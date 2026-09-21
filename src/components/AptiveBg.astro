@@ -1,0 +1,138 @@
+---
+/**
+ * AptiveAI's branded backdrop for the docs landing page — soft blurred halos
+ * in the brand ramp (cyan → blue → navy, the same three colours the portal's
+ * `AptiveBg` draws; apps/portal/src/client/common/aptive-bg.tsx in
+ * aptiveaihq/core) behind the mark at very low opacity, as a watermark.
+ *
+ * Implemented as a CSS-only fixed orb layer — the mechanism the ClusterCode
+ * docs landing uses ("ported 1:1 from the portal hero's .hero-orb-1/2/3"),
+ * and which the portal itself ships as `.hero-orbs` — rather than the
+ * portal's canvas painter: it needs no script, freezes cleanly under
+ * prefers-reduced-motion, and renders identically everywhere.
+ */
+---
+
+<div class="aptive-bg" aria-hidden="true">
+  <span class="aptive-orb aptive-orb-1"></span>
+  <span class="aptive-orb aptive-orb-2"></span>
+  <span class="aptive-orb aptive-orb-3"></span>
+  <span class="aptive-orb aptive-orb-4"></span>
+  <span class="aptive-orb aptive-orb-5"></span>
+  <img class="aptive-bg__mark" src="/logo-mark.png" alt="" draggable="false" />
+</div>
+
+<style is:global>
+  /* Fixed full-viewport layer behind the splash content, like the ClusterCode
+     docs landing background (z-index -1, pointer-events none). */
+  .aptive-bg {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .aptive-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(72px);
+    opacity: 0.5;
+    will-change: transform;
+  }
+  :root[data-theme='light'] .aptive-orb {
+    opacity: 0.28;
+  }
+
+  /* The brand ramp — cyan, blue, navy (deliberately three colours; a fourth
+     hue turns the wash into a gradient mesh). Two extra low-set halos reuse
+     the ramp so the layer covers the full landing page. */
+  .aptive-orb-1 {
+    top: -8%;
+    left: 8%;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, #10c0f0 0%, transparent 70%);
+    animation: aptive-orb-drift 19s ease-in-out infinite alternate;
+  }
+  .aptive-orb-2 {
+    top: 6%;
+    right: 6%;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, #0080e0 0%, transparent 70%);
+    animation: aptive-orb-drift 23s ease-in-out infinite alternate-reverse;
+  }
+  .aptive-orb-3 {
+    bottom: -16%;
+    left: 38%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #0d52b2 0%, transparent 70%);
+    opacity: 0.45;
+    animation: aptive-orb-drift 27s ease-in-out infinite alternate;
+  }
+  :root[data-theme='light'] .aptive-orb-3 {
+    opacity: 0.24;
+  }
+  .aptive-orb-4 {
+    top: 42%;
+    left: -6%;
+    width: 340px;
+    height: 340px;
+    background: radial-gradient(circle, #0d52b2 0%, transparent 70%);
+    opacity: 0.4;
+    animation: aptive-orb-drift 25s ease-in-out infinite alternate-reverse;
+  }
+  :root[data-theme='light'] .aptive-orb-4 {
+    opacity: 0.2;
+  }
+  .aptive-orb-5 {
+    bottom: 4%;
+    right: -4%;
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, #10c0f0 0%, transparent 70%);
+    opacity: 0.35;
+    animation: aptive-orb-drift 21s ease-in-out infinite alternate;
+  }
+  :root[data-theme='light'] .aptive-orb-5 {
+    opacity: 0.18;
+  }
+
+  /* The mark as a watermark behind the hero — the portal's `hero` variant
+     sizing and alpha. The portal adds `filter: blur(0.5px)` here; that is
+     deliberately NOT reproduced — a filter on this fixed-layer img makes
+     Chromium composite the whole page through a darkened surface (measured:
+     every bright cyan on the page dropped ~40%), and at 0.05 opacity the
+     blur is invisible anyway. */
+  .aptive-bg__mark {
+    position: absolute;
+    left: 50%;
+    top: 40vh;
+    transform: translate(-50%, -50%);
+    width: clamp(240px, 40vmin, 560px);
+    height: auto;
+    opacity: 0.05;
+  }
+  /* On a light ground the navy mark reads louder at the same alpha, so drop
+     to the portal's `subtle` value there. */
+  :root[data-theme='light'] .aptive-bg__mark {
+    opacity: 0.035;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aptive-orb {
+      animation: none;
+    }
+  }
+
+  @keyframes aptive-orb-drift {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(24px, -28px) scale(1.08);
+    }
+  }
+</style>

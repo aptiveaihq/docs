@@ -1,23 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@100..800&display=swap');
 
-/* AptiveAI brand tokens — hand-mirrored from aptiveaihq/core
-   (docs/branding/README.md + apps/portal/src/app/globals.css):
-     --brand-navy        #0d52b2   the primary, identical in light and dark
-     --brand-navy-shade  #0b3d92
-     --brand-gold        #d4a520   flat accent (never the swoosh gradient)
-   Body/heading type is Inter, code is JetBrains Mono, per the brand spec.
-   Dark-mode link/accent text uses a lighter tint of the navy (#5b9bf5) —
-   the brand navy itself is too dark to read on a near-black surface. */
+/* Brand + UI tokens below are hand-mirrored from the AptiveAI portal
+   (aptiveaihq/core: apps/portal/src/app/globals.css and brand.css). The
+   portal's UI palette is the VS Code–derived token table (`--bg`, `--surface`,
+   `--green`, `--blue`, …); its brand identity (navy, the two golds, the
+   Poppins wordmark) lives only in the logo lockup, exactly as in the portal.
+   Body/heading type is Inter, code and labels are JetBrains Mono. */
 
 :root {
   --sl-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --sl-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  --ap-navy: #0d52b2;
-  --ap-navy-shade: #0b3d92;
-  --ap-gold: #d4a520;
+  --sl-text-body-sm: 0.875rem;
+  --sl-nav-height: 3rem;
+  --sl-sidebar-width: 240px;
+  --sl-content-width: 55rem;
+  --sl-nav-pad-x: 1rem;
+  --docs-green: #10c0f0;
+  --docs-border2: #3c3c3c;
+  --docs-surface: #252526;
+  --docs-muted: #808080;
+  /* Black label on the brand-green CTA in both themes (portal MARKETING_CTA). */
+  --docs-cta-text: #000000;
+
+  /* Brand identity — same values in both themes (brand is not theme).
+     Mirrors apps/portal/src/app/brand.css + globals.css. The gold gradient
+     tokens are read by the Logo lockup's swoosh SVG and are NEVER a flat
+     fill; --brand-gold is the flat accent for badges and rules. */
+  --brand-navy: #0d52b2;
+  --brand-navy-shade: #0b3d92;
+  --brand-gold-deep: #a37f41;
+  --brand-gold-mid: #ddba69;
+  --brand-gold-peak: #f9e58f;
+  --brand-gold-fall: #e4c573;
+  --brand-gold: #d4a520;
 }
 
-/* Dark theme */
+/* Dark theme — matches the portal dark mode (globals.css `.dark`) */
 :root[data-theme='dark'] {
   --sl-color-bg: #000000;
   --sl-color-bg-nav: #0a0a0b;
@@ -32,17 +50,23 @@
   --sl-color-gray-5: #0a0a0b;
   --sl-color-gray-6: #000000;
   --sl-color-black: #000000;
-  --sl-color-accent-low: rgba(13, 82, 178, 0.18);
-  --sl-color-accent: #5b9bf5;
-  --sl-color-accent-high: #9cc3fa;
-  --sl-color-text: #cccccc;
-  --sl-color-text-accent: #5b9bf5;
+  --sl-color-accent-low: rgba(16, 192, 240, 0.1);
+  --sl-color-accent: #10c0f0;
+  --sl-color-accent-high: #a0e8ff;
+  --sl-color-text: #d4d4d4;
+  --sl-color-text-accent: #10c0f0;
+  --docs-green: #10c0f0;
+  --docs-border2: #2c2c31;
+  --docs-surface: #0a0a0b;
+  --docs-muted: #808080;
+  /* Keyboard focus ring — the portal's dark accent blue (--blue). */
+  --docs-focus-ring: #569cd6;
 }
 
-/* Light theme
-   NOTE: Starlight uses --sl-color-white for headings (most prominent) and
-   --sl-color-black for backgrounds (least prominent); in light mode these
-   are inverted. */
+/* Light theme — matches the portal light mode
+   NOTE: Starlight uses --sl-color-white for headings (most prominent)
+   and --sl-color-black for backgrounds (least prominent); in light mode
+   these are inverted. */
 :root[data-theme='light'] {
   --sl-color-bg: #ffffff;
   --sl-color-bg-nav: #f3f3f3;
@@ -57,49 +81,439 @@
   --sl-color-gray-5: #e8e8e8;
   --sl-color-gray-6: #f3f3f3;
   --sl-color-black: #ffffff;
-  --sl-color-accent-low: rgba(13, 82, 178, 0.08);
-  --sl-color-accent: var(--ap-navy);
-  --sl-color-accent-high: var(--ap-navy-shade);
+  --sl-color-accent-low: rgba(8, 144, 184, 0.08);
+  --sl-color-accent: #0890b8;
+  --sl-color-accent-high: #044e66;
   --sl-color-text: #333333;
-  --sl-color-text-accent: var(--ap-navy);
+  --sl-color-text-accent: #0890b8;
+  --docs-green: #0890b8;
+  --docs-border2: #b0b0b0;
+  --docs-surface: #ffffff;
+  --docs-muted: #616161;
+  /* Keyboard focus ring — the portal's light accent blue (--blue). */
+  --docs-focus-ring: #005fb8;
 }
 
-/* Hero — primary CTA is the brand navy with white text in both themes,
-   with a flat-gold hover ring as the secondary brand accent. */
-.hero .sl-link-button.primary {
-  background: var(--ap-navy);
-  color: #ffffff;
-  border-color: var(--ap-navy-shade);
-}
-.hero .sl-link-button.primary:hover {
-  background: var(--ap-navy-shade);
-  outline: 2px solid var(--ap-gold);
-  outline-offset: 1px;
-}
-[data-has-hero] .hero .tagline {
-  max-width: 42rem;
-  margin-inline: auto;
+/* Code blocks — match the portal code snippet styling */
+:root[data-theme='dark'] .expressive-code {
+  --ec-codeBg: #0a0a0b;
+  --ec-codeBorder: #2c2c31;
+  --ec-brdRad: 8px;
+  --ec-brdWd: 1.25px;
+  --ec-brdCol: #2c2c31;
+  --ec-codePadBlock: 0.75rem;
+  --ec-codePadInline: 1.125rem;
+  --ec-frm-edTabBarBg: #000000;
+  --ec-frm-trmTtbBg: #000000;
+  --ec-frm-trmTtbBrdBtmCol: #232326;
 }
 
-/* Cards — a thin gold top rule as the brand's secondary accent, and icon
-   chips tinted from the palette instead of Starlight's cycling defaults. */
-.card {
-  border-top: 2px solid var(--ap-gold);
-}
-:root .card .title .icon {
-  color: var(--ap-navy);
-  background-color: rgba(13, 82, 178, 0.1);
-  border-color: rgba(13, 82, 178, 0.35);
-}
-:root[data-theme='dark'] .card .title .icon {
-  color: var(--ap-gold);
-  background-color: rgba(212, 165, 32, 0.1);
-  border-color: rgba(212, 165, 32, 0.35);
+:root[data-theme='light'] .expressive-code {
+  --ec-codeBg: #ffffff;
+  --ec-codeBorder: #b0b0b0;
+  --ec-brdRad: 8px;
+  --ec-brdWd: 1.25px;
+  --ec-brdCol: #b0b0b0;
+  --ec-codePadBlock: 0.75rem;
+  --ec-codePadInline: 1.125rem;
+  --ec-frm-edTabBarBg: #f3f3f3;
+  --ec-frm-trmTtbBg: #e0e0e0;
+  --ec-frm-trmTtbBrdBtmCol: #cecece;
 }
 
-/* Starlight defaults to light; respect the OS preference for dark. */
+/* Starlight defaults to light; override to prefer dark */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
+  }
+}
+
+/* ============================================================
+   FOCUS STATES (a11y) — keyboard :focus-visible ring on custom
+   interactive controls, matching the core Button's ring.
+   ============================================================ */
+.pagination-links a:focus-visible,
+.card a:focus-visible {
+  outline: 2px solid var(--docs-focus-ring);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* ============================================================
+   SCROLLBAR — matches the portal/console thin scrollbar
+   ============================================================ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--docs-border2) var(--sl-color-bg);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--sl-color-bg);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--docs-border2);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--docs-muted);
+}
+
+*::-webkit-scrollbar-corner {
+  background: var(--sl-color-bg);
+}
+
+/* ============================================================
+   HEADER — the custom Header.astro owns the visible bar; reset
+   Starlight's outer <header class="header"> wrapper around it.
+   ============================================================ */
+header.header {
+  background: var(--sl-color-bg-nav) !important;
+  border: none !important;
+  padding: 0 !important;
+  height: auto !important;
+}
+
+/* ============================================================
+   SIDEBAR — match the portal sidebar (240px, same item heights)
+   ============================================================ */
+nav.sidebar {
+  border-right: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-bg-sidebar);
+  width: var(--sl-sidebar-width);
+}
+
+/* Sidebar nav items — match portal: text-sm, transition-colors */
+starlight-menu-button + nav a,
+nav.sidebar a {
+  font-size: 0.875rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.25rem;
+  color: var(--sl-color-gray-2);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+nav.sidebar a:hover,
+nav.sidebar a:focus {
+  background-color: var(--sl-color-hairline-light);
+  color: var(--sl-color-white);
+}
+
+/* Active sidebar item — text color + left accent bar, matching the portal */
+nav.sidebar a[aria-current='page'],
+nav.sidebar a[aria-current='page']:hover,
+nav.sidebar a[aria-current='page']:focus {
+  background: transparent;
+  color: var(--sl-color-white);
+  font-weight: 400;
+  position: relative;
+}
+
+nav.sidebar a[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  background: #005fb8;
+}
+
+:root[data-theme='dark'] nav.sidebar a[aria-current='page']::before {
+  background: #569cd6;
+}
+
+nav.sidebar li {
+  border-inline-start: none !important;
+}
+
+/* Sidebar group labels — match portal: text-sm, regular weight */
+nav.sidebar .group-label {
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--sl-color-gray-2);
+}
+
+/* ============================================================
+   THEME TOGGLE — hide the default Starlight theme select (the
+   custom header carries its own toggle, like the portal ThemeMenu)
+   ============================================================ */
+starlight-theme-select {
+  display: none !important;
+}
+
+/* ============================================================
+   SEARCH — style Starlight's Pagefind trigger like the portal's
+   command-palette box (bg-surface2, border-border2, mono, Ctrl+K)
+   ============================================================ */
+site-search button[data-open-modal] {
+  font-family: var(--sl-font-mono);
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+  height: 2rem;
+  padding-block: 0;
+  padding-inline: 0.625rem;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+:root[data-theme='dark'] site-search button[data-open-modal] {
+  background-color: #141416;
+  border: 1.25px solid #2c2c31;
+  color: #808080;
+}
+
+:root[data-theme='light'] site-search button[data-open-modal] {
+  background-color: #e8e8e8;
+  border: 1.25px solid #b0b0b0;
+  color: #616161;
+}
+
+site-search button[data-open-modal]:hover {
+  border-color: var(--sl-color-accent);
+  color: var(--sl-color-text);
+}
+
+/* Kbd badge inside the search button — match the portal */
+site-search button[data-open-modal] kbd {
+  font-family: var(--sl-font-mono);
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+:root[data-theme='dark'] site-search button[data-open-modal] kbd {
+  background-color: #1c1c1f;
+  border: 1px solid #2c2c31;
+  color: #616161;
+}
+
+:root[data-theme='light'] site-search button[data-open-modal] kbd {
+  background-color: #cecece;
+  border: 1px solid #b0b0b0;
+  color: #767676;
+}
+
+/* ============================================================
+   CONTENT AREA
+   ============================================================ */
+.content-panel {
+  padding-inline: 1.5rem;
+  padding-block: 2.5rem;
+}
+
+/* Center content + TOC as a single unit in the viewport */
+.main-frame > .lg\:sl-flex {
+  max-width: calc(var(--sl-content-width) + var(--sl-sidebar-width));
+  margin-inline: auto;
+}
+
+/* "On this page" sidebar — subtle left border on the TOC content */
+.right-sidebar {
+  border-inline-start: none !important;
+}
+
+starlight-toc nav {
+  border-inline-start: 1px solid var(--sl-color-hairline);
+  padding-inline-start: 1rem;
+}
+
+/* ============================================================
+   GENERAL TYPOGRAPHY — Inter body (the portal's --font-sans),
+   JetBrains Mono for code
+   ============================================================ */
+body {
+  font-family: var(--sl-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+}
+
+a:not([class]) {
+  color: var(--sl-color-accent);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+a:not([class]):hover {
+  color: var(--sl-color-accent-high);
+  text-decoration: underline;
+}
+
+:not(pre) > code {
+  background: var(--sl-color-accent-low);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+/* ============================================================
+   SPLASH / HOME PAGE — match the portal marketing hero styling
+   ============================================================ */
+
+/* Home page — swap nav/body colors to match the portal home page.
+   Portal light: white nav surface on a #f3f3f3 ground. Docs defaults are
+   inverted, so override on splash pages. */
+:root[data-has-hero][data-theme='light'] {
+  --sl-color-bg: #f3f3f3;
+  --sl-color-bg-nav: #ffffff;
+}
+
+:root[data-has-hero][data-theme='dark'] {
+  --sl-color-bg: #000000;
+  --sl-color-bg-nav: #0a0a0b;
+}
+
+/* Hero section — centered, constrained width like the portal hero */
+.hero {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 2rem;
+  grid-template-columns: 1fr !important;
+}
+
+.hero .copy {
+  text-align: center !important;
+  align-items: center !important;
+}
+
+.hero .actions {
+  justify-content: center !important;
+}
+
+/* Hero title — the portal's hero type ramp (font-black, tight tracking) */
+.hero h1 {
+  font-family: var(--sl-font);
+  font-size: clamp(34px, 4.2vw, 58px) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em;
+  line-height: 1.12 !important;
+  color: var(--sl-color-text) !important;
+  margin-bottom: 1rem;
+}
+
+.hero-line1 {
+  display: block;
+  color: var(--sl-color-text);
+}
+
+/* The brand name takes the portal's `.gradient-text` treatment — the same
+   cyan → blue drift the portal hero's accent phrase uses. */
+.hero-line2 {
+  display: block;
+  background: linear-gradient(90deg, #10c0f0, #0080e0, #10c0f0);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-drift 8s ease-in-out infinite alternate;
+}
+
+@keyframes gradient-drift {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-line2 {
+    animation: none;
+  }
+}
+
+/* Hero tagline — match the portal subheadline */
+.hero .tagline {
+  font-family: var(--sl-font);
+  font-size: 1.0625rem !important;
+  line-height: 1.75;
+  color: var(--sl-color-gray-2) !important;
+  max-width: 520px;
+  margin: 0 auto 2rem;
+}
+
+/* Hero action buttons — the portal button canon:
+   • primary = brand-green fill, black label, bold, hover:opacity-85
+     (portal MARKETING_CTA)
+   • secondary = bordered, hover flips border → brand green (OUTLINE_CTA) */
+.sl-link-button {
+  border-radius: 0.5rem !important;
+  font-family: var(--sl-font) !important;
+  font-weight: 700 !important;
+  transition: opacity 200ms ease, border-color 200ms ease !important;
+}
+
+.sl-link-button.primary {
+  background: var(--sl-color-text-accent) !important;
+  border-color: var(--sl-color-text-accent) !important;
+  color: var(--docs-cta-text) !important;
+}
+
+.sl-link-button.primary:hover {
+  opacity: 0.85;
+}
+
+.sl-link-button.secondary,
+.sl-link-button:not(.primary):not(.minimal) {
+  border-color: var(--sl-color-hairline) !important;
+  background: transparent !important;
+  color: var(--sl-color-text) !important;
+}
+
+.sl-link-button.secondary:hover,
+.sl-link-button:not(.primary):not(.minimal):hover {
+  border-color: var(--sl-color-accent) !important;
+}
+
+/* Cards on splash — match the portal card styling */
+.card-grid {
+  max-width: 864px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+}
+
+.card {
+  border-color: var(--sl-color-hairline) !important;
+  border-radius: 0.5rem !important;
+  background-color: var(--docs-surface) !important;
+  color: var(--sl-color-text) !important;
+  transition: border-color 150ms ease;
+}
+
+.card .body {
+  color: var(--sl-color-gray-2) !important;
+}
+
+.card:hover {
+  border-color: var(--sl-color-accent) !important;
+}
+
+.card .title {
+  font-family: var(--sl-font);
+  color: var(--sl-color-text) !important;
+}
+
+/* On the splash the cards sit over the AptiveBg wash — a translucent surface
+   lets the halos glow through, the same way the portal's cards sit on it. */
+:root[data-has-hero][data-theme='dark'] .card {
+  background-color: rgba(10, 10, 11, 0.82) !important;
+}
+:root[data-has-hero][data-theme='light'] .card {
+  background-color: rgba(255, 255, 255, 0.82) !important;
+}
+
+@media (max-width: 50rem) {
+  .hero {
+    padding-top: 3rem;
   }
 }

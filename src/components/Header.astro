@@ -1,0 +1,314 @@
+---
+/**
+ * Custom header mirroring the AptiveAI portal's marketing nav
+ * (apps/portal/src/client/common/nav.tsx in aptiveaihq/core), the same way the
+ * ClusterCode docs header mirrors clustercode.io: logo lockup on the left, the
+ * docs' primary sections as center links, then GitHub, the search box, the
+ * theme toggle, "Log in" and the portal's primary CTA on the right. AptiveAI
+ * is contract-sold — there is no self-serve signup — so the CTA is
+ * "Book a demo →" (portal `MARKETING_CTA`: brand-green fill, black label),
+ * not ClusterCode's "Sign up →".
+ */
+import Search from '@astrojs/starlight/components/Search.astro';
+import Logo from './Logo.astro';
+
+const route = Astro.locals.starlightRoute;
+const isHomePage = !route?.entry?.slug || route.entry.slug === '';
+const pathname = Astro.url.pathname;
+
+// The docs' primary sections. Grows with the site — keep in step with the
+// sidebar groups in astro.config.mjs.
+const navItems = [
+  { label: 'Getting Started', href: '/getting-started/introduction', prefix: '/getting-started' },
+];
+---
+
+<div class:list={["header", "sl-flex", { "header-home": isHomePage }]}>
+  <div class="sl-flex header-start">
+    <a href="/" class="site-title-link header-logo-link" aria-label="AptiveAI Docs home">
+      <span class="header-logo-mobile"><Logo variant="mark" size={22} /></span>
+      <span class="header-logo-desktop"><Logo variant={isHomePage ? 'full' : 'docs'} size={17} /></span>
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={["header-nav-link", { "header-nav-active": pathname.startsWith(item.prefix) }]}
+        >{item.label}</a>
+      ))}
+    </nav>
+  </div>
+  <div class="sl-flex header-end">
+    <a href="https://github.com/aptiveaihq" target="_blank" rel="noopener noreferrer" class="header-icon-link" aria-label="GitHub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+      </svg>
+    </a>
+    <div class="header-search"><Search /></div>
+    <docs-theme-toggle>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="window.__docsToggleTheme && window.__docsToggleTheme()">
+        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </docs-theme-toggle>
+    <a href="https://aptiveai.io/login" class="header-login">Log in</a>
+    <a href="https://aptiveai.io/contact" class="header-cta">Book a demo →</a>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    var storageKey = 'starlight-theme';
+    function getTheme() {
+      var stored = typeof localStorage !== 'undefined' && localStorage.getItem(storageKey);
+      if (stored === 'dark' || stored === 'light') return stored;
+      return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    function updateIcons() {
+      var theme = getTheme();
+      document.querySelectorAll('docs-theme-toggle').forEach(function(el) {
+        var sun = el.querySelector('.icon-sun');
+        var moon = el.querySelector('.icon-moon');
+        if (sun) sun.style.display = theme === 'dark' ? 'block' : 'none';
+        if (moon) moon.style.display = theme === 'dark' ? 'none' : 'block';
+      });
+    }
+    window.__docsToggleTheme = function() {
+      var current = getTheme();
+      var next = current === 'dark' ? 'light' : 'dark';
+      var root = document.documentElement;
+      if (typeof localStorage !== 'undefined') localStorage.setItem(storageKey, next);
+      root.dataset.theme = next;
+      if (window.StarlightThemeProvider) window.StarlightThemeProvider.updatePickers(next);
+      updateIcons();
+    };
+    updateIcons();
+    matchMedia('(prefers-color-scheme: light)').addEventListener('change', updateIcons);
+
+    // Split the splash hero title so the brand name takes the portal's
+    // gradient-text treatment (cyan → blue), like the portal hero's accent.
+    function splitHeroTitle() {
+      var h1 = document.querySelector('.hero h1');
+      if (h1 && !h1.dataset.split) {
+        h1.dataset.split = '1';
+        var text = h1.textContent || '';
+        var idx = text.indexOf('AptiveAI');
+        if (idx >= 0) {
+          var before = text.slice(0, idx);
+          var brand = text.slice(idx, idx + 'AptiveAI'.length);
+          h1.innerHTML = '<span class="hero-line1">' + before + '</span><span class="hero-line2">' + brand + '</span>';
+        }
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', splitHeroTitle);
+    } else {
+      splitHeroTitle();
+    }
+  })();
+</script>
+
+<style>
+  .header {
+    height: var(--sl-nav-height, 3rem);
+    padding-inline: var(--sl-nav-pad-x, 1rem);
+    align-items: center;
+    justify-content: space-between;
+    background: var(--sl-color-bg-nav);
+    border-bottom: 1px solid var(--sl-color-hairline);
+    gap: 0.75rem;
+  }
+
+  .header-start {
+    align-items: center;
+    min-width: 0;
+    flex: 1;
+  }
+
+  /* Primary nav — desktop only; on mobile the sidebar/hamburger handles it. */
+  .header-nav {
+    display: none;
+    align-items: center;
+    gap: 1.5rem;
+    margin-inline-start: 1.75rem;
+  }
+
+  @media (min-width: 50rem) {
+    .header-nav {
+      display: flex;
+    }
+  }
+
+  .header-nav-link {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 200ms ease;
+  }
+
+  .header-nav-link:hover {
+    color: var(--sl-color-text);
+    text-decoration: none;
+  }
+
+  .header-nav-active {
+    color: var(--sl-color-text);
+    font-weight: 600;
+  }
+
+  .site-title-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: opacity 200ms ease;
+  }
+
+  .site-title-link:hover {
+    text-decoration: none;
+    opacity: 0.85;
+  }
+
+  .header-logo-desktop {
+    display: none;
+  }
+
+  @media (min-width: 50rem) {
+    .header-logo-mobile {
+      display: none;
+    }
+    .header-logo-desktop {
+      display: block;
+    }
+  }
+
+  .header-end {
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .header-icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    color: var(--sl-color-gray-2);
+    transition: color 200ms ease, background-color 200ms ease;
+  }
+
+  .header-icon-link:hover {
+    color: var(--sl-color-text);
+    background-color: var(--sl-color-hairline-light);
+  }
+
+  docs-theme-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    border-radius: 0.375rem;
+    background: transparent;
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    transition: color 200ms ease, background-color 200ms ease;
+  }
+
+  .theme-toggle:hover {
+    color: var(--sl-color-text);
+    background-color: var(--sl-color-hairline-light);
+  }
+
+  .icon-sun, .icon-moon {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .icon-sun {
+    display: block;
+  }
+
+  :global(:root[data-theme='light']) .icon-moon {
+    display: block;
+  }
+
+  .header-login {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    transition: color 200ms ease;
+    white-space: nowrap;
+  }
+
+  .header-login:hover {
+    color: var(--sl-color-text);
+    text-decoration: none;
+  }
+
+  /* Portal MARKETING_CTA: brand-green fill, black label, bold, opacity hover. */
+  .header-cta {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--docs-cta-text, #000000);
+    background: var(--docs-green, #10c0f0);
+    padding: 0.4375rem 1rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 200ms ease;
+  }
+
+  .header-cta:hover {
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  /* Keyboard focus ring — accent blue, like the core Button :focus-visible. */
+  .header-nav-link:focus-visible,
+  .header-login:focus-visible,
+  .header-cta:focus-visible,
+  .header-icon-link:focus-visible,
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #005fb8);
+    outline-offset: 2px;
+  }
+
+  /* Starlight's mobile menu button is absolutely positioned at the header's
+     right edge on sidebar pages — reserve room for it so it never overlaps
+     the CTA. The splash page has no menu button, so it keeps full width. */
+  @media (max-width: 50rem) {
+    .header:not(.header-home) {
+      padding-inline-end: 3.25rem;
+    }
+  }
+
+  @media (max-width: 359px) {
+    .header-login, .header-cta {
+      display: none;
+    }
+  }
+</style>

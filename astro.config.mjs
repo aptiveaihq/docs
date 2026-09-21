@@ -18,6 +18,12 @@ export default defineConfig({
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/orgs/aptiveaihq' },
       ],
+      // Header mirrors the AptiveAI portal's marketing nav (see
+      // src/components/Header.astro), the same way the ClusterCode docs
+      // header mirrors clustercode.io.
+      components: {
+        Header: './src/components/Header.astro',
+      },
       customCss: ['./src/styles/custom.css'],
       sidebar: [
         {

@@ -1,0 +1,137 @@
+---
+/**
+ * AptiveAI logo lockup for the docs site — the non-JSX twin of the portal's
+ * <Logo> React component (apps/portal/src/client/common/logo.tsx in
+ * aptiveaihq/core; this repo has no React). Same recipe: the word "aptive" in
+ * the self-hosted Poppins wordmark face, the "AI" monogram mark as an image,
+ * and the gold swoosh as fitted-parabola SVG geometry — never a flat gold.
+ * Geometry constants are the artwork's own ratios, copied from brand.css.
+ * Theme follows Starlight's `:root[data-theme='light'|'dark']`; the `theme`
+ * prop pins it (e.g. for a lockup on an always-dark surface).
+ */
+interface Props {
+  variant?: 'full' | 'docs' | 'mark';
+  size?: number;
+  theme?: 'auto' | 'dark' | 'light';
+  class?: string;
+}
+const { variant = 'docs', size = 20, theme = 'auto', class: className } = Astro.props;
+const themeClass = theme === 'dark' ? 'ap-logo--dark' : theme === 'light' ? 'ap-logo--light' : '';
+const label = variant === 'docs' ? 'AptiveAI Docs' : 'AptiveAI';
+// The gradient lives in the document, so two lockups on one page would
+// otherwise share — and fight over — a single id.
+const gradientId = `ap-swoosh-${variant}`;
+---
+
+<span
+  class:list={['ap-logo', `ap-logo--${variant}`, themeClass, className]}
+  style={`--ap-size:${size}px`}
+  role="img"
+  aria-label={label}
+>
+  <span class="ap-logo__row">
+    {variant !== 'mark' && <span class="ap-logo__wm" aria-hidden="true">aptive</span>}
+    <img class="ap-logo__mark" src="/logo-mark.png" alt="" aria-hidden="true" draggable="false" />
+    {variant === 'docs' && <span class="ap-logo__wm ap-logo__suffix" aria-hidden="true">Docs</span>}
+  </span>
+  {variant !== 'mark' && (
+    <svg
+      class="ap-logo__swoosh"
+      viewBox="0 0 1263 58"
+      preserveAspectRatio="none"
+      role="presentation"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" style="stop-color: var(--brand-gold-deep, #a37f41)" />
+          <stop offset="25%" style="stop-color: var(--brand-gold-mid, #ddba69)" />
+          <stop offset="50%" style="stop-color: var(--brand-gold-peak, #f9e58f)" />
+          <stop offset="72%" style="stop-color: var(--brand-gold-fall, #e4c573)" />
+          <stop offset="100%" style="stop-color: var(--brand-gold-deep, #a37f41)" />
+        </linearGradient>
+      </defs>
+      <path d="M0,52.8 Q631.5,-40.4 1263,48.4 L1263,49.6 Q631.5,-11.6 0,54.1 Z" fill={`url(#${gradientId})`} />
+    </svg>
+  )}
+</span>
+
+<style is:global>
+  /* Poppins (c) Indian Type Foundry / Jonny Pinhorn, SIL OFL 1.1 — the same
+     `latin` subset the portal self-hosts, so the wordmark never depends on a
+     third-party font CDN. */
+  @font-face {
+    font-family: 'Aptive Wordmark';
+    font-style: normal;
+    font-weight: 600;
+    font-display: block;
+    src: url('/assets/fonts/poppins-semibold.woff2') format('woff2');
+  }
+
+  .ap-logo {
+    --ap-size: 24px;
+    --ap-ink: #131516;
+    --ap-swoosh-gap: 0.201em;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: stretch;
+    font-size: var(--ap-size);
+    line-height: 1;
+    user-select: none;
+  }
+  :root[data-theme='dark'] .ap-logo {
+    --ap-ink: #ffffff;
+  }
+  /* Forced-theme modifiers must tie the themed rule's specificity (see
+     brand.css in aptiveaihq/core for the cascade note). */
+  :root .ap-logo.ap-logo--dark {
+    --ap-ink: #ffffff;
+  }
+  :root .ap-logo.ap-logo--light {
+    --ap-ink: #131516;
+  }
+
+  .ap-logo__row {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.013em;
+    white-space: nowrap;
+  }
+  .ap-logo__mark {
+    height: 1.757em;
+    width: auto;
+    display: block;
+    /* The mark overshoots the baseline by the artwork's own 0.030em — an
+       optical correction for its angled lower terminals. */
+    margin-bottom: -0.03em;
+    flex: none;
+  }
+  .ap-logo__wm {
+    font-family: 'Aptive Wordmark', 'Poppins', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 1em;
+    line-height: 1;
+    letter-spacing: 0.018em;
+    color: var(--ap-ink);
+  }
+  .ap-logo__suffix {
+    margin-left: 0.3em;
+    opacity: 0.62;
+  }
+  /* Width/aspect-ratio pair guards against the SVG's default 300x150 box
+     inflating the lockup during intrinsic sizing — see brand.css. */
+  .ap-logo__swoosh {
+    display: block;
+    margin-top: var(--ap-swoosh-gap);
+    flex: none;
+    width: 0;
+    min-width: 100%;
+    aspect-ratio: 1263 / 58;
+    height: auto;
+  }
+  .ap-logo--mark .ap-logo__mark {
+    height: 1.6em;
+    margin-bottom: 0;
+  }
+</style>

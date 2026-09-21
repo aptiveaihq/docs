@@ -38,11 +38,16 @@ pnpm dev      # local dev server
 pnpm build    # production build (what the deploy workflow runs)
 ```
 
-Brand assets (logos, favicon) are copied verbatim from
-`aptiveaihq/core` `docs/branding/latest/`; the color tokens in
-`src/styles/custom.css` mirror the palette recorded in that repository's
-`docs/branding/README.md` (navy `#0d52b2`, navy shade `#0b3d92`, flat gold
-`#d4a520`).
+The site mirrors the AptiveAI portal's design the same way the ClusterCode
+docs mirror clustercode.io: the header is the portal's marketing nav (logo
+lockup, search box, theme toggle, "Log in", "Book a demo →"), the landing
+hero uses the portal's type ramp and gradient accent over the `AptiveBg`
+halo backdrop, and the tokens in `src/styles/custom.css` are hand-mirrored
+from `aptiveaihq/core` (`apps/portal/src/app/globals.css` + `brand.css`).
+The logo lockup (`src/components/Logo.astro`) is the live-HTML twin of the
+portal's `logo.tsx` — Poppins wordmark, mark image, gold-gradient swoosh —
+with `logo-mark.png`, `poppins-semibold.woff2` and the favicon copied
+verbatim from that repository.
 
 ## Scope
 
