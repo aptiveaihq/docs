@@ -16,11 +16,12 @@ const route = Astro.locals.starlightRoute;
 const isHomePage = !route?.entry?.slug || route.entry.slug === '';
 const pathname = Astro.url.pathname;
 
-// The docs' primary sections. Grows with the site — keep in step with the
-// sidebar groups in astro.config.mjs.
-const navItems = [
-  { label: 'Getting Started', href: '/getting-started/introduction', prefix: '/getting-started' },
-];
+// The docs' PRIMARY sections — the product-area groups, once they exist
+// (Connect, Agents, Connectors, Operations). ClusterCode's docs mark only
+// those `primary` in the header nav; "Getting Started" is deliberately not
+// one of them — it is reached via the hero's "Get Started →" and the
+// sidebar. Empty until the first product-area section ships.
+const navItems: { label: string; href: string; prefix: string }[] = [];
 ---
 
 <div class:list={["header", "sl-flex", { "header-home": isHomePage }]}>
