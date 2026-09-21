@@ -9,6 +9,10 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'AptiveAI Docs',
+      // Rewrites the generated <title> to the brand-first "AptiveAI Docs ·
+      // Page" order (home page: just "AptiveAI Docs"), matching the
+      // ClusterCode docs. See src/routeData.ts.
+      routeMiddleware: './src/routeData.ts',
       favicon: '/favicon.ico',
       logo: {
         dark: './src/assets/logo-dark.png',
