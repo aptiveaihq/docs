@@ -25,12 +25,24 @@ process; lowercase "connector" is the engineering word inside the code.
 
 ## Status
 
-Scaffolding pending. The repository is intentionally empty apart from this
-README.
+Scaffolded (2026-09-21): an Astro + Starlight site following the same setup as
+the [clustercode docs](https://github.com/clustercodehq/docs), deployed to
+[`docs.aptiveai.io`](https://docs.aptiveai.io) by GitHub Actions
+(`.github/workflows/deploy-docs.yml` → GitHub Pages). The landing page and a
+Getting Started stub are live; the detailed content in the Scope below is still
+to be written.
 
-The site is planned to follow the same setup as the
-[clustercode docs](https://github.com/clustercodehq/docs) (Astro + Starlight),
-and to deploy to `docs.aptiveai.io`.
+```bash
+pnpm install
+pnpm dev      # local dev server
+pnpm build    # production build (what the deploy workflow runs)
+```
+
+Brand assets (logos, favicon) are copied verbatim from
+`aptiveaihq/core` `docs/branding/latest/`; the color tokens in
+`src/styles/custom.css` mirror the palette recorded in that repository's
+`docs/branding/README.md` (navy `#0d52b2`, navy shade `#0b3d92`, flat gold
+`#d4a520`).
 
 ## Scope
 

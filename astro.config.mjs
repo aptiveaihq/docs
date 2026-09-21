@@ -1,0 +1,30 @@
+import { defineConfig } from 'astro/config';
+import starlight from '@astrojs/starlight';
+
+// Same mechanism as the ClusterCode docs site (clustercodehq/docs): an Astro
+// Starlight site built by GitHub Actions and served from GitHub Pages behind a
+// custom domain (public/CNAME → docs.aptiveai.io).
+export default defineConfig({
+  site: 'https://docs.aptiveai.io',
+  integrations: [
+    starlight({
+      title: 'AptiveAI Docs',
+      favicon: '/favicon.ico',
+      logo: {
+        dark: './src/assets/logo-dark.png',
+        light: './src/assets/logo-light.png',
+        replacesTitle: true,
+      },
+      social: [
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/orgs/aptiveaihq' },
+      ],
+      customCss: ['./src/styles/custom.css'],
+      sidebar: [
+        {
+          label: 'Getting Started',
+          items: [{ label: 'Introduction', slug: 'getting-started/introduction' }],
+        },
+      ],
+    }),
+  ],
+});

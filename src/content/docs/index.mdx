@@ -1,0 +1,39 @@
+---
+title: Welcome to AptiveAI Docs
+description: AI workers for your business. Connect your systems, put agents on real computers, and keep every task visible and under your control.
+template: splash
+hero:
+  tagline: AI workers for your business. Connect your systems, put agents on real computers, and keep every task visible and under your control.
+  actions:
+    - text: Get Started →
+      link: /getting-started/introduction
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/orgs/aptiveaihq
+      icon: external
+      variant: secondary
+      attrs:
+        target: _blank
+        rel: noopener
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="AptiveAI Connect" icon="comment">
+    Your existing ChatGPT or Claude, connected to your systems through AptiveAI
+    Connectors — answers and actions grounded in your own data.
+  </Card>
+  <Card title="AptiveAI Agents" icon="rocket">
+    Configured agents on isolated computers with a browser and a desktop.
+    Watch the live view, set schedules, and approve what matters.
+  </Card>
+  <Card title="Connectors" icon="puzzle">
+    The integration layer behind both products — typed API clients and MCP
+    servers, deployed per customer.
+  </Card>
+  <Card title="AI Assessment" icon="magnifier">
+    The first step: an assessment of your processes that leads into Connect or
+    Agents, on-site or online.
+  </Card>
+</CardGrid>

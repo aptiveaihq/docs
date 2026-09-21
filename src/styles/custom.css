@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@100..800&display=swap');
+
+/* AptiveAI brand tokens — hand-mirrored from aptiveaihq/core
+   (docs/branding/README.md + apps/portal/src/app/globals.css):
+     --brand-navy        #0d52b2   the primary, identical in light and dark
+     --brand-navy-shade  #0b3d92
+     --brand-gold        #d4a520   flat accent (never the swoosh gradient)
+   Body/heading type is Inter, code is JetBrains Mono, per the brand spec.
+   Dark-mode link/accent text uses a lighter tint of the navy (#5b9bf5) —
+   the brand navy itself is too dark to read on a near-black surface. */
+
+:root {
+  --sl-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --ap-navy: #0d52b2;
+  --ap-navy-shade: #0b3d92;
+  --ap-gold: #d4a520;
+}
+
+/* Dark theme */
+:root[data-theme='dark'] {
+  --sl-color-bg: #000000;
+  --sl-color-bg-nav: #0a0a0b;
+  --sl-color-bg-sidebar: #0a0a0b;
+  --sl-color-hairline-light: #141416;
+  --sl-color-hairline: #232326;
+  --sl-color-white: #d4d4d4;
+  --sl-color-gray-1: #cccccc;
+  --sl-color-gray-2: #808080;
+  --sl-color-gray-3: #616161;
+  --sl-color-gray-4: #232326;
+  --sl-color-gray-5: #0a0a0b;
+  --sl-color-gray-6: #000000;
+  --sl-color-black: #000000;
+  --sl-color-accent-low: rgba(13, 82, 178, 0.18);
+  --sl-color-accent: #5b9bf5;
+  --sl-color-accent-high: #9cc3fa;
+  --sl-color-text: #cccccc;
+  --sl-color-text-accent: #5b9bf5;
+}
+
+/* Light theme
+   NOTE: Starlight uses --sl-color-white for headings (most prominent) and
+   --sl-color-black for backgrounds (least prominent); in light mode these
+   are inverted. */
+:root[data-theme='light'] {
+  --sl-color-bg: #ffffff;
+  --sl-color-bg-nav: #f3f3f3;
+  --sl-color-bg-sidebar: #f3f3f3;
+  --sl-color-hairline-light: #e8e8e8;
+  --sl-color-hairline: #cecece;
+  --sl-color-white: #333333;
+  --sl-color-gray-1: #3b3b3b;
+  --sl-color-gray-2: #616161;
+  --sl-color-gray-3: #767676;
+  --sl-color-gray-4: #cecece;
+  --sl-color-gray-5: #e8e8e8;
+  --sl-color-gray-6: #f3f3f3;
+  --sl-color-black: #ffffff;
+  --sl-color-accent-low: rgba(13, 82, 178, 0.08);
+  --sl-color-accent: var(--ap-navy);
+  --sl-color-accent-high: var(--ap-navy-shade);
+  --sl-color-text: #333333;
+  --sl-color-text-accent: var(--ap-navy);
+}
+
+/* Hero — primary CTA is the brand navy with white text in both themes,
+   with a flat-gold hover ring as the secondary brand accent. */
+.hero .sl-link-button.primary {
+  background: var(--ap-navy);
+  color: #ffffff;
+  border-color: var(--ap-navy-shade);
+}
+.hero .sl-link-button.primary:hover {
+  background: var(--ap-navy-shade);
+  outline: 2px solid var(--ap-gold);
+  outline-offset: 1px;
+}
+[data-has-hero] .hero .tagline {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+/* Cards — a thin gold top rule as the brand's secondary accent, and icon
+   chips tinted from the palette instead of Starlight's cycling defaults. */
+.card {
+  border-top: 2px solid var(--ap-gold);
+}
+:root .card .title .icon {
+  color: var(--ap-navy);
+  background-color: rgba(13, 82, 178, 0.1);
+  border-color: rgba(13, 82, 178, 0.35);
+}
+:root[data-theme='dark'] .card .title .icon {
+  color: var(--ap-gold);
+  background-color: rgba(212, 165, 32, 0.1);
+  border-color: rgba(212, 165, 32, 0.35);
+}
+
+/* Starlight defaults to light; respect the OS preference for dark. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+  }
+}
