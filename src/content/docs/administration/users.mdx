@@ -1,0 +1,172 @@
+---
+title: Users and roles
+description: The people in your enterprise — the three roles and exactly what each may do, inviting people one at a time or from a file, resending and revoking invitations, what an invitee sees, changing a role, removing someone and the last-owner rule, and an account that signed up without an invitation.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Everyone who uses AptiveAI Agents for your company belongs to your
+**enterprise** with one of three roles. People join **by invitation**: an owner
+or admin invites them from **Users** in the [admin area](/administration/overview),
+they accept, and they are in.
+
+**Users** has two tabs:
+
+- **People** — everyone in the enterprise, with their **Name**, **Email**,
+  **Role** and when they **Joined**. Search with *Search people…*.
+- **Invitations** — every invitation sent, with who was **Invited** and by whom,
+  the **Role**, the **Status** and when it was **Created**.
+
+## Roles
+
+| Role | In short |
+|---|---|
+| **Owner** | Everything an admin can do, plus roles, billing and usage |
+| **Admin** | Manages agents, connectors and members |
+| **Member** | Starts and follows tasks |
+
+A role applies to the whole enterprise. What each one may do:
+
+| Action | Owner | Admin | Member |
+|---|:---:|:---:|:---:|
+| Start tasks, steer them, answer questions, rename and pin them | ✓ | ✓ | ✓ |
+| Create a personal agent, and configure it | ✓ | ✓ | ✓ |
+| Create schedules | ✓ | ✓ | ✓ |
+| Write skills for themselves | ✓ | ✓ | ✓ |
+| Keep [personal sign-ins](/reference/settings/sign-ins) | ✓ | ✓ | ✓ |
+| Configure, archive and restore a shared agent | ✓ | ✓ | — |
+| Share an agent or a skill with the workspace | ✓ | ✓ | — |
+| Grant connectors to agents, and choose which are [available to personal agents](/concepts/connectors#available-to-personal-agents) | ✓ | ✓ | — |
+| Approve or reject an agent's change request | ✓ | ✓ | — |
+| Delete a task | ✓ | ✓ | — |
+| Enter the admin area; invite people, resend and revoke invitations, remove people | ✓ | ✓ | — |
+| Change someone's role | ✓ | — | — |
+| See billing, invoices and usage | ✓ | — | — |
+
+Deleting a task also takes being the person who started it or a workspace
+owner — see [Tasks](/concepts/tasks#sharing-and-who-sees-a-task). Starting or
+configuring work also needs [paid access](/administration/usage#paid-access),
+whatever the role.
+
+<Aside type="note">
+  Seeing an agent, a task or a schedule is not a matter of role alone —
+  personal agents and private tasks are hidden from admins too. See
+  [Access and sharing](/administration/access).
+</Aside>
+
+## Inviting people
+
+**Invite someone** on **Users** opens **Invite members**.
+
+<Steps>
+
+1. **Add each person.** Type an email address and pick a **Role** —
+   **Admin** or **Member**. **+ Add more** adds a row; up to 50 people at a
+   time.
+
+2. **Or upload a file.** **Upload CSV** reads a spreadsheet export: a column
+   headed `email` (or just a list of addresses) and, optionally, a `role`
+   column. A blank or unknown role becomes **Member**, and the dialog says
+   which rows it skipped or changed and why.
+
+3. **Send.** **Send invites** creates the invitations and emails each person
+   a link.
+
+</Steps>
+
+The result is shown row by row:
+
+| Result | Meaning |
+|---|---|
+| **Sent** | The invitation exists and the email went out |
+| **Not emailed** | The invitation exists but the email was not delivered. Copy the link from **Invitations** and send it yourself |
+| **Already invited** | This address already has a pending invitation. Resend it from **Invitations** if they need a new link |
+| **Has an account** | The address already belongs to another AptiveAI enterprise, so it cannot be invited. Contact AptiveAI support to move it into yours |
+| **Not an address** | Not an email address |
+
+**Owner is never offered in an invitation.** An owner is appointed from an
+existing person's row — see [Changing a role](#changing-a-role).
+
+### Managing invitations
+
+Every invitation **expires after 7 days**. Its **Status** is **Pending**,
+**Accepted**, **Expired** or **Revoked**. On a pending invitation:
+
+- **Copy link** copies the accept link, to send it another way.
+- **Resend** emails it again with a fresh link and a new expiry. The old link
+  stops working.
+- **Revoke** stops the link working at once. The row stays in the list as the
+  record that they were invited.
+
+An expired or revoked invitation can be **Delete**d from the list. Its link
+already stopped working; you can always invite the person again.
+
+### What the invitee sees
+
+The email links to an invitation page: *… invited you to join … as a member*
+(or *an admin*). From there they **Sign in to accept** or **Create an account**.
+
+<Aside type="caution" title="Accept before opening the console">
+  The invitation page asks the invitee to use the address the invitation was
+  sent to, and to accept **before** opening AptiveAI Agents, so their account
+  joins your enterprise. Signed in with a different address, they see **Wrong
+  account** and can sign out and use the right one.
+</Aside>
+
+**Accept invitation** puts them in your enterprise with the role you chose.
+Opening the link again afterwards says *You have joined …*, with **Open
+AptiveAI Agents**. An invitation that has
+expired, been revoked or been resent shows *This invitation is not valid —
+ask the person who invited you to send a new invitation*.
+
+## Changing a role
+
+Owners change roles from the **Role** on a person's row in **People**. The
+rules:
+
+- Only an **owner** changes roles. An admin sees the role but cannot change it.
+- Nobody changes their **own** role.
+- Only an owner can change or remove another **owner**.
+- **The last owner cannot be demoted.** *This is the enterprise's last owner —
+  make someone else an owner first.*
+
+To hand the enterprise over, make the new person an owner first, then change
+your own role — or have them change it.
+
+## Removing someone
+
+Removing someone from their row in **People** asks *Remove … from this
+enterprise?* and, once confirmed:
+
+- deletes every access they held and takes them out of the enterprise — they
+  lose access on their next page load;
+- stops sharing your tasks and schedules with them;
+- **keeps** everything they created: tasks, agents and skills stay.
+
+Their AptiveAI account itself is not deleted. The same rules as for roles
+apply: owners and admins remove people, nobody removes themselves, only an
+owner removes an owner, and the last owner cannot be removed.
+
+A person who holds no access any more but is still attached to the enterprise
+shows **No access** in place of a role, so they can still be found and
+removed.
+
+## Someone signed up without an invitation
+
+Anyone can create an AptiveAI account, but only an invitation puts it in an
+enterprise. An account with none sees one page, wherever they go after signing
+in: **This account is not set up yet** — *If your company already uses
+AptiveAI Agents, ask your administrator to invite you.* Its one action is
+**Contact us**.
+
+To let them in, invite the address they signed up with. When they accept, the
+account joins your enterprise.
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Access and sharing" href="/administration/access" description="Workspaces, and who sees which agent, task and schedule." />
+  <LinkCard title="Usage and credit" href="/administration/usage" description="AI credit, what spends it, and billing." />
+  <LinkCard title="Agents" href="/concepts/agents" description="Personal and shared agents, and who may configure them." />
+  <LinkCard title="The admin area" href="/administration/overview" description="Who can enter, and what each role sees." />
+</CardGrid>

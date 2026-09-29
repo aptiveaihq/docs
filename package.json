@@ -6,8 +6,10 @@
   "packageManager": "pnpm@10.34.5",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "build": "node scripts/check-nav-drift.mjs && astro build",
+    "preview": "astro preview",
+    "check:nav": "node scripts/check-nav-drift.mjs",
+    "generate:nav-icons": "node scripts/generate-nav-icons.mjs"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.34",

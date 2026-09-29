@@ -1,0 +1,67 @@
+---
+// The mobile bottom bar. Its pinned tabs come from src/nav.mjs, the same tree
+// that builds the sidebar, the header nav and the search index — so a section
+// can no longer reach the desktop nav without also reaching the mobile menu.
+//
+// The MENU itself is no longer here. It used to be a slide-up sheet rendered as
+// a sibling of this bar; it is now the behind-the-body drawer in
+// MobileDrawer.astro (rendered before `.page` in PageFrame.astro, because that
+// layer has to sit UNDER the page card in DOM order). This bar only carries the
+// trigger — `data-cc-drawer-toggle`, which MobileDrawer's script owns.
+import { pinnedGroups, activeGroupLabel } from '../nav.mjs';
+import NavIcon from './NavIcon.astro';
+
+const currentPath = Astro.url.pathname;
+
+const pinnedItems = [
+  ...pinnedGroups(),
+  { key: 'Search', label: 'Search', href: '#', icon: 'search', action: 'search' },
+];
+
+// Match on group membership, not path prefix: /concepts/automation/ belongs to
+// AI Workforce even though it sits under /concepts/.
+const activeGroup = activeGroupLabel(currentPath);
+const isActive = (key: string) => key === activeGroup;
+---
+
+<nav class="bottom-nav" aria-label="Mobile navigation">
+  <button
+    class="bottom-nav-item"
+    type="button"
+    aria-label="Menu"
+    aria-expanded="false"
+    aria-controls="cc-mobile-drawer"
+    data-cc-drawer-toggle
+  >
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+    </svg>
+    <span>Menu</span>
+  </button>
+  {pinnedItems.map((item) => (
+    item.action === 'search' ? (
+      <button class="bottom-nav-item" type="button" aria-label="Search" data-bottom-nav-search>
+        <NavIcon name="search" />
+        <span>{item.label}</span>
+      </button>
+    ) : (
+      <a href={item.href} class:list={['bottom-nav-item', { active: isActive(item.key) }]}>
+        <NavIcon name={item.icon} />
+        <span>{item.label}</span>
+      </a>
+    )
+  ))}
+</nav>
+
+<script is:inline>
+  (function () {
+    var searchBtn = document.querySelector('[data-bottom-nav-search]');
+    if (!searchBtn) return;
+    searchBtn.addEventListener('click', function () {
+      // The palette is a fixed overlay inside the page card; opening it while
+      // the card is parked aside would render it scaled and out of reach.
+      if (window.__ccMobileDrawer) window.__ccMobileDrawer.close();
+      if (window.__openCommandPalette) window.__openCommandPalette();
+    });
+  })();
+</script>

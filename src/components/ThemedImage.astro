@@ -1,0 +1,391 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/**
+ * Theme-aware product screenshot, wrapped in a device frame.
+ *
+ * Renders the dark and light variant and shows the one matching the reader's
+ * selected docs theme — pure CSS keyed off Starlight's `data-theme` attribute
+ * on <html> (no JS, no flash on theme switch, follows the picker including
+ * "Auto"). `loading="lazy"` keeps the hidden variant cheap.
+ *
+ * Two frames:
+ *
+ *   browser (default) — a faux browser chrome (traffic lights + URL bar) to
+ *     match the portal's `app-screenshot` component. Copied from ClusterCode.
+ *   phone — an iPhone: titanium rim, black bezel, the Dynamic Island, a status
+ *     bar (9:41, signal, Wi-Fi, battery), a home indicator and the side
+ *     buttons. For a 390×844 capture. Authored here at the founder's request
+ *     (2026-09-29): neither ClusterCode nor the platform has a phone frame.
+ *
+ * The phone's status bar and home indicator sit in bands ABOVE and BELOW the
+ * screenshot rather than over it, so they never hide the console's own header
+ * or bottom bar. Each band is painted with the screenshot's own edge row (the
+ * image stretched until one row fills it), so it reads as one screen.
+ *
+ * Usage (inside .mdx):
+ *   import ThemedImage from '../../../components/ThemedImage.astro';
+ *   import formDark from '../../../assets/screenshots/build-from-container-form-dark.png';
+ *   import formLight from '../../../assets/screenshots/build-from-container-form-light.png';
+ *
+ *   <ThemedImage dark={formDark} light={formLight} alt="The From Container form" title="Create Image" />
+ *
+ *   Phones, two side by side on a wide screen and stacked on a narrow one:
+ *
+ *   <div class="phone-row">
+ *     <ThemedImage frame="phone" dark={aDark} light={aLight} alt="…" title="Bottom bar" />
+ *     <ThemedImage frame="phone" dark={bDark} light={bLight} alt="…" title="Side panel" />
+ *   </div>
+ */
+interface Props {
+  /** Image shown when the docs theme is dark. */
+  dark: ImageMetadata;
+  /** Image shown when the docs theme is light. */
+  light: ImageMetadata;
+  /** Required alt text — the text walkthrough stays canonical, but every
+   *  image must still describe itself. */
+  alt: string;
+  /** URL-bar text in the faux browser chrome (browser frame only). */
+  url?: string;
+  /** Browser frame: the page title on the right of the chrome bar (the
+   *  browser-tab name), mirroring the portal's `app-screenshot` component.
+   *  Phone frame: a caption under the phone. */
+  title?: string;
+  /** The device drawn around the screenshot. */
+  frame?: 'browser' | 'phone';
+}
+
+const { dark, light, alt, url = 'console.aptiveai.io', title, frame = 'browser' } = Astro.props;
+
+// The phone needs plain URLs: for its <img> srcset, and for the status-bar and
+// home-indicator bands, which are painted with the image itself.
+const phone =
+  frame === 'phone'
+    ? await Promise.all(
+        [dark, light].map((src) => getImage({ src, format: 'webp', widths: [600, 900, src.width] })),
+      )
+    : null;
+const phoneSizes = '(max-width: 360px) 100vw, 300px';
+---
+
+{frame === 'phone' && phone ? (
+  <figure class="themed-image themed-phone">
+    <div class="phone">
+      <span class="phone-button action" aria-hidden="true"></span>
+      <span class="phone-button volume-up" aria-hidden="true"></span>
+      <span class="phone-button volume-down" aria-hidden="true"></span>
+      <span class="phone-button side" aria-hidden="true"></span>
+      <div class="phone-body">
+        <div class="phone-screen">
+          <div
+            class="phone-band phone-status"
+            style={`--edge-dark: url(${phone[0].src}); --edge-light: url(${phone[1].src});`}
+            aria-hidden="true"
+          >
+            <span class="phone-time">9:41</span>
+            <span class="phone-island"></span>
+            <span class="phone-glyphs">
+              <svg viewBox="0 0 18 12" class="glyph-signal">
+                <rect x="0" y="8" width="3" height="4" rx="0.8" />
+                <rect x="5" y="5.5" width="3" height="6.5" rx="0.8" />
+                <rect x="10" y="3" width="3" height="9" rx="0.8" />
+                <rect x="15" y="0" width="3" height="12" rx="0.8" />
+              </svg>
+              <svg viewBox="0 0 16 12" class="glyph-wifi">
+                <path d="M8 2.2c2.4 0 4.6.9 6.3 2.5l1.2-1.3C13.5 1.4 10.9.4 8 .4S2.5 1.4.5 3.4l1.2 1.3C3.4 3.1 5.6 2.2 8 2.2Z" />
+                <path d="M8 5.8c1.4 0 2.7.5 3.7 1.4l1.2-1.3C11.6 4.7 9.9 4 8 4s-3.6.7-4.9 1.9l1.2 1.3c1-.9 2.3-1.4 3.7-1.4Z" />
+                <path d="M8 9.4c.5 0 1 .2 1.3.5L8 11.6 6.7 9.9c.3-.3.8-.5 1.3-.5Z" />
+              </svg>
+              <svg viewBox="0 0 27 13" class="glyph-battery">
+                <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" stroke-opacity="0.4" />
+                <rect x="2" y="2" width="20" height="9" rx="2" />
+                <path d="M25 4.5v4c.8-.3 1.4-1.1 1.4-2s-.6-1.7-1.4-2Z" fill-opacity="0.45" />
+              </svg>
+            </span>
+          </div>
+          <img
+            src={phone[0].src}
+            srcset={phone[0].srcSet.attribute}
+            sizes={phoneSizes}
+            width={dark.width}
+            height={dark.height}
+            alt={alt}
+            class="phone-shot themed-image-dark"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            src={phone[1].src}
+            srcset={phone[1].srcSet.attribute}
+            sizes={phoneSizes}
+            width={light.width}
+            height={light.height}
+            alt={alt}
+            class="phone-shot themed-image-light"
+            loading="lazy"
+            decoding="async"
+          />
+          <div
+            class="phone-band phone-home"
+            style={`--edge-dark: url(${phone[0].src}); --edge-light: url(${phone[1].src});`}
+            aria-hidden="true"
+          >
+            <span class="phone-home-indicator"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {title && <figcaption>{title}</figcaption>}
+  </figure>
+) : (
+  <figure class="themed-image">
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <span class="dot" style="background:#ff5f57"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#28ca41"></span>
+        <span class="url">{url}</span>
+        {title && <span class="title">{title}</span>}
+      </div>
+      <div class="browser-body">
+        <Image src={dark} alt={alt} class="themed-image-dark" loading="lazy" />
+        <Image src={light} alt={alt} class="themed-image-light" loading="lazy" />
+      </div>
+    </div>
+  </figure>
+)}
+
+<style>
+  .themed-image {
+    margin: 1.5rem 0;
+  }
+  .browser-frame {
+    border-radius: 0.6rem;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  }
+  /* Starlight's content auto-spacing (a 0-specificity :where() rule) adds a
+     top margin to flow elements, which lands on this div and opens a ~16px gap
+     between the chrome bar and the screenshot. Zero it so the image sits flush. */
+  .browser-body {
+    margin: 0;
+  }
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--sl-color-gray-6);
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+  .dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    flex: none;
+  }
+  .url {
+    margin-left: 0.5rem;
+    padding: 0.15rem 0.7rem;
+    border-radius: 0.35rem;
+    background: var(--sl-color-black);
+    color: var(--sl-color-gray-2);
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+  .title {
+    margin-left: auto;
+    color: var(--sl-color-gray-3);
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+    font-size: 0.7rem;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .browser-body :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+  :global([data-theme='light']) .themed-image-dark {
+    display: none;
+  }
+  :global([data-theme='dark']) .themed-image-light {
+    display: none;
+  }
+
+  /* ─────────────────────────────── phone ─────────────────────────────── */
+  /* Proportions follow an iPhone 15 Pro (393 pt wide): every length is a
+     share of the phone's own width (`cqw`), so the frame scales as one piece.
+     The rim takes the docs' own grays, so it follows the theme; the bezel and
+     the Dynamic Island are black in every theme, as on the device — the same
+     reason the browser frame's traffic lights are fixed colours. */
+  .themed-phone {
+    --phone-rim: linear-gradient(
+      135deg,
+      var(--sl-color-gray-3),
+      var(--sl-color-gray-2) 22%,
+      var(--sl-color-gray-3) 48%,
+      var(--sl-color-gray-2) 74%,
+      var(--sl-color-gray-3)
+    );
+    --phone-glass: #0b0b0d;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .phone {
+    container-type: inline-size;
+    position: relative;
+    width: min(100%, 300px);
+    /* Room for the side buttons, which stand proud of the rim. */
+    padding-inline: 4px;
+    box-sizing: border-box;
+  }
+  .phone-body {
+    margin: 0;
+    padding: 1.1cqw;
+    border-radius: 16.5cqw;
+    background: var(--phone-rim);
+    box-shadow:
+      0 18px 36px rgba(0, 0, 0, 0.22),
+      inset 0 0 0 0.35cqw rgba(255, 255, 255, 0.18);
+  }
+  .phone-screen {
+    container-type: inline-size;
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border: 3.2cqw solid var(--phone-glass);
+    border-radius: 15.2cqw;
+    background: var(--phone-glass);
+  }
+  .phone-screen > * {
+    margin: 0;
+  }
+  .phone-shot {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* The bands: the screenshot stretched until one row of it fills the band. */
+  .phone-band {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-image: var(--edge-dark);
+    background-repeat: no-repeat;
+    background-size: 100% 100000%;
+    color: var(--sl-color-white);
+  }
+  :global([data-theme='light']) .phone-band {
+    background-image: var(--edge-light);
+  }
+  .phone-status {
+    height: 13.7cqw;
+    background-position: top;
+    justify-content: space-between;
+    padding-inline: 8.5cqw 6.5cqw;
+    font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif;
+  }
+  .phone-home {
+    height: 7cqw;
+    background-position: bottom;
+    justify-content: center;
+  }
+  .phone-time {
+    font-size: 4.3cqw;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .phone-island {
+    position: absolute;
+    top: 2.8cqw;
+    left: 50%;
+    width: 32cqw;
+    height: 9.4cqw;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: var(--phone-glass);
+  }
+  .phone-glyphs {
+    display: flex;
+    align-items: center;
+    gap: 1.4cqw;
+  }
+  .phone-glyphs svg {
+    display: block;
+    height: 3cqw;
+    width: auto;
+    fill: currentColor;
+  }
+  .phone-glyphs .glyph-battery {
+    height: 3.3cqw;
+  }
+  .phone-home-indicator {
+    width: 34cqw;
+    height: 1.3cqw;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  /* Side buttons: the action button and the volume pair on the left, the side
+     button on the right. Placed as shares of the phone's height. */
+  .phone-button {
+    position: absolute;
+    width: 4px;
+    background: var(--phone-rim);
+    box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+  }
+  .phone-button.action,
+  .phone-button.volume-up,
+  .phone-button.volume-down {
+    left: 0.5px;
+    border-radius: 3px 0 0 3px;
+  }
+  .phone-button.action {
+    top: 15%;
+    height: 4.5%;
+  }
+  .phone-button.volume-up {
+    top: 22.5%;
+    height: 8%;
+  }
+  .phone-button.volume-down {
+    top: 32%;
+    height: 8%;
+  }
+  .phone-button.side {
+    right: 0.5px;
+    top: 25%;
+    height: 12%;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .themed-phone figcaption {
+    color: var(--sl-color-gray-3);
+    font-family: var(--sl-font-mono, ui-monospace, monospace);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  /* Two phones side by side where there is room, stacked where there is not. */
+  :global(.phone-row) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem 3rem;
+    margin: 1.5rem 0;
+  }
+  /* Starlight's content spacing would push every phone after the first down. */
+  :global(.phone-row > *) {
+    margin: 0 !important;
+    flex: 0 1 300px;
+  }
+</style>

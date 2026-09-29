@@ -117,7 +117,9 @@ const gradientId = `ap-swoosh-${variant}`;
   }
   .ap-logo__suffix {
     margin-left: 0.3em;
-    opacity: 0.62;
+    /* Brighter than the portal's 0.62: on the docs chrome the lockup is the
+       only brand on the page and read too faint there. */
+    opacity: 0.9;
   }
   /* Width/aspect-ratio pair guards against the SVG's default 300x150 box
      inflating the lockup during intrinsic sizing — see brand.css. */

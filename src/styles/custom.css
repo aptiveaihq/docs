@@ -1,14 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@100..800&display=swap');
 
-/* Brand + UI tokens below are hand-mirrored from the AptiveAI portal
-   (aptiveaihq/core: apps/portal/src/app/globals.css and brand.css). The
-   portal's UI palette is the VS Code–derived token table (`--bg`, `--surface`,
-   `--green`, `--blue`, …); its brand identity (navy, the two golds, the
-   Poppins wordmark) lives only in the logo lockup, exactly as in the portal.
-   Body/heading type is Inter, code and labels are JetBrains Mono. */
+/* Brand tokens below are hand-mirrored from the AptiveAI portal (aptiveaihq/core).
+   They are NOT auto-synced: the layout, type and chrome below are copied from
+   the ClusterCode docs (clustercodehq/docs src/styles/custom.css), and the
+   palette is the same VS Code–derived token table both portals share. */
 
 :root {
-  --sl-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sl-font: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
   --sl-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
   --sl-text-body-sm: 0.875rem;
   --sl-nav-height: 3rem;
@@ -19,13 +17,10 @@
   --docs-border2: #3c3c3c;
   --docs-surface: #252526;
   --docs-muted: #808080;
-  /* Black label on the brand-green CTA in both themes (portal MARKETING_CTA). */
-  --docs-cta-text: #000000;
 
-  /* Brand identity — same values in both themes (brand is not theme).
-     Mirrors apps/portal/src/app/brand.css + globals.css. The gold gradient
-     tokens are read by the Logo lockup's swoosh SVG and are NEVER a flat
-     fill; --brand-gold is the flat accent for badges and rules. */
+  /* AptiveAI brand identity — same values in both themes (brand is not
+     theme). Mirrors apps/portal/src/app/brand.css in aptiveaihq/core; read
+     by the Logo lockup's swoosh gradient, never used as a flat fill. */
   --brand-navy: #0d52b2;
   --brand-navy-shade: #0b3d92;
   --brand-gold-deep: #a37f41;
@@ -35,7 +30,12 @@
   --brand-gold: #d4a520;
 }
 
-/* Dark theme — matches the portal dark mode (globals.css `.dark`) */
+/* Splash/home page uses Inter for marketing feel */
+:root:has([data-has-hero]) {
+  --sl-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Dark theme — matches portal/orchestrator dark mode */
 :root[data-theme='dark'] {
   --sl-color-bg: #000000;
   --sl-color-bg-nav: #0a0a0b;
@@ -53,20 +53,22 @@
   --sl-color-accent-low: rgba(16, 192, 240, 0.1);
   --sl-color-accent: #10c0f0;
   --sl-color-accent-high: #a0e8ff;
-  --sl-color-text: #d4d4d4;
+  --sl-color-text: #cccccc;
   --sl-color-text-accent: #10c0f0;
   --docs-green: #10c0f0;
-  --docs-border2: #2c2c31;
+  --docs-border2: #232326;
   --docs-surface: #0a0a0b;
   --docs-muted: #808080;
-  /* Keyboard focus ring — the portal's dark accent blue (--blue). */
+  /* Keyboard focus ring — accent blue, matches core Button :focus-visible
+     (packages/ui/src/theme.css --accent-blue dark #569cd6). */
   --docs-focus-ring: #569cd6;
+  --signup-text: #000000;
 }
 
-/* Light theme — matches the portal light mode
+/* Light theme — matches portal/orchestrator light mode
    NOTE: Starlight uses --sl-color-white for headings (most prominent)
-   and --sl-color-black for backgrounds (least prominent); in light mode
-   these are inverted. */
+   and --sl-color-black for backgrounds (least prominent). In light mode
+   these are inverted: "white" = darkest text, "black" = lightest bg. */
 :root[data-theme='light'] {
   --sl-color-bg: #ffffff;
   --sl-color-bg-nav: #f3f3f3;
@@ -87,14 +89,18 @@
   --sl-color-text: #333333;
   --sl-color-text-accent: #0890b8;
   --docs-green: #0890b8;
-  --docs-border2: #b0b0b0;
+  --docs-border2: #cecece;
   --docs-surface: #ffffff;
   --docs-muted: #616161;
-  /* Keyboard focus ring — the portal's light accent blue (--blue). */
+  /* Keyboard focus ring — accent blue, matches core Button :focus-visible
+     (packages/ui/src/theme.css --accent-blue light #005fb8). */
   --docs-focus-ring: #005fb8;
+  /* Text on the brand-green primary CTA — black in BOTH themes, matching
+     portal MARKETING_CTA (`text-black`). #000 on #0890b8 is ~6.6:1 (AA). */
+  --signup-text: #000000;
 }
 
-/* Code blocks — match the portal code snippet styling */
+/* Code blocks — match portal code snippet styling */
 :root[data-theme='dark'] .expressive-code {
   --ec-codeBg: #0a0a0b;
   --ec-codeBorder: #2c2c31;
@@ -121,6 +127,16 @@
   --ec-frm-trmTtbBrdBtmCol: #cecece;
 }
 
+/* Terminal frame — colored macOS-style dots (red, yellow, green) */
+.expressive-code .frame.is-terminal .header::before {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  background-color: transparent !important;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2060%2016'%20preserveAspectRatio%3D'xMidYMid%20meet'%3E%3Ccircle%20cx%3D'8'%20cy%3D'8'%20r%3D'8'%20fill%3D'%23ff5f57'%2F%3E%3Ccircle%20cx%3D'30'%20cy%3D'8'%20r%3D'8'%20fill%3D'%23febc2e'%2F%3E%3Ccircle%20cx%3D'52'%20cy%3D'8'%20r%3D'8'%20fill%3D'%2328c840'%2F%3E%3C%2Fsvg%3E") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+}
+
 /* Starlight defaults to light; override to prefer dark */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
@@ -130,17 +146,26 @@
 
 /* ============================================================
    FOCUS STATES (a11y) — keyboard :focus-visible ring on custom
-   interactive controls, matching the core Button's ring.
+   interactive controls, matching core Button's ring
+   (packages/ui/src/theme.css: 2px accent-blue outline, offset 2px).
+   Keyboard-only (:focus-visible) so mouse clicks stay ring-free.
+   The accent-blue value is themed via --docs-focus-ring.
    ============================================================ */
+.sidebar-collapse-btn:focus-visible,
+.sidebar-footer-logo:focus-visible,
+.collapsed-icon-item:focus-visible,
+.collapsed-logo:focus-visible,
+.breadcrumb-link:focus-visible,
 .pagination-links a:focus-visible,
-.card a:focus-visible {
+.card a:focus-visible,
+.bottom-nav-item:focus-visible,
+.bottom-nav-menu-item:focus-visible {
   outline: 2px solid var(--docs-focus-ring);
   outline-offset: 2px;
-  border-radius: 0.25rem;
 }
 
 /* ============================================================
-   SCROLLBAR — matches the portal/console thin scrollbar
+   SCROLLBAR — matches portal/orchestrator thin scrollbar
    ============================================================ */
 * {
   scrollbar-width: thin;
@@ -170,18 +195,24 @@
 }
 
 /* ============================================================
-   HEADER — the custom Header.astro owns the visible bar; reset
-   Starlight's outer <header class="header"> wrapper around it.
+   HEADER — match portal nav (h-12, bg-secondary, border-bottom)
    ============================================================ */
 header.header {
-  background: var(--sl-color-bg-nav) !important;
-  border: none !important;
-  padding: 0 !important;
-  height: auto !important;
+  height: var(--sl-nav-height);
+  border-bottom: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-bg-nav);
+  padding-inline: var(--sl-nav-pad-x);
+}
+
+/* Logo area in header */
+.site-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  gap: 0.5rem;
 }
 
 /* ============================================================
-   SIDEBAR — match the portal sidebar (240px, same item heights)
+   SIDEBAR — match portal sidebar (240px, same item heights)
    ============================================================ */
 nav.sidebar {
   border-right: 1px solid var(--sl-color-hairline);
@@ -189,7 +220,7 @@ nav.sidebar {
   width: var(--sl-sidebar-width);
 }
 
-/* Sidebar nav items — match portal: text-sm, transition-colors */
+/* Sidebar nav items — match portal: text-sm, px-4, h-[48px], transition-colors */
 starlight-menu-button + nav a,
 nav.sidebar a {
   font-size: 0.875rem;
@@ -205,7 +236,7 @@ nav.sidebar a:focus {
   color: var(--sl-color-white);
 }
 
-/* Active sidebar item — text color + left accent bar, matching the portal */
+/* Active sidebar item — text color + left accent bar, matching portal */
 nav.sidebar a[aria-current='page'],
 nav.sidebar a[aria-current='page']:hover,
 nav.sidebar a[aria-current='page']:focus {
@@ -234,80 +265,128 @@ nav.sidebar li {
   border-inline-start: none !important;
 }
 
-/* Sidebar group labels — match portal: text-sm, regular weight */
+/* Sidebar content — remove Starlight's default padding/gap for flush items */
+nav.sidebar .sidebar-content {
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+nav.sidebar sl-sidebar-state-persist > ul > li {
+  margin-top: 0 !important;
+}
+
+/* Sidebar group labels — match portal: text-sm, font-weight 400, h-[48px], px-4 */
 nav.sidebar .group-label {
   font-size: 0.875rem;
   font-weight: 400;
   text-transform: none;
   letter-spacing: 0;
   color: var(--sl-color-gray-2);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+nav.sidebar .group-label .large {
+  color: inherit;
+  font-weight: inherit;
+}
+
+nav.sidebar details > summary {
+  padding: 0;
+  padding-right: 1rem;
+  border-radius: 0.25rem;
+}
+
+nav.sidebar details > summary:hover .group-label {
+  color: var(--sl-color-text);
+}
+
+nav.sidebar details > summary:hover {
+  background-color: var(--sl-color-hairline-light);
 }
 
 /* ============================================================
-   THEME TOGGLE — hide the default Starlight theme select (the
-   custom header carries its own toggle, like the portal ThemeMenu)
+   THEME TOGGLE — hide default Starlight theme select everywhere
    ============================================================ */
 starlight-theme-select {
   display: none !important;
 }
 
 /* ============================================================
-   SEARCH — style Starlight's Pagefind trigger like the portal's
-   command-palette box (bg-surface2, border-border2, mono, Ctrl+K)
+   SEARCH — match portal search trigger styling
    ============================================================ */
-site-search button[data-open-modal] {
+site-search button,
+starlight-search button {
   font-family: var(--sl-font-mono);
   font-size: 0.75rem;
   border-radius: 0.375rem;
-  height: 2rem;
-  padding-block: 0;
-  padding-inline: 0.625rem;
+  height: 2rem !important;
+  padding: 0.3125rem 0.625rem;
   transition: border-color 150ms ease, color 150ms ease;
 }
 
-:root[data-theme='dark'] site-search button[data-open-modal] {
-  background-color: #141416;
-  border: 1.25px solid #2c2c31;
-  color: #808080;
+:root[data-theme='dark'] site-search button,
+:root[data-theme='dark'] starlight-search button {
+  background-color: #141416 !important;
+  border: 1.25px solid #2c2c31 !important;
+  color: #808080 !important;
 }
 
-:root[data-theme='light'] site-search button[data-open-modal] {
-  background-color: #e8e8e8;
-  border: 1.25px solid #b0b0b0;
-  color: #616161;
+:root[data-theme='light'] site-search button,
+:root[data-theme='light'] starlight-search button {
+  background-color: #e8e8e8 !important;
+  border: 1.25px solid #b0b0b0 !important;
+  color: #616161 !important;
 }
 
-site-search button[data-open-modal]:hover {
-  border-color: var(--sl-color-accent);
-  color: var(--sl-color-text);
+site-search button:hover,
+starlight-search button:hover {
+  border-color: var(--sl-color-accent) !important;
+  color: var(--sl-color-text) !important;
 }
 
-/* Kbd badge inside the search button — match the portal */
-site-search button[data-open-modal] kbd {
-  font-family: var(--sl-font-mono);
-  font-size: 10px;
-  padding: 1px 4px;
-  border-radius: 3px;
+/* Kbd badge inside search button — match portal */
+site-search button kbd,
+starlight-search button kbd {
+  font-size: 10px !important;
+  padding: 1px 4px !important;
+  border-radius: 3px !important;
 }
 
-:root[data-theme='dark'] site-search button[data-open-modal] kbd {
-  background-color: #1c1c1f;
-  border: 1px solid #2c2c31;
-  color: #616161;
+:root[data-theme='dark'] site-search button kbd,
+:root[data-theme='dark'] starlight-search button kbd {
+  background-color: #1c1c1f !important;
+  border: 1px solid #2c2c31 !important;
+  color: #616161 !important;
 }
 
-:root[data-theme='light'] site-search button[data-open-modal] kbd {
-  background-color: #cecece;
-  border: 1px solid #b0b0b0;
-  color: #767676;
+:root[data-theme='light'] site-search button kbd,
+:root[data-theme='light'] starlight-search button kbd {
+  background-color: #cecece !important;
+  border: 1px solid #b0b0b0 !important;
+  color: #767676 !important;
 }
 
 /* ============================================================
-   CONTENT AREA
+   CONTENT AREA — match portal (px-6 py-10)
    ============================================================ */
 .content-panel {
   padding-inline: 1.5rem;
   padding-block: 2.5rem;
+}
+
+/* Hide page title panel — breadcrumb already shows the page name.
+   Exclude splash/hero pages where the title panel contains the hero. */
+:root:not([data-has-hero]) .content-panel:has(h1#_top) {
+  display: none;
+}
+
+/* Remove border-top left over from hidden title panel */
+:root:not([data-has-hero]) .content-panel:has(h1#_top) + .content-panel {
+  border-top: none;
 }
 
 /* Center content + TOC as a single unit in the viewport */
@@ -316,9 +395,36 @@ site-search button[data-open-modal] kbd {
   margin-inline: auto;
 }
 
+
+/* Page description — first paragraph styled as subtitle with separator */
+.sl-markdown-content > p:first-child {
+  color: var(--sl-color-gray-2);
+  font-size: 0.875rem;
+  line-height: 1.43;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--sl-color-hairline);
+}
+
 /* "On this page" sidebar — subtle left border on the TOC content */
 .right-sidebar {
   border-inline-start: none !important;
+}
+
+@media (max-width: 50rem) {
+  .right-sidebar,
+  starlight-toc {
+    display: none !important;
+  }
+}
+
+@media (max-width: 72rem) {
+  mobile-starlight-toc {
+    display: none !important;
+  }
+  .main-frame {
+    --sl-mobile-toc-height: 0rem !important;
+  }
 }
 
 starlight-toc nav {
@@ -326,9 +432,15 @@ starlight-toc nav {
   padding-inline-start: 1rem;
 }
 
+/* Card-style sections for content — match portal SectionCard */
+.sl-markdown-content > section,
+.sl-markdown-content > h2 + *,
+.sl-markdown-content > .tablist {
+  scroll-margin-top: 3rem;
+}
+
 /* ============================================================
-   GENERAL TYPOGRAPHY — Inter body (the portal's --font-sans),
-   JetBrains Mono for code
+   GENERAL TYPOGRAPHY
    ============================================================ */
 body {
   font-family: var(--sl-font);
@@ -359,12 +471,151 @@ a:not([class]):hover {
 }
 
 /* ============================================================
-   SPLASH / HOME PAGE — match the portal marketing hero styling
+   PAGINATION — side-by-side prev/next, compact styling
+   ============================================================ */
+.pagination-links {
+  display: flex !important;
+  /* Safety net only — with `flex: 1 1 0` below the pair no longer needs to
+     wrap. Kept so a future change to the basis can't reintroduce the sideways
+     page scroll a long title used to cause. */
+  flex-wrap: wrap !important;
+  justify-content: space-between !important;
+  gap: 0.75rem !important;
+  align-items: stretch !important;
+}
+
+.pagination-links a {
+  display: inline-flex !important;
+  /* Equal halves. Content-sized cards stacked once a title got long, which
+     read as broken; splitting the row 50/50 keeps them side by side and
+     aligned at every width, and the title clamps instead (see .link-title). */
+  flex: 1 1 0 !important;
+  width: auto !important;
+  max-width: 100% !important;
+  border-color: var(--sl-color-hairline) !important;
+  border-radius: 0.375rem !important;
+  padding: 0.4rem 0.75rem !important;
+  box-shadow: none !important;
+  min-width: 0 !important;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+/* A lone card (only /getting-started/introduction/, which has no Previous)
+   stays content-sized so it keeps its compact right-aligned treatment rather
+   than stretching across the full column. */
+.pagination-links a:only-child {
+  flex: 0 1 auto !important;
+}
+
+/* Let the clamp actually bite: without min-width:0 the flex item refuses to
+   shrink below its content's min-content width. */
+.pagination-links a > span {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Keep Next on the right even once it has wrapped onto its own row, and keep a
+   LONE Next (only /getting-started/introduction/) at the right edge too —
+   forward is always rightward, so the control doesn't jump left-then-right
+   across a reader's first two clicks. Matches Starlight's stock Pagination,
+   which end-justifies a next-only card's content. Logical property, so RTL
+   flips correctly. This rule also produces the left/right split in the wrapped
+   two-card state — don't remove it while adjusting anything else here. */
+.pagination-links a[rel='next'] {
+  margin-inline-start: auto !important;
+}
+
+.pagination-links a:hover {
+  border-color: var(--sl-color-accent) !important;
+  background-color: var(--sl-color-accent-low);
+}
+
+/* Clamp to two lines, then ellipsis. Two rather than one because at 390px a
+   half-width card fits ~18 characters on a line — "Session persistence" would
+   lose a character — where two lines fit ~36 and almost every title survives
+   whole. Truncation is then the exception, which matters because phones have
+   no hover to recover the hidden text; a `title` is added by the script in
+   PageFrame.astro only when a title is genuinely clamped. */
+.pagination-links .link-title {
+  font-size: 0.75rem !important;
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  /* Last-resort break so a single very long word can't reintroduce overflow. */
+  overflow-wrap: anywhere;
+}
+
+.pagination-links span {
+  font-size: 0.625rem;
+}
+
+.pagination-links svg {
+  width: 0.875rem !important;
+  height: 0.875rem !important;
+}
+
+/* ============================================================
+   FONT SIZE — match portal text-sm (14px/20px) baseline
+   ============================================================ */
+:root {
+  --sl-text-base: 0.875rem;
+  --sl-text-sm: 0.8125rem;
+  --sl-text-xs: 0.75rem;
+  --sl-text-2xl: 1.125rem;
+  --sl-text-3xl: 1.25rem;
+  --sl-text-4xl: 1.375rem;
+  --sl-text-5xl: 1.5rem;
+  --sl-line-height: 1.43;
+}
+
+.sl-markdown-content {
+  font-size: 0.875rem;
+  line-height: 1.43;
+  color: var(--sl-color-gray-2);
+}
+
+.sl-markdown-content h2 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--sl-color-text);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.sl-markdown-content h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sl-color-text);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sl-markdown-content h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sl-color-text);
+}
+
+/* ============================================================
+   SPLASH / HOME PAGE — match marketing portal hero styling
    ============================================================ */
 
-/* Home page — swap nav/body colors to match the portal home page.
-   Portal light: white nav surface on a #f3f3f3 ground. Docs defaults are
-   inverted, so override on splash pages. */
+/* Fix double header — Starlight wraps our custom Header in its own
+   <header class="header">. Reset the outer wrapper's chrome so
+   only our inner .header controls the visual layout. */
+header.header {
+  background: var(--sl-color-bg-nav) !important;
+  border: none !important;
+  padding: 0 !important;
+  height: auto !important;
+}
+
+/* Home page — swap nav/body colors to match portal home page.
+   Portal: white nav + gray body (light), #252526 nav + #1e1e1e body (dark).
+   Docs defaults are inverted, so override on splash pages. */
 :root[data-has-hero][data-theme='light'] {
   --sl-color-bg: #f3f3f3;
   --sl-color-bg-nav: #ffffff;
@@ -375,111 +626,87 @@ a:not([class]):hover {
   --sl-color-bg-nav: #0a0a0b;
 }
 
-/* Hero section — LEFT-justified inside the portal home's own container
-   (max-w-[1160px] px-10, hero pt-[140px]), mirroring ReachHero in
-   aptiveaihq/core apps/portal/src/client/home/reach-hero.tsx. */
+:root[data-has-hero] .header {
+  background: var(--sl-color-bg-nav) !important;
+}
+
+/* Home page login/signup — use Inter to match portal nav */
+:root[data-has-hero] .header-login,
+:root[data-has-hero] .header-signup {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Hero section — centered, constrained width like marketing portal */
 .hero {
-  text-align: left;
-  max-width: calc(1160px + 5rem);
+  text-align: center;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 7.5rem 2.5rem 2rem;
+  padding: 5rem 1.5rem 2rem;
   grid-template-columns: 1fr !important;
 }
 
 .hero .copy {
-  text-align: left !important;
-  align-items: flex-start !important;
+  text-align: center !important;
+  align-items: center !important;
 }
 
 .hero .actions {
-  justify-content: flex-start !important;
-  /* Portal: CTA row sits mt-[30px] under the subline. */
-  margin-top: 30px;
+  justify-content: center !important;
 }
 
-/* The portal hero's Eyebrow line (marketing-primitives.tsx: 11px mono,
-   uppercase, wide tracking, muted). */
-.hero .copy::before {
-  content: 'AptiveAI · Documentation';
-  font-family: var(--sl-font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--sl-color-gray-3);
-}
-
-/* Hero title — the portal's exact hero type ramp:
-   clamp(34px,4.2vw,56px), font-black, tracking -1.75px, leading 1.08. */
+/* Hero title — Inter font, gradient on "AptiveAI" */
 .hero h1 {
-  font-family: var(--sl-font);
-  font-size: clamp(34px, 4.2vw, 56px) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: clamp(34px, 4.2vw, 58px) !important;
   font-weight: 900 !important;
-  letter-spacing: -1.75px;
-  line-height: 1.08 !important;
+  letter-spacing: -0.03em;
+  line-height: 1.12 !important;
   color: var(--sl-color-text) !important;
-  margin-top: 18px;
-  margin-bottom: 12px;
+  margin-bottom: 1rem;
 }
 
-/* The accent phrase is INLINE, like the portal's
-   "Connect your business <em>to AI.</em>" */
 .hero-line1 {
-  display: inline;
+  display: block;
   color: var(--sl-color-text);
 }
 
-/* The brand name takes the portal's `.gradient-text` treatment — the same
-   cyan → blue drift the portal hero's accent phrase uses. */
 .hero-line2 {
-  display: inline;
-  background: linear-gradient(90deg, #10c0f0, #0080e0, #10c0f0);
-  background-size: 200% 100%;
+  display: block;
+  background: linear-gradient(90deg, #10c0f0, #0080e0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-drift 8s ease-in-out infinite alternate;
 }
 
-@keyframes gradient-drift {
-  from { background-position: 0% 50%; }
-  to { background-position: 100% 50%; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-line2 {
-    animation: none;
-  }
-}
-
-/* Hero tagline — the portal subline: 17.5px, leading 1.65, muted, 58ch. */
+/* Hero tagline — match marketing portal subheadline */
 .hero .tagline {
-  font-family: var(--sl-font);
-  font-size: 17.5px !important;
-  line-height: 1.65;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.0625rem !important;
+  line-height: 1.75;
   color: var(--sl-color-gray-2) !important;
-  max-width: 58ch;
-  margin: 0;
+  max-width: 520px;
+  margin: 0 auto 2rem;
 }
 
-/* Hero action buttons — the portal button canon:
-   • primary = brand-green fill, black label, bold, hover:opacity-85
+/* Hero action buttons — aligned to the portal button canon:
+   • primary = brand-green fill, black label, bold, hover:opacity-85 (transition-opacity 200ms)
      (portal MARKETING_CTA)
-   • secondary = bordered, hover flips border → brand green (OUTLINE_CTA) */
+   • secondary = bordered, hover flips border → brand green (transition-colors)
+   Square-corner radius (0.5rem) is kept intentionally — the docs brand uses
+   rounded-lg CTAs, not Starlight's default 999rem pill. */
 .sl-link-button {
-  /* Portal CTA_BOX: px-5 py-3 rounded-[9px] text-[14.5px]. */
-  border-radius: 9px !important;
-  font-family: var(--sl-font) !important;
-  font-size: 14.5px !important;
+  border-radius: 0.5rem !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
   font-weight: 700 !important;
-  padding: 12px 20px !important;
   transition: opacity 200ms ease, border-color 200ms ease !important;
 }
 
+/* Primary — opacity fade on hover (MARKETING_CTA). Scoped to .primary so the
+   bordered secondary uses a border-color hover instead, not an opacity fade. */
 .sl-link-button.primary {
   background: var(--sl-color-text-accent) !important;
   border-color: var(--sl-color-text-accent) !important;
-  color: var(--docs-cta-text) !important;
+  color: var(--signup-text) !important;
 }
 
 .sl-link-button.primary:hover {
@@ -493,18 +720,31 @@ a:not([class]):hover {
   color: var(--sl-color-text) !important;
 }
 
+/* Secondary — hover flips the border to brand green (transition-colors). */
 .sl-link-button.secondary:hover,
 .sl-link-button:not(.primary):not(.minimal):hover {
   border-color: var(--sl-color-accent) !important;
 }
 
-/* Cards on splash — the same container as the hero, so the grid's left edge
-   lines up with the left-justified copy (portal content bands share the
-   max-w-[1160px] px-10 container). */
+/* Cards on splash — match portal card styling */
 .card-grid {
-  max-width: calc(1160px + 5rem);
+  max-width: 864px;
   margin: 0 auto;
-  padding: 0 2.5rem 3rem;
+  padding: 0 1.5rem 3rem;
+}
+
+/* Section intro above the automation card grid: constrain it to the same width
+   and horizontal alignment as the cards (the grid is max-width:864px centered
+   with 1.5rem side padding), and add breathing room before the grid. Without
+   this the heading + paragraph span the full content column and overhang the
+   cards on both sides. */
+.automation-intro {
+  max-width: 864px;
+  margin: 0 auto;
+  padding: 0 1.5rem 1.5rem;
+}
+.automation-intro > :last-child {
+  margin-bottom: 0;
 }
 
 .card {
@@ -524,21 +764,776 @@ a:not([class]):hover {
 }
 
 .card .title {
-  font-family: var(--sl-font);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--sl-color-text) !important;
 }
 
 /* On the splash the cards sit over the AptiveBg wash — a translucent surface
    lets the halos glow through, the same way the portal's cards sit on it. */
 :root[data-has-hero][data-theme='dark'] .card {
-  background-color: rgba(10, 10, 11, 0.82) !important;
+  background-color: rgba(10, 10, 11, 0.72) !important;
 }
 :root[data-has-hero][data-theme='light'] .card {
-  background-color: rgba(255, 255, 255, 0.82) !important;
+  background-color: rgba(255, 255, 255, 0.72) !important;
 }
 
+/* Each splash card carries one "Page →" link; stretch it over the whole card
+   so the box itself is the click target, not only the link line. */
+:root[data-has-hero] .card-grid .card {
+  position: relative;
+}
+:root[data-has-hero] .card-grid .card a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* ============================================================
+   MOBILE — match portal responsive behavior
+   ============================================================ */
 @media (max-width: 50rem) {
   .hero {
     padding-top: 3rem;
   }
+
+  :not([data-has-hero]) .main-frame {
+    padding-bottom: 3.5rem;
+  }
+}
+
+/* ============================================================
+   BREADCRUMBS — portal-style slash-separated path in header
+   ============================================================ */
+.breadcrumbs {
+  display: none;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--sl-color-gray-2);
+  margin-inline-start: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+@media (min-width: 50rem) {
+  .breadcrumbs {
+    display: flex;
+  }
+}
+
+.breadcrumb-sep {
+  margin-inline: 0.375rem;
+  color: var(--sl-color-gray-2);
+  flex-shrink: 0;
+}
+
+.breadcrumb-link {
+  color: var(--sl-color-gray-2);
+  text-decoration: none;
+  transition: color 150ms ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.breadcrumb-link:hover {
+  color: var(--sl-color-text);
+  text-decoration: none;
+}
+
+.breadcrumb-current {
+  color: var(--sl-color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   SIDEBAR FOOTER — logo + collapse chevron at bottom
+   ============================================================ */
+.sidebar-footer {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.75rem 0.5rem;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  background: var(--sl-color-bg-sidebar);
+  z-index: 1;
+  min-height: 48px;
+}
+
+@media (min-width: 50rem) {
+  .sidebar-footer {
+    display: flex;
+  }
+}
+
+.sidebar-footer-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 !important;
+}
+
+/* The footer logo is now the live <Logo> lockup (mark + "AptiveAI Docs"),
+   which sizes itself via --ap-size. Do NOT force a fixed height on its inner
+   mark <img> — that would break the lockup's proportions. */
+.sidebar-footer-logo .ap-logo {
+  font-size: 20px;
+}
+
+.sidebar-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--sl-color-gray-2);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.sidebar-collapse-btn:hover {
+  color: var(--sl-color-text);
+  background-color: var(--sl-color-hairline-light);
+}
+
+/* ============================================================
+   COLLAPSED SIDEBAR STRIP — 48px icon-only sidebar (portal-style)
+   ============================================================ */
+.collapsed-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* No top padding or inter-item gap — match the shared app sidebar, whose
+     collapsed rail is a flush stack of 48px cells starting at the very top
+     (the first icon is level with the top of the rail, not inset). */
+}
+
+.collapsed-icon-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: transparent;
+  color: var(--sl-color-gray-2);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 150ms ease;
+  position: relative;
+}
+
+.collapsed-icon-item svg {
+  width: 22px;
+  height: 22px;
+}
+
+.collapsed-icon-item:hover {
+  color: var(--sl-color-text);
+}
+
+/* Active collapsed icon — match the portal/orchestrator shared sidebar (and the
+   expanded state above): the VSCode accent blue, NOT the docs cyan brand accent,
+   and a full-height 2px left bar with a 4px rounded-right edge (not a short
+   centered stub). Keeps the icon rail's active treatment identical across all
+   three apps. */
+.collapsed-icon-item.active {
+  color: #005fb8;
+}
+
+:root[data-theme='dark'] .collapsed-icon-item.active {
+  color: #569cd6;
+}
+
+.collapsed-icon-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: #005fb8;
+  border-radius: 0 4px 4px 0;
+}
+
+:root[data-theme='dark'] .collapsed-icon-item.active::before {
+  background: #569cd6;
+}
+
+.collapsed-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-top: auto;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0 0 0.5rem;
+}
+
+.collapsed-logo-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.collapsed-logo-chevron {
+  display: none;
+  color: var(--sl-color-gray-2);
+}
+
+.sidebar-collapsed-strip:hover .collapsed-logo-img {
+  display: none;
+}
+
+.sidebar-collapsed-strip:hover .collapsed-logo-chevron {
+  display: block;
+}
+
+.sidebar-collapsed-strip:hover .collapsed-logo {
+  color: var(--sl-color-gray-2);
+}
+
+.sidebar-collapsed-strip:hover .collapsed-logo:hover {
+  color: var(--sl-color-text);
+}
+
+/* ============================================================
+   SIDEBAR GROUP ICONS — generated from NAV_ICONS in src/nav.mjs
+   into src/styles/nav-icons.generated.css, which astro.config.mjs
+   loads after this file. Do not hand-write mask rules here: the
+   artwork has exactly one source now. See scripts/generate-nav-icons.mjs.
+   ============================================================ */
+
+/* ============================================================
+   BOTTOM NAV — mobile bottom navigation bar (portal-style)
+   ============================================================ */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3.5rem;
+  background: var(--sl-color-bg-nav);
+  border-top: 1px solid var(--sl-color-hairline);
+  z-index: var(--sl-z-index-navbar, 10);
+}
+
+@media (max-width: 50rem) {
+  :root:not([data-has-hero]) .bottom-nav {
+    display: flex;
+  }
+  :root:not([data-has-hero]) .search-trigger {
+    display: none;
+  }
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--sl-color-gray-2);
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 150ms ease;
+}
+
+.bottom-nav-item:hover {
+  color: var(--sl-color-text);
+  text-decoration: none;
+}
+
+/* Active = icon + text blue, no border (mobile pattern). */
+.bottom-nav-item.active {
+  color: #005fb8;
+}
+
+:root[data-theme='dark'] .bottom-nav-item.active {
+  color: #569cd6;
+}
+
+.bottom-nav-item svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ============================================================
+   MOBILE MENU — the "behind the body" drawer
+   ============================================================ */
+@media (max-width: 50rem) {
+  starlight-menu-button {
+    display: none !important;
+  }
+
+  .bottom-nav {
+    z-index: 9999 !important;
+  }
+
+  .breadcrumbs {
+    display: flex !important;
+  }
+
+  .breadcrumb-sep,
+  .breadcrumb-link {
+    display: none;
+  }
+
+  .breadcrumb-current {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+/* ── The drawer layer (MobileDrawer.astro) ───────────────────────────────
+   Exact port of the orchestrator's MobileDrawerLayer
+   (core/apps/orchestrator/src/client/layout/mobile-drawer.tsx): a full-screen
+   layer that never moves and only fades, rendered BEFORE `.page` so the app
+   card slides aside to reveal it.
+
+   Deliberately NO z-index — on either the layer or the card. Stacking is pure
+   DOM order: while the card is parked its transform makes it a positioned,
+   stacking-context box that paints after this one. Adding a z-index here was
+   the regression the React version documents; do not "fix" anything with one.
+
+   Stays in the DOM while closed (opacity 0) so the reveal is instant, and is
+   `visibility: hidden` + `inert` so its 58 links stay out of the tab order.
+   The visibility delay defers the hide until the fade has finished. */
+.cc-drawer-layer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* The card sliver occupies the right 18% of the viewport; without the
+     padding the drawer's right-edge controls render underneath it. */
+  padding-right: calc(18% + 8px);
+  background: var(--sl-color-bg-nav);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 300ms ease, visibility 0s linear 300ms;
+}
+
+.cc-drawer-layer[data-open] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 300ms ease, visibility 0s linear 0s;
+}
+
+/* The drawer is a mobile surface only — above the breakpoint the sidebar and
+   header nav are permanently visible and nothing can open it. */
+@media (min-width: 50rem) {
+  .cc-drawer-layer {
+    display: none;
+  }
+}
+
+/* The blanket reduced-motion net further down zeroes transition DURATIONS but
+   not delays, which would leave the layer visible for 300ms after a close. */
+@media (prefers-reduced-motion: reduce) {
+  .cc-drawer-layer,
+  .cc-drawer-layer[data-open] {
+    transition-delay: 0s !important;
+  }
+}
+
+.cc-drawer-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Top padding clears the notch on a phone; the right padding is the optical
+     correction the orchestrator's header uses — a small glyph in a 44px hit
+     target reads as sitting past the row line when it is flush with it. */
+  padding: max(env(safe-area-inset-top), 0.75rem) 0.375rem 0.75rem 1.25rem;
+}
+
+.cc-drawer-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--sl-color-gray-2);
+  cursor: pointer;
+  transition: color 100ms ease, background-color 100ms ease;
+}
+
+.cc-drawer-close:hover {
+  color: var(--sl-color-text);
+  background: var(--sl-color-hairline-light);
+}
+
+.cc-drawer-close:focus-visible {
+  outline: 2px solid var(--docs-focus-ring, #005fb8);
+  outline-offset: -2px;
+}
+
+.cc-drawer-close svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* The list scrolls inside the layer. The bottom padding clears the bottom bar,
+   which travels with the card and so overlaps the drawer's lower edge. */
+.cc-drawer-nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 5rem;
+  /* Transparent TRACK. The global `*` rule sets the track to --sl-color-bg,
+     an opaque fill, which paints a solid band down the drawer's edge because
+     the drawer's ground is --sl-color-bg-nav, not --sl-color-bg. Chrome
+     ignores ::-webkit-scrollbar-* once scrollbar-color is set, so the
+     standard property is the effective lever. */
+  scrollbar-color: var(--docs-border2) transparent;
+}
+.cc-drawer-nav::-webkit-scrollbar-track,
+.cc-drawer-nav::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* The bar's own height, published so surfaces that must sit ABOVE it (the
+   cookie banner) can reserve exactly that much and stay in sync if it
+   changes. Only set where the bar is actually displayed. */
+@media (max-width: 50rem) {
+  :root:not([data-has-hero]) {
+    --cc-bottom-nav-clearance: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* While the card is parked it becomes the scroll container AND (through its
+   transform) the containing block for its fixed children — so `bottom: 0`
+   resolves against the padding box and then scrolls away with the content:
+   at scrollTop 1083 the bar rendered at y = -150, off the top of the card.
+   Translating them back down by the captured offset re-pins them to the
+   card's visible bottom. The tap-catcher is absolute and needs the same
+   correction, or the parked card is only tappable near its top. */
+.page[data-cc-parked] > .bottom-nav,
+.page[data-cc-parked] > #cc-banner,
+.page[data-cc-parked] > .cc-card-catcher {
+  transform: translateY(var(--cc-parked-scroll, 0px));
+}
+
+/* ── The app card (`.page`, parked aside) ────────────────────────────────
+   `transition: transform` ONLY — transform is compositor-animatable, and
+   putting border-radius in the transition list forces a repaint of the whole
+   viewport-sized layer on every frame. The radius/outline/shadow snap in at
+   each end, masked by the motion.
+
+   `transform-origin: 0% 45%` with `translateX(82%)` puts the card's LEFT edge
+   at 82% of the viewport and shrinks it toward that edge, so exactly the
+   remaining 18% stays visible as a tappable sliver at any width — the same
+   geometry as the orchestrator's card.
+
+   While closed `.page` gets no position and no z-index, so it creates no
+   stacking context; only the transform does, and only while parked.
+
+   `position: fixed` while parked is the one deliberate divergence from the
+   React original: a docs page scrolls the DOCUMENT and can be many viewports
+   tall, so scaling it in place would pivot around 45% of the document and
+   produce a column rather than a card. Pinning it to the viewport (and handing
+   it the window's scroll offset via scrollTop — see MobileDrawer.astro) gives
+   the transform a viewport-sized box, which is what the orchestrator's shell
+   already is. `display: block` goes with it: `.right-col` is `flex: 1`, so in a
+   height-constrained flex column it would shrink to the viewport and the card
+   could never be scrolled to the position the reader was actually at. */
+@media (max-width: 50rem) {
+  .page {
+    transform-origin: 0% 45%;
+    transition: transform 300ms ease-out;
+  }
+
+  .page[data-cc-parked] {
+    display: block;
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    height: 100dvh;
+    /* `.page`'s resting `min-height: 100vh` would out-rank `height: 100dvh`
+       whenever the browser chrome is showing, pushing the card's rounded
+       bottom edge below the viewport. */
+    min-height: 0;
+    overflow: hidden;
+    background: var(--sl-color-bg);
+    border-radius: 1.5rem;
+    outline: 1px solid var(--sl-color-hairline);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.45);
+  }
+
+  .page[data-cc-aside] {
+    transform: translateX(82%) scale(0.9);
+  }
+
+  /* Full-surface tap-catcher over the parked card. z-index is scoped to the
+     card's own stacking context and outranks everything inside it (the bottom
+     bar is z-9999).
+
+     Deliberately UNTINTED, matching packages/ui's AppDrawerCard: the catcher
+     exists to make the parked page inert, not to dim it. A transparent box
+     still receives pointer events, so the blocking behaviour is unchanged. */
+  .page[data-cc-parked] .cc-card-catcher {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 10000;
+    cursor: pointer;
+  }
+}
+
+.cc-card-catcher {
+  display: none;
+}
+
+/* ============================================================
+   MOTION SYSTEM (issue #515 docs pass) — ported from core's
+   packages/ui/src/theme.css motion vocabulary. Durations: 150ms
+   exits/dialogs, 200ms theme cross-fade, 250ms entrances/collapse.
+   ============================================================ */
+
+/* Item 1 — theme toggle cross-fade. `flashThemeTransition` (Header.astro)
+   adds `.theme-transition` to <html> for ~240ms BEFORE flipping data-theme,
+   then removes it, so colors ease between themes instead of snapping — without
+   a permanent transition that would make every hover laggy. The `html` prefix
+   lifts specificity above utility color transitions. No-ops under reduced
+   motion (the helper never adds the class; the blanket gate below also guards). */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 200ms ease, color 200ms ease,
+    border-color 200ms ease, fill 200ms ease, stroke 200ms ease;
+}
+
+/* Item 3 — sidebar <details> section groups animate open/closed via the
+   grid-template-rows 0fr↔1fr trick (the one sanctioned non-transform collapse
+   — no height:auto thrash). A JS assist in Sidebar.astro wraps each group's
+   content in `.sl-collapse-anim` and keeps `<details open>` through the closing
+   animation so the content isn't UA-hidden mid-transition. */
+.sl-collapse-anim {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease-out;
+}
+.sl-collapse-anim[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+.sl-collapse-anim > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Item 7 — landing scroll-reveal. Below-the-fold splash cards fade + rise in
+   as they enter the viewport, staggered ~40ms each (delay set inline by JS).
+   Gated on `.cc-reveal-init`, which the reveal script adds synchronously only
+   when motion is allowed — so a no-JS or reduced-motion visitor sees the cards
+   immediately, never stuck hidden. */
+:root.cc-reveal-init .card-grid .card {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+:root.cc-reveal-init .card-grid .card.cc-shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Item 0 — reduced-motion safety net (ported verbatim from core). Collapses
+   every animation/transition to imperceptible when the OS asks for reduced
+   motion, auto-gating everything above. Placed last + !important so it wins. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto !important; }
+  :root.cc-reveal-init .card-grid .card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Menu rows read from --sl-color-gray-2, which holds exactly the portal's
+   --text-secondary (#616161 light / #808080 dark, packages/ui/src/theme.css) —
+   so the docs sheet and the product's bottom menu match by construction rather
+   than by two hand-kept hex values.
+   These were briefly hardcoded brighter to clear WCAG AA (the greys measure
+   ~3.4–4.1:1 here). That is a real shortfall, but it made the docs menu visibly
+   lighter than the same menu in the portal, so parity won. Raising it properly
+   means moving --text-secondary in core, which lifts every surface at once. */
+.bottom-nav-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  color: var(--sl-color-gray-2);
+  text-decoration: none;
+  transition: color 100ms ease, background-color 100ms ease;
+}
+
+.bottom-nav-menu-item:hover {
+  color: var(--sl-color-text);
+  text-decoration: none;
+}
+
+/* Active = icon + text blue, no border, no bg tint (mobile pattern). */
+.bottom-nav-menu-item.active {
+  color: #005fb8;
+  background: transparent;
+}
+
+:root[data-theme='dark'] .bottom-nav-menu-item.active {
+  color: #569cd6;
+}
+
+.bottom-nav-menu-item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ── Mobile menu accordion ──────────────────────────────────────────────
+   Sections expand in place rather than sending you to a section landing page
+   first. Built on <details>/<summary> so keyboard and no-JS both work; the
+   sidebar's grid-template-rows fold animation enhances it when JS is on.
+
+   The portal's shared BottomNav (packages/ui/.../bottom-nav.tsx) keeps its
+   menu flat because it has ~8 entries — this tree has 58, so the sections
+   collapse. Everything else follows that component's vocabulary: accent-blue
+   active with no fill or border, trailing chips flush-right. */
+
+.bn-group-row {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+/* Suppress the native disclosure triangle — the chevron replaces it. */
+.bn-group-row::-webkit-details-marker,
+.bn-group-row::marker {
+  display: none;
+  content: '';
+}
+
+.bn-group-label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.bn-chevron {
+  width: 14px !important;
+  height: 14px !important;
+  color: var(--sl-color-gray-3);
+  transition: transform 200ms ease;
+}
+
+.bn-group[open] > .bn-group-row .bn-chevron {
+  transform: rotate(90deg);
+}
+
+.bn-sublist {
+  list-style: none;
+  margin: 0;
+  /* No padding: the collapse animation sizes a `0fr` grid track, and `min-height:
+     0` on the child zeroes its content contribution but NOT its padding — 6px of
+     bottom padding here floored the closed track at 6px instead of 0. The rows'
+     own vertical padding already separates the list from the next section. */
+  padding: 0;
+}
+
+.bn-subitem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Indent aligns with the group label, i.e. past the 20px icon + 0.75rem gap.
+     Vertical padding is set for a ~40px row: these are the primary navigation
+     targets on mobile, and the denser 34px row was an easy one to fat-finger. */
+  padding: 0.625rem 1.25rem 0.625rem 3.25rem;
+  min-height: 2.5rem;
+  font-size: 0.8125rem;
+  /* One step dimmer than the section row above it — same relationship the
+     sidebar uses between a group label and its pages. */
+  color: var(--sl-color-gray-3);
+  text-decoration: none;
+  transition: color 100ms ease, background-color 100ms ease;
+}
+
+.bn-subitem:hover {
+  color: var(--sl-color-text);
+  text-decoration: none;
+}
+
+/* Active = text blue only, matching the portal's mobile rows. */
+.bn-subitem.current {
+  color: #005fb8;
+  font-weight: 600;
+}
+
+:root[data-theme='dark'] .bn-subitem.current {
+  color: #569cd6;
+}
+
+.bn-subitem-label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Chip sits flush-right like the shared component's `ml-auto` badge. */
+.bn-badge {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
+
+.bn-subitem:focus-visible,
+.bn-group-row:focus-visible {
+  outline: 2px solid var(--docs-focus-ring, #005fb8);
+  outline-offset: -2px;
+}
+
+/* "Barely there" Beta badge — mirrors the orchestrator/portal beta label:
+   teal text, no fill, no border, uppercase. Teal = --accent-teal
+   (#388a34 light / #4ec9b0 dark), mirrored from the portal. */
+.sl-badge.beta-badge,
+.beta-badge {
+  background-color: transparent;
+  border-color: transparent;
+  color: #388a34;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding-inline: 0.15em;
+}
+
+:root[data-theme='dark'] .sl-badge.beta-badge,
+:root[data-theme='dark'] .beta-badge {
+  color: #4ec9b0;
 }
