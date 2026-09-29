@@ -23,11 +23,15 @@ export default defineConfig({
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/orgs/aptiveaihq' },
       ],
-      // Header mirrors the AptiveAI portal's marketing nav (see
-      // src/components/Header.astro), the same way the ClusterCode docs
-      // header mirrors clustercode.io.
+      // The chrome is the ClusterCode docs' own (clustercodehq/docs): the same
+      // component overrides, copied, with only brand, URLs and nouns changed.
       components: {
         Header: './src/components/Header.astro',
+        ThemeSelect: './src/components/ThemeSelect.astro',
+        PageFrame: './src/components/PageFrame.astro',
+        Sidebar: './src/components/Sidebar.astro',
+        MobileMenuFooter: './src/components/MobileMenuFooter.astro',
+        MobileMenuToggle: './src/components/MobileMenuToggle.astro',
       },
       // nav-icons.generated.css is emitted from NAV_ICONS by
       // scripts/generate-nav-icons.mjs and loads after custom.css.

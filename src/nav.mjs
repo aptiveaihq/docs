@@ -65,6 +65,7 @@ export const nav = [
     icon: 'file',
     href: '/reference/settings/',
     collapsed: true,
+    primary: true,
     pinned: true,
     items: [
       { label: 'Settings', slug: 'reference/settings', desc: 'Every section of Settings' },
