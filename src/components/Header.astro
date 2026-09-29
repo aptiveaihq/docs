@@ -11,17 +11,19 @@
  */
 import Search from '@astrojs/starlight/components/Search.astro';
 import Logo from './Logo.astro';
+import { primaryNav, activeGroupLabel } from '../nav.mjs';
 
 const route = Astro.locals.starlightRoute;
 const isHomePage = !route?.entry?.slug || route.entry.slug === '';
 const pathname = Astro.url.pathname;
 
-// The docs' PRIMARY sections — the product-area groups, once they exist
-// (Connect, Agents, Connectors, Operations). ClusterCode's docs mark only
-// those `primary` in the header nav; "Getting Started" is deliberately not
-// one of them — it is reached via the hero's "Get Started →" and the
-// sidebar. Empty until the first product-area section ships.
-const navItems: { label: string; href: string; prefix: string }[] = [];
+// The docs' PRIMARY sections: the nav.mjs groups marked `primary`, as in
+// the ClusterCode docs header. "Getting Started" is deliberately not one of
+// them — it is reached via the hero's "Get Started →" and the sidebar. The
+// active link is decided by group membership (activeGroupLabel), not by a
+// path prefix.
+const navItems = primaryNav();
+const activeNav = activeGroupLabel(pathname);
 ---
 
 <div class:list={["header", "sl-flex", { "header-home": isHomePage }]}>
@@ -34,7 +36,7 @@ const navItems: { label: string; href: string; prefix: string }[] = [];
       {navItems.map((item) => (
         <a
           href={item.href}
-          class:list={["header-nav-link", { "header-nav-active": pathname.startsWith(item.prefix) }]}
+          class:list={["header-nav-link", { "header-nav-active": activeNav === item.key }]}
         >{item.label}</a>
       ))}
     </nav>
