@@ -1,10 +1,75 @@
 ---
-title: settings
-description: settings
+title: Settings
+description: Every section of the console's Settings page — plan and AI credit, personal sign-ins, appearance, notifications and version — plus where language, your account and your team are managed.
 ---
 
-This page is being written.
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Settings** holds your own preferences for the console — open it from the
+sidebar under **Configure**. Everything on it is **per person**: your sign-ins,
+your theme, the notifications you receive. The page is organised into the
+sections below, and the side navigation jumps between them.
+
+## Plan & credit
+
+Whether this account can start new work, and what it has left to spend.
+
+| Row | What it shows |
+|---|---|
+| **Status** | **Awaiting first payment**, **Trial**, **Active**, **Payment overdue** or **Cancelled** |
+| **AI credit left** | The credit the account can still spend on AI |
+| **Agents** | **Can start new work**, or the reason it cannot — such as *No AI credit is available* — with **Contact us** |
+
+Agents can start new work only while the status is **Active** or **Trial**
+*and* there is AI credit left — see [paid access](/concepts/agents#paid-access).
+An enterprise's owner sees links to **Billing** and **Usage** in Admin instead,
+where the plan, invoices and credit are.
+
+## Personal sign-ins
+
+Accounts your agents can sign in to while they work for you — your login to a
+supplier portal, a carrier's site, a web app your team uses. The password is
+stored encrypted and is never shown again, not to you and not to the agent.
+
+See [Personal sign-ins](/reference/settings/sign-ins) for how they are used.
+
+## Appearance
+
+Customize the look and feel of the console: pick one of its sixteen colour
+themes, or **System** to follow your device's light or dark setting.
+
+## Notifications
+
+Control which notifications you receive, and how: in the app, by email, and as
+desktop notifications on this device.
+
+See [Notification settings](/reference/settings/notifications) for each
+control.
+
+## About
+
+Application information: the running **Version** — click it to copy — handy
+when you report a problem, so we know exactly which build you are on.
+
+## Elsewhere
+
+A few things you might look for here live elsewhere:
+
+| What | Where |
+|---|---|
+| **Language** — English or Spanish | The account menu, under your avatar. Your choice follows you to any device you sign in on |
+| **Your account** | **Account** in the account menu |
+| **Your team** — members, invitations, roles and billing | **Admin**, for owners and admins |
+| An agent's own sign-ins | The agent's builder, under **Configure → Sign-ins** |
+
+<Aside type="note">
+  The **Configure** page in the sidebar gathers all of these in one place —
+  agents, connectors, skills, personal sign-ins, notifications, settings and
+  Admin — with a link to the docs for each one that has a page here.
+</Aside>
 
 ## Next
 
-- [Introduction](/getting-started/introduction) — what AptiveAI is.
+- [Personal sign-ins](/reference/settings/sign-ins) — your own accounts, for sites an agent opens.
+- [Notification settings](/reference/settings/notifications) — what reaches you, and where.
+- [Agents](/concepts/agents#paid-access) — what paid access allows.

@@ -1,10 +1,77 @@
 ---
-title: sign-ins
-description: sign-ins
+title: Personal sign-ins
+description: Save your own accounts so an agent can sign in to those sites for you, without the password ever reaching the agent — how a sign-in is stored, where it may be typed, and which one wins.
 ---
 
-This page is being written.
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A **personal sign-in** is one of your own accounts — a supplier portal, a
+carrier's site, a web app your team uses — saved so an agent can sign in to it
+while it works on **your** tasks, without asking you each time. The password is
+stored encrypted and is never shown again: not to you, and not to the agent.
+
+Find them in **Settings → Personal sign-ins**, or from the **Configure** page.
+
+## Adding a sign-in
+
+**Add a sign-in** opens the form:
+
+<Steps>
+
+1. **Name** — what the agent sees, such as *Amazon*. Up to 80 characters.
+
+2. **Sites** — the sites this sign-in may be typed into, one per line, `https`
+   only, up to ten. The agent may only type it into these exact sites.
+
+3. **User name** — shown here so you can tell your accounts apart. The agent
+   never sees it.
+
+4. **Password** — when editing, leave it empty to keep the saved one.
+
+</Steps>
+
+**Save sign-in** stores it. The list shows each sign-in's **Name**, **Sites**,
+**Account** and when it was **Last used**, with **Edit** and **Delete**.
+Deleting one means agents that were using it have to ask you to sign in
+instead.
+
+<Aside type="caution" title="Codes cannot be saved.">
+  A one-time code, an authenticator app or a recovery phrase cannot be stored
+  as a sign-in. When a site asks for one, the agent asks you: enter it
+  yourself on the task's [live view](/concepts/tasks#the-live-view), or send it
+  in the conversation — typing a code you sent needs your approval, and it is
+  then hidden from the task's history.
+</Aside>
+
+## How a sign-in is used
+
+The panel **How sign-ins are used** on the page spells it out; in short:
+
+| | |
+|---|---|
+| **Stored** | Encrypted, and never returned by the console to anyone |
+| **What the agent sees** | The sign-in's name, its sites and an id — never the user name or the password |
+| **Where it can go** | Only into a field on one of its exact `https` sites, and a password only into a password box. The console checks both before typing |
+| **What the agent is told** | That the field was filled — never the value. Text on the page that would show it is hidden from the agent. Screenshots are not |
+| **Submitting** | Filling a sign-in never submits the form by itself |
+| **The browser** | The agent's browser does not save passwords |
+| **Changes** | Adding, changing and deleting a sign-in is recorded |
+
+If no saved sign-in matches the site in front of it, or more than one could,
+the agent asks you what to do.
+
+## Yours and the agent's
+
+An [agent](/concepts/agents#sign-ins) can hold sign-ins of its own, set in its
+builder. On a task, the agent can use **its own** sign-ins and **those of the
+person who started the task**. When both have a sign-in with the same name,
+**yours is used** and the agent's is not.
+
+Signing in with a sign-in puts the task's browser in as that account, and the
+session carries into your later tasks on the same browser.
 
 ## Next
 
-- [Introduction](/getting-started/introduction) — what AptiveAI is.
+- [Settings](/reference/settings) — every section of the page.
+- [Tasks](/concepts/tasks#the-live-view) — the live view, where you finish a sign-in yourself.
+- [Agents](/concepts/agents#sign-ins) — an agent's own sign-ins.

@@ -1,10 +1,173 @@
 ---
-title: schedules
-description: schedules
+title: Schedules
+description: A schedule starts a task on its own at the times you set — a morning report, a weekly check. Cadence, approval mode, gates, skipped firings, and who sees and changes a schedule.
 ---
 
-This page is being written.
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A **schedule** starts a [task](/concepts/tasks) on its own at the times you
+set — sweep the invoices every weekday at 7am, check a supplier portal every
+hour, send a summary on Monday mornings. Each time it **fires**, a new task
+starts on a computer in your workspace, works to the end, and appears in the
+schedule's history like any other task.
+
+Open **Schedules** from the sidebar. You can also ask an agent to set one up
+for you in a task — see [From a conversation](#from-a-conversation).
+
+## How it works
+
+```
+Cadence reaches its next time (e.g. weekdays at 7am, Europe/Madrid)
+  → Gates checked: business hours, anything to process, AI credit
+    → A task starts: the agent's instructions, then the schedule's
+      → The agent works on its own computer until it is done
+        → The firing lands in the schedule's History
+```
+
+If a check fails, the firing is **skipped** instead, with a reason, and the
+schedule simply waits for its next time — see [Skipped firings](#skipped-firings).
+
+## Creating a schedule
+
+From the **Schedules** page, **New schedule** opens the form:
+
+<Steps>
+
+1. **Name** — what the schedule is called, such as *Morning invoice sweep*.
+
+2. **Agent** — which [agent](/concepts/agents) does the work, or
+   **No agent — free-form**. With an agent, its instructions come first and
+   the schedule's instruction follows. Only active agents fire: a draft, paused
+   or archived agent is shown as such in the list. The agent cannot be changed
+   later — create a second schedule instead.
+
+3. **What it does each time** — the instruction for every firing. Optional
+   with an agent; required without one.
+
+4. **When it needs your approval** — **Autonomous** (the default) runs to the
+   end without asking anyone. **Interactive** stops and waits for you before
+   sending, deleting, buying or submitting.
+
+5. **Cadence** — **Hourly**, **Daily**, **Weekdays**, **Weekly** or
+   **Custom cron**. New schedules start as Daily at 09:00. A custom cron has
+   five fields (e.g. `0 9 * * 1-5`); anything more often than once a minute is
+   refused. A preview shows the next time it will fire.
+
+6. **Timezone** — stored on the schedule, so a 7am schedule means 7am where
+   the work is, whoever edits it later.
+
+7. **Gates** — optional checks before each firing (below).
+
+</Steps>
+
+You never choose a computer or what it is built from. Each firing gets a
+computer in your workspace, chosen when it fires.
+
+<Aside type="caution" title="Autonomous means nobody is asked.">
+  An autonomous schedule approves every action for you — including ones that
+  cannot be undone, and writes to your [connectors](/concepts/connectors) —
+  at your own risk. Choose **Interactive** when the work should wait for a
+  person before it sends, deletes, buys or submits; the waiting task then
+  reaches you in the [Inbox](/concepts/inbox).
+</Aside>
+
+### Gates
+
+| Gate | What it does |
+|---|---|
+| **Skip when there is nothing to process** | Looks first — in the place you describe under **Where to look**, such as *unpaid invoices older than 30 days* — and skips the firing if there is nothing to do |
+| **Only fire during business hours** | Skips firings outside **From** – **Until** on the days you pick. Defaults to 09:00–17:00, Monday to Friday |
+| **Pause after repeated failures** | Pauses the schedule after a number of **Consecutive failures** in a row (5 by default, 1–100) |
+
+## The Schedules page
+
+The top of the page counts **Total**, **Enabled**, **Running** and
+**Failed (24h)** schedules, and shows when the **Next task** starts. Below it,
+two views:
+
+- **List view** — schedules grouped by agent, each with its **Status**,
+  **Cadence**, **Next** time and which computer it uses. The default, and the only view
+  on a narrow screen.
+- **Timeline view** — every schedule as a lane, with past and upcoming firings
+  along it, over **12h**, **24h**, **3d**, **7d** or **15d**. Click a firing to
+  open its task, answer it, open its live view or edit the schedule.
+
+The view you pick is remembered in this browser.
+
+Each schedule's menu offers **Run now**, **Pause** / **Resume**, **Edit** and
+**Delete** to the people who may change it. **Run now** fires immediately,
+through the same gates as a timed firing, without moving the next scheduled
+time; a paused schedule must be resumed first. **Delete** removes the schedule
+and its whole history, and cannot be undone.
+
+### A schedule's page
+
+Opening a schedule shows its **Cadence** card (agent, mode, state, cron,
+timezone, next and last firing), **What it does each time**, its **Gates**,
+and its **History**: every firing with when it **Started**, its **Outcome**,
+how long it **Took** and any detail such as a skip reason. Open a firing to see
+what it was asked to do at the time, its transcript and its documents.
+
+## Skipped firings
+
+A firing that cannot or should not go ahead is recorded as **Skipped**, with a
+reason, before any work starts. The common ones:
+
+| Reason | What happened |
+|---|---|
+| **Agent busy** | The agent was already working on another task. An agent works on one task at a time |
+| **Previous run active** | This schedule's previous firing was still working |
+| **Nothing to process** | The *nothing to process* gate found nothing to do |
+| **Outside business hours** | The business-hours gate was closed |
+| **Could not check for work** | The *nothing to process* gate could not look |
+| **Paused after failures** | The schedule paused itself after repeated failures |
+| **Agent not active** | The agent is a draft, paused or archived |
+| **No AI credit** | The account has no AI credit to spend. It fires again on its next time once credit is added |
+| **Missed window** | The firing's time had already passed |
+
+A skip never piles up work for later: when credit returns or the agent frees
+up, the schedule carries on from its **next** time, without replaying the
+firings it missed.
+
+**Agent busy**, **Previous run active** and **Nothing to process** are quiet —
+they are expected, and send no notification. Every other skip sends one
+notification per schedule to the people who can see it.
+
+<Aside type="note">
+  When an agent in a task fires one of its *own* schedules, that firing is not
+  skipped as busy: it waits and starts as soon as the agent's current reply
+  ends.
+</Aside>
+
+## Who sees a schedule
+
+Schedules are private to the people involved:
+
+| Person | Sees it | May edit, pause, **Run now** or delete it |
+|---|---|---|
+| The person who created it | Yes | Yes |
+| People it was shared with | Yes, and they take part in every task it starts | No |
+| Workspace owners | Yes — owners see every schedule | Yes |
+| Anyone else, including admins | No | No |
+
+**Share** on a schedule's page adds people; each one is told with a
+notification. The schedule's link opens only for people with access. Anyone
+who can see a schedule also sees the tasks it starts.
+
+## From a conversation
+
+You can ask an agent in any task to list, create, change, pause, resume, fire or
+delete a schedule — *"check the supplier portal every weekday at 8"*. It uses
+the built-in `schedules` [skill](/concepts/skills#built-in-skills), and every
+change stops on an approval card first — *The agent wants to create a schedule
+"…". Allow it?* — showing when it will fire and the next time. The change is
+made as you, the person who started the task, under the same rules as the
+Schedules page. A task a schedule started can never change schedules itself.
 
 ## Next
 
-- [Introduction](/getting-started/introduction) — what AptiveAI is.
+<CardGrid>
+  <LinkCard title="Tasks" href="/concepts/tasks" description="What every firing becomes." />
+  <LinkCard title="Agents" href="/concepts/agents" description="The instructions a scheduled task follows." />
+  <LinkCard title="Inbox" href="/concepts/inbox" description="Where skips and waiting tasks reach you." />
+</CardGrid>

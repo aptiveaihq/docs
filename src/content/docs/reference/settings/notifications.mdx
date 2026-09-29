@@ -1,10 +1,57 @@
 ---
-title: notifications
-description: notifications
+title: Notification settings
+description: Choose which notifications reach you, and where — in the app, by email, and as desktop notifications on this device.
 ---
 
-This page is being written.
+import { Aside } from '@astrojs/starlight/components';
+
+**Settings → Notifications** decides which of the [Inbox's](/concepts/inbox)
+notifications reach you, and where. It has two cards. Both are yours alone —
+nobody else's notifications change.
+
+## Background alerts
+
+A desktop notification when something needs you while the console's tab is in
+the background.
+
+- **Desktop notifications** — turns them on or off. This setting is **per
+  device**: turn it on in each browser where you want it.
+- **Send test notification** — checks that your browser actually shows one.
+
+If your browser has blocked notifications for the console, the card says so
+and how to allow them. Browsers that cannot show them — iOS among them — get an
+explanation instead of the switch.
+
+## What you are told about
+
+One row per kind of notification, each with two settings, **On** or **Off**:
+
+| Setting | Where it reaches you |
+|---|---|
+| **In the app** | The bell, the Inbox page and — when turned on above — desktop notifications |
+| **Email** | Your account's email address |
+
+The kinds, and what triggers each, are listed on the
+[Inbox](/concepts/inbox#what-you-are-told-about) page. Out of the box everything
+is on in the app, and email is on only for messages and shares addressed to you
+and for the account's billing notices.
+
+**A task is waiting on an answer** cannot be turned off in the app — it is
+*always shown*, because a task that has stopped to ask you something has no
+other way to say so. Its email setting is yours to change.
+
+Every email carries an unsubscribe link that turns this same setting off.
+
+### Saving
+
+Changes take effect when you press **Save preferences**; until then the card
+shows **Unsaved changes**. After saving, the card shows what was stored.
+
+<Aside type="note">
+  Emails are sent in English, whatever language the console is set to.
+</Aside>
 
 ## Next
 
-- [Introduction](/getting-started/introduction) — what AptiveAI is.
+- [Inbox](/concepts/inbox) — every kind of notification, and answering from one.
+- [Settings](/reference/settings) — every section of the page.

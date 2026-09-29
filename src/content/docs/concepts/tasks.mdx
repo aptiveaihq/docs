@@ -1,10 +1,212 @@
 ---
-title: tasks
-description: tasks
+title: Tasks
+description: A task is one piece of work, from the message that starts it to the result — with a transcript, a composer to steer it, approvals and questions, a live view of the agent's computer, documents, sharing, and the Tasks list.
 ---
 
-This page is being written.
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A **task** is one piece of work: *"reconcile this week's supplier invoices"*,
+*"find out why order 4471 has not shipped"*. You start it with a message, an
+[agent](/concepts/agents) works on it — on a computer of its own, with the
+[connectors](/concepts/connectors) it has been granted — and the task keeps
+everything that happened: the conversation, every step the agent took, the
+questions it asked, the files it wrote and what it cost.
+
+A task can also be started by a [schedule](/concepts/schedules). Either way,
+it lives at its own page, `/tasks/<id>`, and in the [Tasks list](#the-tasks-list).
+
+## Starting a task
+
+**New task**, the first row of the sidebar, is where work starts.
+
+<Steps>
+
+1. **Pick an agent.** Click one under **Your agents**, or type `@` or `/` in
+   the composer and choose it. The page becomes *You're working with …*, with
+   the agent's purpose and its conversation starters. A pinned agent in the
+   sidebar opens this page directly.
+
+2. **Say what you need.** Type your message, or click a conversation starter
+   to send its message straight away. Type `/` to add a
+   [skill](/concepts/skills). Attach files with **Attach a file** or by
+   dropping them on the page — up to 20 files of 25 MB each; images can be
+   marked up with **Annotate** first.
+
+3. **Send.** The task starts and you land on its page.
+
+</Steps>
+
+Sending with **no agent** gets you a plain answer instead — no computer and no
+access to your systems. That task is shown as **Answer directly**, and you can
+still hand it to an agent later with **Choose an agent**.
+
+<Aside type="note">
+  An agent works on [one task at a time](/concepts/agents#one-task-at-a-time-per-agent).
+  If it is already busy, the composer says so before you send, with a link to
+  the task it is working on.
+</Aside>
+
+## The task page
+
+### The transcript
+
+The conversation, top to bottom: your messages and their attachments, the
+agent's replies, and each step it took in plain words — *Opening …*,
+*Clicking …*, *Titled the task: …*. Consecutive steps fold into one line such
+as **12 steps**; open the fold to read them. A fold says on its closed line
+when something **didn't work** or is still **working…**.
+
+### Steering it
+
+While the agent works, the composer stays open: *Steer this task, or @ another
+agent to help…*. A message you send reaches the agent at its next step. Type
+`@` to **Bring in an agent** to help; on a task with no agent, **Choose an
+agent** hands the whole task to one.
+
+To stop, use the button in the send slot — **Interrupt this task** pauses it
+where it is (*Send another message to carry on*). From the keyboard, **Esc**
+then **Enter** interrupts. **End task** in the header stops it for good and releases
+its computer; anything it already did in your systems stays done.
+
+A task that has completed, failed, been stopped or paused picks up again when
+you send it another message.
+
+### Questions and approvals
+
+When the agent needs you, the task stops and a card takes the composer's place.
+
+- **A question** — the agent asks something only you can answer, sometimes
+  with choices. Answer it and the task carries on.
+- **An approval** — the agent is about to do something that cannot be undone:
+  send a message, submit a form, delete, spend money, or write to one of your
+  systems. The card says exactly what, and you choose:
+
+| Button | Effect |
+|---|---|
+| **Approve** | Run this action once, then carry on |
+| **Approve all** | Run this and stop asking for the rest of this task |
+| **Decline** | Skip this action and tell the agent why — there is a box for what to do instead |
+
+A task waiting on you shows as **Needs you**, and reaches you in the
+[Inbox](/concepts/inbox), where you can answer it without opening the task.
+
+<Aside type="caution" title="Sending the agent a password or code">
+  An agent types a password or one-time code only if **you sent it** in the
+  conversation, and only after an approval card for that. Once typed, the value
+  is removed from the task's history — the transcript shows it as hidden. An
+  unanswered card for a code expires after an hour. Values shorter than six
+  characters are not hidden. For accounts you use often, save a
+  [personal sign-in](/reference/settings/sign-ins) instead.
+</Aside>
+
+## The live view
+
+The **live view** is the agent's computer, live: its real screen, as the agent
+clicks and types. It opens by itself in the side panel the first time the
+agent uses the screen, and **Full screen** gives it the whole page.
+
+You can use the computer yourself through it — type a one-time code, finish a
+sign-in, show the agent where something is — and a composer over the screen
+(**Show chat** / **Hide chat**) lets you talk to the agent while you watch.
+**Show what the agent is doing** opens a commentary of its steps as it goes.
+
+The live view is yours to open and close; the agent cannot open or close it.
+When the agent tells you what its computer is doing, it has just checked
+rather than assumed. After a task ends, its computer is kept for five minutes — so the
+next task starts faster and the screen is still there — and then released.
+
+## The side panel
+
+Three tabs beside the transcript, which can sit to the right or below
+(**Layout**), be resized or be collapsed:
+
+- **Live view** — see above.
+- **Details** — a **Summary** once there is one; the **Computers** the task
+  used; the **Tools** it had, and any granted tools it could not use; and
+  **Task details**: status, the instruction, the agent, duration, what it cost
+  (such as *$0.004 AI · 3 min on a computer*) and, under **More details**, the
+  model and when it started and finished.
+- **Documents** — every file attached to the task, and everything the task
+  wrote down.
+
+## Names
+
+A task is named from its first message until, after its first reply, it gets
+a short title of its own. An agent can also title a task when its instructions
+say how. Click the title to rename it; a name a person types always wins, and
+clearing it brings the automatic title back.
+
+## Sharing and who sees a task
+
+A task is private to the people involved in it:
+
+| Who | Sees and takes part | Deletes it, changes who has access |
+|---|:---:|:---:|
+| The person who started it | ✓ | ✓ |
+| People it was shared with | ✓ | — |
+| People who can see the schedule that started it | ✓ | — |
+| Workspace owners, when the task has an agent | ✓ | ✓ |
+| Anyone else, including admins | — | — |
+
+A task with no agent is never an owner's to see. Everyone who can see a task
+takes part in it: they read it, watch its live view, send messages, answer its
+questions and stop it.
+
+**Share** in the task's header adds people from your workspace; each is told
+with a notification. **Copy link** gives a short `/s/…` address to the task —
+the link only points the way, and only people with access can open it.
+
+**Delete task** removes the task, its transcript and its documents, and cannot
+be undone. It takes an owner or admin who is also the person who started the
+task or a workspace owner, and a task that is still working cannot be
+deleted.
+
+## The Tasks list
+
+**Tasks** (under **Work**) lists every task you can see: its **Task** name with
+its summary or the question it is waiting on, the **Agent**, **Status**,
+**Started** and **Duration**. Tasks waiting on you are gathered in a
+**Needs you** band at the top, whatever the filters. Tasks started by the same
+schedule fold into one row you can open.
+
+Filter by **Status**, **When** (today, 7 days, 30 days) and **Agent**, or type
+in the search box to match names, summaries, instructions and more. The list
+refreshes by itself.
+
+### Statuses
+
+| Status | Meaning |
+|---|---|
+| **Running** | The agent is working on it |
+| **Needs you** | Waiting on your answer or approval |
+| **Paused** | The agent has replied, or was interrupted, and is waiting for your next message |
+| **Completed** | Done |
+| **Failed** | Something went wrong; the transcript says what |
+| **Stopped** | Ended on purpose — by a person, or because an approval expired — with the reason recorded |
+
+Older tasks may also show **Incomplete**, **Skipped** or **Expired**, statuses
+that newer tasks record as **Stopped** with a reason.
+
+### The Activity panel
+
+**Activity** in the sidebar opens your tasks as a panel beside whatever page
+you are on. **Group by** **Agent** gives every agent you can start a task with
+a group of its own — with a **+** to start a new task with it — while **Status**
+groups them by status, and **None** (the default) shows one list. Tasks waiting
+on you come first. **Pin to the top** keeps a task at the head of the panel for
+everyone in the workspace.
+
+## Paid access
+
+Starting or restarting a task needs [paid access](/concepts/agents#paid-access).
+Without it the console says why — for example *No AI credit is available* —
+while tasks already under way can still be read, steered, answered and
+stopped. A task is never stopped halfway because credit ran out.
 
 ## Next
 
-- [Introduction](/getting-started/introduction) — what AptiveAI is.
+<CardGrid>
+  <LinkCard title="Agents" href="/concepts/agents" description="Who works on a task, and how it is set up." />
+  <LinkCard title="Inbox" href="/concepts/inbox" description="Where a task that needs you reaches you." />
+  <LinkCard title="Schedules" href="/concepts/schedules" description="Start tasks on a cadence." />
+</CardGrid>
