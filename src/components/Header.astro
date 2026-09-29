@@ -100,7 +100,7 @@ const activeNav = activeGroupLabel(pathname);
       </button>
     </docs-theme-toggle>
     <a href="https://aptiveai.io/login" class="header-login">Log in</a>
-    <a href="https://aptiveai.io/contact" class="header-signup">Book a demo →</a>
+    <a href="https://aptiveai.io/contact" class="header-signup"><span class="cta-long">Book a demo →</span><span class="cta-short">Demo →</span></a>
   </div>
 </div>
 
@@ -437,6 +437,20 @@ const activeNav = activeGroupLabel(pathname);
   @media (max-width: 359px) {
     .header-login, .header-signup {
       display: none;
+    }
+  }
+
+  /* "Book a demo" is wider than the "Sign up" this header was sized for, and
+     at phone width it squeezed the page name off the bar; say "Demo" there. */
+  .cta-short {
+    display: none;
+  }
+  @media (max-width: 50rem) {
+    .cta-long {
+      display: none;
+    }
+    .cta-short {
+      display: inline;
     }
   }
 

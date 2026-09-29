@@ -8,13 +8,6 @@ hero:
     - text: Get Started →
       link: /getting-started/introduction
       variant: primary
-    - text: View on GitHub
-      link: https://github.com/orgs/aptiveaihq
-      icon: external
-      variant: secondary
-      attrs:
-        target: _blank
-        rel: noopener
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
@@ -25,20 +18,29 @@ import LandingHeaderScroll from '../../components/LandingHeaderScroll.astro';
 <LandingHeaderScroll />
 
 <CardGrid>
-  <Card title="AptiveAI Connect" icon="comment">
-    Your existing ChatGPT or Claude, connected to your systems through AptiveAI
-    Connectors — answers and actions grounded in your own data.
+  <Card title="Tasks" icon="rocket">
+    One piece of work, from the message that starts it to the result. An agent
+    works it on a computer of its own, and the task keeps everything that
+    happened.
+
+    [Tasks →](/concepts/tasks/)
   </Card>
-  <Card title="AptiveAI Agents" icon="rocket">
-    Configured agents on isolated computers with a browser and a desktop.
-    Watch the live view, set schedules, and approve what matters.
+  <Card title="Agents" icon="laptop">
+    An AI worker set up for one job in your company. Describe the job once —
+    how your company does it, which systems it may reach — then give it tasks.
+
+    [Agents →](/concepts/agents/)
+  </Card>
+  <Card title="Schedules" icon="random">
+    Start a task on its own at the times you set — sweep the invoices every
+    weekday at 7am, or send a summary on Monday mornings.
+
+    [Schedules →](/concepts/schedules/)
   </Card>
   <Card title="Connectors" icon="puzzle">
-    The integration layer behind both products — typed API clients and MCP
-    servers, deployed per customer.
-  </Card>
-  <Card title="AI Assessment" icon="magnifier">
-    The first step: an assessment of your processes that leads into Connect or
-    Agents, on-site or online.
+    How an agent reaches your company's systems — a mailbox, or any HTTP API
+    with an OpenAPI document — through tools classed as reads or writes.
+
+    [Connectors →](/concepts/connectors/)
   </Card>
 </CardGrid>

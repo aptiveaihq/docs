@@ -35,6 +35,7 @@ export const nav = [
     icon: 'book',
     href: '/getting-started/introduction/',
     collapsed: false,
+    primary: true,
     pinned: true,
     items: [
       { label: 'Introduction', slug: 'getting-started/introduction', desc: 'What is AptiveAI' },

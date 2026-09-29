@@ -768,6 +768,27 @@ header.header {
   color: var(--sl-color-text) !important;
 }
 
+/* On the splash the cards sit over the AptiveBg wash — a translucent surface
+   lets the halos glow through, the same way the portal's cards sit on it. */
+:root[data-has-hero][data-theme='dark'] .card {
+  background-color: rgba(10, 10, 11, 0.72) !important;
+}
+:root[data-has-hero][data-theme='light'] .card {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+}
+
+/* Each splash card carries one "Page →" link; stretch it over the whole card
+   so the box itself is the click target, not only the link line. */
+:root[data-has-hero] .card-grid .card {
+  position: relative;
+}
+:root[data-has-hero] .card-grid .card a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
 /* ============================================================
    MOBILE — match portal responsive behavior
    ============================================================ */
@@ -862,7 +883,7 @@ header.header {
    which sizes itself via --ap-size. Do NOT force a fixed height on its inner
    mark <img> — that would break the lockup's proportions. */
 .sidebar-footer-logo .ap-logo {
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .sidebar-collapse-btn {
