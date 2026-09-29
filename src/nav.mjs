@@ -39,6 +39,7 @@ export const nav = [
     pinned: true,
     items: [
       { label: 'Introduction', slug: 'getting-started/introduction', desc: 'What is AptiveAI' },
+      { label: 'Finding your way around', slug: 'getting-started/finding-your-way', desc: 'A tour of the console: sidebar, hubs, Activity, phone' },
     ],
   },
   {

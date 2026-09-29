@@ -1,0 +1,204 @@
+---
+title: Finding your way around
+description: A tour of the AptiveAI Agents console — the sidebar from New task to Configure, starting work with an agent, the Work and Configure pages and their Ask buttons, the Activity panel, where Settings, the agents and the admin area live, and the console on a phone.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ThemedImage from '../../../components/ThemedImage.astro';
+import sidebarDark from '../../../assets/screenshots/console-sidebar-dark-20260929.png';
+import sidebarLight from '../../../assets/screenshots/console-sidebar-light-20260929.png';
+import landingDark from '../../../assets/screenshots/agent-landing-dark-20260929.png';
+import landingLight from '../../../assets/screenshots/agent-landing-light-20260929.png';
+import workDark from '../../../assets/screenshots/work-hub-dark-20260929.png';
+import workLight from '../../../assets/screenshots/work-hub-light-20260929.png';
+import configureDark from '../../../assets/screenshots/configure-hub-dark-20260929.png';
+import configureLight from '../../../assets/screenshots/configure-hub-light-20260929.png';
+import activityDark from '../../../assets/screenshots/activity-panel-dark-20260929.png';
+import activityLight from '../../../assets/screenshots/activity-panel-light-20260929.png';
+import agentsDark from '../../../assets/screenshots/agents-list-dark-20260929.png';
+import agentsLight from '../../../assets/screenshots/agents-list-light-20260929.png';
+import phoneDark from '../../../assets/screenshots/phone-navigation-dark-20260929.png';
+import phoneLight from '../../../assets/screenshots/phone-navigation-light-20260929.png';
+
+The **console** is where you work with AptiveAI Agents: you start
+[tasks](/concepts/tasks), follow them, answer your agents and set everything
+up. This page walks through it from the sidebar down, so you know where each
+thing lives. Every section links to the page that explains it in full.
+
+## The sidebar
+
+The sidebar is the same on every page. From the top:
+
+| Row | What it does |
+|---|---|
+| **New task** | The first page of the console, where work starts. See [Starting work with an agent](#starting-work-with-an-agent). |
+| **Pinned agents** | Agents you have pinned get a row of their own, right under New task, marked with a pin. Clicking one starts a task with that agent. |
+| **Agents** | The word opens the [Agents page](/concepts/agents#where-agents-appear); the arrow beside it expands every agent you can see, ending in **All agents**. |
+| **Activity** | Opens the [Activity panel](#the-activity-panel) beside the page you are on, instead of going to a page. |
+| **Inbox** | What your agents need you to see — see the [Inbox](/concepts/inbox). |
+| **Work** | [A page of cards](#the-work-and-configure-pages) for tasks, schedules and the Inbox. |
+| **Configure** | [A page of cards](#the-work-and-configure-pages) for agents, connectors, skills, your settings and the admin area. |
+
+<ThemedImage
+  dark={sidebarDark}
+  light={sidebarLight}
+  title="New task"
+  alt="The console with the sidebar expanded: New task, two pinned agents (Accounts receivable follow-up and Service request intake), Agents expanded to its three agents and All agents, then Activity, Inbox, Work and Configure. The … menu of the pinned Accounts receivable follow-up row is open, offering Start new task, Configure and Unpin."
+/>
+
+Every agent row, pinned or under **Agents**, has a **…** menu:
+
+- **Start new task** — the same as clicking the row.
+- **Configure** — opens the agent's builder. Only shown if you may edit the
+  agent.
+- **Pin** / **Unpin** — adds the agent to, or takes it off, the top of the
+  sidebar. Pins are yours alone; see
+  [Pinning and icons](/concepts/agents#pinning-and-icons).
+
+**Work** stays highlighted while you are on a task or a schedule, and
+**Configure** while you are on connectors, skills or Settings, so you can
+always tell where you are.
+
+<Aside type="note">
+  AptiveAI's own staff see one more group at the bottom of the sidebar,
+  **Master admin**. It holds the tools AptiveAI uses to run the service, and
+  customers never see it.
+</Aside>
+
+## Starting work with an agent
+
+Clicking an agent — in the sidebar, on New task or on the Agents page — opens
+**New task** with that agent chosen. The breadcrumb reads
+**New task / *the agent's name***, the page says *You're working with …* above
+the agent's purpose, and the agent's [conversation
+starters](/concepts/agents#conversation-starters) are ready to click. The
+composer shows the agent as a chip, and whatever you send goes to it.
+
+<ThemedImage
+  dark={landingDark}
+  light={landingLight}
+  url="console.aptiveai.io/?agent=…"
+  title="Service request intake"
+  alt="New task with the Service request intake agent chosen. The breadcrumb reads New task / Service request intake; the page shows the agent's icon, You're working with Service request intake and its purpose, three conversation starters, and the composer with an agent chip for Service request intake."
+/>
+
+The address is `/?agent=<id>`, so the page can be bookmarked or shared with a
+colleague who can see the same agent. Clicking a conversation starter sends its
+message straight away; to write your own, type in the composer. Clear the chip
+to get a plain answer with no agent instead. [Tasks](/concepts/tasks#starting-a-task)
+covers what happens next.
+
+## The Work and Configure pages
+
+**Work** and **Configure** each open a page of cards, one card per place you
+can go. Work holds what your agents do and when:
+[Tasks](/concepts/tasks), [Schedules](/concepts/schedules) and the
+[Inbox](/concepts/inbox).
+
+<ThemedImage
+  dark={workDark}
+  light={workLight}
+  url="console.aptiveai.io/work"
+  title="Work"
+  alt="The Work page: the line The tasks your agents do, and when they run: now, or on a schedule, above three cards — Tasks, Schedules and Inbox — each with a description and Open, Docs and Ask links. An Ask about Work button sits in the header."
+/>
+
+Configure holds how your agents are set up and how the app works for you:
+[Agents](/concepts/agents), [Connectors](/concepts/connectors),
+[Skills](/concepts/skills), [Personal
+sign-ins](/reference/settings/sign-ins),
+[Notifications](/reference/settings/notifications),
+[Settings](/reference/settings) and — for owners and admins —
+[Admin](/administration/overview).
+
+<ThemedImage
+  dark={configureDark}
+  light={configureLight}
+  url="console.aptiveai.io/configure"
+  title="Configure"
+  alt="The Configure page: seven cards — Agents, Connectors, Skills, Personal sign-ins, Notifications, Settings and Admin — each with a description and Open and Ask links, and a Docs link on all but Admin. An Ask about Configure button sits in the header."
+/>
+
+Each card has up to three links:
+
+| Link | What it does |
+|---|---|
+| **Open** | Goes to the page. **Admin** opens in the portal at `aptiveai.io/admin`, which its card marks with an outside-link icon. |
+| **Docs ↗** | Opens the page of this documentation that explains it. |
+| **Ask** | Opens New task with a question already typed — *Explain Tasks: search the docs, summarise it, and link the pages.* Nothing is sent until you press Send, so you can change the question first. |
+
+**Ask about Work** and **Ask about Configure**, in the page header, do the same
+for the whole page: the question asks what you can do under that section. An
+Ask task has no agent, so it answers from this documentation — no computer, and
+no access to your systems.
+
+## The Activity panel
+
+**Activity** opens your tasks as a panel beside whatever page you are on, so
+you can keep an eye on them without leaving it. While it is open, the sidebar
+shrinks to its icons; close the panel and the sidebar comes back as it was.
+
+<ThemedImage
+  dark={activityDark}
+  light={activityLight}
+  url="console.aptiveai.io/work"
+  title="Activity"
+  alt="The Activity panel open beside the Work page, grouped by Agent: an Active section, then a group per agent — Service request intake, expanded to its four tasks, and Accounts receivable follow-up — each with a search button, a + button and a count. The Group by switch at the bottom reads None, Agent, Status, with Agent selected."
+/>
+
+At the bottom, **Group by** switches how the panel is read: **None** (the
+default, one list), **Agent** or **Status**. Grouped by **Agent**, every agent
+you can start a task with has a group of its own, and its **+** opens New task
+with that agent chosen. The **+** at the top of the panel opens New task with no
+agent chosen. Tasks waiting on you come first. See [The Activity panel](/concepts/tasks#the-activity-panel)
+for the rest.
+
+## Where to find things
+
+| Looking for | Where it is |
+|---|---|
+| A task you or a colleague started | **Activity**, or **Work → Tasks** |
+| A schedule | **Work → Schedules** |
+| A question waiting on you | **Inbox**, or the top of **Activity** |
+| Every agent, or a new one | **Agents** in the sidebar, **All agents** at the end of its list, or **Configure → Agents** |
+| Your own sign-ins to websites an agent opens | **Configure → Personal sign-ins** — the [Personal sign-ins](/reference/settings/sign-ins) section of Settings |
+| Which notifications reach you, and how | **Configure → Notifications** — the [Notifications](/reference/settings/notifications) section of Settings |
+| Your plan, AI credit, theme | **Configure → Settings** |
+| Language and your account | The account menu, under your avatar in the top-right corner |
+| Members, invitations and billing | **Configure → Admin**, for owners and admins — see [The admin area](/administration/overview) |
+
+The **Agents page** lists every agent you can see, as tiles or a table, with
+each one's state, last task and next scheduled task. **Start a task** opens New
+task with that agent; **New agent** opens the builder.
+
+<ThemedImage
+  dark={agentsDark}
+  light={agentsLight}
+  url="console.aptiveai.io/agents"
+  title="Agents"
+  alt="The Agents page: All agents (3) as tiles — Morning operations digest (Draft), Accounts receivable follow-up (Active) and Service request intake (Active) — each with its purpose, Last task, Next scheduled and Created, a … menu and, for active agents, a Start a task button. An Archived chip, a filter box and a tiles/table switch sit above them; New agent is in the header."
+/>
+
+## On a phone
+
+On a phone the sidebar becomes a bar at the bottom of the screen: **Menu**,
+**Work**, **New task** in the middle, **Agents** and **Activity**. **Menu**
+opens the full sidebar as a side panel, with **Agents** expandable and the same
+**…** menu on every agent row.
+
+<ThemedImage
+  dark={phoneDark}
+  light={phoneLight}
+  url="console.aptiveai.io"
+  title="New task"
+  alt="Two phone screens side by side. Left: New task, with Your agents above the composer and the bottom bar — Menu, Work, New task, Agents and Activity. Right: the side panel opened from Menu, showing New task, the pinned agents, Agents expanded to every agent with a … on each row, All agents, Activity, Inbox, Work and Configure."
+/>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Tasks" href="/concepts/tasks" description="What happens after you press Send." />
+  <LinkCard title="Agents" href="/concepts/agents" description="How an agent is set up, shared and pinned." />
+  <LinkCard title="Settings" href="/reference/settings" description="Every section of Settings." />
+  <LinkCard title="The admin area" href="/administration/overview" description="Members, invitations and billing, for owners and admins." />
+</CardGrid>
