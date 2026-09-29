@@ -136,24 +136,81 @@ no access to your systems.
 
 ## The Activity panel
 
-**Activity** opens your tasks as a panel beside whatever page you are on, so
-you can keep an eye on them without leaving it. While it is open, the sidebar
-shrinks to its icons; close the panel and the sidebar comes back as it was.
+**Activity** is the live list of the tasks you can see — the ones you started,
+the ones shared with you, and, if you are an owner, your workspace's agents'
+tasks ([who sees a task](/concepts/tasks#sharing-and-who-sees-a-task)). The
+sidebar's **Activity** row opens it as a panel beside whatever page you are on,
+so you can keep an eye on your tasks without leaving that page; the row does not
+go anywhere itself. While the panel is open the sidebar shrinks to its icons;
+close it with **×**, or click **Activity** again, and the sidebar comes back as
+it was. On a phone, **Activity** in the bottom bar opens the same list.
+
+The **Activity** row carries a count: how many tasks are running or waiting on
+someone right now. Its icon pulses while that count is above zero.
 
 <ThemedImage
   dark={activityDark}
   light={activityLight}
   url="console.aptiveai.io/work"
   title="Activity"
-  alt="The Activity panel open beside the Work page, grouped by Agent: an Active section, then a collapsed group per agent — Service request intake with 4 tasks and Accounts receivable follow-up with none — each with a search button, a + button and its task count. The Group by switch at the bottom reads None, Agent, Status, with Agent selected."
+  alt="The Activity panel open beside the Work page, grouped by Agent. Active reads Nothing is running. Below it, the Service request intake group is collapsed with a count of 5, and the Accounts receivable follow-up group is open with two finished tasks — Invoice follow-up criteria and Invoice follow-up assistance — each showing its name, how long it took and the first line of its result. Each group header has a search button, a + and its count. The Group by switch at the bottom reads None, Agent, Status, with Agent selected."
 />
 
-At the bottom, **Group by** switches how the panel is read: **None** (the
-default, one list), **Agent** or **Status**. Grouped by **Agent**, every agent
-you can start a task with has a group of its own, and its **+** opens New task
-with that agent chosen. The **+** at the top of the panel opens New task with no
-agent chosen. Tasks waiting on you come first. See [The Activity panel](/concepts/tasks#the-activity-panel)
-for the rest.
+### What is in it
+
+**Group by**, at the foot of the panel, decides how the list is arranged:
+
+| Group by | What you see |
+|---|---|
+| **None** (the default) | One list: pinned tasks first, then the tasks waiting on you and the running ones, then the rest — each part newest first. |
+| **Agent** | **Needs you** and **Active** at the top, then a group for every agent you can start a task with — including one with no tasks yet — and **Other** for tasks with no agent. Each group's **+** opens New task with that agent chosen. |
+| **Status** | **Needs you** and **Active** at the top, then a group for each of the other statuses. |
+
+**Needs you** holds the tasks waiting on your answer or approval, and appears
+only when there is one; its cards are amber and show the question. **Active**
+holds the tasks an agent is working on right now.
+
+A task is listed once. A finished task's card shows its name, how long it took
+and the first line of its result; a running one shows how long ago it started.
+Each group shows its first tasks, and **N more** loads more in place. The panel
+keeps to your recent work — the [Tasks list](/concepts/tasks#the-tasks-list)
+under **Work** is where to look for something older. **Group by** goes back to
+**None** when the page is reloaded.
+
+### Statuses
+
+| Status | Meaning |
+|---|---|
+| **Running** | The agent is working on it. |
+| **Needs you** | Waiting on your answer or approval. |
+| **Paused** | The agent has replied, or was interrupted, and is waiting for your next message. |
+| **Completed** | Done. |
+| **Failed** | Something went wrong; the transcript says what. |
+| **Stopped** | Ended on purpose — by a person, or because an approval expired — with the reason recorded. |
+
+Older tasks may also show **Incomplete**, **Skipped** or **Expired**.
+
+### Finding and opening a task
+
+- **Open it** — click a card to go to the task's page. Ctrl-click, or
+  Cmd-click on a Mac, opens it in a new tab. The task you are looking at is
+  shown above the lists, marked **Viewing**.
+- **Search** — the magnifier on a section's header opens a search box that
+  filters the tasks that section has loaded by name, agent, result, question
+  or status.
+- **Start one** — the **+** at the top of the panel opens New task with no
+  agent chosen; a group's **+** chooses that group's agent for you.
+- **Pin** — the pin on a card keeps that task at the top of its section, for
+  everyone in the workspace.
+- **Rename** — the pencil beside a task's name renames it in place; a plain
+  click on the name opens the task.
+- **Density** — the lines button in the panel's header switches between
+  **Compact** (one line per task), **Normal** and **Detailed**, which adds the
+  status, the agent and when the task started.
+
+A task that a [schedule](/concepts/schedules) started stacks with the schedule's
+other tasks into one card, which opens to show them. For the rest, see
+[The Activity panel](/concepts/tasks#the-activity-panel) under Tasks.
 
 ## Where to find things
 
