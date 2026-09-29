@@ -68,7 +68,7 @@ export const nav = [
     pinned: true,
     items: [
       { label: 'Settings', slug: 'reference/settings', desc: 'Every section of Settings' },
-      { label: 'Sign-ins', slug: 'reference/settings/sign-ins', desc: 'Your saved sign-ins for sites an agent opens' },
+      { label: 'Personal sign-ins', slug: 'reference/settings/sign-ins', desc: 'Your own accounts an agent signs in to for you' },
       { label: 'Notifications', slug: 'reference/settings/notifications', desc: 'Which notifications reach you, and how' },
     ],
   },

@@ -1,10 +1,324 @@
 ---
-title: agents
-description: agents
+title: Agents
+description: An agent is an AI worker you configure once — its instructions, the systems it may reach, what it knows — and then give tasks. Creating and configuring one, personal and shared agents, pinning and icons, archiving, how an agent updates itself, and the restrictions that apply.
 ---
 
-This page is being written.
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+An **agent** is an AI worker set up for one job in your company — handling
+supplier invoices, triaging a support mailbox, checking orders in a portal.
+You describe the job once: what it is for, how your company does it, which
+systems it may reach and what it should know. After that, anyone the agent is
+shared with gives it [tasks](/concepts/tasks) in plain language, or a
+[schedule](/concepts/schedules) gives it tasks on its own.
+
+Every agent works on a **computer** of its own for each task: an isolated
+desktop with a browser, which you can watch and take over through the
+[live view](/concepts/tasks#the-live-view). This is not configured per agent —
+every agent gets one.
+
+## Where agents appear
+
+- **The sidebar.** **Agents** expands to every agent you can see, ending in
+  **All agents**. Each row has a **…** menu: **Start new task**, **Configure**
+  (only if you may edit the agent) and **Pin** / **Unpin**.
+- **New task.** The first page of the console lists **Your agents**. Pick one
+  and you are *working with* it: its icon, its purpose and its
+  [conversation starters](#conversation-starters) fill the page, and the
+  composer sends your message to it. The address is `/?agent=<id>`, so the page
+  can be bookmarked or shared.
+- **The Agents page** (`/agents`). Every agent as a tile or in a table — with
+  its **State**, **Last task** and **Next scheduled** task — searchable, with
+  an **Archived** chip to show archived agents. Clicking an agent opens it for
+  a new task; **Configure** is on the card's menu for people who may edit it.
+
+An agent is in one of four states:
+
+| State | Tasks by hand | Schedules fire |
+|---|:---:|:---:|
+| **Draft** — being set up | — | — |
+| **Active** | ✓ | ✓ |
+| **Paused** | ✓ | — |
+| **Archived** — retired, see [Archiving](#archiving) | — | — |
+
+## Creating an agent
+
+**New agent** on the Agents page opens the **builder**. It has two panes: a
+conversation with the builder on one side, and **Try it** on the other.
+
+<Steps>
+
+1. **Describe the job.** In the **Create** tab, tell the builder what the agent
+   is for — *"describe the job the way you would to a new hire"*. The builder
+   writes the name, the purpose and the instructions from what you say, grants
+   the connectors and skills the job needs, writes conversation starters and
+   sets guardrails. Keep talking to it to adjust anything.
+
+2. **Check the details.** The **Configure** tab shows every field the builder
+   filled in, for you to read and edit directly.
+
+3. **Try it.** Talk to the agent in **Try it** as your team will. Every edit
+   applies to its next answer. Connector tools really work — and a write asks
+   first, *Approve and run it* or *Not now* — and when the job needs a browser,
+   the agent starts a **Computer** of its own, which stops when you close it or
+   leave. The conversation is not saved.
+
+4. **Create it.** **Create agent** saves it as a **Draft**. **Activate** makes
+   it available for tasks.
+
+</Steps>
+
+On a saved agent the builder conversation is called **Refine**. A change it
+makes to the instructions is saved at once as a new version; every other
+change waits for **Save agent**.
+
+## Configuring an agent
+
+The **Configure** tab has one section per part of the agent.
+
+### Identity
+
+**Name** (up to 120 characters) and **Purpose** — one line, up to 500
+characters, shown on the agent roster and in the Agents list — and who it is
+**Shared with** (see [Personal and shared agents](#personal-and-shared-agents)).
+
+### Instructions
+
+How your company does this job, in Markdown, up to 30,000 characters. The
+instructions come first in every task the agent works on, including tasks a
+schedule starts. The builder writes and edits them for you; you can also edit
+them by hand.
+
+At the end of the instructions, an agent can collect **standing rules** it has
+been taught during tasks — see [How an agent updates itself](#how-an-agent-updates-itself).
+Those rules are approved in tasks, so the builder does not write them.
+
+### Conversation starters
+
+Up to eight ready-made openers — each a **Label** (up to 80 characters) and the
+**Message** it sends (up to 2,000). They appear as cards when someone picks the
+agent on the New task page; clicking one sends its message straight away.
+
+### Connectors
+
+Which of your workspace's [connectors](/concepts/connectors) the agent may use,
+and optionally which of each connector's tools. Your AptiveAI contact connects
+the systems; granting them is per agent.
+
+### Skills
+
+Which of your workspace's [skills](/concepts/skills) the agent offers when
+someone types `/`, and may open by itself. Only skills that are shared and
+organization-wide can be granted. The agent is told about the first 25 granted
+skills in full, and the rest by name only. Every agent also has the
+[built-in skills](/concepts/skills#built-in-skills).
+
+### Knowledge
+
+Files the agent can search and read while it works: price lists, procedures,
+contracts, product sheets.
+
+| | |
+|---|---|
+| **File types** | PDF (scanned pages included), PNG and JPEG images, text and Markdown, CSV, Word, Excel and PowerPoint |
+| **Limits** | 25 MB per file, 20 files per agent, up to 50 scanned pages read per file |
+| **Scanned pages** | Read by text recognition, in English and Spanish. Printed text only — charts and photos are not read |
+
+Each file can carry a short **description** (up to 300 characters) that tells
+the agent what it is for. The agent searches its files and then reads the
+pages it needs, a few at a time. The Knowledge section becomes available once
+the agent has been saved, and files are saved as you add them, not with the
+rest of the page.
+
+<Aside type="caution" title="Knowledge search matches words, not meaning.">
+  Searching understands different forms of a word in English and Spanish —
+  *office* finds *offices*, *oficina* finds *oficinas* — but it does not
+  translate or guess: *office* does not find *oficina*, and a typo finds
+  nothing. Write file descriptions and instructions in the words your
+  documents use.
+</Aside>
+
+### Sign-ins
+
+Sign-ins the agent itself holds, for websites it opens on its computer. With
+none of its own, it can still use the
+[personal sign-ins](/reference/settings/sign-ins) of the person who started
+the task — and when both have a sign-in with the same name, the person's is
+used. Signing in puts the starting person's own browser in as that account,
+and the session carries into their other tasks.
+
+### Guardrails
+
+| Guardrail | What it does |
+|---|---|
+| **Ask before anything irreversible** | Sending, deleting, purchasing or granting access stops and waits for your approval |
+| **Can analyse files** | Lets the agent read and analyse the files on its computer |
+| **Approval before analysing** | Asks before it reads the files on a task's computer |
+| **Only act during set hours** | Between **From** and **Until** only; outside that window the agent waits rather than starting |
+
+Guardrails are enforced by the task itself, whatever the instructions say —
+they are not a request to the model.
+
+### Versions
+
+A version is written every time you save a change. The **Versions** tab lists
+them; restoring an older one records a new version, so nothing is lost.
+
+## Personal and shared agents
+
+A new agent is **personal**: only you can see it and give it tasks — nobody
+else in the workspace, admins included.
+
+A **shared** agent is shared with one or more workspaces. Everyone in them can
+see it and start tasks with it; only its editors can change it. Save the agent
+first, then choose the workspaces under **Shared with**.
+
+| | Personal agent | Shared agent |
+|---|---|---|
+| Who sees it and gives it tasks | Only the person who created it | Everyone in the workspaces it is shared with |
+| Who may configure it | The person who created it | Owners and admins of those workspaces |
+| Connectors it may hold | Only connectors **available to personal agents** (see [Restrictions](#restrictions)) | Any connector in the workspace |
+
+An agent AptiveAI sets up for your workspace is visible to its owners and
+admins before it is shared, so they can review it and share it with the
+people who will use it.
+
+## Pinning and icons
+
+**Pin** an agent from its **…** menu in the sidebar and it gets a row of its
+own near the top, just below **New task** — one click to start working with
+it. Pins are yours alone, kept in the order you pin them, up to 50. A pinned
+agent is still listed under **Agents**, with a pin mark. An agent that is
+archived, or that you can no longer see, drops out of your pins by itself.
+
+Each agent has an **icon**, shown on a round badge in the sidebar, on the New
+task page, on its card and in the Activity panel. Without one, a generic agent
+icon is shown. People who may edit the agent set it from the builder's header:
+
+- **Upload** an image — it is resized and cropped to a square around its centre.
+- **Generate** — the builder draws an icon from the agent's name and purpose.
+- **Remove** — back to the generic icon.
+
+## Archiving
+
+**Archive agent** takes an agent out of the Agents list and the New task page;
+nobody can start a task with it. Its task history is kept. Two more things
+happen, both undone by **Restore agent**:
+
+- Its **enabled schedules are paused**. Restoring turns back on exactly those —
+  a schedule someone paused by hand, or one that paused itself after failures,
+  stays paused.
+- Its **connector grants are kept**, so it comes back equipped. The connector's
+  page still lists it, marked **Archived**.
+
+A restored agent comes back as a **Draft**; activate it again to use it. The
+**Archived** chip on the Agents page shows archived agents.
+
+<Aside type="note" title="Deleting an agent for good">
+  Only AptiveAI can delete an archived agent permanently. That removes the
+  agent with everything it had — its tasks and their transcripts, its
+  schedules, notifications, knowledge files, grants, skills, sign-ins and
+  versions — and cannot be undone. Credit and computer-time records are kept
+  for billing. It is refused while one of the agent's tasks is working or
+  waiting on someone.
+</Aside>
+
+## How an agent updates itself
+
+An agent can be taught during a task — *"remember that invoices from this
+supplier always go to Maria"* — and change itself to match. It can:
+
+- **Add a standing rule** to the end of its instructions. Each rule records who
+  said it, when, where and their exact words.
+- **Edit its instructions** in place, shown as a before-and-after on the card.
+- **Add a line to a knowledge file**, when it has knowledge files. This is not
+  versioned, and re-uploading the file drops it.
+
+Nothing changes without a person's say:
+
+| Who started the task | What happens |
+|---|---|
+| Someone who may configure the agent | The task shows an approval card — *This agent wants to change itself, so it is waiting for you* — with **Approve** and **Decline**. Approving saves the change and a new version |
+| Anyone else | The change becomes a **request**. The workspace's owners and admins are notified, and approve or reject it from the notification or from the builder's **Requests** tab |
+
+The **Requests** tab lists every request with its **Status** — **Waiting**,
+**Approved**, **Rejected** or **Could not apply** — and who asked. A rejection
+can carry a note saying why, and the person who asked is told either way.
+
+Agents update themselves only in tasks a person started, never in a task a
+schedule started. You can also teach an agent in **Try it**, once it has been
+saved.
+
+## Restrictions
+
+### Roles
+
+What each workspace role may do with agents:
+
+| Action | Owner | Admin | Member |
+|---|:---:|:---:|:---:|
+| See agents shared with them, and give them tasks | ✓ | ✓ | ✓ |
+| Create an agent (personal until shared) | ✓ | ✓ | ✓ |
+| Configure, archive and restore their own personal agent | ✓ | ✓ | ✓ |
+| Configure, archive and restore a shared agent | ✓ | ✓ | — |
+| Share an agent with workspaces | ✓ | ✓ | — |
+| Approve or reject a change request | ✓ | ✓ | — |
+
+Rights to a shared agent come from a role that covers the workspace the agent
+belongs to — being an admin of one workspace gives no rights over another
+workspace's agents.
+
+### Paid access
+
+Creating, configuring and sharing agents, and starting tasks, need **paid
+access**. Your account has it when **both** hold:
+
+- its status is **Active** or **Trial**, and
+- it has **AI credit** left to spend (more than zero).
+
+Without it, you can still read everything, and a task that is already working
+can still be steered, answered or stopped — but no new work starts. The
+console says why, for example *No AI credit is available*, and
+[Settings → Plan & credit](/reference/settings#plan--credit) shows the
+account's status and the credit left. A task that uses up the last of the
+credit finishes; the next one is refused. No task is stopped halfway for
+money.
+
+### The model is set by AptiveAI
+
+Which AI model an agent uses is set only by AptiveAI, because it changes
+what your account pays. The builder cannot change it, and nobody in your
+workspace can.
+
+### Personal agents hold only connectors made available to them
+
+A member's personal agent may only be granted connectors that have
+**Available to personal agents** turned on. The rule is checked when the
+connector is granted and again every time a task starts, so turning the switch
+off takes the connector away from those agents at their next task. Owners and
+admins, who may grant any connector, are not limited by it.
+
+### One task at a time per agent
+
+An agent works on **one task at a time**, for everyone who uses it. A task
+holds its agent while it is working or waiting on someone. While it does:
+
+- the composer says *… is already working on a task, and starts one at a time*,
+  with **Open that task** when you can see it — send your message without an
+  agent to get a plain answer instead;
+- sending anyway is refused — *… is already working on a task. Wait for it to
+  finish*;
+- a schedule's firing is skipped as **Agent busy**.
+
+Different agents work at the same time, and so can the same person with
+several agents. When one job needs to happen in parallel, give it to more than
+one agent.
 
 ## Next
 
-- [Introduction](/getting-started/introduction) — what AptiveAI is.
+<CardGrid>
+  <LinkCard title="Tasks" href="/concepts/tasks" description="Give an agent work, and watch it happen." />
+  <LinkCard title="Connectors" href="/concepts/connectors" description="The systems an agent can reach." />
+  <LinkCard title="Skills" href="/concepts/skills" description="Instructions an agent loads when it needs them." />
+  <LinkCard title="Schedules" href="/concepts/schedules" description="Give an agent tasks on a cadence." />
+</CardGrid>

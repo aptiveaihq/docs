@@ -1,10 +1,115 @@
 ---
-title: skills
-description: skills
+title: Skills
+description: A skill is an instruction you save once and reuse — added to a message with /, or opened by an agent on its own when its instructions call for one. Workspace skills, scope and sharing, and the skills built into every agent.
 ---
 
-This page is being written.
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A **skill** is an instruction you save once and reuse: how your team writes a
+weekly summary, the steps for checking a supplier's portal, the format a
+report must follow. Instead of pasting the same paragraph into every task, you
+save it as a skill and add it with one keystroke.
+
+A skill reaches an agent in two ways:
+
+- **You add it to a message.** Type `/` in the composer and pick it. The agent
+  receives your message plus the skill's text.
+- **The agent opens it itself.** An agent sees the name and description of the
+  skills it may use, and loads the full text when its instructions or the task
+  call for one. The transcript shows *Loading skill …* and then *Skill …
+  loaded*.
+
+Open **Skills** from the sidebar to see and write them.
+
+## Adding a skill to a message
+
+In any composer — the **New task** page, or a task that is already under way —
+type `/` to open **Agents and skills**, and pick one. It sits above the message
+as a chip until you send; the transcript then records *Added the skill … to
+this task*.
+
+A skill can contain **blanks**: wrap a word in its instructions in braces,
+such as `{customer}`, and it becomes a blank. The Skills page lists each
+skill's blanks, so you can see what a skill expects before you use it.
+
+<Aside type="tip">
+  People who add a skill see only its name, not its text. That makes a skill a
+  good place for a long procedure your whole team should follow the same way —
+  nobody has to read it to use it.
+</Aside>
+
+## The Skills page
+
+Skills are listed in two groups:
+
+| Group | What is in it | What you can do |
+|---|---|---|
+| **Mine** | The skills you wrote | Edit, share or delete them |
+| **Shared by your team** | Skills others in the workspace shared | **Copy to mine** — make your own editable copy |
+
+Each row shows the skill's **Name**, its **Blanks**, its **Scope**, and whether
+it is **Shared** or **Private**. Deleting a skill removes it for everyone;
+tasks that already used it keep the text they were given.
+
+## Writing a skill
+
+**New skill** opens the editor:
+
+| Field | What it holds |
+|---|---|
+| **Name** | Up to 120 characters |
+| **Description** | Up to 500 characters. Shown beside the name when someone types `/`, and what an agent reads to decide whether to open it |
+| **Instructions** | The text itself, up to 10,000 characters. `{word}` becomes a blank |
+| **Scope** | **Organization-wide**, or one named agent |
+| **Share with your team** | Owners and admins only. Everyone in the workspace sees it, and it can be granted to an agent |
+
+### Scope
+
+- **Scoped to an agent**, a skill belongs to that agent: it is offered on that
+  agent's tasks. You can only scope a skill to an agent you can see.
+- **Organization-wide**, a skill is offered on tasks with no agent, and to any
+  agent it is granted to in the [agent builder](/concepts/agents#skills).
+
+Only a skill that is both **shared** and **organization-wide** can be granted
+to an agent in the builder.
+
+## Built-in skills
+
+Some skills ship with AptiveAI Agents and are offered to **every** agent,
+beside your workspace's own. They are not listed on the Skills page, and their
+text is never shown — the transcript records only that the skill was loaded.
+If one of your skills has the same name as a built-in skill, the built-in one
+is used.
+
+| Skill | What it does |
+|---|---|
+| `schedules` | Create, change, pause, resume, fire or delete a [schedule](/concepts/schedules), or list them — from a conversation |
+| `docs` | Read these docs, to answer a how-it-works question about AptiveAI Agents |
+
+A built-in skill can bring **tools** with it, which a workspace skill cannot:
+`schedules` gives the agent a tool to manage schedules, and `docs` a tool to
+read this site.
+
+<Aside type="note" title="Changing a schedule from a task always asks first.">
+  Every schedule change the `schedules` skill makes stops on an approval card —
+  *The agent wants to create a schedule … Allow it?* — and the change is made
+  as the person who started the task. The skill is never offered on a task a
+  schedule started, so a schedule cannot rewrite schedules on its own.
+</Aside>
+
+## Who may do what
+
+| Action | Who |
+|---|---|
+| Write a skill | Everyone in the workspace |
+| Edit or delete a skill | The person who wrote it |
+| Share or unshare a skill | Owners and admins |
+| Copy a shared skill to your own | Everyone who can see it |
 
 ## Next
 
-- [Introduction](/getting-started/introduction) — what AptiveAI is.
+<CardGrid>
+  <LinkCard title="Agents" href="/concepts/agents" description="Grant shared skills to an agent in its builder." />
+  <LinkCard title="Tasks" href="/concepts/tasks" description="Where you type / to add a skill." />
+  <LinkCard title="Schedules" href="/concepts/schedules" description="What the built-in schedules skill manages." />
+</CardGrid>

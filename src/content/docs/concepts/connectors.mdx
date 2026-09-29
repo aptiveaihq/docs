@@ -1,10 +1,166 @@
 ---
-title: connectors
-description: connectors
+title: Connectors
+description: A connector gives your agents tools inside one of your company's systems — a mailbox, or any HTTP API with an OpenAPI document. What each kind does, how writes are approved, and who may change what.
 ---
 
-This page is being written.
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A **connector** is how an agent reaches one of your company's systems. Each
+connector gives the agents it is granted to a set of **tools** — search a
+mailbox, look up an order, create a record — and the agent calls those tools
+while it works a [task](/concepts/tasks), the same way it uses the browser on
+its computer.
+
+Your **AptiveAI contact** sets each connector up for you: they create it, store
+its credential and choose which of its operations become tools. Your team then
+decides which [agents](/concepts/agents) may use it. Open **Connectors** from
+the sidebar to see every system your workspace is connected to.
+
+<Aside type="note">
+  Connectors are one connection per system, shared by the workspace. There is
+  no per-person sign-in to a connector: its single credential is stored
+  encrypted, and it is never shown again, never logged and never returned by
+  the API. For your *own* accounts on websites an agent opens, use
+  [Personal sign-ins](/reference/settings/sign-ins) instead.
+</Aside>
+
+## Kinds of connector
+
+Two kinds ship today. A new kind is added by AptiveAI, not from the console.
+
+| Kind | What it connects | Tools |
+|---|---|---|
+| **Mailbox (IMAP)** | A mail account the agent reads over IMAP — to triage, search and summarise | Three, all read-only: list messages, search messages, read a message. It never sends, deletes or moves mail |
+| **OpenAPI service** | Any HTTP API that has an OpenAPI 3 document | One tool per operation in the document |
+
+### Mailbox (IMAP)
+
+A mailbox connector is configured with its **IMAP host**, **Port** (993 for
+TLS, 143 for plain), **Use TLS**, the **Mailbox** to read (INBOX by default)
+and, where needed, **Allow a self-signed certificate**. Its credential is a
+**Username** and a **Password or app password**. A long message is read in
+pages, so an agent can work through a large email without loading all of it
+at once.
+
+### OpenAPI service
+
+An OpenAPI connector is built from the API's own description. Its schema comes
+either from a **URL** (fetched over https, reachable without a credential) or
+from a **pasted document** in JSON or YAML — the format is detected. The
+connector calls the API at its **Base URL** (the document's first server when
+left blank), authenticating with an **API key** sent as `Authorization: Basic`,
+`Authorization: Bearer` or a custom header, or with none.
+
+Importing the schema turns every operation into a tool and reports what it did
+— *Imported N tools; N operations were skipped; N changes to review*. When the
+API changes, the connector is re-imported and its tools reclassified.
+
+## Reads, writes and approval
+
+Every tool is either a **read** or a **write**. A read goes ahead as soon as
+the agent calls it. A write — anything that changes something in your system —
+stops the task and asks first.
+
+How a tool is classed, in order:
+
+1. A choice made by hand on the connector wins (shown as **Set by hand**).
+2. Otherwise the API document's own flag for a consequential operation decides.
+3. Otherwise the HTTP method decides: `GET`, `HEAD`, `OPTIONS` and `TRACE` are
+   reads; everything else is a write.
+
+When the agent reaches a write, the task shows an approval card — *This agent
+is about to change something in a connected system, so it is waiting for you*
+— naming the connector and the tool, and what it will send. You answer with:
+
+| Button | Effect |
+|---|---|
+| **Approve** | Run this call once, then carry on |
+| **Approve all** | Run this, and stop asking for the rest of this task |
+| **Decline** | Skip this call and tell the agent why — the card has a box for what to do instead |
+
+Approving a write to a connector covers every later write to that same
+connector for the rest of the task, not just that one operation.
+
+<Aside type="caution" title="A scheduled task does not stop to ask.">
+  Nobody is watching a task a [schedule](/concepts/schedules) started, so its
+  writes go ahead without an approval card, and the transcript records each one as
+  *Done without asking*. Grant write tools to an agent you schedule only when
+  you are comfortable with that.
+</Aside>
+
+## Ids the agent did not make up
+
+A connector checks every id an agent passes to it — a message id, an order
+number. The id must be one the connector itself returned earlier in the same
+task, or one a person typed into the conversation. Anything else is not sent,
+and the agent is told to look the id up again. This stops an agent acting on an
+id it guessed or mistyped.
+
+## Files a connector returns
+
+When a connector answers with a file, or with a result too large to hand the
+agent whole, the file is kept with the task and the agent is given its path
+and a preview. It can then open or process the file on its computer like any
+other.
+
+## Status
+
+| Status | What it means |
+|---|---|
+| **Connected** | Working. Agents granted it can use it |
+| **Needs reconnecting** | Its credential was rejected. Your AptiveAI contact reconnects it; agents using it fail until then, and the workspace is notified |
+| **Unavailable** | The system could not be reached. It is tested again automatically whenever a task starts |
+| **Not connected** | Created, but not connected yet. Your AptiveAI contact sets this up |
+
+A connector can also be configured but switched off, in which case agents
+granted it cannot use it. A server error or one bad call does not mark a
+connector as needing reconnection — only a rejected credential does.
+
+When a task starts while a connector is broken, its tools are held back from
+that task and the transcript says how many granted tools are not available.
+
+## The Connectors page
+
+The list shows each **Connector** with its **Status**, how many **Agents** use
+it, how many **Tools** it has and when it was **Last used**, with a status
+filter and a search box.
+
+Opening one shows three sections:
+
+- **Connection** — the kind of system, how it connects, when it was last used
+  and connected, and its non-secret settings, read-only.
+- **What it can do** — its tools, each marked as a read or as
+  **Writes — asks first**.
+- **Agents using it** — every agent granted it, with the tools each may use and
+  whether the grant is **Enabled** or **Off**. An [archived agent](/concepts/agents#archiving)
+  keeps its grant and is listed last with an **Archived** badge, so restoring
+  it brings it back equipped. Grants are changed in the agent's own builder,
+  not here.
+
+### Available to personal agents
+
+Each connector carries an **Available to personal agents** switch. A
+[personal agent](/concepts/agents#personal-and-shared-agents) may only be granted
+connectors that have it on. Turning it off takes the connector away from every
+personal agent at its next task; the grants are kept, so turning it back on
+restores them.
+
+## Who may do what
+
+| Action | Who |
+|---|---|
+| See connectors, their status and tools | Everyone in the workspace |
+| Grant a connector to an agent | Owners and admins |
+| Turn **Available to personal agents** on or off | Owners and admins |
+| Create a connector, store its credential, import its schema, edit its tools, test or disconnect it | Your AptiveAI contact |
+
+Granting a connector is also one of the actions that needs
+[paid access](/concepts/agents#restrictions).
 
 ## Next
 
-- [Introduction](/getting-started/introduction) — what AptiveAI is.
+<CardGrid>
+  <LinkCard title="Agents" href="/concepts/agents" description="Grant a connector to an agent in its builder." />
+  <LinkCard title="Tasks" href="/concepts/tasks" description="Where approval cards appear and are answered." />
+  <LinkCard title="Personal sign-ins" href="/reference/settings/sign-ins" description="Your own accounts, for websites an agent opens." />
+</CardGrid>
