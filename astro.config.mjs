@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { toStarlightSidebar } from './src/nav.mjs';
 
 // Same mechanism as the ClusterCode docs site (clustercodehq/docs): an Astro
 // Starlight site built by GitHub Actions and served from GitHub Pages behind a
@@ -28,13 +29,12 @@ export default defineConfig({
       components: {
         Header: './src/components/Header.astro',
       },
-      customCss: ['./src/styles/custom.css'],
-      sidebar: [
-        {
-          label: 'Getting Started',
-          items: [{ label: 'Introduction', slug: 'getting-started/introduction' }],
-        },
-      ],
+      // nav-icons.generated.css is emitted from NAV_ICONS by
+      // scripts/generate-nav-icons.mjs and loads after custom.css.
+      customCss: ['./src/styles/custom.css', './src/styles/nav-icons.generated.css'],
+      // Nav lives in src/nav.mjs, as in the ClusterCode docs. Add pages
+      // there, not here — `pnpm check:nav` fails the build otherwise.
+      sidebar: toStarlightSidebar(),
     }),
   ],
 });
