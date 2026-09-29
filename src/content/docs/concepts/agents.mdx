@@ -82,9 +82,11 @@ The **Configure** tab has one section per part of the agent.
 
 ### Identity
 
-**Name** (up to 120 characters) and **Purpose** — one line, up to 500
-characters, shown on the agent roster and in the Agents list — and who it is
-**Shared with** (see [Personal and shared agents](#personal-and-shared-agents)).
+**Icon** — the agent's picture, on the first row (see
+[The agent's icon](#the-agents-icon)). **Name** (up to 120 characters) and
+**Purpose** — one line, up to 500 characters, shown on the agent roster and in
+the Agents list — and who it is **Shared with** (see
+[Personal and shared agents](#personal-and-shared-agents)).
 
 ### Instructions
 
@@ -195,19 +197,43 @@ it. Pins are yours alone, kept in the order you pin them, up to 50. A pinned
 agent is still listed under **Agents**, with a pin mark. An agent that is
 archived, or that you can no longer see, drops out of your pins by itself.
 
-Each agent has an **icon**, shown on a round badge in the sidebar, on the New
-task page, on its card and in the Activity panel. Without one, a generic agent
-icon is shown. People who may edit the agent click the icon in the builder's
-header — **Change icon** — and choose:
+### The agent's icon
 
-- **Upload image…** — a PNG, JPEG, WebP or SVG under 5 MB. A photo or other
-  picture is resized and cropped to a square around its centre; an SVG is
-  checked, and anything in it that could run is refused.
-- **Generate icon** — an icon drawn for the agent from its name and purpose.
-- **Remove icon** — back to the generic icon.
+Each agent has an **icon**, a round picture shown:
 
-An icon change is saved at once, not with the rest of the page, so
-**Discard** does not undo it. Everyone else sees the icon without the menu.
+- in the sidebar — on its pinned row and its row under **Agents**;
+- in the breadcrumb, before the agent's name — in the builder, and on New task
+  with the agent chosen (`/?agent=<id>`);
+- on the New task page, on its card on the Agents page, and on its group in the
+  Activity panel.
+
+Without one, a generic agent icon is shown. Only people who may edit the agent
+can change it; everyone else sees the picture alone.
+
+**In Configure.** The icon is the first row of **Identity**. Click the circle,
+or use the buttons beside it:
+
+- **Upload** — a PNG, JPEG, WebP or SVG under 5 MB. A picture is resized and
+  cropped around its centre to 128×128, and shown in the circle; an SVG is
+  checked, and anything in it that could run is refused. An upload is saved at
+  once.
+- **Generate** — draws an icon from the agent's saved name and purpose, as a
+  **preview**: nothing is saved until you choose **Use this**. **Try again**
+  draws another; **Cancel** puts the preview away.
+- **Remove** — back to the generic icon.
+
+An icon change is saved on its own, not with the rest of the page, so
+**Discard** does not undo it. A new agent gets its icon once it is saved.
+
+**In the builder chat.** Ask for an icon — or describe a new agent with a name
+and a purpose — and the builder draws one and shows it in the conversation.
+The composer then asks **Use this icon?**: **Use this icon** makes it the
+agent's icon, **Try another** draws a different one, and you can type what you
+would rather have instead. Nothing is saved until you choose to use it. A new
+agent's chosen icon is stored when you save the agent.
+
+Each drawing is a picture drawn by the model, with up to three tries to get a
+usable one, and it uses AI credit.
 
 ## Archiving
 
