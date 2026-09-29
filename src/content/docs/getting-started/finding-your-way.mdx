@@ -146,7 +146,9 @@ close it with **×**, or click **Activity** again, and the sidebar comes back as
 it was. On a phone, **Activity** in the bottom bar opens the same list.
 
 The **Activity** row carries a count: how many tasks are running or waiting on
-someone right now. Its icon pulses while that count is above zero.
+someone right now. Its icon pulses while that count is above zero. It is not an
+unread count — that is the number on the bell in the header, which counts your
+unread notifications (see the [Inbox](/concepts/inbox)).
 
 <ThemedImage
   dark={activityDark}
@@ -163,7 +165,7 @@ someone right now. Its icon pulses while that count is above zero.
 | Group by | What you see |
 |---|---|
 | **None** (the default) | One list: pinned tasks first, then the tasks waiting on you and the running ones, then the rest — each part newest first. |
-| **Agent** | **Needs you** and **Active** at the top, then a group for every agent you can start a task with — including one with no tasks yet — and **Other** for tasks with no agent. Each group's **+** opens New task with that agent chosen. |
+| **Agent** | **Needs you** and **Active** at the top, then a group for every agent you can start a task with — including one with no tasks yet, whose group reads *Nothing here.* — and **Other** for tasks with no agent. Each group's **+** opens New task with that agent chosen (`/?agent=<id>`). |
 | **Status** | **Needs you** and **Active** at the top, then a group for each of the other statuses. |
 
 **Needs you** holds the tasks waiting on your answer or approval, and appears
