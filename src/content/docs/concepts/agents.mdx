@@ -29,8 +29,12 @@ every agent gets one.
   can be bookmarked or shared.
 - **The Agents page** (`/agents`). Every agent as a tile or in a table — with
   its **State**, **Last task** and **Next scheduled** task — searchable, with
-  an **Archived** chip to show archived agents. Clicking an agent opens it for
-  a new task; **Configure** is on the card's menu for people who may edit it.
+  an **Archived** chip to show archived agents. Clicking an agent, or its
+  **Start a task** button, opens New task with that agent chosen. Its **…**
+  menu has the same items as in the sidebar: **Start new task**, **Configure**
+  (only if you may edit the agent) and **Pin** / **Unpin**. An archived agent
+  cannot be given tasks, so clicking it opens its builder instead, for people
+  who may edit it.
 
 An agent is in one of four states:
 
@@ -193,11 +197,17 @@ archived, or that you can no longer see, drops out of your pins by itself.
 
 Each agent has an **icon**, shown on a round badge in the sidebar, on the New
 task page, on its card and in the Activity panel. Without one, a generic agent
-icon is shown. People who may edit the agent set it from the builder's header:
+icon is shown. People who may edit the agent click the icon in the builder's
+header — **Change icon** — and choose:
 
-- **Upload** an image — it is resized and cropped to a square around its centre.
-- **Generate** — the builder draws an icon from the agent's name and purpose.
-- **Remove** — back to the generic icon.
+- **Upload image…** — a PNG, JPEG, WebP or SVG under 5 MB. A photo or other
+  picture is resized and cropped to a square around its centre; an SVG is
+  checked, and anything in it that could run is refused.
+- **Generate icon** — an icon drawn for the agent from its name and purpose.
+- **Remove icon** — back to the generic icon.
+
+An icon change is saved at once, not with the rest of the page, so
+**Discard** does not undo it. Everyone else sees the icon without the menu.
 
 ## Archiving
 
