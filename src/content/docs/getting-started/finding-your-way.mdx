@@ -17,8 +17,10 @@ import activityDark from '../../../assets/screenshots/activity-panel-dark-202609
 import activityLight from '../../../assets/screenshots/activity-panel-light-20260929.png';
 import agentsDark from '../../../assets/screenshots/agents-list-dark-20260929.png';
 import agentsLight from '../../../assets/screenshots/agents-list-light-20260929.png';
-import phoneDark from '../../../assets/screenshots/phone-navigation-dark-20260929.png';
-import phoneLight from '../../../assets/screenshots/phone-navigation-light-20260929.png';
+import phoneBarDark from '../../../assets/screenshots/phone-bottom-bar-dark-20260929.png';
+import phoneBarLight from '../../../assets/screenshots/phone-bottom-bar-light-20260929.png';
+import phonePanelDark from '../../../assets/screenshots/phone-side-panel-dark-20260929.png';
+import phonePanelLight from '../../../assets/screenshots/phone-side-panel-light-20260929.png';
 
 The **console** is where you work with AptiveAI Agents: you start
 [tasks](/concepts/tasks), follow them, answer your agents and set everything
@@ -184,15 +186,24 @@ task with that agent; **New agent** opens the builder.
 On a phone the sidebar becomes a bar at the bottom of the screen: **Menu**,
 **Work**, **New task** in the middle, **Agents** and **Activity**. **Menu**
 opens the full sidebar as a side panel, with **Agents** expandable and the same
-**…** menu on every agent row.
+**…** menu on every agent row. Tap **Agents** to open its list in place.
 
-<ThemedImage
-  dark={phoneDark}
-  light={phoneLight}
-  url="console.aptiveai.io"
-  title="New task"
-  alt="Two phone screens side by side. Left: New task, with Your agents above the composer and the bottom bar — Menu, Work, New task, Agents and Activity. Right: the side panel opened from Menu, showing New task, the pinned agents, Agents expanded to every agent with a … on each row, All agents, Activity, Inbox, Work and Configure."
-/>
+<div class="phone-row">
+  <ThemedImage
+    frame="phone"
+    dark={phoneBarDark}
+    light={phoneBarLight}
+    title="The bottom bar"
+    alt="New task on a phone: Your agents above the composer, and the bottom bar — Menu, Work, New task in the middle, Agents and Activity."
+  />
+  <ThemedImage
+    frame="phone"
+    dark={phonePanelDark}
+    light={phonePanelLight}
+    title="Menu, with Agents open"
+    alt="The side panel opened from Menu: New task, the two pinned agents, Agents open to every agent with a … on each row and All agents, then Activity, Inbox, Work and Configure."
+  />
+</div>
 
 ## Next
 
