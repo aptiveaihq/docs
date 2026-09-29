@@ -55,6 +55,9 @@ const activeNav = activeGroupLabel(pathname);
           class:list={["header-nav-link", { "header-nav-active": activeNav === item.key }]}
         >{item.label}</a>
       ))}
+      {/* The AI Assessment is where a company starts with AptiveAI; it lives
+          on the portal, so it sits beside the doc sections as an outbound link. */}
+      <a href="https://aptiveai.io/assessment" class="header-nav-link">AI Assessment</a>
     </nav>
     {breadcrumb.length > 0 && (
       <nav class="breadcrumbs" aria-label="Breadcrumb">

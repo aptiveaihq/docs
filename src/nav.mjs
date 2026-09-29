@@ -82,6 +82,7 @@ export const nav = [
     external: true,
     items: [
       { label: 'Home', link: 'https://aptiveai.io' },
+      { label: 'AI Assessment', link: 'https://aptiveai.io/assessment' },
       { label: 'Console', link: 'https://console.aptiveai.io' },
       { label: 'Admin', link: 'https://aptiveai.io/admin' },
     ],
