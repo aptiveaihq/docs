@@ -1,0 +1,128 @@
+---
+title: Access and sharing
+description: Who sees what in AptiveAI Agents — workspaces and how far a role reaches, personal and shared agents, who sees a task and a schedule, sharing them with colleagues, short links, and which connectors a personal agent may hold.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Two things decide what a person can see and do. Their **role** — owner, admin
+or member — decides which *kinds* of action they may take (see
+[Users and roles](/administration/users#roles)). **Access** decides which
+*things* they see: which workspaces, which agents, which tasks and schedules.
+This page is about access.
+
+The short version: agents are personal until they are shared, tasks and
+schedules are private to the people involved, and an admin role does not
+unlock anyone else's private work.
+
+## Workspaces and how far a role reaches
+
+Your enterprise holds one or more organizations, and each organization one or
+more **workspaces**. A workspace is where the work lives — its tasks,
+schedules, agents and the computers they work on.
+
+| Who | Reaches |
+|---|---|
+| Owners and admins | Every organization and workspace in the enterprise |
+| A member invited from the admin area | Every workspace in the enterprise |
+| A member limited by AptiveAI | Only the organizations and workspaces they were given |
+
+Invitations sent from **Users** give access to the whole enterprise at the role
+you choose. If a member should see only some workspaces, or you need another
+workspace, ask your AptiveAI contact — workspaces and those limits are set up
+by the AptiveAI team.
+
+<Aside type="note">
+  Rights over a shared agent come from a role that covers the workspace the
+  agent belongs to. Being an admin somewhere in the enterprise is not enough
+  on its own.
+</Aside>
+
+## Agents: personal and shared
+
+| | Personal agent | Shared agent |
+|---|---|---|
+| **Who sees it and gives it tasks** | Only the person who created it — nobody else, admins and owners included | Everyone in the workspaces it is shared with |
+| **Who configures it** | Its creator | Owners and admins of those workspaces |
+| **Connectors it may hold** | Only connectors **available to personal agents** | Any connector in the workspace |
+
+- **Every new agent is personal.** Anyone, a member included, may create one
+  for themselves.
+- **Sharing** is **Shared with** in the agent's **Configure** tab, once the
+  agent is saved. Only owners and admins can share an agent, or take it back.
+  Everyone it is newly shared with is notified.
+- **An agent AptiveAI sets up for you** is visible to your workspace's owners
+  and admins before it is shared, so they can review it and share it with the
+  people who will use it.
+
+See [Agents → Personal and shared agents](/concepts/agents#personal-and-shared-agents).
+
+### Connectors for personal agents
+
+Each [connector](/concepts/connectors) carries an **Available to personal
+agents** switch, which owners and admins turn on or off on the Connectors page.
+A personal agent may only be granted connectors that have it on, and the rule
+is checked again every time a task starts — so turning it off takes the
+connector away from every personal agent at its next task. The grants are
+kept, so turning it back on restores them.
+
+Leave it off for a connector that reaches something sensitive, and only
+shared agents — which only owners and admins configure — will be able to use
+it.
+
+## Tasks: private to the people involved
+
+A task is seen by:
+
+| Who | Sees and takes part | Deletes it, changes who has access |
+|---|:---:|:---:|
+| The person who started it | ✓ | ✓ |
+| People it was shared with | ✓ | — |
+| People who can see the schedule that started it | ✓ | — |
+| Workspace owners, when the task has an agent | ✓ | ✓ |
+| Anyone else, including admins | — | — |
+
+A task with no agent — a plain answer — is never an owner's to see. Everyone
+who can see a task takes part in it: they read it, watch its live view, send
+messages, answer its questions and stop it. See
+[Tasks → Sharing and who sees a task](/concepts/tasks#sharing-and-who-sees-a-task).
+
+## Schedules: private the same way
+
+| Who | Sees it | Edits, pauses, **Run now** or deletes it |
+|---|:---:|:---:|
+| The person who created it | ✓ | ✓ |
+| People it was shared with | ✓ — and every task it starts | — |
+| Workspace owners | ✓ | ✓ |
+| Anyone else, including admins | — | — |
+
+See [Schedules → Who sees a schedule](/concepts/schedules#who-sees-a-schedule).
+
+## Sharing a task or a schedule
+
+**Share** in a task's header, or on a schedule's page, adds people from your
+workspace. Each person is told with a notification. Sharing is the starter's —
+or a workspace owner's — to change.
+
+**Copy link** on a task gives a short `/s/…` address. The link only points the
+way: whoever opens it still needs access, and anyone without it is refused.
+
+When someone is [removed](/administration/users#removing-someone) from the
+enterprise, the tasks and schedules shared with them stop being shared with
+them.
+
+## Skills
+
+A skill someone writes is theirs alone until it is **shared** with the
+workspace, which only owners and admins can do. Only shared,
+organization-wide skills can be granted to an agent. See
+[Skills](/concepts/skills).
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Users and roles" href="/administration/users" description="What each role may do, and inviting people." />
+  <LinkCard title="Agents" href="/concepts/agents" description="Personal and shared agents, in full." />
+  <LinkCard title="Tasks" href="/concepts/tasks" description="Sharing a task, short links and the Tasks list." />
+  <LinkCard title="Usage and credit" href="/administration/usage" description="AI credit, what spends it, and billing." />
+</CardGrid>

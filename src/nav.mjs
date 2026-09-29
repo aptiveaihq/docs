@@ -75,6 +75,24 @@ export const nav = [
     ],
   },
   {
+    // Looking after the account rather than doing the work: the admin area,
+    // people and roles, who sees what, and credit and billing. For an
+    // enterprise's owners and admins; AptiveAI's own operator screens are
+    // deliberately not documented here.
+    label: 'Administration',
+    short: 'Admin',
+    icon: 'shield',
+    href: '/administration/overview/',
+    collapsed: true,
+    primary: true,
+    items: [
+      { label: 'The admin area', slug: 'administration/overview', desc: 'Who can enter, and what each role sees' },
+      { label: 'Users and roles', slug: 'administration/users', desc: 'Invite people, change roles, remove someone' },
+      { label: 'Access and sharing', slug: 'administration/access', desc: 'Workspaces, and who sees which agent, task and schedule' },
+      { label: 'Usage and credit', slug: 'administration/usage', desc: 'AI credit, what spends it, and billing' },
+    ],
+  },
+  {
     label: 'Links',
     icon: 'external',
     href: 'https://aptiveai.io',
@@ -104,6 +122,8 @@ export const NAV_ICONS = {
   file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>',
   external:
     '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>',
+  // lucide `shield`
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
   search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
 };
 

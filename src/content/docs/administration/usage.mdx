@@ -1,0 +1,200 @@
+---
+title: Usage and credit
+description: What AI credit is and how it is spent — the three kinds of credit and their order, why a task can finish on the last of it and the next is refused, computer time, the usage ledger and its $0 rows, credit links from AptiveAI, account notices, when agents cannot start, and the owner's read-only Billing page.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Your enterprise pays AptiveAI a monthly subscription, and its agents spend
+**AI credit** as they work. This page explains where the credit comes from,
+what spends it, where to read it, and what happens when it runs out.
+
+| Where | Who | Shows |
+|---|---|---|
+| Console → **Settings → Plan & credit** | Everyone | The account's **Status**, the **AI credit left**, and whether agents **Can start new work** |
+| Admin → **Usage** | Owners | Credit left, the last 30 days by agent and by person, and every movement of credit |
+| Admin → **Billing** | Owners | The plan, the payment method and every invoice |
+
+## Paid access
+
+Agents can start new work only while **both** hold:
+
+- the account's status is **Active** or **Trial**, and
+- it has **AI credit** left to spend — more than zero.
+
+Without paid access, no new work starts: nobody can start a task, create or
+configure an agent, create a schedule or grant a connector, and schedules skip
+their firings. The console is not shown at all. Everyone who opens it is sent
+to one page that says why, with **Contact us** — and, for an owner, **View
+billing**:
+
+| Page | What it says |
+|---|---|
+| **This account is not active yet** | *AptiveAI is still setting up this account. You will be able to start work once your trial or subscription begins.* |
+| **No trial credit is available** | *This account is on a trial, but it does not have enough AI credit to run your agents.* |
+| **No AI credit is available** | *The subscription is active, but this account does not have enough AI credit or balance to run your agents.* |
+| **A payment is overdue** | *The last invoice was not paid by its due date. Agents cannot start new work until it is settled.* |
+| **This subscription has ended** | *Agents and task history are no longer available on this account. To reactivate it, get in touch.* |
+
+The admin area stays open to owners and admins, with the same reason in a
+banner at the top, so an owner can still read **Billing** and **Usage**. A
+task that was already working when the credit ran out finishes — see
+[below](#why-a-task-can-finish-on-the-last-of-the-credit).
+
+The account's status is one of **Awaiting first payment**, **Trial**,
+**Active**, **Payment overdue** or **Cancelled**.
+
+## AI credit
+
+Every step an agent takes costs a little credit — usually a fraction of a
+cent — at the price the AI provider reports for it. Credit is spent by tasks,
+by tasks a schedule starts, by **Try it** in the agent builder, and by the
+short title AptiveAI writes for each task.
+
+### Three kinds of credit, spent in order
+
+| Kind | Where it comes from | Expires |
+|---|---|---|
+| **Promotional** | A credit link from AptiveAI — see [Credit from AptiveAI](#credit-from-aptiveai) | Yes — unused credit expires on the date it was issued with |
+| **Plan credit** | Your plan's monthly AI allowance, added when an invoice is paid, once per invoice | No |
+| **Wallet** | Credit AptiveAI adds to your account directly | No |
+
+An agent draws on **promotional credit first** (the soonest to expire first),
+then **plan credit**, then the **wallet**. The credit left is the sum of all
+three, and it is the number paid access reads.
+
+### Why a task can finish on the last of the credit
+
+What a task will cost cannot be known before it runs, so a task only needs
+*some* credit to start, not enough for the whole job. A task that is working
+when the credit runs out **finishes**; its last steps take the balance below
+zero. The **next** task is refused, and a schedule's next firing is skipped as
+**No AI credit** — without piling up work for when credit returns.
+
+No task is ever stopped halfway for money.
+
+### Credit from AptiveAI
+
+AptiveAI can send credit to a person in your enterprise as an emailed link.
+The page it opens — **Accept credit** — shows the amount, when unused credit
+expires and when the link itself expires.
+
+<Steps>
+
+1. **Sign in with the address it was sent to.** Signed in as anyone else, the
+   page says **Wrong account**.
+
+2. **Accept credit.** It is added to the enterprise you are in, as
+   promotional credit.
+
+</Steps>
+
+Accepting credit on an account that is **Awaiting first payment** starts its
+**Trial**, which lasts as long as the credit does: it ends when the credit runs
+out or expires. A link that has expired, been withdrawn or been used says
+*This credit link is not valid*. If AptiveAI withdraws credit, whatever is
+unspent is removed; what was already spent stays spent.
+
+## Computer time
+
+Each task that needs a browser gets a [computer](/concepts/tasks#the-live-view).
+The time every computer is in use is recorded — including the few minutes one
+is kept ready after a task, so the next task starts faster. Computer time costs
+credit only if your plan sets a per-minute rate for it; otherwise it is
+recorded at $0.
+
+## The Usage page
+
+Owners open **Usage** in the admin area.
+
+**AI credit** — *What your agents draw on.*
+
+| Tile | Shows |
+|---|---|
+| **Remaining** | Everything agents can still spend — the same number paid access reads |
+| **Spent** | What has been spent |
+| **Promotional** | Unexpired promotional credit, when there is any |
+| **Wallet** | The wallet, when there is anything in it |
+
+With nothing left it says *No AI credit is available, so new tasks cannot be
+started. Contact us to add credit.*
+
+**Last 30 days** — where the spending went, **By agent** and **By person**. Besides each agent's name you may see *Tasks with no agent*, *(tested
+in the builder)*, *(computer kept warm)* and *(instructions edited)*; spend
+that no person started — a schedule's tasks — shows as *Scheduled or
+unattributed*.
+
+**Recent activity** — every movement of AI credit, newest first: **When**,
+**What ran** (the agent, or *A task*), **Model**, **Tokens** and **Amount**.
+Spending shows as a negative amount; credit arriving as a positive one, named
+by its kind:
+
+| Row | Meaning |
+|---|---|
+| **Period reset** | The plan's monthly allowance, added when an invoice was paid |
+| **Promotional credit** | A credit link was accepted |
+| **Promotional credit expired** | Unused promotional credit reached its expiry |
+| **Promotional credit revoked** | AptiveAI withdrew unspent promotional credit |
+| **Wallet overflow** | Spending that went on to the wallet once the plan credit was used |
+| **Manual adjustment** | AptiveAI changed the balance by hand |
+
+Amounts smaller than a cent are shown in full, such as `-$0.004396`.
+
+<Aside type="note" title="Rows of $0.00 are on purpose">
+  Every step an agent takes leaves exactly one row, even when nothing was
+  charged — because the provider reported no price for it, because there was
+  no credit to draw on, or because the credit had run out. A $0.00 row is the
+  record that the step happened, not a broken meter. And when a provider
+  reports the tokens a step used but not its price, the step is charged at
+  the model's list price and AptiveAI's record marks the charge as
+  estimated.
+</Aside>
+
+## Notices
+
+Owners and admins are told, in the [Inbox](/concepts/inbox) and by email:
+
+| Notice | When |
+|---|---|
+| **AI credit is running low** | The credit falls below the account's warning level, when one is set. At most once a month |
+| **The trial is about to end** | The trial ends within seven days |
+| **A payment is overdue** | The latest invoice is unpaid |
+
+Each is sent once per condition, however many tasks run in between. Which of
+them reach you, and how, is in
+[Notification settings](/reference/settings/notifications).
+
+## When the subscription ends or the account is suspended
+
+Running out of credit only stops new work. Two things stop work that is
+already under way:
+
+- **The subscription ends.** *Agents and task history are no longer available
+  on this account.* Tasks that are working end at their next step, tasks
+  waiting on a question are stopped, computers are shut down, and stored
+  sign-ins are no longer used. An owner can still open **Billing**.
+- **AptiveAI suspends the account.** Everyone sees *This account is
+  suspended*, and work stops the same way. If you believe it is a mistake,
+  contact AptiveAI. When a suspension is lifted, stored sign-ins work again
+  with nothing to redo.
+
+## Billing
+
+**Billing** in the admin area is the owner's. It is read-only: AptiveAI manages
+the subscription, so there is no card form and no cancel button — to change
+anything, use **Contact us**.
+
+| Section | What it shows |
+|---|---|
+| **Plan** | The plan, its status, the **Monthly price**, the **Next billing date** or **Billing start date**, when it **Ends** if it is ending, and when a trial's credit expires. When agents cannot start, the reason, with **Contact us** |
+| **Payment method** | The card on file — brand, last four digits and expiry — or *No card on file. This enterprise is invoiced, and each invoice is emailed to its billing contact.* |
+| **Invoices** | Every invoice, with its **Date**, **Amount** and **Status** — **Paid**, **Open**, **Draft**, **Uncollectible** or **Void** — and **Download** for the PDF |
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Settings" href="/reference/settings#plan--credit" description="Plan & credit, as every person sees it." />
+  <LinkCard title="The admin area" href="/administration/overview" description="Who can enter, and what each role sees." />
+  <LinkCard title="Agents" href="/concepts/agents#paid-access" description="What paid access allows." />
+  <LinkCard title="Schedules" href="/concepts/schedules#skipped-firings" description="Firings skipped for no AI credit." />
+</CardGrid>
