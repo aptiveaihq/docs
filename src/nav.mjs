@@ -44,9 +44,9 @@ export const nav = [
   },
   {
     // The four nouns of AptiveAI Agents — agent, task, schedule, connector —
-    // plus the skills an agent loads and the Inbox where the product tells you
-    // what happened. Tasks leads because it is where work starts and where
-    // every other concept shows up.
+    // plus the skills an agent loads, the files a task carries, and the Inbox
+    // where the product tells you what happened. Tasks leads because it is
+    // where work starts and where every other concept shows up.
     label: 'Concepts',
     icon: 'puzzle',
     href: '/concepts/tasks/',
@@ -59,6 +59,7 @@ export const nav = [
       { label: 'Schedules', slug: 'concepts/schedules', desc: 'Start a task on a recurring cadence' },
       { label: 'Connectors', slug: 'concepts/connectors', desc: "Access to your company's systems" },
       { label: 'Skills', slug: 'concepts/skills', desc: 'Reusable know-how an agent loads on demand' },
+      { label: 'Files', slug: 'concepts/files', desc: 'Attach, view and get back files; knowledge files' },
       { label: 'Inbox', slug: 'concepts/inbox', desc: 'Notifications and what arrives when' },
     ],
   },

@@ -1,0 +1,210 @@
+---
+title: Files
+description: How AptiveAI Agents handles files — attaching them to a task, files a connector returns, files an agent makes on its computer, where each is kept and for how long, the viewer that opens them, knowledge files an agent searches, and who can see them.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A [task](/concepts/tasks) can carry files: an invoice you want checked, the
+export a [connector](/concepts/connectors) hands back, the report the agent
+builds for you. Whatever their source, a task's files are kept together — listed
+in the task's side panel, opened in the same viewer, downloadable, and copied
+onto the agent's computer so it can work on them.
+
+An [agent](/concepts/agents) can also be given **knowledge files** — price
+lists, procedures, contracts — that it searches in every task. Those belong to
+the agent rather than to one task; see [Knowledge files](#knowledge-files).
+
+## Where a task's files come from
+
+| Source | How it arrives | Largest file | Kept for |
+|---|---|---|---|
+| **You attach it** | From the composer, when you send a message | 25 MB | 2 days |
+| **A connector returns it** | A file in the connector's answer, or an answer too large to hand the agent whole | 10 MB | 10 days |
+| **The agent makes it** | Saved as output from its work on its computer | 10 MB | 10 days |
+
+Each workspace can hold up to 10 GB of files that have not yet expired. Past
+that, a new file is refused with *this workspace has used its file storage
+allowance* until older ones expire.
+
+## Attaching files
+
+Attach files to any message — on **New task** or in a task that is already
+under way — with **Attach a file**, or by dropping them on the page
+(*Drop files to attach*).
+
+- **Up to 20 files per message, 25 MB each.** Any type of file can be attached.
+- **Pictures can be marked up before you send them.** Open the picture and
+  choose **Annotate**: draw freehand, lines, rectangles and ellipses, or add
+  text, in red, blue, green or gray. **Save annotated image** replaces the
+  picture with a marked-up PNG copy. A file cannot be annotated once it has
+  been sent.
+- **The agent sees attached pictures at once.** A PNG, JPEG, GIF or WebP
+  picture of up to 5 MB goes to the agent inside your message — up to three
+  per message — so it can answer *"what does this screenshot say?"* without
+  opening anything.
+- **Every file is also placed on the agent's computer**, in the task's files
+  folder, `/tmp/<task id>/files/`, and the agent is told its name. Two files
+  with the same name in one task are kept apart: the second `invoices.csv`
+  becomes `invoices-2.csv`.
+
+A file sent partway through a task is marked **Sent mid-task** in the side
+panel.
+
+## Files a connector returns
+
+Some connectors answer with a file — an export as a spreadsheet or CSV, say.
+The file is kept with the task and the agent is given its path, its type and
+size, and a preview of its contents. A large export may arrive as several
+parts.
+
+An answer too large to hand the agent whole — anything over 32 KB — is kept
+the same way, as a `.json` file (or `.csv` or `.txt` when the answer is plain
+text), and the agent gets a preview and the path instead. It then reads what
+it needs from the file on its computer, rather than carrying the whole answer
+through the conversation.
+
+If a file cannot be kept, the connector's answer still reaches the agent, with
+a note saying which file was not kept and why.
+
+## Files the agent makes
+
+An agent can work on files **with code, on its computer**: read a spreadsheet,
+total a column, pull the text out of a PDF, compare two lists, draw a chart,
+produce a report. It shows in the transcript as *Working with the files on the
+computer*.
+
+Anything the agent saves as output is **kept for you** — shown in the
+conversation under the agent's reply, and in the side panel. Common documents
+keep their real type, so a PDF, Word, Excel, PowerPoint or CSV file opens as
+one; a picture it draws, the agent can look at too. It can also keep any other
+file from the task's files folder on purpose, shown as *Keeping a file for
+you*. Each kept file can be up to 10 MB.
+
+Two [guardrails](/concepts/agents#guardrails) in the agent's configuration
+control this, and both are on for a new agent:
+
+| Guardrail | Effect |
+|---|---|
+| **Can analyse files** | Off, the agent cannot work on files with code at all |
+| **Approval before analysing** | The first time in a task, the agent asks: *The agent wants to read and analyse the files on this task's computer. If you approve, it can do this for the rest of this task without asking again.* |
+
+Working on files needs the agent's computer, so a task with no agent cannot do
+it.
+
+On its computer the agent can also put a task file into a website's upload
+field — shown as *Uploading a file* — for example to attach an invoice to a
+form in one of your systems.
+
+## Where files are kept
+
+A task's file has two copies.
+
+- **The stored copy** is kept in AptiveAI's file storage for the time in the
+  [table above](#where-a-tasks-files-come-from) — 2 days for a file you
+  attached, 10 days for one a connector returned or the agent made. This is the
+  copy you view and download. After it expires, the file stays listed but reads
+  **Download expired**, and it can no longer be opened.
+- **The copy on the computer** is what the agent works on. Files are copied
+  there when the task has a computer. A task never starts a computer just to
+  hold a file: until it has one, its files wait, and they are copied when it
+  gets one — again if it moves to a new computer. This copy lasts only as long
+  as the computer does.
+
+Download your results before they expire if you need to keep them.
+
+## Seeing a task's files
+
+- **In the transcript.** Files you attached appear under your message; files
+  the agent made appear under its reply. Click one to open it.
+- **In the side panel.** The **Documents** tab lists **Files** — every file
+  in the task, whatever its source. Each shows a preview or a type icon, its
+  name, *Click to view* or *Click to download*, its size, a download button,
+  its path on the computer and when it arrived.
+
+## The viewer
+
+Clicking a file opens it in the viewer. **◀** and **▶** (or the arrow keys)
+move between the files of the same message or list, **Esc** closes it, and a
+download button is always there.
+
+| File | Shown as |
+|---|---|
+| **Pictures** — PNG, JPEG, GIF, WebP, BMP | The picture, with **Zoom in**, **Zoom out** and **Reset zoom** |
+| **PDF** | Your browser's own PDF reader — pages, zoom, search and print. **Open in a new tab** reads it full size, which is the better choice on a phone |
+| **Spreadsheets** — Excel (`.xlsx`, `.xlsm`, `.xls`), OpenDocument (`.ods`), CSV and TSV | A table with lettered columns and numbered rows, one tab per sheet. Up to 5,000 rows, 200 columns and 50 sheets are shown |
+| **Word** (`.docx`) | The document |
+| **PowerPoint** (`.pptx`) | The slides — *Preview — layout may differ from PowerPoint.* |
+| **Markdown** | Formatted text |
+| **Text and data** — `.txt`, `.log`, JSON, XML, YAML | A read-only text view, with highlighting for JSON, XML and YAML. The first 500,000 characters are shown |
+| **Anything else** | Its name and size, with **Download** |
+
+When part of a file is not shown, the viewer says so; the download is always
+the whole file.
+
+## Knowledge files
+
+Knowledge files are uploaded in an agent's builder, under **Configure** →
+[**Knowledge**](/concepts/agents#knowledge), and belong to that agent. They
+do not expire, and they are not copied onto its computer: the agent searches
+and reads them directly, in every task it works on.
+
+| | |
+|---|---|
+| **File types** | PDF, PNG and JPEG pictures, text (`.txt`, `.md`, `.csv`), Word (`.docx`), Excel (`.xlsx`) and PowerPoint (`.pptx`) |
+| **Limits** | 25 MB per file, 20 files per agent, up to 50 scanned pages per file |
+
+When a file is added it is read once, and its status moves from *Reading the
+file…* to **Ready** — or **Failed**, with the reason.
+
+- **PDFs** are read from their text. A page with no text on it — a scan — is
+  read by text recognition, in English and Spanish, and the status says how
+  many scanned pages were read. A picture is read the same way. Printed text
+  only: handwriting, charts and photos are not read.
+- **Spreadsheets and CSV files** are kept as tables: each row stays a row, with
+  its column names. Excel values keep their formatting — dates as dates,
+  percentages as percentages — and one sheet is one page.
+- **Word and text files** are split into pages of about 3,000 characters;
+  **PowerPoint** is one page per slide.
+
+In a task, the agent sees each file's name, page count and description.
+When it needs a fact, it searches them (*Searching its knowledge for …*) and
+reads the pages it needs, up to ten at a time (*Reading a knowledge file*).
+
+<Aside type="caution" title="Search matches words, not meaning.">
+  Searching understands different forms of a word in English and Spanish —
+  *office* finds *offices*, *oficina* finds *oficinas* — but it does not
+  translate or guess meaning: *office* does not find *oficina*, and a typo
+  may find nothing. Give each file a **description** in the words people will
+  ask with, even when the file uses other words.
+</Aside>
+
+## Who can see a task's files
+
+A file is visible to exactly the people who can
+[see its task](/concepts/tasks#sharing-and-who-sees-a-task) — its starter,
+the people it was shared with, people who can see the schedule that started it,
+and the workspace's owners when the task has an agent. There is no admin
+override. A file you attached but have not sent yet is visible only to you.
+Once a task is deleted, nobody can open its files.
+
+An agent's knowledge files are listed in its builder. Only people who may
+configure the agent add, describe or remove them, and the agent only ever
+searches its own. The console offers no download of a knowledge file, so keep
+your own copy.
+
+<Aside type="note" title="Passwords and codes">
+  A password or code you send an agent in the conversation is hidden from the
+  task's history once it has been typed — see
+  [Sending the agent a password or code](/concepts/tasks#questions-and-approvals).
+  That applies to the conversation. A file is kept exactly as it was sent, so
+  do not put passwords in files you attach.
+</Aside>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Tasks" href="/concepts/tasks" description="Where files are attached, made and listed." />
+  <LinkCard title="Agents" href="/concepts/agents#knowledge" description="Give an agent knowledge files, and set its guardrails." />
+  <LinkCard title="Connectors" href="/concepts/connectors" description="The systems that return files to a task." />
+</CardGrid>
