@@ -5,11 +5,13 @@
  * page's card) builds its href and label from here, so the console URL and
  * the questions are never restated in a component or a page.
  *
- * The link opens the console's create door with `?prompt=` only. The console
- * reads that parameter and PREFILLS the composer (apps/console
- * `client/navigation/ask-message.ts`); it sends on arrival only when `send=1`
- * is also present, which this link must never add — the reader sees the
- * question, can change it, and presses Send themselves.
+ * The link opens the console's create door with `?ask=docs-help-<lang>`, a
+ * NAMED question the console keeps in its own registry and sends on arrival.
+ * The URL never carries the text: an outside page may only trigger a question
+ * the console already knows, which is what makes sending on arrival safe (a
+ * free-text `?prompt=` from outside the console is only ever prefilled). The
+ * `question` below is the same sentence the console's preset holds, kept here
+ * for the page's own copy; change both together.
  *
  * "Search the docs" in the question is what makes the task load the console's
  * built-in `docs` skill, which reads this site through `/api/docs.json`.
@@ -28,7 +30,7 @@ export const CONSOLE_URL = (
   'https://console.aptiveai.io'
 ).replace(/\/+$/, '');
 
-/** Per page language: the link's label and the question it prefills. */
+/** Per page language: the link's label and the question the console sends. */
 export const ASK = {
   en: {
     label: 'Ask me anything',
@@ -36,7 +38,7 @@ export const ASK = {
       'What can you help me with in the AptiveAI documentation? Search the docs and list the topics you can help with.',
     cardTitle: 'Ask me anything',
     cardBody:
-      'Not sure where to start? Ask an AptiveAI agent. It opens the console with a question ready, searches these docs, and answers with links to the pages.',
+      'Not sure where to start? Ask an AptiveAI agent. It opens the console and asks for you: the agent searches these docs and answers with links to the pages.',
     cardCta: 'Open the console',
   },
   es: {
@@ -45,7 +47,7 @@ export const ASK = {
       '¿En qué me puedes ayudar con la documentación de AptiveAI? Busca en la documentación y enumera los temas en los que me puedes ayudar.',
     cardTitle: 'Pregúntame lo que quieras',
     cardBody:
-      '¿No sabes por dónde empezar? Pregúntale a un agente de AptiveAI. Abre la consola con una pregunta lista, busca en esta documentación y te responde con enlaces a las páginas.',
+      '¿No sabes por dónde empezar? Pregúntale a un agente de AptiveAI. Abre la consola y pregunta por ti: el agente busca en esta documentación y te responde con enlaces a las páginas.',
     cardCta: 'Abrir la consola',
   },
 };
@@ -55,7 +57,12 @@ export function askFor(locale) {
   return ASK[locale] ?? ASK.en;
 }
 
-/** The console's create door with the question prefilled — never `send=1`. */
+/** The console's named docs question for a page language (`docs-help-en` / `-es`). */
+export function askPreset(locale) {
+  return `docs-help-${ASK[locale] ? locale : 'en'}`;
+}
+
+/** The console's create door, sending the named docs question on arrival. */
 export function askHref(locale) {
-  return `${CONSOLE_URL}/?prompt=${encodeURIComponent(askFor(locale).question)}`;
+  return `${CONSOLE_URL}/?ask=${askPreset(locale)}`;
 }
