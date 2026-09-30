@@ -20,7 +20,8 @@ const BRAND = 'AptiveAI Docs';
 
 export const onRequest = defineRouteMiddleware((context) => {
   const { starlightRoute } = context.locals;
-  const isHome = context.url.pathname === '/' || context.url.pathname === '';
+  // `/es/` is the Spanish landing page.
+  const isHome = /^\/(es\/?)?$/.test(context.url.pathname) || context.url.pathname === '';
 
   const pageTitle = isHome ? BRAND : `${BRAND} · ${starlightRoute.entry.data.title}`;
 

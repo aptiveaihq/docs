@@ -10,6 +10,14 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'AptiveAI Docs',
+      // English at the root URLs (unchanged), Spanish under /es/ with the same
+      // slugs: src/content/docs/es/<slug>.mdx. `pnpm check:nav` fails when a
+      // page exists in one language and not the other.
+      defaultLocale: 'root',
+      locales: {
+        root: { label: 'English', lang: 'en' },
+        es: { label: 'Español', lang: 'es' },
+      },
       // Rewrites the generated <title> to the brand-first "AptiveAI Docs ·
       // Page" order (home page: just "AptiveAI Docs"), matching the
       // ClusterCode docs. See src/routeData.ts.

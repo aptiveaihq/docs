@@ -1,0 +1,122 @@
+---
+title: Habilidades
+description: Una habilidad es una instrucción que guardas una vez y reutilizas; se agrega a un mensaje con /, o un agente la abre por su cuenta cuando sus instrucciones lo piden. Habilidades del espacio de trabajo, alcance y uso compartido, y las habilidades integradas en todos los agentes.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Una **habilidad** es una instrucción que guardas una vez y reutilizas: cómo
+escribe tu equipo un resumen semanal, los pasos para revisar el portal de un
+proveedor, el formato que debe seguir un informe. En lugar de pegar el mismo
+párrafo en cada tarea, lo guardas como habilidad y lo agregas con una sola
+tecla.
+
+Una habilidad llega a un agente de dos maneras:
+
+- **Tú la agregas a un mensaje.** Escribe `/` en el cuadro de mensajes y
+  elígela. El agente recibe tu mensaje más el texto de la habilidad.
+- **El agente la abre por su cuenta.** Un agente ve el nombre y la descripción
+  de las habilidades que puede usar, y carga el texto completo cuando sus
+  instrucciones o la tarea lo piden. La transcripción muestra *Cargando la
+  habilidad …* y luego *Habilidad … cargada*.
+
+Abre **Habilidades** desde la barra lateral para verlas y escribirlas.
+
+## Agregar una habilidad a un mensaje
+
+En cualquier cuadro de mensajes —la página **Nueva tarea** o una tarea que ya
+está en marcha— escribe `/` para abrir **Agentes y habilidades**, y elige una.
+Queda sobre el mensaje como una etiqueta hasta que lo envías; después, la
+transcripción registra *Se agregó la habilidad … a esta tarea*.
+
+Una habilidad puede contener **espacios en blanco**: pon una palabra de sus
+instrucciones entre llaves, como `{customer}`, y se convierte en un espacio en
+blanco. La página Habilidades muestra los espacios en blanco de cada
+habilidad, para que veas qué espera una habilidad antes de usarla.
+
+<Aside type="tip">
+  Las personas que agregan una habilidad solo ven su nombre, no su texto. Eso
+  hace de una habilidad un buen lugar para un procedimiento largo que todo tu
+  equipo debe seguir de la misma manera: nadie tiene que leerlo para usarlo.
+</Aside>
+
+## La página Habilidades
+
+Las habilidades se muestran en dos grupos:
+
+| Grupo | Qué contiene | Qué puedes hacer |
+|---|---|---|
+| **Mías** | Las habilidades que escribiste | Editarlas, compartirlas o eliminarlas |
+| **Compartidas por tu equipo** | Habilidades que otras personas del espacio de trabajo compartieron | **Copiar a las mías**: haz tu propia copia editable |
+
+Cada fila muestra el **Nombre** de la habilidad, sus **Espacios en blanco**, su
+**Alcance** y si está **Compartida** o es **Privada**. Eliminar una habilidad
+la quita para todos; las tareas que ya la usaron conservan el texto que
+recibieron.
+
+## Escribir una habilidad
+
+**Nueva habilidad** abre el editor:
+
+| Campo | Qué contiene |
+|---|---|
+| **Nombre** | Hasta 120 caracteres |
+| **Descripción** | Hasta 500 caracteres. Se muestra junto al nombre cuando alguien escribe `/`, y es lo que lee un agente para decidir si la abre |
+| **Instrucciones** | El texto en sí, hasta 10,000 caracteres. `{word}` se convierte en un espacio en blanco |
+| **Alcance** | **Toda la organización**, o un agente concreto |
+| **Compartir con tu equipo** | Solo propietarios y administradores. Todos en el espacio de trabajo la ven, y se puede conceder a un agente |
+
+### Alcance
+
+- **Limitada a un agente**, una habilidad pertenece a ese agente: se ofrece en
+  las tareas de ese agente. Solo puedes limitar una habilidad a un agente que
+  puedas ver.
+- **De toda la organización**, una habilidad se ofrece en las tareas sin
+  agente y a cualquier agente al que se le conceda en el
+  [constructor de agentes](/es/concepts/agents#habilidades).
+
+Solo una habilidad que sea a la vez **compartida** y **de toda la
+organización** se puede conceder a un agente en el constructor.
+
+## Habilidades integradas
+
+Algunas habilidades vienen con AptiveAI Agents y se ofrecen a **todos** los
+agentes, junto a las de tu espacio de trabajo. No aparecen en la página
+Habilidades, y su texto nunca se muestra: la transcripción solo registra que
+se cargó la habilidad. Si una de tus habilidades tiene el mismo nombre que una
+habilidad integrada, se usa la integrada.
+
+| Habilidad | Qué hace |
+|---|---|
+| `schedules` | Crear, cambiar, pausar, reanudar, ejecutar o eliminar una [programación](/es/concepts/schedules), o listarlas, desde una conversación |
+| `docs` | Responder una pregunta sobre cómo funciona AptiveAI Agents a partir de esta documentación, con un enlace a la página que leyó |
+
+Una habilidad integrada puede traer **herramientas** consigo, algo que una
+habilidad del espacio de trabajo no puede: `schedules` le da al agente una
+herramienta para gestionar programaciones, y `docs`, una herramienta para leer
+este sitio.
+
+<Aside type="note" title="Cambiar una programación desde una tarea siempre pregunta antes.">
+  Cada cambio de programación que hace la habilidad `schedules` se detiene en
+  una tarjeta de aprobación —*El agente quiere crear una programación …
+  ¿Lo permites?*— y el cambio se hace en nombre de la persona que inició la
+  tarea. La habilidad nunca se ofrece en una tarea que inició una programación,
+  así que una programación no puede reescribir programaciones por su cuenta.
+</Aside>
+
+## Quién puede hacer qué
+
+| Acción | Quién |
+|---|---|
+| Escribir una habilidad | Todos en el espacio de trabajo |
+| Editar o eliminar una habilidad | La persona que la escribió |
+| Compartir o dejar de compartir una habilidad | Propietarios y administradores |
+| Copiar una habilidad compartida como propia | Todos los que pueden verla |
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Agentes" href="/es/concepts/agents" description="Concede habilidades compartidas a un agente en su constructor." />
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="Dónde escribes / para agregar una habilidad." />
+  <LinkCard title="Programaciones" href="/es/concepts/schedules" description="Lo que gestiona la habilidad integrada schedules." />
+</CardGrid>

@@ -8,14 +8,15 @@
 // MobileDrawer.astro (rendered before `.page` in PageFrame.astro, because that
 // layer has to sit UNDER the page card in DOM order). This bar only carries the
 // trigger — `data-cc-drawer-toggle`, which MobileDrawer's script owns.
-import { pinnedGroups, activeGroupLabel } from '../nav.mjs';
+import { pinnedGroups, activeGroupLabel, localeFromPath } from '../nav.mjs';
 import NavIcon from './NavIcon.astro';
 
 const currentPath = Astro.url.pathname;
+const t = Astro.locals.t;
 
 const pinnedItems = [
-  ...pinnedGroups(),
-  { key: 'Search', label: 'Search', href: '#', icon: 'search', action: 'search' },
+  ...pinnedGroups(localeFromPath(currentPath)),
+  { key: 'Search', label: t('aptive.header.search'), href: '#', icon: 'search', action: 'search' },
 ];
 
 // Match on group membership, not path prefix: /concepts/automation/ belongs to
@@ -38,12 +39,12 @@ const ariaCurrent = (key: string, href: string) =>
     name in `aria-label`; the label element is only shown on the active tab.
     Styles: the BOTTOM NAV block in src/styles/custom.css. */}
 
-<nav class="bottom-nav" aria-label="Mobile navigation">
+<nav class="bottom-nav" aria-label={t('aptive.bottom.nav')}>
   <div class="bottom-nav-cell" data-align="start">
     <button
       class="bottom-nav-item"
       type="button"
-      aria-label="Menu"
+      aria-label={t('aptive.bottom.menu')}
       aria-expanded="false"
       aria-controls="cc-mobile-drawer"
       data-cc-drawer-toggle
@@ -53,7 +54,7 @@ const ariaCurrent = (key: string, href: string) =>
           <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
         </svg>
       </span>
-      <span class="bottom-nav-label">Menu</span>
+      <span class="bottom-nav-label">{t('aptive.bottom.menu')}</span>
     </button>
   </div>
   {pinnedItems.map((item, i) => (

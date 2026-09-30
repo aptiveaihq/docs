@@ -1,5 +1,8 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+
+// One static 404 serves every language (GitHub Pages has no per-path 404), so
+// it says it in both, and points at both landing pages.
 ---
 
 <StarlightPage frontmatter={{ title: '404 — Page Not Found', template: 'splash' }}>
@@ -7,13 +10,20 @@ import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
     <p style="font-size: 1.5rem; margin-bottom: 1rem;">
       This page doesn't exist.
     </p>
-    <p style="color: var(--sl-color-gray-2); margin-bottom: 2rem;">
+    <p style="color: var(--sl-color-gray-2); margin-bottom: 1.5rem;">
       The page you're looking for has been moved, renamed, or never existed in the first place.
+    </p>
+    <p style="font-size: 1.25rem; margin-bottom: 0.5rem;" lang="es">
+      Esta página no existe.
+    </p>
+    <p style="color: var(--sl-color-gray-2); margin-bottom: 2rem;" lang="es">
+      La página que buscas se movió, cambió de nombre o nunca existió.
     </p>
     <nav style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
       <a href="/">Home</a>
       <a href="/getting-started/introduction">Introduction</a>
       <a href="/concepts/tasks">Concepts</a>
+      <a href="/es/" lang="es">Inicio (español)</a>
     </nav>
   </div>
 </StarlightPage>

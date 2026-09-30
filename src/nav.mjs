@@ -24,6 +24,9 @@
  *   external  — links off-site; excluded from search
  *
  * Item fields: label, slug, desc (palette subtitle), badge (sidebar only).
+ *
+ * Per language (groups and items): `es: { label, short, desc }` — the Spanish
+ * text for the same fields. See "Languages" below.
  */
 
 const beta = { text: 'Beta', variant: 'default', class: 'beta-badge' };
@@ -31,6 +34,7 @@ const beta = { text: 'Beta', variant: 'default', class: 'beta-badge' };
 export const nav = [
   {
     label: 'Getting Started',
+    es: { label: 'Primeros pasos', short: 'Empezar' },
     short: 'Start',
     icon: 'book',
     href: '/getting-started/introduction/',
@@ -38,8 +42,8 @@ export const nav = [
     primary: true,
     pinned: true,
     items: [
-      { label: 'Introduction', slug: 'getting-started/introduction', desc: 'What is AptiveAI' },
-      { label: 'Finding your way around', slug: 'getting-started/finding-your-way', desc: 'A tour of the console: sidebar, hubs, Activity, phone' },
+      { label: 'Introduction', slug: 'getting-started/introduction', desc: 'What is AptiveAI', es: { label: 'Introducción', desc: 'Qué es AptiveAI' } },
+      { label: 'Finding your way around', slug: 'getting-started/finding-your-way', desc: 'A tour of the console: sidebar, hubs, Activity, phone', es: { label: 'Cómo orientarte', desc: 'Un recorrido por la consola: barra lateral, secciones, Actividad, teléfono' } },
     ],
   },
   {
@@ -48,32 +52,34 @@ export const nav = [
     // where the product tells you what happened. Tasks leads because it is
     // where work starts and where every other concept shows up.
     label: 'Concepts',
+    es: { label: 'Conceptos' },
     icon: 'puzzle',
     href: '/concepts/tasks/',
     collapsed: false,
     primary: true,
     pinned: true,
     items: [
-      { label: 'Tasks', slug: 'concepts/tasks', desc: 'One piece of work, start to finish' },
-      { label: 'Agents', slug: 'concepts/agents', desc: 'Configured AI workers on their own computers' },
-      { label: 'Schedules', slug: 'concepts/schedules', desc: 'Start a task on a recurring cadence' },
-      { label: 'Connectors', slug: 'concepts/connectors', desc: "Access to your company's systems" },
-      { label: 'Skills', slug: 'concepts/skills', desc: 'Reusable know-how an agent loads on demand' },
-      { label: 'Files', slug: 'concepts/files', desc: 'Attach, view and get back files; knowledge files' },
-      { label: 'Inbox', slug: 'concepts/inbox', desc: 'Notifications and what arrives when' },
+      { label: 'Tasks', slug: 'concepts/tasks', desc: 'One piece of work, start to finish', es: { label: 'Tareas', desc: 'Un trabajo, de principio a fin' } },
+      { label: 'Agents', slug: 'concepts/agents', desc: 'Configured AI workers on their own computers', es: { label: 'Agentes', desc: 'Trabajadores de IA configurados, cada uno en su propia computadora' } },
+      { label: 'Schedules', slug: 'concepts/schedules', desc: 'Start a task on a recurring cadence', es: { label: 'Programaciones', desc: 'Inicia una tarea con una frecuencia recurrente' } },
+      { label: 'Connectors', slug: 'concepts/connectors', desc: "Access to your company's systems", es: { label: 'Conectores', desc: 'Acceso a los sistemas de tu empresa' } },
+      { label: 'Skills', slug: 'concepts/skills', desc: 'Reusable know-how an agent loads on demand', es: { label: 'Habilidades', desc: 'Conocimiento reutilizable que un agente carga cuando lo necesita' } },
+      { label: 'Files', slug: 'concepts/files', desc: 'Attach, view and get back files; knowledge files', es: { label: 'Archivos', desc: 'Adjunta, ve y recupera archivos; archivos de conocimiento' } },
+      { label: 'Inbox', slug: 'concepts/inbox', desc: 'Notifications and what arrives when', es: { label: 'Bandeja de entrada', desc: 'Notificaciones y qué llega cuándo' } },
     ],
   },
   {
     label: 'Reference',
+    es: { label: 'Referencia' },
     icon: 'file',
     href: '/reference/settings/',
     collapsed: true,
     primary: true,
     pinned: true,
     items: [
-      { label: 'Settings', slug: 'reference/settings', desc: 'Every section of Settings' },
-      { label: 'Personal sign-ins', slug: 'reference/settings/sign-ins', desc: 'Your own accounts an agent signs in to for you' },
-      { label: 'Notifications', slug: 'reference/settings/notifications', desc: 'Which notifications reach you, and how' },
+      { label: 'Settings', slug: 'reference/settings', desc: 'Every section of Settings', es: { label: 'Configuración', desc: 'Cada sección de Configuración' } },
+      { label: 'Personal sign-ins', slug: 'reference/settings/sign-ins', desc: 'Your own accounts an agent signs in to for you', es: { label: 'Inicios de sesión personales', desc: 'Tus propias cuentas, en las que un agente inicia sesión por ti' } },
+      { label: 'Notifications', slug: 'reference/settings/notifications', desc: 'Which notifications reach you, and how', es: { label: 'Notificaciones', desc: 'Qué notificaciones te llegan y cómo' } },
     ],
   },
   {
@@ -82,29 +88,31 @@ export const nav = [
     // enterprise's owners and admins; AptiveAI's own operator screens are
     // deliberately not documented here.
     label: 'Administration',
+    es: { label: 'Administración', short: 'Admin' },
     short: 'Admin',
     icon: 'shield',
     href: '/administration/overview/',
     collapsed: true,
     primary: true,
     items: [
-      { label: 'The admin area', slug: 'administration/overview', desc: 'Who can enter, and what each role sees' },
-      { label: 'Users and roles', slug: 'administration/users', desc: 'Invite people, change roles, remove someone' },
-      { label: 'Access and sharing', slug: 'administration/access', desc: 'Workspaces, and who sees which agent, task and schedule' },
-      { label: 'Usage and credit', slug: 'administration/usage', desc: 'AI credit, what spends it, and billing' },
+      { label: 'The admin area', slug: 'administration/overview', desc: 'Who can enter, and what each role sees', es: { label: 'El área de administración', desc: 'Quién puede entrar y qué ve cada rol' } },
+      { label: 'Users and roles', slug: 'administration/users', desc: 'Invite people, change roles, remove someone', es: { label: 'Usuarios y roles', desc: 'Invita personas, cambia roles, quita a alguien' } },
+      { label: 'Access and sharing', slug: 'administration/access', desc: 'Workspaces, and who sees which agent, task and schedule', es: { label: 'Acceso y uso compartido', desc: 'Espacios de trabajo, y quién ve cada agente, tarea y programación' } },
+      { label: 'Usage and credit', slug: 'administration/usage', desc: 'AI credit, what spends it, and billing', es: { label: 'Uso y crédito', desc: 'Crédito de IA, qué lo consume y facturación' } },
     ],
   },
   {
     label: 'Links',
+    es: { label: 'Enlaces' },
     icon: 'external',
     href: 'https://aptiveai.io',
     collapsed: true,
     external: true,
     items: [
-      { label: 'Home', link: 'https://aptiveai.io' },
-      { label: 'AI Assessment', link: 'https://aptiveai.io/assessment' },
-      { label: 'Console', link: 'https://console.aptiveai.io' },
-      { label: 'Admin', link: 'https://aptiveai.io/admin' },
+      { label: 'Home', link: 'https://aptiveai.io', es: { label: 'Inicio' } },
+      { label: 'AI Assessment', link: 'https://aptiveai.io/assessment', es: { label: 'Evaluación de IA' } },
+      { label: 'Console', link: 'https://console.aptiveai.io', es: { label: 'Consola' } },
+      { label: 'Admin', link: 'https://aptiveai.io/admin', es: { label: 'Administración' } },
     ],
   },
 ];
@@ -132,55 +140,94 @@ export const NAV_ICONS = {
   search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
 };
 
-/** `concepts/tasks` → `/concepts/tasks/` */
-export const hrefFor = (item) => item.link ?? `/${item.slug}/`;
+// ── Languages ─────────────────────────────────────────────────────────────
+// English is the root locale (URLs unchanged); every other language lives
+// under /<code>/ with the same slugs, and each group and item carries its
+// labels for that language under the same key (`es: { label, short, desc }`).
+// `pnpm check:nav` fails when a label is missing or a page exists in one
+// language and not the other. Keep in step with `locales` in astro.config.mjs.
 
-/** Starlight only understands label/slug/link/badge — drop our extra fields. */
+/** Non-root locales, as used in URLs and in the `es: {…}` keys above. */
+export const LOCALES = ['es'];
+
+/** The locale a URL path belongs to: 'es' for /es/…, otherwise 'en'. */
+export function localeFromPath(pathname) {
+  const first = (pathname ?? '').replace(/^\/+/, '').split('/')[0];
+  return LOCALES.includes(first) ? first : 'en';
+}
+
+/** A path without its locale prefix: `/es/concepts/tasks/` → `/concepts/tasks/`. */
+export function stripLocale(pathname) {
+  const locale = localeFromPath(pathname);
+  return locale === 'en' ? pathname ?? '' : (pathname ?? '').replace(new RegExp(`^/${locale}(?=/|$)`), '') || '/';
+}
+
+/** An internal path in a locale: `/concepts/tasks/` → `/es/concepts/tasks/`. Off-site links pass through. */
+export function localizePath(href, locale = 'en') {
+  if (!href || locale === 'en' || /^https?:\/\//.test(href)) return href;
+  return `/${locale}${href.startsWith('/') ? href : `/${href}`}`;
+}
+
+/** A group's or item's field in a locale, falling back to English. */
+const tr = (entry, field, locale) => (locale !== 'en' && entry[locale]?.[field]) || entry[field];
+
+/** `concepts/tasks` → `/concepts/tasks/` (or `/es/concepts/tasks/`) */
+export const hrefFor = (item, locale = 'en') => item.link ?? localizePath(`/${item.slug}/`, locale);
+
+/** Starlight's sidebar: label/slug/link/badge, plus per-language `translations`. */
 export function toStarlightSidebar() {
-  return nav.map(({ label, collapsed, items }) => ({
-    label,
-    collapsed,
-    items: items.map((item) =>
+  const translations = (entry) =>
+    Object.fromEntries(LOCALES.filter((l) => entry[l]?.label).map((l) => [l, entry[l].label]));
+  return nav.map((group) => ({
+    label: group.label,
+    translations: translations(group),
+    collapsed: group.collapsed,
+    items: group.items.map((item) =>
       item.link
-        ? { label: item.label, link: item.link }
-        : { label: item.label, slug: item.slug, ...(item.badge ? { badge: item.badge } : {}) },
+        ? { label: item.label, link: item.link, translations: translations(item) }
+        : {
+            label: item.label,
+            slug: item.slug,
+            translations: translations(item),
+            ...(item.badge ? { badge: item.badge } : {}),
+          },
     ),
   }));
 }
 
 /** Flat, searchable index for the command palette. Off-site groups excluded. */
-export function paletteItems() {
+export function paletteItems(locale = 'en') {
   return nav
     .filter((group) => !group.external)
     .flatMap((group) =>
       group.items.map((item) => ({
-        title: item.label,
-        desc: item.desc ?? '',
-        href: hrefFor(item),
-        group: group.label,
+        title: tr(item, 'label', locale),
+        desc: tr(item, 'desc', locale) ?? '',
+        href: hrefFor(item, locale),
+        group: tr(group, 'label', locale),
         icon: group.icon,
       })),
     );
 }
 
-// `key` is always the canonical group label, so callers can compare it against
-// activeGroupLabel() even where the visible text is the shortened form.
+// `key` is always the canonical (English) group label, so callers can compare
+// it against activeGroupLabel() whatever language the visible text is in.
 
 /** Groups for the desktop header nav. */
-export function primaryNav() {
+export function primaryNav(locale = 'en') {
   return nav
     .filter((group) => group.primary)
     // Full labels on the desktop header (room to spare); the mobile pinned bar
     // keeps using `short` via pinnedGroups().
-    .map((group) => ({ key: group.label, label: group.label, href: group.href }));
+    .map((group) => ({ key: group.label, label: tr(group, 'label', locale), href: localizePath(group.href, locale) }));
 }
 
 /** Groups for the mobile bottom-nav menu panel. */
-export function menuGroups() {
+export function menuGroups(locale = 'en') {
   return nav.map((group) => ({
     key: group.label,
-    label: group.label,
-    href: group.href,
+    label: tr(group, 'label', locale),
+    href: localizePath(group.href, locale),
     icon: group.icon,
     external: Boolean(group.external),
   }));
@@ -195,13 +242,15 @@ export function menuGroups() {
  * both decided here rather than restated in the component.
  *
  * @param pathname current URL path, used to mark the active item + open group
+ *                 (and, through its /es/ prefix, the language of the labels)
  */
 export function menuTree(pathname) {
-  const activeSlug = (pathname ?? '').replace(/^\/+|\/+$/g, '');
+  const locale = localeFromPath(pathname);
+  const activeSlug = stripLocale(pathname).replace(/^\/+|\/+$/g, '');
   return nav.map((group) => {
     const items = group.items.map((item) => ({
-      label: item.label,
-      href: hrefFor(item),
+      label: tr(item, 'label', locale),
+      href: hrefFor(item, locale),
       badge: item.badge?.text ?? null,
       external: Boolean(item.link),
       current: item.slug != null && item.slug === activeSlug,
@@ -209,7 +258,7 @@ export function menuTree(pathname) {
     const active = items.some((item) => item.current);
     return {
       key: group.label,
-      label: group.label,
+      label: tr(group, 'label', locale),
       icon: group.icon,
       external: Boolean(group.external),
       items,
@@ -222,26 +271,26 @@ export function menuTree(pathname) {
 }
 
 /** Groups pinned to the always-visible mobile bottom bar. */
-export function pinnedGroups() {
+export function pinnedGroups(locale = 'en') {
   return nav
     .filter((group) => group.pinned)
     .map((group) => ({
       key: group.label,
-      label: group.short ?? group.label,
-      href: group.href,
+      label: tr(group, 'short', locale) ?? tr(group, 'label', locale),
+      href: localizePath(group.href, locale),
       icon: group.icon,
     }));
 }
 
 /**
- * Which group owns the current URL.
+ * Which group owns the current URL (in any language).
  *
  * Matches on the page's actual group membership rather than a path prefix,
  * because a group can hold pages from another section (in the ClusterCode docs
  * a `guides/` page lives under a `concepts/` group).
  */
 export function activeGroupLabel(pathname) {
-  const slug = pathname.replace(/^\/+|\/+$/g, '');
+  const slug = stripLocale(pathname).replace(/^\/+|\/+$/g, '');
   for (const group of nav) {
     if (group.items.some((item) => item.slug === slug)) return group.label;
   }

@@ -1,0 +1,180 @@
+---
+title: Conectores
+description: Un conector les da a tus agentes herramientas dentro de uno de los sistemas de tu empresa — un buzón de correo o cualquier API HTTP con un documento OpenAPI. Qué hace cada tipo, cómo se aprueban las escrituras y quién puede cambiar qué.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Un **conector** es la forma en que un agente llega a uno de los sistemas de tu
+empresa. Cada conector da a los agentes a los que se asigna un conjunto de
+**herramientas** — buscar en un buzón, consultar un pedido, crear un registro —,
+y el agente usa esas herramientas mientras trabaja en una
+[tarea](/es/concepts/tasks), igual que usa el navegador de su computadora.
+
+Tu **contacto de AptiveAI** configura cada conector por ti: lo crea, guarda su
+credencial y elige cuáles de sus operaciones se convierten en herramientas.
+Luego tu equipo decide qué [agentes](/es/concepts/agents) pueden usarlo. Abre
+**Conectores** desde la barra lateral para ver todos los sistemas a los que
+está conectado tu espacio de trabajo.
+
+<Aside type="note">
+  Los conectores son una conexión por sistema, compartida por el espacio de
+  trabajo. No hay un inicio de sesión por persona en un conector: su única
+  credencial se guarda cifrada, y nunca se vuelve a mostrar, nunca se registra
+  en los logs y la API nunca la devuelve. Para tus *propias* cuentas en los
+  sitios web que abre un agente, usa en su lugar los
+  [inicios de sesión personales](/es/reference/settings/sign-ins).
+</Aside>
+
+## Tipos de conector
+
+Hoy hay dos tipos disponibles. Los tipos nuevos los agrega AptiveAI, no se
+crean desde la consola.
+
+| Tipo | Qué conecta | Herramientas |
+|---|---|---|
+| **Buzón de correo (IMAP)** | Una cuenta de correo que el agente lee por IMAP — para clasificar, buscar y resumir | Tres, todas de solo lectura: listar mensajes, buscar mensajes, leer un mensaje. Nunca envía, elimina ni mueve correo |
+| **Servicio OpenAPI** | Cualquier API HTTP que tenga un documento OpenAPI 3 | Una herramienta por cada operación del documento |
+
+### Buzón de correo (IMAP)
+
+Un conector de buzón se configura con su **Host IMAP**, **Puerto** (993 para
+TLS, 143 para texto plano), **Usar TLS**, el **Buzón** que se lee (INBOX de
+forma predeterminada) y, cuando hace falta, **Permitir un certificado
+autofirmado**. Su credencial es un **Nombre de usuario** y una **Contraseña o
+contraseña de aplicación**. Un mensaje largo se lee por páginas, así que un
+agente puede recorrer un correo grande sin cargarlo entero de una vez.
+
+### Servicio OpenAPI
+
+Un conector OpenAPI se construye a partir de la propia descripción de la API.
+Su esquema viene de una **URL** (que se descarga por https y debe ser accesible
+sin credencial) o de un **documento pegado** en JSON o YAML — el formato se
+detecta solo. El conector llama a la API en su **URL base** (el primer servidor
+del documento si se deja en blanco), y se autentica con una **clave de API**
+enviada como `Authorization: Basic`, `Authorization: Bearer` o un encabezado
+personalizado, o sin autenticación.
+
+Al importar el esquema, cada operación se convierte en una herramienta y se
+informa lo que se hizo — *Se importaron N herramientas; se omitieron N
+operaciones; N cambios para revisar*. Cuando la API cambia, el conector se
+vuelve a importar y sus herramientas se reclasifican.
+
+## Lecturas, escrituras y aprobación
+
+Cada herramienta es una **lectura** o una **escritura**. Una lectura se ejecuta
+en cuanto el agente la llama. Una escritura — cualquier cosa que cambie algo en
+tu sistema — detiene la tarea y pregunta antes.
+
+Cómo se clasifica una herramienta, en este orden:
+
+1. Gana una elección hecha a mano en el conector (se muestra como **Fijado a
+   mano**).
+2. Si no, decide la marca propia del documento de la API para una operación con
+   consecuencias.
+3. Si no, decide el método HTTP: `GET`, `HEAD`, `OPTIONS` y `TRACE` son
+   lecturas; todo lo demás es una escritura.
+
+Cuando el agente llega a una escritura, la tarea muestra una tarjeta de
+aprobación — *Este agente está a punto de cambiar algo en un sistema conectado,
+así que te está esperando* — que indica el conector, la herramienta y lo que va
+a enviar. Respondes con:
+
+| Botón | Efecto |
+|---|---|
+| **Aprobar** | Ejecuta esta llamada una vez y sigue |
+| **Aprobar todo** | Ejecuta esta y deja de preguntar durante el resto de esta tarea |
+| **Rechazar** | Omite esta llamada y dile al agente por qué — la tarjeta tiene un cuadro para indicar qué hacer en su lugar |
+
+Aprobar una escritura en un conector cubre todas las escrituras posteriores en
+ese mismo conector durante el resto de la tarea, no solo esa operación.
+
+<Aside type="caution" title="Una tarea programada no se detiene a preguntar.">
+  Nadie está pendiente de una tarea que inició una
+  [programación](/es/concepts/schedules), así que sus escrituras se ejecutan sin
+  tarjeta de aprobación, y la transcripción registra cada una como *Hecho sin
+  preguntar*. Asigna herramientas de escritura a un agente que programas solo
+  cuando estés de acuerdo con eso.
+</Aside>
+
+## Ids que el agente no inventó
+
+Un conector revisa cada id que un agente le pasa — un id de mensaje, un número
+de pedido. El id tiene que ser uno que el propio conector haya devuelto antes
+en la misma tarea, o uno que una persona haya escrito en la conversación.
+Cualquier otro no se envía, y se le dice al agente que vuelva a buscar el id.
+Esto evita que un agente actúe sobre un id que adivinó o escribió mal.
+
+## Archivos que devuelve un conector
+
+Cuando un conector responde con un archivo, o con un resultado demasiado grande
+para entregárselo entero al agente, el archivo se guarda con la tarea y el
+agente recibe su ruta y una vista previa. Luego puede abrir o procesar el
+archivo en su computadora como cualquier otro. Los límites de tamaño y el
+tiempo que se guarda ese archivo están en
+[Archivos](/es/concepts/files#archivos-que-devuelve-un-conector).
+
+## Estado
+
+| Estado | Qué significa |
+|---|---|
+| **Conectado** | Funciona. Los agentes a los que se asignó pueden usarlo |
+| **Hay que reconectarlo** | Su credencial fue rechazada. Tu contacto de AptiveAI lo reconecta; los agentes que lo usan fallan hasta entonces, y se notifica al espacio de trabajo |
+| **No disponible** | No se pudo acceder al sistema. Se vuelve a probar automáticamente cada vez que empieza una tarea |
+| **Sin conectar** | Creado, pero todavía sin conectar. Tu contacto de AptiveAI lo configura |
+
+Un conector también puede estar configurado pero desactivado, y en ese caso los
+agentes a los que se asignó no pueden usarlo. Un error del servidor o una
+llamada fallida no marcan un conector como que hay que reconectarlo — solo lo
+hace una credencial rechazada.
+
+Cuando una tarea empieza mientras un conector está averiado, sus herramientas
+se retienen para esa tarea y la transcripción indica cuántas herramientas
+asignadas no están disponibles.
+
+## La página Conectores
+
+La lista muestra cada **Conector** con su **Estado**, cuántos **Agentes** lo
+usan, cuántas **Herramientas** tiene y su **Último uso**, con un filtro de
+estado y un cuadro de búsqueda.
+
+Al abrir uno, se ven tres secciones:
+
+- **Conexión** — el tipo de sistema, cómo se conecta, cuándo se usó y se
+  conectó por última vez, y su configuración no secreta, en solo lectura.
+- **Qué puede hacer** — sus herramientas, cada una marcada como lectura o como
+  **Escribe: pide aprobación**.
+- **Agentes que la usan** — cada agente al que se asignó, con las herramientas
+  que puede usar cada uno y si la asignación está **Activado** o
+  **Desactivado**. Un [agente archivado](/es/concepts/agents#archivar)
+  conserva su asignación y aparece al final con una etiqueta **Archivado**, así
+  que al restaurarlo vuelve equipado. Las asignaciones se cambian en el propio
+  creador del agente, no aquí.
+
+### Disponible para agentes personales
+
+Cada conector tiene un interruptor **Disponible para agentes personales**. A un
+[agente personal](/es/concepts/agents#agentes-personales-y-compartidos) solo se le
+pueden asignar conectores que lo tengan activado. Al desactivarlo, el conector
+se les quita a todos los agentes personales en su siguiente tarea; las
+asignaciones se conservan, así que al volver a activarlo se restauran.
+
+## Quién puede hacer qué
+
+| Acción | Quién |
+|---|---|
+| Ver los conectores, su estado y sus herramientas | Todos en el espacio de trabajo |
+| Asignar un conector a un agente | Propietarios y administradores |
+| Activar o desactivar **Disponible para agentes personales** | Propietarios y administradores |
+| Crear un conector, guardar su credencial, importar su esquema, editar sus herramientas, probarlo o desconectarlo | Tu contacto de AptiveAI |
+
+Asignar un conector también es una de las acciones que requieren
+[acceso de pago](/es/concepts/agents#restricciones).
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Agentes" href="/es/concepts/agents" description="Asigna un conector a un agente en su creador." />
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="Donde aparecen y se responden las tarjetas de aprobación." />
+  <LinkCard title="Inicios de sesión personales" href="/es/reference/settings/sign-ins" description="Tus propias cuentas, para los sitios web que abre un agente." />
+</CardGrid>

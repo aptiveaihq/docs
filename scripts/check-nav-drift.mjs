@@ -13,7 +13,7 @@
 import { readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { nav, NAV_ICONS } from '../src/nav.mjs';
+import { nav, NAV_ICONS, LOCALES } from '../src/nav.mjs';
 import { isCurrent } from './generate-nav-icons.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -23,6 +23,8 @@ function walk(dir, prefix = '') {
   const out = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const name = entry.name;
+    // A locale directory at the top level holds the translations, not English pages.
+    if (entry.isDirectory() && prefix === '' && LOCALES.includes(name)) continue;
     if (entry.isDirectory()) {
       out.push(...walk(join(dir, name), `${prefix}${name}/`));
     } else if (name.endsWith('.mdx') || name.endsWith('.md')) {
@@ -89,6 +91,46 @@ if (badIcon.length) {
   );
 }
 
+// Every language mirrors the English tree: the same slugs under
+// src/content/docs/<locale>/, no page in one language only (a missing one is a
+// 404 behind the language picker, an extra one is unreachable from the nav),
+// and a label for every group and item in that language (a missing one shows
+// English in the middle of a translated menu).
+for (const locale of LOCALES) {
+  const localeDir = join(docsDir, locale);
+  const localePages = existsSync(localeDir) ? walk(localeDir) : [];
+  const englishAll = walk(docsDir);
+  const untranslated = englishAll.filter((slug) => !localePages.includes(slug));
+  const orphans = localePages.filter((slug) => !englishAll.includes(slug));
+  if (untranslated.length) {
+    problems.push(
+      `${untranslated.length} page(s) have no ${locale} translation at src/content/docs/${locale}/:\n` +
+        untranslated.map((s) => `    ${s}`).join('\n'),
+    );
+  }
+  if (orphans.length) {
+    problems.push(
+      `${orphans.length} ${locale} page(s) have no English original (same slug required):\n` +
+        orphans.map((s) => `    ${locale}/${s}`).join('\n'),
+    );
+  }
+  const unlabelled = [];
+  for (const group of nav) {
+    if (!group[locale]?.label) unlabelled.push(`group "${group.label}" → ${locale}.label`);
+    if (group.short && !group[locale]?.short) unlabelled.push(`group "${group.label}" → ${locale}.short`);
+    for (const item of group.items) {
+      if (!item[locale]?.label) unlabelled.push(`"${item.label}" → ${locale}.label`);
+      if (item.desc && !item[locale]?.desc) unlabelled.push(`"${item.label}" → ${locale}.desc`);
+    }
+  }
+  if (unlabelled.length) {
+    problems.push(
+      `${unlabelled.length} nav label(s) missing for ${locale} in src/nav.mjs:\n` +
+        unlabelled.map((s) => `    ${s}`).join('\n'),
+    );
+  }
+}
+
 // Sidebar group icons are CSS masks selected by `:nth-child(N)`, so they are
 // bound to group POSITION. Rather than police a hand-written copy — which drifted,
 // and whose guard had a false pass on renumbered selectors — the rules are now
@@ -110,5 +152,6 @@ if (problems.length) {
 
 console.log(
   `✓ Nav in sync — ${pages.length} pages, all present in src/nav.mjs, no dead links, ` +
-    `${nav.length} group icons generated and current.`,
+    `${nav.length} group icons generated and current; translated into ${LOCALES.join(', ')} ` +
+    `with every page and label present.`,
 );

@@ -1,0 +1,384 @@
+---
+title: Agentes
+description: Un agente es un trabajador de IA que configuras una vez —sus instrucciones, los sistemas a los que puede llegar, lo que sabe— y al que luego le das tareas. Cómo crearlo y configurarlo, agentes personales y compartidos, fijarlos e iconos, archivarlos, cómo un agente se actualiza a sí mismo y las restricciones que aplican.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Un **agente** es un trabajador de IA preparado para un trabajo concreto en tu
+empresa: gestionar facturas de proveedores, clasificar un buzón de soporte,
+revisar pedidos en un portal. Describes el trabajo una sola vez: para qué es,
+cómo lo hace tu empresa, a qué sistemas puede llegar y qué debe saber. Después,
+cualquier persona con quien se comparta el agente le da
+[tareas](/es/concepts/tasks) en lenguaje normal, o una
+[programación](/es/concepts/schedules) le da tareas por su cuenta.
+
+Cada agente trabaja en una **computadora** propia para cada tarea: un
+escritorio aislado con un navegador, que puedes observar y controlar a través
+de la [vista en vivo](/es/concepts/tasks#la-vista-en-vivo). Esto no se configura
+por agente: todos los agentes tienen una.
+
+## Dónde aparecen los agentes
+
+- **La barra lateral.** **Agentes** se despliega con todos los agentes que
+  puedes ver y termina en **Todos los agentes**. Cada fila tiene un menú **…**:
+  **Nueva tarea**, **Configurar** (solo si puedes editar el agente) y
+  **Fijar** / **Dejar de fijar**.
+- **Nueva tarea.** La primera página de la consola muestra **Tus agentes**.
+  Elige uno y estarás *trabajando con* él: su icono, su propósito y sus
+  [frases de inicio](#frases-de-inicio) llenan la página, y el
+  cuadro de mensajes le envía tu mensaje. La dirección es `/?agent=<id>`, así que puedes
+  guardar la página en favoritos o compartirla.
+- **La página Agentes** (`/agents`). Todos los agentes como tarjetas o en una
+  tabla —con su **Estado**, **Última tarea** y **Próxima programada**—, con
+  búsqueda y un filtro **Archivados** para mostrar los agentes archivados. Al
+  hacer clic en un agente, o en su botón **Iniciar una tarea**, se abre Nueva
+  tarea con ese agente elegido. Su menú **…** tiene las mismas opciones que en
+  la barra lateral: **Nueva tarea**, **Configurar** (solo si puedes editar el
+  agente) y **Fijar** / **Dejar de fijar**. A un agente archivado no se le
+  pueden dar tareas, así que al hacer clic en él se abre su constructor, para
+  las personas que pueden editarlo.
+
+Un agente está en uno de cuatro estados:
+
+| Estado | Tareas a mano | Se ejecutan programaciones |
+|---|:---:|:---:|
+| **Borrador**: en preparación | — | — |
+| **Activo** | ✓ | ✓ |
+| **En pausa** | ✓ | — |
+| **Archivado**: retirado, consulta [Archivar](#archivar) | — | — |
+
+## Crear un agente
+
+**Nuevo agente**, en la página Agentes, abre el **constructor**. Tiene dos
+paneles: una conversación con el asistente de un lado y **Pruébalo** del otro.
+
+<Steps>
+
+1. **Describe el trabajo.** En la pestaña **Crear**, dile al asistente para qué
+   sirve el agente: *"describe el trabajo como se lo explicarías a alguien
+   recién contratado"*. El asistente escribe el nombre, el propósito y las
+   instrucciones a partir de lo que dices, concede los conectores y las
+   habilidades que el trabajo necesita, escribe frases de inicio y define
+   límites de seguridad. Sigue hablando con él para ajustar lo que quieras.
+
+2. **Revisa los detalles.** La pestaña **Configurar** muestra cada campo que
+   llenó el asistente, para que lo leas y lo edites directamente.
+
+3. **Pruébalo.** Habla con el agente en **Pruébalo** como lo hará tu equipo.
+   Cada cambio se aplica a su siguiente respuesta. Las herramientas de los
+   conectores funcionan de verdad —y una escritura pregunta antes, *Aprobar y
+   ejecutar* o *Ahora no*—, y cuando el trabajo necesita un navegador, el
+   agente inicia una **Computadora** propia, que se detiene cuando la cierras o
+   sales. La conversación no se guarda.
+
+4. **Créalo.** **Crear agente** lo guarda como **Borrador**. **Activar** lo
+   deja disponible para tareas.
+
+</Steps>
+
+En un agente guardado, la conversación del constructor se llama **Refinar**.
+Un cambio que hace en las instrucciones se guarda de inmediato como una nueva
+versión; cualquier otro cambio espera a **Guardar agente**.
+
+## Configurar un agente
+
+La pestaña **Configurar** tiene una sección por cada parte del agente.
+
+### Identidad
+
+**Icono**: la imagen del agente, en la primera fila (consulta
+[El icono del agente](#el-icono-del-agente)). **Nombre** (hasta 120 caracteres) y
+**Propósito** —una línea, hasta 500 caracteres, que se muestra en la lista de
+agentes de Nueva tarea y en la página Agentes—, y **Compartido con**, con
+quién se comparte (consulta [Agentes personales y compartidos](#agentes-personales-y-compartidos)).
+
+### Instrucciones
+
+Cómo hace tu empresa este trabajo, en Markdown, hasta 30,000 caracteres. Las
+instrucciones van primero en cada tarea en la que trabaja el agente, incluidas
+las tareas que inicia una programación. El asistente las escribe y las edita
+por ti; también puedes editarlas a mano.
+
+Al final de las instrucciones, un agente puede reunir **reglas permanentes**
+que le enseñaron durante las tareas; consulta
+[Cómo un agente se actualiza a sí mismo](#cómo-un-agente-se-actualiza-a-sí-mismo). Esas
+reglas se aprueban en las tareas, así que el asistente no las escribe.
+
+### Frases de inicio
+
+Hasta ocho mensajes de apertura listos para usar, cada uno con una
+**Etiqueta** (hasta 80 caracteres) y el **Mensaje** que envía (hasta 2,000).
+Aparecen como tarjetas cuando alguien elige el agente en la página Nueva tarea;
+al hacer clic en una, su mensaje se envía de inmediato.
+
+### Conectores
+
+Cuáles de los [conectores](/es/concepts/connectors) de tu espacio de trabajo
+puede usar el agente y, opcionalmente, cuáles herramientas de cada conector. Tu
+contacto de AptiveAI conecta los sistemas; concederlos se hace por agente.
+
+### Habilidades
+
+Cuáles de las [habilidades](/es/concepts/skills) de tu espacio de trabajo
+ofrece el agente cuando alguien escribe `/`, y cuáles puede abrir por su
+cuenta. Solo se pueden conceder las habilidades compartidas y de toda la
+organización. Al agente se le presentan completas las primeras 25 habilidades
+concedidas, y el resto solo por nombre. Además, todos los agentes tienen las
+[habilidades integradas](/es/concepts/skills#habilidades-integradas).
+
+### Conocimiento
+
+Archivos que el agente puede buscar y leer mientras trabaja: listas de
+precios, procedimientos, contratos, fichas de producto.
+
+| | |
+|---|---|
+| **Tipos de archivo** | PDF (incluidas páginas escaneadas), imágenes PNG y JPEG, texto y Markdown, CSV, Word, Excel y PowerPoint |
+| **Límites** | 25 MB por archivo, 20 archivos por agente, hasta 50 páginas escaneadas leídas por archivo |
+| **Páginas escaneadas** | Se leen con reconocimiento de texto, en inglés y español. Solo texto impreso: no se leen gráficos ni fotos |
+
+Cada archivo puede llevar una **descripción** breve (hasta 300 caracteres) que
+le dice al agente para qué sirve. El agente busca en sus archivos y luego lee
+las páginas que necesita, unas pocas a la vez. La sección Conocimiento está
+disponible una vez que el agente se ha guardado, y los archivos se guardan a
+medida que los agregas, no junto con el resto de la página. Cómo se lee cada
+tipo de archivo está en [Archivos](/es/concepts/files#archivos-de-conocimiento).
+
+<Aside type="caution" title="La búsqueda en el conocimiento compara palabras, no significados.">
+  La búsqueda entiende distintas formas de una palabra en inglés y en español
+  —*office* encuentra *offices*, *oficina* encuentra *oficinas*—, pero no
+  traduce ni adivina: *office* no encuentra *oficina*, y una errata no
+  encuentra nada. Escribe las descripciones de los archivos y las
+  instrucciones con las palabras que usan tus documentos.
+</Aside>
+
+### Inicios de sesión
+
+Inicios de sesión que tiene el propio agente, para los sitios web que abre en
+su computadora. Si no tiene ninguno propio, puede usar los
+[inicios de sesión personales](/es/reference/settings/sign-ins) de la persona
+que inició la tarea, y cuando ambos tienen un inicio de sesión con el mismo
+nombre, se usa el de la persona. Al iniciar sesión, el propio navegador de la
+persona que inició la tarea queda conectado con esa cuenta, y la sesión se
+mantiene en sus otras tareas.
+
+### Límites de seguridad
+
+| Límite de seguridad | Qué hace |
+|---|---|
+| **Preguntar antes de cualquier acción irreversible** | Enviar, eliminar, comprar o conceder acceso se detiene y espera tu aprobación |
+| **Puede analizar archivos** | Permite que el agente lea y analice los archivos de su computadora; consulta [Archivos que crea el agente](/es/concepts/files#archivos-que-crea-el-agente) |
+| **Aprobación antes de analizar** | Pregunta antes de leer los archivos de la computadora de una tarea |
+| **Actuar solo en un horario definido** | Solo entre **Desde** y **Hasta**; fuera de ese horario, el agente espera en lugar de empezar |
+
+Los límites de seguridad los aplica la propia tarea, digan lo que digan las
+instrucciones: no son una petición al modelo.
+
+### Versiones
+
+Se escribe una versión cada vez que guardas un cambio. La pestaña
+**Versiones** las muestra; restaurar una anterior registra una nueva versión,
+así que no se pierde nada.
+
+## Agentes personales y compartidos
+
+Un agente nuevo es **personal**: solo tú puedes verlo y darle tareas; nadie
+más en el espacio de trabajo, ni siquiera los administradores.
+
+Un agente **compartido** se comparte con uno o más espacios de trabajo. Todos
+en ellos pueden verlo e iniciar tareas con él; solo sus editores pueden
+cambiarlo. Primero guarda el agente y luego elige los espacios de trabajo en
+**Compartido con**.
+
+| | Agente personal | Agente compartido |
+|---|---|---|
+| Quién lo ve y le da tareas | Solo la persona que lo creó | Todos en los espacios de trabajo con los que se comparte |
+| Quién puede configurarlo | La persona que lo creó | Propietarios y administradores de esos espacios de trabajo |
+| Conectores que puede tener | Solo conectores **disponibles para agentes personales** (consulta [Restricciones](#restricciones)) | Cualquier conector del espacio de trabajo |
+
+Un agente que AptiveAI prepara para tu espacio de trabajo es visible para sus
+propietarios y administradores antes de compartirse, para que puedan revisarlo
+y compartirlo con las personas que lo usarán.
+
+## Fijar agentes e iconos
+
+Usa **Fijar** en el menú **…** de un agente en la barra lateral y tendrá una fila
+propia cerca de la parte superior, justo debajo de **Nueva tarea**: un clic
+para empezar a trabajar con él. Los agentes fijados son solo tuyos, se guardan
+en el orden en que los fijas, hasta 50. Un agente fijado sigue apareciendo en
+**Agentes**, con una marca de fijado. Un agente que se archiva, o que ya no
+puedes ver, sale de tus fijados por sí solo.
+
+### El icono del agente
+
+Cada agente tiene un **icono**, una imagen redonda que se muestra:
+
+- en la barra lateral, en su fila fijada y en su fila dentro de **Agentes**;
+- en la ruta de navegación, antes del nombre del agente, en el constructor y
+  en Nueva tarea con el agente elegido (`/?agent=<id>`);
+- en la página Nueva tarea, en su tarjeta de la página Agentes y en su grupo
+  del panel Actividad.
+
+Si no tiene uno, se muestra un icono genérico de agente. Solo las personas que
+pueden editar el agente pueden cambiarlo; los demás solo ven la imagen.
+
+**En Configurar.** El icono es la primera fila de **Identidad**. Haz clic en
+el círculo o usa los botones que están al lado:
+
+- **Subir**: un PNG, JPEG, WebP o SVG de menos de 5 MB. Una imagen se
+  redimensiona y se recorta alrededor de su centro a 128×128, y se muestra en
+  el círculo; un SVG se revisa, y se rechaza cualquier cosa que contenga que
+  pueda ejecutarse. Una imagen subida se guarda de inmediato.
+- **Generar**: dibuja un icono a partir del nombre y el propósito guardados
+  del agente, como **vista previa**: no se guarda nada hasta que eliges
+  **Usar este**. **Probar otro** dibuja otro; **Cancelar** descarta la vista
+  previa.
+- **Quitar**: vuelve al icono genérico.
+
+Un cambio de icono se guarda por separado, no con el resto de la página, así
+que **Descartar** no lo deshace. Un agente nuevo recibe su icono una vez que
+se guarda.
+
+**En el chat del constructor.** Pide un icono —o describe un agente nuevo con
+un nombre y un propósito— y el asistente dibuja uno y lo muestra en la
+conversación. El cuadro de mensajes pregunta entonces **¿Usar este icono?**: **Usar
+este icono** lo convierte en el icono del agente, **Probar otro** dibuja uno
+diferente, y también puedes escribir lo que prefieres. No se guarda nada hasta
+que eliges usarlo. El icono elegido para un agente nuevo se guarda cuando
+guardas el agente.
+
+Cada dibujo es una imagen hecha por el modelo, con hasta tres intentos para
+lograr una que sirva, y consume crédito de IA.
+
+## Archivar
+
+**Archivar agente** saca a un agente de la página Agentes y de la página Nueva
+tarea; nadie puede iniciar una tarea con él. Su historial de tareas se
+conserva. Pasan dos cosas más, y **Restaurar agente** deshace ambas:
+
+- Sus **programaciones activas se ponen en pausa**. Al restaurarlo se vuelven a
+  activar exactamente esas: una programación que alguien pausó a mano, o que
+  se pausó sola tras varios fallos, sigue en pausa.
+- Sus **concesiones de conectores se conservan**, así que vuelve equipado. La
+  página del conector lo sigue mostrando, marcado como **Archivado**.
+
+Un agente restaurado vuelve como **Borrador**; actívalo otra vez para usarlo.
+El filtro **Archivados** de la página Agentes muestra los agentes archivados.
+
+<Aside type="note" title="Eliminar un agente definitivamente">
+  Solo AptiveAI puede eliminar un agente archivado de forma permanente. Eso
+  elimina el agente con todo lo que tenía —sus tareas y sus transcripciones,
+  sus programaciones, notificaciones, archivos de conocimiento, concesiones,
+  habilidades, inicios de sesión y versiones— y no se puede deshacer. Los
+  registros de crédito y de tiempo de computadora se conservan para la
+  facturación. Se rechaza mientras una de las tareas del agente esté
+  trabajando o esperando a alguien.
+</Aside>
+
+## Cómo un agente se actualiza a sí mismo
+
+A un agente se le puede enseñar durante una tarea —*"recuerda que las facturas
+de este proveedor siempre van a María"*— y él cambia para ajustarse. Puede:
+
+- **Agregar una regla permanente** al final de sus instrucciones. Cada regla
+  registra quién la dijo, cuándo, dónde y sus palabras exactas.
+- **Editar sus instrucciones** en el lugar, mostradas como un antes y después
+  en la tarjeta.
+- **Agregar una línea a un archivo de conocimiento**, cuando tiene archivos de
+  conocimiento. Esto no se versiona, y volver a subir el archivo la elimina.
+
+Nada cambia sin que una persona lo apruebe:
+
+| Quién inició la tarea | Qué pasa |
+|---|---|
+| Alguien que puede configurar el agente | La tarea muestra una tarjeta de aprobación —*Este agente quiere cambiarse a sí mismo, así que te está esperando*— con **Aprobar** y **Rechazar**. Aprobar guarda el cambio y una nueva versión |
+| Cualquier otra persona | El cambio se convierte en una **solicitud**. Los propietarios y administradores del espacio de trabajo reciben una notificación y la aprueban o la rechazan desde la notificación o desde la pestaña **Solicitudes** del constructor |
+
+La pestaña **Solicitudes** muestra cada solicitud con su **Estado** —**En
+espera**, **Aprobada**, **Rechazada** o **No se pudo aplicar**— y quién la
+pidió. Un rechazo puede llevar una nota que explique por qué, y a la persona
+que la pidió se le avisa en cualquier caso.
+
+Los agentes se actualizan solo en tareas que inició una persona, nunca en una
+tarea que inició una programación. También puedes enseñarle a un agente en
+**Pruébalo**, una vez que se ha guardado.
+
+## Restricciones
+
+### Roles
+
+Lo que cada rol del espacio de trabajo puede hacer con los agentes:
+
+| Acción | Propietario | Administrador | Miembro |
+|---|:---:|:---:|:---:|
+| Ver los agentes compartidos con ellos y darles tareas | ✓ | ✓ | ✓ |
+| Crear un agente (personal hasta que se comparta) | ✓ | ✓ | ✓ |
+| Configurar, archivar y restaurar su propio agente personal | ✓ | ✓ | ✓ |
+| Configurar, archivar y restaurar un agente compartido | ✓ | ✓ | — |
+| Compartir un agente con espacios de trabajo | ✓ | ✓ | — |
+| Aprobar o rechazar una solicitud de cambio | ✓ | ✓ | — |
+
+Los derechos sobre un agente compartido vienen de un rol que cubra el espacio
+de trabajo al que pertenece el agente: ser administrador de un espacio de
+trabajo no da ningún derecho sobre los agentes de otro.
+
+### Acceso de pago
+
+Crear, configurar y compartir agentes, e iniciar tareas, requiere **acceso de
+pago**. Tu cuenta lo tiene cuando se cumplen **las dos** condiciones:
+
+- su estado es **Activa** o **Prueba**, y
+- le queda **crédito de IA** para gastar (más de cero).
+
+Sin él, no empieza ningún trabajo nuevo y la consola no se muestra en absoluto:
+todas las personas que la abren son enviadas a una página que explica por qué
+—por ejemplo, *No hay crédito de IA disponible*— con **Contáctanos**, y **Ver
+facturación** para un propietario. El
+[área de administración](/es/administration/overview) sigue abierta para
+propietarios y administradores, con el mismo motivo en un aviso, y también tu
+página de cuenta. Una tarea que consume lo último del crédito termina; la
+siguiente se rechaza. Ninguna tarea se detiene a la mitad por dinero. Consulta
+[Uso y crédito](/es/administration/usage#acceso-de-pago) para ver cada motivo y lo
+que dice.
+
+### AptiveAI define el modelo
+
+Qué modelo de IA usa un agente lo define solo AptiveAI, porque cambia lo que
+paga tu cuenta. El asistente no puede cambiarlo, y nadie en tu espacio de
+trabajo puede.
+
+### Los agentes personales solo tienen conectores que se pusieron a su disposición
+
+Al agente personal de un miembro solo se le pueden conceder conectores que
+tengan activado **Disponible para agentes personales**. La regla se comprueba
+cuando se concede el conector y otra vez cada vez que empieza una tarea, así
+que desactivar el interruptor les quita el conector a esos agentes en su
+siguiente tarea. Los propietarios y administradores, que pueden conceder
+cualquier conector, no están limitados por ella.
+
+### Una tarea a la vez por agente
+
+Un agente trabaja en **una tarea a la vez**, para todas las personas que lo
+usan. Una tarea ocupa a su agente mientras está trabajando o esperando a
+alguien. Mientras tanto:
+
+- el cuadro de mensajes dice *… ya está trabajando en una tarea y solo hace una a la
+  vez*, con **Abrir esa tarea** cuando puedes verla; envía tu mensaje sin
+  agente para obtener una respuesta directa;
+- si lo envías de todos modos, se rechaza: *… ya está trabajando en una tarea.
+  Espera a que termine*;
+- la ejecución de una programación se omite como **Agente ocupado**.
+
+Distintos agentes trabajan al mismo tiempo, y también puede hacerlo la misma
+persona con varios agentes. Cuando un trabajo tiene que hacerse en paralelo,
+dáselo a más de un agente.
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="Dale trabajo a un agente y observa cómo lo hace." />
+  <LinkCard title="Conectores" href="/es/concepts/connectors" description="Los sistemas a los que puede llegar un agente." />
+  <LinkCard title="Habilidades" href="/es/concepts/skills" description="Instrucciones que un agente carga cuando las necesita." />
+  <LinkCard title="Programaciones" href="/es/concepts/schedules" description="Dale tareas a un agente con una cadencia." />
+</CardGrid>

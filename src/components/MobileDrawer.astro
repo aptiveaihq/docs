@@ -23,8 +23,10 @@ import { menuTree } from '../nav.mjs';
 import NavIcon from './NavIcon.astro';
 import Logo from './Logo.astro';
 import AskLink from './AskLink.astro';
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
 
 const tree = menuTree(Astro.url.pathname);
+const t = Astro.locals.t;
 ---
 
 <div id="cc-mobile-drawer" class="cc-drawer-layer" aria-hidden="true" inert>
@@ -32,7 +34,7 @@ const tree = menuTree(Astro.url.pathname);
     <Logo variant="docs" size={20} />
     {/* Mirrors the orchestrator drawer's header ✕, so the parked-card tap stays
         the second door out and not the only one. */}
-    <button type="button" class="cc-drawer-close" aria-label="Close menu" data-cc-drawer-close>
+    <button type="button" class="cc-drawer-close" aria-label={t('aptive.drawer.close')} data-cc-drawer-close>
       <svg
         viewBox="0 0 24 24"
         aria-hidden="true"
@@ -48,7 +50,7 @@ const tree = menuTree(Astro.url.pathname);
     </button>
   </div>
 
-  <nav class="cc-drawer-nav" aria-label="Site navigation">
+  <nav class="cc-drawer-nav" aria-label={t('aptive.drawer.nav')}>
     {/* First row, as in the desktop header nav (src/ask.mjs). */}
     <AskLink variant="drawer" />
     {tree.map((group) => (
@@ -88,7 +90,24 @@ const tree = menuTree(Astro.url.pathname);
       </details>
     ))}
   </nav>
+
+  {/* The phone's language picker (the header shows its own from 50rem up). */}
+  <div class="cc-drawer-lang"><LanguageSelect /></div>
 </div>
+
+<style>
+  .cc-drawer-lang {
+    display: flex;
+    padding: 0.5rem 1.25rem 1rem;
+    font-size: 0.875rem;
+  }
+  .cc-drawer-lang :global(label) {
+    color: var(--sl-color-gray-2);
+  }
+  .cc-drawer-lang :global(select) {
+    width: auto;
+  }
+</style>
 
 <script is:inline>
   /* Drawer state machine. Two elements move together:

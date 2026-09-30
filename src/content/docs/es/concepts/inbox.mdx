@@ -1,0 +1,91 @@
+---
+title: Bandeja de entrada
+description: "La Bandeja de entrada reúne todo aquello para lo que un agente te necesita: una tarea que espera una respuesta, trabajo terminado, una programación omitida, un conector que dejó de funcionar. Cada tipo de notificación, dónde te llega y cómo responder desde ahí."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+La **Bandeja de entrada** es todo aquello para lo que un agente te necesitó,
+en un solo lugar: una tarea que espera tu respuesta, trabajo que terminó o
+falló, una programación que se omitió, un conector que dejó de funcionar.
+Responde una pregunta desde la Bandeja de entrada y la tarea continúa; no
+tienes que abrirla.
+
+Las notificaciones te llegan hasta en tres lugares:
+
+| Dónde | Qué ves |
+|---|---|
+| **En la aplicación** | La campana del encabezado, con el número de notificaciones sin leer, y la página **Bandeja de entrada** |
+| **Por correo** | Un mensaje a la dirección de tu cuenta, para los tipos que elijas |
+| **En este dispositivo** | Una notificación de escritorio mientras la pestaña de la consola está en segundo plano, si la activas |
+
+Eliges qué tipos te llegan y dónde en
+[Configuración → Notificaciones](/es/reference/settings/notifications).
+
+## La página Bandeja de entrada
+
+Abre **Bandeja de entrada** desde la barra lateral (o desde la página
+**Trabajo**). Muestra **Todas las notificaciones**, de la más reciente a la
+más antigua, con un cuadro de filtro. **Marcar todo como leído** pone a cero
+el número de sin leer; **Descartar todo** vacía la lista. Cada notificación
+tiene su propia **×** para descartarla y un botón para actuar sobre ella:
+
+- **Responder**: para una tarea que te espera; se abre ahí mismo un cuadro de
+  respuesta, y **Enviar respuesta** se la envía a la tarea.
+- **Ver tarea**: abre la tarea.
+- **Abrir**: abre aquello de lo que trata la notificación.
+
+La campana del encabezado abre las mismas notificaciones como un panel, con
+**Marcar todo como leído** y **Borrar**, desde cualquier página.
+
+<Aside type="tip">
+  Una tarea que espera tu respuesta también muestra una tarjeta que te sigue de
+  página en página hasta que respondes, así que es difícil pasar por alto una
+  pregunta aunque estés trabajando en otra parte de la consola.
+</Aside>
+
+## De qué te avisamos
+
+| Notificación | Se envía cuando | Se envía a |
+|---|---|---|
+| **Una tarea termina** | Una tarea se completa | La persona que la inició |
+| **Una tarea falla** | Una tarea falla | La persona que la inició |
+| **Una tarea espera una respuesta** | Un agente hace una pregunta o se detiene para pedir una aprobación | La persona que la inició |
+| **Un agente te envía un mensaje, o alguien comparte una tarea contigo** | Un agente te escribe por tu nombre, o se comparte contigo una tarea, una programación o un agente | Esa persona |
+| **Una programación omite una tarea** | [Se omite la ejecución de una programación](/es/concepts/schedules#ejecuciones-omitidas), salvo por los motivos silenciosos | Todas las personas que pueden ver la programación |
+| **Un conector necesita volver a conectarse** | La credencial de un [conector](/es/concepts/connectors) dejó de funcionar | El espacio de trabajo |
+| **Alguien pide un cambio en un agente** | Un agente pide [cambiarse a sí mismo](/es/concepts/agents#cómo-un-agente-se-actualiza-a-sí-mismo) en una tarea iniciada por alguien que no puede aprobarlo | Los propietarios y administradores que pueden aprobarlo |
+| **Un cambio que pediste fue aprobado o rechazado** | Se decide esa solicitud | La persona que la pidió |
+| **El crédito de IA se está agotando** | El crédito de IA de la cuenta baja de su nivel de alerta | Propietarios y administradores |
+| **La prueba está por terminar** | La prueba termina dentro de siete días | Propietarios y administradores |
+| **Un pago está vencido** | La factura más reciente no está pagada | Propietarios y administradores |
+
+Una solicitud de cambio llega con **Aprobar** y **Rechazar** en la propia
+tarjeta. Una programación que se sigue omitiendo por el mismo motivo envía una
+sola notificación, no una por ejecución, y las notificaciones de la cuenta se
+envían una vez por situación, así que un pico de actividad no te inunda.
+
+## Valores predeterminados
+
+| | En la aplicación | Por correo |
+|---|:---:|:---:|
+| **Una tarea espera una respuesta** | Siempre | Desactivado |
+| **Un agente te envía un mensaje, o alguien comparte una tarea contigo** | Activado | Activado |
+| **El crédito de IA se está agotando**, **La prueba está por terminar**, **Un pago está vencido** | Activado | Activado |
+| Todos los demás tipos | Activado | Desactivado |
+
+**Una tarea espera una respuesta** siempre se muestra en la aplicación: una
+tarea que se detuvo para preguntarte algo no tiene otra forma de avisarte.
+Todo lo demás, incluido el correo de ese tipo, lo puedes activar o desactivar
+tú.
+
+Cada correo incluye un enlace para cancelar la suscripción que desactiva ese
+mismo ajuste.
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Configuración de notificaciones" href="/es/reference/settings/notifications" description="Elige qué te llega y dónde." />
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="Preguntas y aprobaciones, en la propia tarea." />
+  <LinkCard title="Programaciones" href="/es/concepts/schedules" description="Qué omisiones avisan y cuáles no." />
+</CardGrid>

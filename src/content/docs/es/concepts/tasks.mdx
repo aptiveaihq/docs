@@ -1,0 +1,230 @@
+---
+title: Tareas
+description: Una tarea es un trabajo concreto, desde el mensaje que lo inicia hasta el resultado — con una transcripción, un cuadro de mensajes para guiarla, aprobaciones y preguntas, una vista en vivo de la computadora del agente, documentos, opciones para compartir y la lista de Tareas.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Una **tarea** es un trabajo concreto: *"concilia las facturas de proveedores de
+esta semana"*, *"averigua por qué no se ha enviado el pedido 4471"*. La inicias
+con un mensaje, un [agente](/es/concepts/agents) trabaja en ella — en una
+computadora propia, con los [conectores](/es/concepts/connectors) que se le
+otorgaron — y la tarea guarda todo lo que pasó: la conversación, cada paso que dio
+el agente, las preguntas que hizo, los archivos que escribió y lo que costó.
+
+Una tarea también puede iniciarla una [programación](/es/concepts/schedules). En
+cualquier caso, tiene su propia página, `/tasks/<id>`, y aparece en la
+[lista de Tareas](#la-lista-de-tareas).
+
+## Iniciar una tarea
+
+**Nueva tarea**, la primera fila de la barra lateral, es donde empieza el trabajo.
+
+<Steps>
+
+1. **Elige un agente.** Haz clic en uno en **Tus agentes**, o escribe `@` o `/`
+   en el cuadro de mensajes y elígelo. La página pasa a decir *Estás trabajando con …*,
+   con el propósito del agente y sus frases de inicio. Un agente fijado en la
+   barra lateral abre esta página directamente.
+
+2. **Di lo que necesitas.** Escribe tu mensaje, o haz clic en una frase de inicio
+   para enviar su mensaje de inmediato. Escribe `/` para agregar una
+   [habilidad](/es/concepts/skills). Adjunta archivos con **Adjuntar un archivo**
+   o arrastrándolos a la página — hasta 20 archivos de 25 MB cada uno; antes
+   puedes marcar las imágenes con **Anotar**. Consulta
+   [Archivos](/es/concepts/files).
+
+3. **Envía.** La tarea empieza y llegas a su página.
+
+</Steps>
+
+Si envías **sin agente**, obtienes una respuesta simple — sin computadora y sin
+acceso a tus sistemas. Esa tarea aparece como **Responder directamente**, y
+todavía puedes pasársela a un agente más tarde con **Elige un agente**.
+
+<Aside type="note">
+  Un agente trabaja en [una tarea a la vez](/es/concepts/agents#una-tarea-a-la-vez-por-agente).
+  Si ya está ocupado, el cuadro de mensajes te lo dice antes de que envíes, con un enlace
+  a la tarea en la que está trabajando.
+</Aside>
+
+## La página de la tarea
+
+### La transcripción
+
+La conversación, de arriba abajo: tus mensajes y sus adjuntos, las respuestas del
+agente y cada paso que dio, en palabras simples — *Abriendo …*, *Haciendo clic
+en …*, *Tituló la tarea: …*. Los pasos consecutivos se agrupan en una sola línea,
+como **12 pasos**; abre el grupo para leerlos. Un grupo cerrado indica en su línea
+cuando algo **no funcionó** o sigue **trabajando…**.
+
+### Guiarla
+
+Mientras el agente trabaja, el cuadro de mensajes sigue abierto: *Guía esta tarea, o @
+otro agente para que ayude…*. Un mensaje que envíes le llega al agente en su
+siguiente paso. Escribe `@` para **Sumar un agente** que ayude; en una tarea sin
+agente, **Elige un agente** le pasa toda la tarea a uno.
+
+Para detenerla, usa el botón en el lugar del botón de enviar — **Interrumpir esta
+tarea** la pausa donde está (*Envía otro mensaje para continuar*). Desde el
+teclado, **Esc** y luego **Enter** la interrumpen. **Terminar tarea**, en el
+encabezado, la detiene definitivamente y libera su computadora; lo que ya haya
+hecho en tus sistemas queda hecho.
+
+Una tarea que se completó, falló, se detuvo o está en pausa se retoma cuando le
+envías otro mensaje.
+
+### Preguntas y aprobaciones
+
+Cuando el agente te necesita, la tarea se detiene y una tarjeta ocupa el lugar
+del cuadro de mensajes.
+
+- **Una pregunta** — el agente pregunta algo que solo tú puedes responder, a veces
+  con opciones. Respóndela y la tarea continúa.
+- **Una aprobación** — el agente está a punto de hacer algo que no se puede
+  deshacer: enviar un mensaje, enviar un formulario, eliminar algo, gastar dinero
+  o escribir en uno de tus sistemas. La tarjeta dice exactamente qué, y tú eliges:
+
+| Botón | Efecto |
+|---|---|
+| **Aprobar** | Ejecuta esta acción una vez y continúa |
+| **Aprobar todo** | Ejecuta esta y deja de preguntar durante el resto de esta tarea |
+| **Rechazar** | Omite esta acción y dile al agente por qué — hay un cuadro para indicar qué hacer en su lugar |
+
+Una tarea que te espera aparece como **Te necesita**, y te llega a la
+[Bandeja de entrada](/es/concepts/inbox), donde puedes responderla sin abrir la
+tarea.
+
+<Aside type="caution" title="Enviarle al agente una contraseña o un código">
+  Un agente escribe una contraseña o un código de un solo uso solo si **tú se lo
+  enviaste** en la conversación, y solo después de una tarjeta de aprobación para
+  eso. Una vez escrito, el valor se elimina del historial de la tarea — la
+  transcripción lo muestra como oculto. Una tarjeta sin responder para un código
+  vence después de una hora. Los valores de menos de seis caracteres no se ocultan.
+  Para las cuentas que usas con frecuencia, mejor guarda un
+  [inicio de sesión personal](/es/reference/settings/sign-ins).
+</Aside>
+
+## La vista en vivo
+
+La **vista en vivo** es la computadora del agente, en vivo: su pantalla real,
+mientras el agente hace clic y escribe. Se abre sola en el panel lateral la
+primera vez que el agente usa la pantalla, y **Pantalla completa** le da toda la
+página.
+
+A través de ella puedes usar la computadora tú mismo — escribir un código de un
+solo uso, terminar un inicio de sesión, mostrarle al agente dónde está algo — y un
+cuadro de mensajes sobre la pantalla (**Mostrar chat** / **Ocultar chat**) te permite
+hablar con el agente mientras miras. **Mostrar lo que está haciendo el agente**
+abre un comentario de sus pasos a medida que avanza.
+
+Abrir y cerrar la vista en vivo te corresponde a ti; el agente no puede abrirla
+ni cerrarla. Cuando el agente te dice qué está haciendo su computadora, lo acaba
+de comprobar en lugar de suponerlo. Cuando una tarea termina, su computadora se
+conserva cinco minutos — así la siguiente tarea empieza más rápido y la pantalla
+sigue ahí — y luego se libera.
+
+## El panel lateral
+
+Tres pestañas junto a la transcripción, que pueden ubicarse a la derecha o debajo
+(**Diseño**), cambiar de tamaño o contraerse:
+
+- **Vista en vivo** — ver arriba.
+- **Detalles** — un **Resumen** cuando lo hay; las **Computadoras** que usó la
+  tarea; las **Herramientas** que tenía, y cualquier herramienta otorgada que no
+  pudo usar; y los **Detalles de la tarea**: estado, la instrucción, el agente, la
+  duración, lo que costó (por ejemplo *$0.004 de IA · 3 min en una computadora*)
+  y, en **Más detalles**, el modelo y cuándo empezó y terminó.
+- **Documentos** — todos los archivos de la tarea: los que se le adjuntaron, los
+  que devolvió un conector y los que creó el agente. Consulta
+  [Archivos](/es/concepts/files).
+
+## Nombres
+
+Una tarea toma su nombre de su primer mensaje hasta que, después de su primera
+respuesta, recibe un título corto propio. Un agente también puede ponerle título
+a una tarea cuando sus instrucciones dicen cómo. Haz clic en el título para
+cambiarle el nombre; un nombre que escribe una persona siempre tiene prioridad, y
+si lo borras vuelve el título automático.
+
+## Compartir una tarea y quién la ve
+
+Una tarea es privada para las personas que participan en ella:
+
+| Quién | La ve y participa | La elimina, cambia quién tiene acceso |
+|---|:---:|:---:|
+| La persona que la inició | ✓ | ✓ |
+| Las personas con las que se compartió | ✓ | — |
+| Las personas que pueden ver la programación que la inició | ✓ | — |
+| Los propietarios del espacio de trabajo, cuando la tarea tiene un agente | ✓ | ✓ |
+| Cualquier otra persona, incluidos los administradores | — | — |
+
+Una tarea sin agente nunca la ven los propietarios. Todos los que pueden ver una
+tarea participan en ella: la leen, miran su vista en vivo, envían mensajes,
+responden sus preguntas y la detienen.
+
+**Compartir**, en el encabezado de la tarea, agrega personas de tu espacio de
+trabajo; a cada una se le avisa con una notificación. **Copiar enlace** da una
+dirección corta `/s/…` a la tarea — el enlace solo indica el camino, y solo las
+personas con acceso pueden abrirla.
+
+**Eliminar tarea** borra la tarea, su transcripción y sus documentos, y no se
+puede deshacer. Requiere un propietario o administrador que además sea la persona
+que inició la tarea o un propietario del espacio de trabajo, y una tarea que
+todavía está trabajando no se puede eliminar.
+
+## La lista de Tareas
+
+**Tareas** (en **Trabajo**) muestra todas las tareas que puedes ver: el nombre en
+**Tarea**, con su resumen o la pregunta que espera respuesta, el **Agente**, el
+**Estado**, el **Inicio** y la **Duración**. Las tareas que te esperan se reúnen
+en una franja **Te necesitan** arriba, sean cuales sean los filtros. Las tareas
+iniciadas por la misma programación se agrupan en una fila que puedes abrir.
+
+Filtra por **Estado**, **Cuándo** (hoy, 7 días, 30 días) y **Agente**, o escribe
+en el cuadro de búsqueda para buscar en nombres, resúmenes, instrucciones y más.
+La lista se actualiza sola.
+
+### Estados
+
+| Estado | Significado |
+|---|---|
+| **En ejecución** | El agente está trabajando en ella |
+| **Te necesita** | Espera tu respuesta o tu aprobación |
+| **En pausa** | El agente respondió, o lo interrumpieron, y espera tu siguiente mensaje |
+| **Completada** | Terminada |
+| **Fallida** | Algo salió mal; la transcripción dice qué |
+| **Detenida** | Terminó a propósito — por una persona, o porque venció una aprobación — y el motivo queda registrado |
+
+Las tareas más antiguas también pueden mostrar **Incompleta**, **Omitida** o
+**Vencida**, estados que las tareas más nuevas registran como **Detenida** con un
+motivo.
+
+### El panel Actividad
+
+**Actividad**, en la barra lateral, abre tus tareas como un panel junto a la
+página en la que estés. **Agrupar por** **Agente** le da a cada agente con el que
+puedes iniciar una tarea un grupo propio — con un **+** para iniciar una tarea
+nueva con él —, mientras que **Estado** las agrupa por estado, y **Ninguno** (la
+opción predeterminada) muestra una sola lista. Las tareas que te esperan van
+primero. **Fijar arriba** mantiene una tarea al principio del panel para todos en
+el espacio de trabajo.
+
+## Acceso de pago
+
+Iniciar o reiniciar una tarea requiere [acceso de pago](/es/concepts/agents#acceso-de-pago).
+Sin él, la consola no se muestra: todos los que la abren llegan a una página que
+explica por qué — por ejemplo *No hay crédito de IA disponible* — con
+**Contáctanos**. El área de administración y la página de tu cuenta siguen
+abiertas, con el motivo en un aviso. Una tarea que ya estaba trabajando cuando se
+acabó el crédito termina; nunca se detiene a la mitad porque se acabó el crédito.
+Consulta [Uso y crédito](/es/administration/usage#acceso-de-pago).
+
+## Siguientes pasos
+
+<CardGrid>
+  <LinkCard title="Agentes" href="/es/concepts/agents" description="Quién trabaja en una tarea, y cómo está configurado." />
+  <LinkCard title="Bandeja de entrada" href="/es/concepts/inbox" description="Dónde te llega una tarea que te necesita." />
+  <LinkCard title="Programaciones" href="/es/concepts/schedules" description="Inicia tareas con una frecuencia." />
+  <LinkCard title="Archivos" href="/es/concepts/files" description="Los archivos que adjuntas, los que crea el agente y cuánto tiempo se conservan." />
+</CardGrid>

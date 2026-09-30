@@ -1,0 +1,83 @@
+---
+title: Inicios de sesión personales
+description: Guarda tus propias cuentas para que un agente inicie sesión en esos sitios por ti, sin que la contraseña llegue nunca al agente — cómo se guarda un inicio de sesión, dónde se puede escribir y cuál tiene prioridad.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Un **inicio de sesión personal** es una de tus propias cuentas — el portal de un
+proveedor, el sitio de una transportista, una app web que usa tu equipo —
+guardada para que un agente pueda iniciar sesión en ella mientras trabaja en
+**tus** tareas, sin preguntarte cada vez. La contraseña se guarda cifrada y no se
+vuelve a mostrar: ni a ti ni al agente.
+
+Los encuentras en **Configuración → Inicios de sesión personales**, o desde la
+página **Configurar**.
+
+## Agregar un inicio de sesión
+
+**Agregar un inicio de sesión** abre el formulario:
+
+<Steps>
+
+1. **Nombre** — lo que ve el agente, por ejemplo *Amazon*. Hasta 80 caracteres.
+
+2. **Sitios** — los sitios en los que se puede escribir este inicio de sesión, uno
+   por línea, solo `https`, hasta diez. El agente solo puede escribirlo en estos
+   sitios exactos.
+
+3. **Nombre de usuario** — se muestra aquí para que puedas distinguir tus cuentas.
+   El agente nunca lo ve.
+
+4. **Contraseña** — al editar, déjala vacía para conservar la guardada.
+
+</Steps>
+
+**Guardar inicio de sesión** lo guarda. La lista muestra de cada inicio de sesión
+el **Nombre**, los **Sitios**, la **Cuenta** y su **Último uso**, con **Editar** y
+**Eliminar**. Si eliminas uno, los agentes que lo usaban tendrán que pedirte que
+inicies sesión.
+
+<Aside type="caution" title="Los códigos no se pueden guardar.">
+  Un código de un solo uso, una app de autenticación o una frase de recuperación
+  no se pueden guardar como inicio de sesión. Cuando un sitio pide uno, el agente
+  te lo pide: ingrésalo tú mismo en la [vista en vivo](/es/concepts/tasks#la-vista-en-vivo)
+  de la tarea, o envíalo en la conversación — para que escriba un código que
+  enviaste hace falta tu aprobación, y después se oculta del historial de la
+  tarea.
+</Aside>
+
+## Cómo se usa un inicio de sesión
+
+El panel **Cómo se usan los inicios de sesión** de la página lo explica en
+detalle; en resumen:
+
+| | |
+|---|---|
+| **Almacenamiento** | Cifrado, y la consola nunca lo devuelve a nadie |
+| **Lo que ve el agente** | El nombre del inicio de sesión, sus sitios y un id — nunca el nombre de usuario ni la contraseña |
+| **Dónde se puede escribir** | Solo en un campo de uno de sus sitios `https` exactos, y una contraseña solo en un cuadro de contraseña. La consola comprueba ambas cosas antes de escribir |
+| **Lo que se le dice al agente** | Que el campo se llenó — nunca el valor. El texto de la página que lo mostraría se le oculta al agente. Las capturas de pantalla no |
+| **Envío** | Llenar un inicio de sesión nunca envía el formulario por sí solo |
+| **El navegador** | El navegador del agente no guarda contraseñas |
+| **Cambios** | Agregar, cambiar o eliminar un inicio de sesión queda registrado |
+
+Si ningún inicio de sesión guardado coincide con el sitio que tiene delante, o si
+podría servir más de uno, el agente te pregunta qué hacer.
+
+## Los tuyos y los del agente
+
+Un [agente](/es/concepts/agents#inicios-de-sesión) puede tener inicios de sesión propios,
+configurados en su editor. En una tarea, el agente puede usar **los suyos** y
+**los de la persona que inició la tarea**. Cuando ambos tienen un inicio de sesión
+con el mismo nombre, **se usa el tuyo** y no el del agente.
+
+Iniciar sesión con un inicio de sesión deja el navegador de la tarea conectado con
+esa cuenta, y la sesión se mantiene en tus tareas posteriores en el mismo
+navegador.
+
+## Siguientes pasos
+
+- [Configuración](/es/reference/settings) — cada sección de la página.
+- [Tareas](/es/concepts/tasks#la-vista-en-vivo) — la vista en vivo, donde terminas tú mismo un inicio de sesión.
+- [Agentes](/es/concepts/agents#inicios-de-sesión) — los inicios de sesión propios de un agente.

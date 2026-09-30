@@ -1,9 +1,11 @@
 ---
 // Search index is derived from src/nav.mjs, so every page in the nav tree is
-// searchable by construction. Adding a page there adds it here.
-import { paletteItems, NAV_ICONS } from '../nav.mjs';
+// searchable by construction. Adding a page there adds it here. Titles,
+// descriptions and links follow the page's language (/es/ → Spanish).
+import { paletteItems, NAV_ICONS, localeFromPath } from '../nav.mjs';
 
-const allItems = paletteItems();
+const allItems = paletteItems(localeFromPath(Astro.url.pathname));
+const t = Astro.locals.t;
 ---
 
 <div
@@ -11,6 +13,7 @@ const allItems = paletteItems();
   class="cp-overlay"
   data-items={JSON.stringify(allItems)}
   data-icons={JSON.stringify(NAV_ICONS)}
+  data-empty={t('aptive.palette.empty')}
   hidden
 >
   <div class="cp-panel">
@@ -19,14 +22,14 @@ const allItems = paletteItems();
         <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/>
         <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
-      <input id="cp-input" class="cp-input" type="text" placeholder="Search pages, guides, commands..." autocomplete="off" />
+      <input id="cp-input" class="cp-input" type="text" placeholder={t('aptive.palette.placeholder')} autocomplete="off" />
       <kbd class="cp-esc">ESC</kbd>
     </div>
     <div id="cp-results" class="cp-results"></div>
     <div class="cp-footer">
-      <span>&#8593;&#8595; navigate</span>
-      <span>&#8629; open</span>
-      <span>ESC close</span>
+      <span>&#8593;&#8595; {t('aptive.palette.navigate')}</span>
+      <span>&#8629; {t('aptive.palette.open')}</span>
+      <span>ESC {t('aptive.palette.close')}</span>
     </div>
   </div>
 </div>
@@ -77,7 +80,7 @@ const allItems = paletteItems();
         + '</a>';
     });
     if (filtered.length === 0) {
-      html = '<div class="cp-empty">No results found</div>';
+      html = '<div class="cp-empty">' + esc(overlay.dataset.empty || 'No results found') + '</div>';
     }
     resultsEl.innerHTML = html;
     var active = resultsEl.querySelector('.cp-active');

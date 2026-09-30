@@ -1,0 +1,55 @@
+---
+title: Te damos la bienvenida a AptiveAI Docs
+description: Trabajadores de IA para tu empresa. Conecta tus sistemas, pon agentes en computadoras reales y mantén cada tarea visible y bajo tu control.
+template: splash
+hero:
+  tagline: Trabajadores de IA para tu empresa. Conecta tus sistemas, pon agentes en computadoras reales y mantén cada tarea visible y bajo tu control.
+  actions:
+    - text: Empezar →
+      link: /es/getting-started/introduction
+      variant: primary
+    - text: Haz la Evaluación de IA
+      link: https://aptiveai.io/assessment
+      variant: secondary
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import AptiveBg from '../../../components/AptiveBg.astro';
+import LandingHeaderScroll from '../../../components/LandingHeaderScroll.astro';
+import AskLink from '../../../components/AskLink.astro';
+
+<AptiveBg />
+<LandingHeaderScroll />
+
+<AskLink variant="card" />
+
+<CardGrid>
+  <Card title="Tareas" icon="rocket">
+    Un trabajo concreto, desde el mensaje que lo inicia hasta el resultado. Un
+    agente lo hace en una computadora propia, y la tarea conserva todo lo que
+    pasó.
+
+    [Tareas →](/es/concepts/tasks/)
+  </Card>
+  <Card title="Agentes" icon="laptop">
+    Un trabajador de IA preparado para un trabajo concreto en tu empresa.
+    Describe el trabajo una vez —cómo lo hace tu empresa, a qué sistemas puede
+    llegar— y luego dale tareas.
+
+    [Agentes →](/es/concepts/agents/)
+  </Card>
+  <Card title="Programaciones" icon="random">
+    Inicia una tarea por su cuenta en los horarios que definas: revisar las
+    facturas cada día hábil a las 7 a. m. o enviar un resumen los lunes por la
+    mañana.
+
+    [Programaciones →](/es/concepts/schedules/)
+  </Card>
+  <Card title="Conectores" icon="puzzle">
+    Cómo llega un agente a los sistemas de tu empresa —un buzón de correo o
+    cualquier API HTTP con un documento OpenAPI— mediante herramientas
+    clasificadas como lecturas o escrituras.
+
+    [Conectores →](/es/concepts/connectors/)
+  </Card>
+</CardGrid>

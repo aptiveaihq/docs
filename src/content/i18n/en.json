@@ -1,0 +1,22 @@
+{
+  "aptive.nav.primary": "Primary",
+  "aptive.nav.breadcrumb": "Breadcrumb",
+  "aptive.nav.assessment": "AI Assessment",
+  "aptive.header.home": "AptiveAI Docs home",
+  "aptive.header.search": "Search",
+  "aptive.header.theme": "Toggle theme",
+  "aptive.header.login": "Log in",
+  "aptive.header.demo": "Book a demo →",
+  "aptive.header.demoShort": "Demo →",
+  "aptive.drawer.close": "Close menu",
+  "aptive.drawer.nav": "Site navigation",
+  "aptive.bottom.nav": "Mobile navigation",
+  "aptive.bottom.menu": "Menu",
+  "aptive.palette.placeholder": "Search pages, guides, commands...",
+  "aptive.palette.empty": "No results found",
+  "aptive.palette.navigate": "navigate",
+  "aptive.palette.open": "open",
+  "aptive.palette.close": "close",
+  "aptive.sidebar.collapse": "Collapse sidebar",
+  "aptive.sidebar.expand": "Expand sidebar"
+}

@@ -1,0 +1,175 @@
+---
+title: Usuarios y roles
+description: "Las personas de tu empresa: los tres roles y exactamente qué puede hacer cada uno, invitar a personas de una en una o desde un archivo, reenviar y revocar invitaciones, qué ve quien recibe la invitación, cambiar un rol, quitar a alguien y la regla del último propietario, y una cuenta que se registró sin invitación."
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Todas las personas que usan AptiveAI Agents en tu empresa pertenecen a tu
+**empresa** con uno de tres roles. Las personas se unen **por invitación**: un
+propietario o administrador las invita desde **Usuarios** en el [área de administración](/es/administration/overview),
+ellas aceptan y ya están dentro.
+
+**Usuarios** tiene dos pestañas:
+
+- **Personas**: todas las personas de la empresa, con su **Nombre**, **Correo**,
+  **Rol** y cuándo **Se unió**. Busca con *Buscar personas…*.
+- **Invitaciones**: todas las invitaciones enviadas, con quién fue **Invitado** y
+  por quién, el **Rol**, el **Estado** y cuándo fue **Creada**.
+
+## Roles
+
+| Rol | En resumen |
+|---|---|
+| **Propietario** | Todo lo que puede hacer un administrador, más roles, facturación y uso |
+| **Administrador** | Gestiona agentes, conectores y miembros |
+| **Miembro** | Inicia tareas y les da seguimiento |
+
+Un rol se aplica a toda la empresa. Lo que puede hacer cada uno:
+
+| Acción | Propietario | Administrador | Miembro |
+|---|:---:|:---:|:---:|
+| Iniciar tareas, guiarlas, responder preguntas, cambiarles el nombre y fijarlas | ✓ | ✓ | ✓ |
+| Crear un agente personal y configurarlo | ✓ | ✓ | ✓ |
+| Crear programaciones | ✓ | ✓ | ✓ |
+| Escribir habilidades para sí mismo | ✓ | ✓ | ✓ |
+| Guardar [inicios de sesión personales](/es/reference/settings/sign-ins) | ✓ | ✓ | ✓ |
+| Configurar, archivar y restaurar un agente compartido | ✓ | ✓ | — |
+| Compartir un agente o una habilidad con el espacio de trabajo | ✓ | ✓ | — |
+| Dar acceso a conectores a los agentes y elegir cuáles están [disponibles para agentes personales](/es/concepts/connectors#disponible-para-agentes-personales) | ✓ | ✓ | — |
+| Aprobar o rechazar una solicitud de cambio de un agente | ✓ | ✓ | — |
+| Eliminar una tarea | ✓ | ✓ | — |
+| Entrar al área de administración; invitar a personas, reenviar y revocar invitaciones, quitar a personas | ✓ | ✓ | — |
+| Cambiar el rol de alguien | ✓ | — | — |
+| Ver la facturación, las facturas y el uso | ✓ | — | — |
+
+Para eliminar una tarea también hay que ser quien la inició o un propietario
+del espacio de trabajo; consulta [Tareas](/es/concepts/tasks#compartir-una-tarea-y-quién-la-ve).
+Iniciar o configurar trabajo también requiere [acceso de pago](/es/administration/usage#acceso-de-pago),
+sea cual sea el rol.
+
+<Aside type="note">
+  Ver un agente, una tarea o una programación no depende solo del rol: los
+  agentes personales y las tareas privadas también están ocultos para los
+  administradores. Consulta [Acceso y uso compartido](/es/administration/access).
+</Aside>
+
+## Invitar a personas
+
+**Invitar a alguien** en **Usuarios** abre **Invitar miembros**.
+
+<Steps>
+
+1. **Agrega a cada persona.** Escribe una dirección de correo y elige un
+   **Rol**: **Administrador** o **Miembro**. **+ Agregar más** agrega una fila;
+   hasta 50 personas a la vez.
+
+2. **O sube un archivo.** **Subir CSV** lee una hoja de cálculo exportada: una
+   columna con el encabezado `email` (o simplemente una lista de direcciones) y,
+   opcionalmente, una columna `role`. Un rol vacío o desconocido se convierte en
+   **Miembro**, y el diálogo indica qué filas omitió o cambió y por qué.
+
+3. **Envía.** **Enviar invitaciones** crea las invitaciones y envía a cada
+   persona un enlace por correo.
+
+</Steps>
+
+El resultado se muestra fila por fila:
+
+| Resultado | Significado |
+|---|---|
+| **Enviada** | La invitación existe y el correo se envió |
+| **No enviada por correo** | La invitación existe, pero el correo no se entregó. Copia el enlace desde **Invitaciones** y envíalo tú |
+| **Ya invitado** | Esta dirección ya tiene una invitación pendiente. Reenvíala desde **Invitaciones** si la persona necesita un enlace nuevo |
+| **Ya tiene cuenta** | La dirección ya pertenece a otra empresa de AptiveAI, así que no se puede invitar. Contacta al soporte de AptiveAI para pasarla a la tuya |
+| **No es una dirección** | No es una dirección de correo |
+
+**Propietario nunca se ofrece en una invitación.** Un propietario se nombra
+desde la fila de una persona que ya existe; consulta [Cambiar un rol](#cambiar-un-rol).
+
+### Gestionar invitaciones
+
+Cada invitación **vence a los 7 días**. Su **Estado** es **Pendiente**,
+**Aceptada**, **Vencida** o **Revocada**. En una invitación pendiente:
+
+- **Copiar enlace** copia el enlace para aceptar, para enviarlo por otro medio.
+- **Reenviar** la vuelve a enviar por correo con un enlace nuevo y un nuevo
+  vencimiento. El enlace anterior deja de funcionar.
+- **Revocar** hace que el enlace deje de funcionar de inmediato. La fila se
+  queda en la lista como constancia de que la persona fue invitada.
+
+Una invitación vencida o revocada se puede quitar de la lista con **Eliminar**.
+Su enlace ya dejó de funcionar; siempre puedes volver a invitar a la persona.
+
+### Qué ve quien recibe la invitación
+
+El correo enlaza a una página de invitación: *… te invitó a unirte a … como
+miembro* (o *administrador*). Desde ahí puede elegir **Inicia sesión para
+aceptar** o **Crear una cuenta**.
+
+<Aside type="caution" title="Aceptar antes de abrir la consola">
+  La página de invitación le pide a la persona que use la dirección a la que se
+  envió la invitación y que acepte **antes** de abrir AptiveAI Agents, para que
+  su cuenta se una a tu empresa. Si inició sesión con otra dirección, ve
+  **Cuenta incorrecta** y puede cerrar sesión y usar la correcta.
+</Aside>
+
+**Aceptar invitación** la agrega a tu empresa con el rol que elegiste. Si
+vuelve a abrir el enlace después, dice *Te uniste a …*, con **Abrir AptiveAI
+Agents**. Una invitación que venció, se revocó o se reenvió muestra *Esta
+invitación no es válida: pídele a la persona que te invitó que te envíe una
+nueva invitación*.
+
+## Cambiar un rol
+
+Los propietarios cambian los roles desde el **Rol** en la fila de una persona
+en **Personas**. Las reglas:
+
+- Solo un **propietario** cambia roles. Un administrador ve el rol, pero no
+  puede cambiarlo.
+- Nadie cambia su **propio** rol.
+- Solo un propietario puede cambiar o quitar a otro **propietario**.
+- **El último propietario no puede perder ese rol.** *Este es el último
+  propietario de la empresa: primero haz propietario a otra persona.*
+
+Para traspasar la empresa, primero haz propietaria a la nueva persona y luego
+cambia tu propio rol, o pídele que lo cambie ella.
+
+## Quitar a alguien
+
+Quitar a alguien desde su fila en **Personas** pregunta *¿Quitar a … de esta
+empresa?* y, una vez confirmado:
+
+- elimina todos los accesos que tenía y la saca de la empresa: pierde el acceso
+  la próxima vez que carga una página;
+- deja de compartir tus tareas y programaciones con ella;
+- **conserva** todo lo que creó: las tareas, los agentes y las habilidades se quedan.
+
+Su cuenta de AptiveAI en sí no se elimina. Se aplican las mismas reglas que
+para los roles: los propietarios y administradores quitan a personas, nadie se
+quita a sí mismo, solo un propietario quita a un propietario y el último
+propietario no se puede quitar.
+
+Una persona que ya no tiene ningún acceso pero sigue vinculada a la empresa
+muestra **Sin acceso** en lugar de un rol, para que se pueda encontrar y
+quitar.
+
+## Alguien se registró sin invitación
+
+Cualquiera puede crear una cuenta de AptiveAI, pero solo una invitación la
+agrega a una empresa. Una cuenta sin invitación ve una sola página, vaya a
+donde vaya después de iniciar sesión: **Esta cuenta aún no está configurada**:
+*Si tu empresa ya usa AptiveAI Agents, pídele a tu administrador que te
+invite.* Su única acción es **Contáctanos**.
+
+Para darle acceso, invita la dirección con la que se registró. Cuando acepte,
+la cuenta se unirá a tu empresa.
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Acceso y uso compartido" href="/es/administration/access" description="Espacios de trabajo, y quién ve cada agente, tarea y programación." />
+  <LinkCard title="Uso y crédito" href="/es/administration/usage" description="El crédito de IA, en qué se gasta y la facturación." />
+  <LinkCard title="Agentes" href="/es/concepts/agents" description="Agentes personales y compartidos, y quién puede configurarlos." />
+  <LinkCard title="El área de administración" href="/es/administration/overview" description="Quién puede entrar y qué ve cada rol." />
+</CardGrid>

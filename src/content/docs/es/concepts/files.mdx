@@ -1,0 +1,223 @@
+---
+title: Archivos
+description: Cómo maneja AptiveAI Agents los archivos — adjuntarlos a una tarea, los archivos que devuelve un conector, los que un agente crea en su computadora, dónde se guarda cada uno y por cuánto tiempo, el visor que los abre, los archivos de conocimiento que consulta un agente y quién puede verlos.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Una [tarea](/es/concepts/tasks) puede llevar archivos: una factura que quieres
+que se revise, la exportación que devuelve un [conector](/es/concepts/connectors),
+el informe que el agente prepara para ti. Sea cual sea su origen, los archivos
+de una tarea se guardan juntos: aparecen en el panel lateral de la tarea, se
+abren en el mismo visor, se pueden descargar y se copian a la computadora del
+agente para que pueda trabajar con ellos.
+
+A un [agente](/es/concepts/agents) también se le pueden dar **archivos de
+conocimiento** — listas de precios, procedimientos, contratos — que consulta en
+cada tarea. Esos pertenecen al agente y no a una tarea concreta; consulta
+[Archivos de conocimiento](#archivos-de-conocimiento).
+
+## De dónde vienen los archivos de una tarea
+
+| Origen | Cómo llega | Tamaño máximo | Se guarda durante |
+|---|---|---|---|
+| **Lo adjuntas tú** | Desde el cuadro de mensajes, al enviar un mensaje | 25 MB | 2 días |
+| **Lo devuelve un conector** | Un archivo en la respuesta del conector, o una respuesta demasiado grande para entregársela entera al agente | 10 MB | 10 días |
+| **Lo crea el agente** | Se guarda como resultado de su trabajo en su computadora | 10 MB | 10 días |
+
+Cada espacio de trabajo puede guardar hasta 10 GB de archivos que todavía no
+han vencido. Si se supera, un archivo nuevo se rechaza con el mensaje *este
+espacio de trabajo agotó su espacio de almacenamiento de archivos* hasta que
+venzan los más antiguos.
+
+## Adjuntar archivos
+
+Adjunta archivos a cualquier mensaje — en **Nueva tarea** o en una tarea que ya
+está en curso — con **Adjuntar un archivo**, o arrastrándolos a la página
+(*Suelta archivos para adjuntarlos*).
+
+- **Hasta 20 archivos por mensaje, de 25 MB cada uno.** Puedes adjuntar
+  cualquier tipo de archivo.
+- **Puedes marcar las imágenes antes de enviarlas.** Abre la imagen y elige
+  **Anotar**: dibuja a mano alzada, líneas, rectángulos y elipses, o agrega
+  texto, en rojo, azul, verde o gris. **Guardar imagen anotada** reemplaza la
+  imagen por una copia PNG con tus marcas. Un archivo ya enviado no se puede
+  anotar.
+- **El agente ve de inmediato las imágenes adjuntas.** Una imagen PNG, JPEG, GIF
+  o WebP de hasta 5 MB le llega al agente dentro de tu mensaje — hasta tres por
+  mensaje —, así que puede responder *"¿qué dice esta captura de pantalla?"* sin
+  abrir nada.
+- **Cada archivo se coloca también en la computadora del agente**, en la
+  carpeta de archivos de la tarea, `/tmp/<task id>/files/`, y se le dice al
+  agente su nombre. Dos archivos con el mismo nombre en una tarea se mantienen
+  separados: el segundo `invoices.csv` pasa a ser `invoices-2.csv`.
+
+Un archivo enviado a mitad de una tarea aparece marcado como **Enviado durante
+la tarea** en el panel lateral.
+
+## Archivos que devuelve un conector
+
+Algunos conectores responden con un archivo — por ejemplo, una exportación en
+hoja de cálculo o CSV. El archivo se guarda con la tarea y el agente recibe su
+ruta, su tipo y tamaño, y una vista previa de su contenido. Una exportación
+grande puede llegar en varias partes.
+
+Una respuesta demasiado grande para entregársela entera al agente — cualquier
+cosa de más de 32 KB — se guarda del mismo modo, como archivo `.json` (o `.csv`
+o `.txt` cuando la respuesta es texto plano), y el agente recibe en su lugar una
+vista previa y la ruta. Luego lee lo que necesita del archivo en su
+computadora, en lugar de arrastrar la respuesta completa por la conversación.
+
+Si un archivo no se puede guardar, la respuesta del conector le llega igual al
+agente, con una nota que indica qué archivo no se guardó y por qué.
+
+## Archivos que crea el agente
+
+Un agente puede trabajar con archivos **mediante código, en su computadora**:
+leer una hoja de cálculo, sumar una columna, extraer el texto de un PDF,
+comparar dos listas, dibujar un gráfico, generar un informe. En la
+transcripción aparece como *Trabajando con los archivos de la computadora*.
+
+Todo lo que el agente guarda como resultado **se conserva para ti**: se muestra
+en la conversación debajo de la respuesta del agente y en el panel lateral. Los
+documentos comunes conservan su tipo real, así que un archivo PDF, Word, Excel,
+PowerPoint o CSV se abre como tal; una imagen que dibuje, el agente también la
+puede ver. También puede conservar a propósito cualquier otro archivo de la
+carpeta de archivos de la tarea, lo que aparece como *Guardando un archivo para
+ti*. Cada archivo conservado puede tener hasta 10 MB.
+
+Dos [límites de seguridad](/es/concepts/agents#límites-de-seguridad) de la configuración
+del agente controlan esto, y ambos están activados en un agente nuevo:
+
+| Límite de seguridad | Efecto |
+|---|---|
+| **Puede analizar archivos** | Si está desactivado, el agente no puede trabajar con archivos mediante código en absoluto |
+| **Aprobación antes de analizar** | La primera vez en una tarea, el agente pregunta: *El agente quiere leer y analizar los archivos de la computadora de esta tarea. Si lo apruebas, podrá hacerlo durante el resto de esta tarea sin volver a preguntar.* |
+
+Trabajar con archivos requiere la computadora del agente, así que una tarea sin
+agente no puede hacerlo.
+
+En su computadora, el agente también puede poner un archivo de la tarea en el
+campo de carga de un sitio web — lo que aparece como *Subiendo un archivo* —,
+por ejemplo para adjuntar una factura a un formulario en uno de tus sistemas.
+
+## Dónde se guardan los archivos
+
+Un archivo de una tarea tiene dos copias.
+
+- **La copia almacenada** se guarda en el almacenamiento de archivos de
+  AptiveAI durante el tiempo indicado en la [tabla de arriba](#de-dónde-vienen-los-archivos-de-una-tarea):
+  2 días para un archivo que adjuntaste, 10 días para uno que devolvió un
+  conector o que creó el agente. Esta es la copia que ves y descargas. Cuando
+  vence, el archivo sigue en la lista pero indica **La descarga expiró**, y ya
+  no se puede abrir.
+- **La copia en la computadora** es con la que trabaja el agente. Los archivos
+  se copian ahí cuando la tarea tiene una computadora. Una tarea nunca inicia
+  una computadora solo para guardar un archivo: hasta que tenga una, sus
+  archivos esperan, y se copian cuando la consigue — y de nuevo si pasa a otra
+  computadora. Esta copia dura solo lo que dure la computadora.
+
+Descarga tus resultados antes de que venzan si necesitas conservarlos.
+
+## Ver los archivos de una tarea
+
+- **En la transcripción.** Los archivos que adjuntaste aparecen debajo de tu
+  mensaje; los que creó el agente, debajo de su respuesta. Haz clic en uno para
+  abrirlo.
+- **En el panel lateral.** La pestaña **Documentos** muestra **Archivos**: todos
+  los archivos de la tarea, sea cual sea su origen. Cada uno muestra una vista
+  previa o un icono de tipo, su nombre, *Haz clic para ver* o *Haz clic para
+  descargar*, su tamaño, un botón de descarga, su ruta en la computadora y
+  cuándo llegó.
+
+## El visor
+
+Al hacer clic en un archivo, se abre en el visor. **◀** y **▶** (o las teclas
+de flecha) pasan de un archivo a otro del mismo mensaje o lista, **Esc** lo
+cierra, y siempre hay un botón de descarga.
+
+| Archivo | Se muestra como |
+|---|---|
+| **Imágenes** — PNG, JPEG, GIF, WebP, BMP | La imagen, con **Acercar**, **Alejar** y **Restablecer zoom** |
+| **PDF** | El lector de PDF de tu propio navegador — páginas, zoom, búsqueda e impresión. **Abrir en una pestaña nueva** lo muestra a tamaño completo, que es la mejor opción en un teléfono |
+| **Hojas de cálculo** — Excel (`.xlsx`, `.xlsm`, `.xls`), OpenDocument (`.ods`), CSV y TSV | Una tabla con columnas con letras y filas numeradas, una pestaña por hoja. Se muestran hasta 5,000 filas, 200 columnas y 50 hojas |
+| **Word** (`.docx`) | El documento |
+| **PowerPoint** (`.pptx`) | Las diapositivas — *Vista previa — el diseño puede diferir de PowerPoint.* |
+| **Markdown** | Texto con formato |
+| **Texto y datos** — `.txt`, `.log`, JSON, XML, YAML | Una vista de texto de solo lectura, con resaltado para JSON, XML y YAML. Se muestran los primeros 500,000 caracteres |
+| **Cualquier otro** | Su nombre y tamaño, con **Descargar** |
+
+Cuando una parte de un archivo no se muestra, el visor lo indica; la descarga
+siempre es el archivo completo.
+
+## Archivos de conocimiento
+
+Los archivos de conocimiento se suben en el creador del agente, en
+**Configurar** → [**Conocimiento**](/es/concepts/agents#conocimiento), y
+pertenecen a ese agente. No vencen y no se copian a su computadora: el agente
+los consulta y los lee directamente, en cada tarea en la que trabaja.
+
+| | |
+|---|---|
+| **Tipos de archivo** | PDF, imágenes PNG y JPEG, texto (`.txt`, `.md`, `.csv`), Word (`.docx`), Excel (`.xlsx`) y PowerPoint (`.pptx`) |
+| **Límites** | 25 MB por archivo, 20 archivos por agente, hasta 50 páginas escaneadas por archivo |
+
+Cuando se agrega un archivo, se lee una vez, y su estado pasa de *Leyendo el
+archivo…* a **Listo** — o a **Falló**, con el motivo.
+
+- **Los PDF** se leen a partir de su texto. Una página sin texto — un escaneo —
+  se lee con reconocimiento de texto, en inglés y en español, y el estado
+  indica cuántas páginas escaneadas se leyeron. Una imagen se lee del mismo
+  modo. Solo texto impreso: no se leen la letra manuscrita, los gráficos ni las
+  fotos.
+- **Las hojas de cálculo y los archivos CSV** se guardan como tablas: cada fila
+  sigue siendo una fila, con los nombres de sus columnas. Los valores de Excel
+  conservan su formato — las fechas como fechas, los porcentajes como
+  porcentajes — y cada hoja es una página.
+- **Los archivos de Word y de texto** se dividen en páginas de unos 3,000
+  caracteres; **PowerPoint** es una página por diapositiva.
+
+En una tarea, el agente ve el nombre, el número de páginas y la descripción de
+cada archivo. Cuando necesita un dato, los consulta (*Buscando … en su
+conocimiento*) y lee las páginas que necesita, hasta diez a la vez (*Leyendo un
+archivo de conocimiento*).
+
+<Aside type="caution" title="La búsqueda encuentra palabras, no significados.">
+  La búsqueda entiende distintas formas de una palabra en inglés y en español —
+  *office* encuentra *offices*, *oficina* encuentra *oficinas* —, pero no
+  traduce ni adivina el significado: *office* no encuentra *oficina*, y un error
+  de escritura puede no encontrar nada. Dale a cada archivo una
+  **descripción** con las palabras con las que la gente va a preguntar, aunque
+  el archivo use otras.
+</Aside>
+
+## Quién puede ver los archivos de una tarea
+
+Un archivo lo pueden ver exactamente las personas que pueden
+[ver su tarea](/es/concepts/tasks#compartir-una-tarea-y-quién-la-ve): quien la inició,
+las personas con quienes se compartió, quienes pueden ver la programación que
+la inició y los propietarios del espacio de trabajo cuando la tarea tiene un
+agente. Los administradores no tienen acceso adicional. Un archivo que
+adjuntaste pero que todavía no enviaste solo lo ves tú. Cuando se elimina una
+tarea, nadie puede abrir sus archivos.
+
+Los archivos de conocimiento de un agente aparecen en su creador. Solo las
+personas que pueden configurar el agente los agregan, describen o quitan, y el
+agente solo consulta los suyos. La consola no ofrece la descarga de un archivo
+de conocimiento, así que guarda tu propia copia.
+
+<Aside type="note" title="Contraseñas y códigos">
+  Una contraseña o un código que le envías a un agente en la conversación se
+  oculta del historial de la tarea una vez que se ha escrito — consulta
+  [Enviarle al agente una contraseña o un código](/es/concepts/tasks#preguntas-y-aprobaciones).
+  Eso se aplica a la conversación. Un archivo se guarda exactamente como se
+  envió, así que no pongas contraseñas en los archivos que adjuntas.
+</Aside>
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="Donde se adjuntan, se crean y se listan los archivos." />
+  <LinkCard title="Agentes" href="/es/concepts/agents#conocimiento" description="Dale a un agente archivos de conocimiento y define sus límites de seguridad." />
+  <LinkCard title="Conectores" href="/es/concepts/connectors" description="Los sistemas que devuelven archivos a una tarea." />
+</CardGrid>
