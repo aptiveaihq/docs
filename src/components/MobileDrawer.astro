@@ -19,14 +19,29 @@
  * the sidebar, the desktop header nav and the Ctrl+K palette. Nothing about the
  * navigation is restated here.
  */
-import { menuTree } from '../nav.mjs';
+import config from 'virtual:starlight/user-config';
+import { menuTree, stripLocale, localizePath } from '../nav.mjs';
 import NavIcon from './NavIcon.astro';
 import Logo from './Logo.astro';
 import AskLink from './AskLink.astro';
-import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
 
 const tree = menuTree(Astro.url.pathname);
 const t = Astro.locals.t;
+
+// The language row: Starlight's own locales config (astro.config.mjs) for the
+// codes and names, Starlight's route data for which one this page is in, and
+// the same slug mapping the rest of the chrome uses, so /concepts/tasks/ ↔
+// /es/concepts/tasks/ and / ↔ /es/. Each name is in its own language, so the
+// row is readable whichever language the reader is stuck in.
+const currentLocale = Astro.locals.starlightRoute.locale ?? 'root';
+const pagePath = stripLocale(Astro.url.pathname);
+const languages = Object.entries(config.locales ?? {}).map(([code, locale]) => ({
+  code,
+  label: locale!.label,
+  lang: locale!.lang,
+  href: localizePath(pagePath, code === 'root' ? 'en' : code),
+  current: code === currentLocale,
+}));
 ---
 
 <div id="cc-mobile-drawer" class="cc-drawer-layer" aria-hidden="true" inert>
@@ -91,21 +106,63 @@ const t = Astro.locals.t;
     ))}
   </nav>
 
-  {/* The phone's language picker (the header shows its own from 50rem up). */}
-  <div class="cc-drawer-lang"><LanguageSelect /></div>
+  {/* The phone's language picker (the header shows its own from 50rem up),
+      drawn as one more drawer group so it reads as part of the menu. Pinned
+      below the scrolling nav, so it is on screen however far the tree is
+      scrolled or unfolded. */}
+  {config.isMultilingual && (
+    <div class="cc-drawer-lang">
+      <details class="bn-group" open>
+        <summary class="bottom-nav-menu-item bn-group-row">
+          <NavIcon name="languages" />
+          <span class="bn-group-label">{t('aptive.drawer.language')}</span>
+          <svg
+            class="bn-chevron"
+            aria-hidden="true"
+            focusable="false"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </summary>
+        <ul class="bn-sublist" aria-label={t('aptive.drawer.language')}>
+          {languages.map((language) => (
+            <li>
+              <a
+                href={language.href}
+                hreflang={language.lang}
+                lang={language.lang}
+                class:list={['bn-subitem', { current: language.current }]}
+                aria-current={language.current ? 'true' : undefined}
+                data-cc-lang={language.code}
+              >
+                <span class="bn-subitem-label">{language.label}</span>
+                {language.current && <NavIcon name="check" strokeWidth={2} />}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </div>
+  )}
 </div>
 
 <style>
   .cc-drawer-lang {
-    display: flex;
-    padding: 0.5rem 1.25rem 1rem;
-    font-size: 0.875rem;
+    flex: 0 0 auto;
+    border-top: 1px solid var(--sl-color-hairline);
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
   }
-  .cc-drawer-lang :global(label) {
-    color: var(--sl-color-gray-2);
-  }
-  .cc-drawer-lang :global(select) {
-    width: auto;
+  .cc-drawer-lang :global(.bn-subitem svg) {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-inline-start: auto;
   }
 </style>
 

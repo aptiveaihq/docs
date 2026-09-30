@@ -19,6 +19,7 @@ const chromeStrings = z.object({
   'aptive.header.demoShort': z.string(),
   'aptive.drawer.close': z.string(),
   'aptive.drawer.nav': z.string(),
+  'aptive.drawer.language': z.string(),
   'aptive.bottom.nav': z.string(),
   'aptive.bottom.menu': z.string(),
   'aptive.palette.placeholder': z.string(),

@@ -1083,11 +1083,15 @@ header.header {
   backdrop-filter: none;
 }
 
+/* On every page, the landing included: the bar's Menu is the phone's only
+   door to the drawer, and the drawer carries the language row — so a landing
+   page without the bar left a phone reader no way to switch language. */
 @media (max-width: 50rem) {
-  :root:not([data-has-hero]) .bottom-nav {
+  :root .bottom-nav {
     display: flex;
   }
-  :root:not([data-has-hero]) .search-trigger {
+  /* The bar carries Search; the header's would be a second copy. */
+  :root .search-trigger {
     display: none;
   }
 }
@@ -1358,7 +1362,7 @@ header.header {
    cookie banner) can reserve exactly that much and stay in sync if it
    changes. Only set where the bar is actually displayed. */
 @media (max-width: 50rem) {
-  :root:not([data-has-hero]) {
+  :root {
     --cc-bottom-nav-clearance: calc(68px + env(safe-area-inset-bottom, 0px));
   }
 }
