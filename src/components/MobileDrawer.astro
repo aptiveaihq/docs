@@ -22,6 +22,7 @@
 import { menuTree } from '../nav.mjs';
 import NavIcon from './NavIcon.astro';
 import Logo from './Logo.astro';
+import AskLink from './AskLink.astro';
 
 const tree = menuTree(Astro.url.pathname);
 ---
@@ -48,6 +49,8 @@ const tree = menuTree(Astro.url.pathname);
   </div>
 
   <nav class="cc-drawer-nav" aria-label="Site navigation">
+    {/* First row, as in the desktop header nav (src/ask.mjs). */}
+    <AskLink variant="drawer" />
     {tree.map((group) => (
       <details class="bn-group" open={group.open}>
         <summary class:list={['bottom-nav-menu-item', 'bn-group-row', { active: group.active }]}>

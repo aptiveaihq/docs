@@ -1,6 +1,7 @@
 ---
 import CommandPalette from './CommandPalette.astro';
 import Logo from './Logo.astro';
+import AskLink from './AskLink.astro';
 import { primaryNav, activeGroupLabel } from '../nav.mjs';
 
 // Build breadcrumb from sidebar tree, capturing first child href for parent links
@@ -49,15 +50,19 @@ const activeNav = activeGroupLabel(pathname);
       <span class="header-logo-desktop"><Logo variant={isHomePage ? 'full' : 'docs'} size={20} /></span>
     </a>
     <nav class="header-nav" aria-label="Primary">
+      {/* First entry, before the doc sections: opens the console with a
+          question about these docs prefilled (src/ask.mjs). */}
+      <AskLink variant="nav" />
       {navItems.map((item) => (
         <a
           href={item.href}
           class:list={["header-nav-link", { "header-nav-active": activeNav === item.key }]}
+          data-nav-collapsible
         >{item.label}</a>
       ))}
       {/* The AI Assessment is where a company starts with AptiveAI; it lives
           on the portal, so it sits beside the doc sections as an outbound link. */}
-      <a href="https://aptiveai.io/assessment" class="header-nav-link">AI Assessment</a>
+      <a href="https://aptiveai.io/assessment" class="header-nav-link" data-nav-collapsible>AI Assessment</a>
     </nav>
     {breadcrumb.length > 0 && (
       <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -108,6 +113,39 @@ const activeNav = activeGroupLabel(pathname);
 </div>
 
 <CommandPalette />
+
+<script is:inline>
+  /* Priority collapse for the header nav. The links never fit at every width
+     (1024 with the sidebar open already overflowed, and the Spanish labels are
+     longer), so instead of fixed breakpoints per language, links marked
+     data-nav-collapsible are hidden from the END (AI Assessment first, then the
+     sections right to left) until the nav clears the header's right cluster.
+     "Ask me anything" is not collapsible and always stays. Every section also
+     lives in the sidebar and the phone menu, so nothing becomes unreachable.
+     Re-runs on resize and once web fonts have loaded (they change widths).
+     Without JS, .header-nav clips instead of overlapping. */
+  (function () {
+    function fit() {
+      var nav = document.querySelector('.header-nav');
+      var end = document.querySelector('.header-end');
+      if (!nav || !end) return;
+      var items = nav.querySelectorAll('[data-nav-collapsible]');
+      for (var i = 0; i < items.length; i++) items[i].hidden = false;
+      if (getComputedStyle(nav).display === 'none') return;
+      var limit = end.getBoundingClientRect().left - 16;
+      for (var j = items.length - 1; j >= 0; j--) {
+        var last = nav.lastElementChild;
+        while (last && last.hidden) last = last.previousElementSibling;
+        if (!last || last.getBoundingClientRect().right <= limit) break;
+        items[j].hidden = true;
+      }
+    }
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    document.addEventListener('DOMContentLoaded', fit, { once: true });
+  })();
+</script>
 
 <script is:inline>
   (function() {
@@ -191,6 +229,12 @@ const activeNav = activeGroupLabel(pathname);
     align-items: center;
     gap: 1.5rem;
     margin-inline-start: 1.75rem;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .header-nav-link[hidden] {
+    display: none;
   }
 
   @media (min-width: 50rem) {
