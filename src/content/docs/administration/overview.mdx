@@ -1,6 +1,6 @@
 ---
 title: The admin area
-description: Where an enterprise's owners and admins manage it — who can enter the admin area, what each role sees there, how to reach it from the console and the website, and what AptiveAI handles for you.
+description: Where an enterprise's owners and admins manage it — who can enter the admin area, what each role sees there, how to reach it from AptiveAI Agents and the website, and what AptiveAI handles for you.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -8,12 +8,12 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 The **admin area** is where your company's account is looked after: the people
 in it, their roles, the invitations waiting to be accepted, and — for owners —
 billing and usage. It lives on the AptiveAI website at `aptiveai.io/admin`,
-beside the console rather than inside it, and it is open to the **owners** and
+beside AptiveAI Agents rather than inside it, and it is open to the **owners** and
 **admins** of your enterprise.
 
 Your day-to-day work — [tasks](/concepts/tasks), [agents](/concepts/agents),
 [schedules](/concepts/schedules), [connectors](/concepts/connectors) — stays in
-the console. The admin area is only about the account.
+AptiveAI Agents. The admin area is only about the account.
 
 ## Your account: enterprise, organization, workspace
 
@@ -41,19 +41,19 @@ what the levels mean for who sees what.
 Every admin page checks the role for itself, so the menu only lists what you
 can open. An admin who opens `/admin` is taken straight to **Users**, the one
 page that is theirs. Both roles also see **Agents** in the menu, which takes
-you back to the console.
+you back to AptiveAI Agents.
 
 <Aside type="note" title="Why billing is the owner's alone">
   Billing and usage are about money the company has agreed to pay, so they are
   shown to owners only. An admin who opens **Billing** or **Usage** is told
   that it is visible to the enterprise's owner. Everyone can still see the
-  account's status and the AI credit left in the console, under
+  account's status and the AI credit left in AptiveAI Agents, under
   [Settings → Plan & credit](/reference/settings#plan--credit).
 </Aside>
 
 ## Getting there
 
-- **From the console.** Open **Configure** in the sidebar and choose the
+- **From AptiveAI Agents.** Open **Configure** in the sidebar and choose the
   **Admin** card — *Members, invitations and billing for your enterprise, in
   the portal*. The card is only shown to owners and admins.
 - **From the website.** Signed in at `aptiveai.io`, owners and admins have an
@@ -62,7 +62,7 @@ you back to the console.
 - **Directly.** Go to `aptiveai.io/admin`. It is the same page for everyone;
   what it shows depends on your role.
 
-To go back, **Agents** in the admin menu opens the console. On a phone the
+To go back, **Agents** in the admin menu opens AptiveAI Agents. On a phone the
 admin menu sits in a bar at the bottom of the screen, with **Account** and
 **Home** beside it.
 
@@ -124,5 +124,5 @@ part of your admin area.
   <LinkCard title="Users and roles" href="/administration/users" description="Invite people, change roles, remove someone." />
   <LinkCard title="Access and sharing" href="/administration/access" description="Workspaces, and who sees which agent, task and schedule." />
   <LinkCard title="Usage and credit" href="/administration/usage" description="AI credit, what spends it, and billing." />
-  <LinkCard title="Settings" href="/reference/settings" description="Each person's own preferences in the console." />
+  <LinkCard title="Settings" href="/reference/settings" description="Each person's own preferences in AptiveAI Agents." />
 </CardGrid>

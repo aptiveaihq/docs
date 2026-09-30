@@ -38,8 +38,8 @@ export const ASK = {
       'What can you help me with in the AptiveAI documentation? Search the docs and list the topics you can help with.',
     cardTitle: 'Ask me anything',
     cardBody:
-      'Not sure where to start? Ask an AptiveAI agent. It opens the console and asks for you: the agent searches these docs and answers with links to the pages.',
-    cardCta: 'Open the console',
+      'Not sure where to start? Ask an AptiveAI agent. It opens AptiveAI Agents and asks for you: the agent searches these docs and answers with links to the pages.',
+    cardCta: 'Open Agents',
   },
   es: {
     label: 'Pregúntame lo que quieras',
@@ -47,8 +47,8 @@ export const ASK = {
       '¿En qué me puedes ayudar con la documentación de AptiveAI? Busca en la documentación y enumera los temas en los que me puedes ayudar.',
     cardTitle: 'Pregúntame lo que quieras',
     cardBody:
-      '¿No sabes por dónde empezar? Pregúntale a un agente de AptiveAI. Abre la consola y pregunta por ti: el agente busca en esta documentación y te responde con enlaces a las páginas.',
-    cardCta: 'Abrir la consola',
+      '¿No sabes por dónde empezar? Pregúntale a un agente de AptiveAI. Abre AptiveAI Agents y pregunta por ti: el agente busca en esta documentación y te responde con enlaces a las páginas.',
+    cardCta: 'Abrir Agentes',
   },
 };
 

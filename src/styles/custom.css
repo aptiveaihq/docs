@@ -63,6 +63,13 @@
      (packages/ui/src/theme.css --accent-blue dark #569cd6). */
   --docs-focus-ring: #569cd6;
   --signup-text: #000000;
+  /* The "Open Agents" CTA gradient (.agents-cta) — copied from the portal's
+     dark-theme --cta-* tokens (apps/portal/src/app/globals.css, html.dark). */
+  --cta-gradient-from: #10c0f0; /* = brand cyan */
+  --cta-gradient-to: #0080e0;   /* = brand blue */
+  --cta-text: #000000;
+  --cta-glow: rgba(16, 192, 240, 0.35);
+  --cta-sheen: rgba(255, 255, 255, 0.35);
 }
 
 /* Light theme — matches portal/orchestrator light mode
@@ -98,6 +105,14 @@
   /* Text on the brand-green primary CTA — black in BOTH themes, matching
      portal MARKETING_CTA (`text-black`). #000 on #0890b8 is ~6.6:1 (AA). */
   --signup-text: #000000;
+  /* The "Open Agents" CTA gradient (.agents-cta) — the portal's light-theme
+     --cta-* tokens: brand stops darkened so the off-white label keeps
+     contrast >= 4.5:1 (apps/portal/src/app/globals.css, :root). */
+  --cta-gradient-from: #0890b8; /* = light --docs-green */
+  --cta-gradient-to: #005fb8;   /* = light blue */
+  --cta-text: #f3f3f3;
+  --cta-glow: rgba(8, 144, 184, 0.3);
+  --cta-sheen: rgba(255, 255, 255, 0.3);
 }
 
 /* Code blocks — match portal code snippet styling */
@@ -1655,4 +1670,98 @@ html.theme-transition *::after {
 :root[data-theme='dark'] .sl-badge.beta-badge,
 :root[data-theme='dark'] .beta-badge {
   color: #4ec9b0;
+}
+
+
+/* ============================================================
+   "OPEN AGENTS" CTA — every link from the docs into the product
+   ============================================================
+   Copied from the portal's `.console-cta` (aptiveaihq/core
+   apps/portal/src/app/globals.css), the portal's one animated-gradient
+   element: "living gradient = takes you into the product". Brand-gradient
+   fill drifting on `gradient-drift`, a diagonal sheen sweeping across every
+   ~7s, hover lift + glow, arrow nudge, and a brand focus ring. Colour comes
+   only from the --cta-* tokens in the theme blocks above; motion is
+   transform / background-position only. Layout (padding, radius, size) stays
+   with each surface in AskLink.astro. Keep in step with the portal. */
+.agents-cta {
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(
+    90deg,
+    var(--cta-gradient-from),
+    var(--cta-gradient-to),
+    var(--cta-gradient-from)
+  );
+  background-size: 200% 100%;
+  color: var(--cta-text);
+  animation: gradient-drift 8s ease-in-out infinite alternate;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+.agents-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px var(--cta-glow);
+}
+.agents-cta:active {
+  transform: scale(0.98);
+}
+.agents-cta:focus-visible {
+  outline: 2px solid var(--docs-green);
+  outline-offset: 2px;
+}
+.agents-cta .agents-cta-arrow {
+  transition: transform 160ms ease;
+}
+.agents-cta:hover .agents-cta-arrow {
+  transform: translateX(3px);
+}
+/* Diagonal highlight sweeping across every ~7s — decorative, translateX only
+   (the diagonal comes from the gradient angle). */
+.agents-cta::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  background: linear-gradient(105deg, transparent 0%, var(--cta-sheen) 50%, transparent 100%);
+  transform: translateX(-120%);
+  animation: agents-cta-sheen 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes gradient-drift {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+
+@keyframes agents-cta-sheen {
+  0%,
+  78% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+/* Reduced motion, as the portal does it: the gradient rests at its start
+   position, no sheen, no lift or nudge. The portal also zeroes transition
+   durations through a global gate (platform theme.css); the docs have no such
+   gate, so the transitions are switched off here explicitly. */
+@media (prefers-reduced-motion: reduce) {
+  .agents-cta,
+  .agents-cta::after,
+  .agents-cta .agents-cta-arrow {
+    animation: none;
+    transition: none;
+  }
+  .agents-cta,
+  .agents-cta:hover,
+  .agents-cta:active,
+  .agents-cta:hover .agents-cta-arrow {
+    transform: none;
+  }
 }

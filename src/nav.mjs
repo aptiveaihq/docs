@@ -43,7 +43,7 @@ export const nav = [
     pinned: true,
     items: [
       { label: 'Introduction', slug: 'getting-started/introduction', desc: 'What is AptiveAI', es: { label: 'Introducción', desc: 'Qué es AptiveAI' } },
-      { label: 'Finding your way around', slug: 'getting-started/finding-your-way', desc: 'A tour of the console: sidebar, hubs, Activity, phone', es: { label: 'Cómo orientarte', desc: 'Un recorrido por la consola: barra lateral, secciones, Actividad, teléfono' } },
+      { label: 'Finding your way around', slug: 'getting-started/finding-your-way', desc: 'A tour of AptiveAI Agents: sidebar, hubs, Activity, phone', es: { label: 'Cómo orientarte', desc: 'Un recorrido por AptiveAI Agents: barra lateral, secciones, Actividad, teléfono' } },
     ],
   },
   {
@@ -111,7 +111,7 @@ export const nav = [
     items: [
       { label: 'Home', link: 'https://aptiveai.io', es: { label: 'Inicio' } },
       { label: 'AI Assessment', link: 'https://aptiveai.io/assessment', es: { label: 'Evaluación de IA' } },
-      { label: 'Console', link: 'https://console.aptiveai.io', es: { label: 'Consola' } },
+      { label: 'Agents', link: 'https://console.aptiveai.io', es: { label: 'Agentes' } },
       { label: 'Admin', link: 'https://aptiveai.io/admin', es: { label: 'Administración' } },
     ],
   },
