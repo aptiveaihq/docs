@@ -17,8 +17,16 @@
  * Plain `.mjs` so both Astro components and Node scripts can import it.
  */
 
-/** The console's origin, without a trailing slash. */
-export const CONSOLE_URL = 'https://console.aptiveai.io';
+/**
+ * The console's origin, without a trailing slash. `PUBLIC_CONSOLE_URL`
+ * overrides it for a local stack (`PUBLIC_CONSOLE_URL=http://localhost:3100
+ * pnpm dev`); a build without it links to production. `import.meta.env` is
+ * absent when a Node script imports this file, hence the guard.
+ */
+export const CONSOLE_URL = (
+  (import.meta.env && import.meta.env.PUBLIC_CONSOLE_URL) ||
+  'https://console.aptiveai.io'
+).replace(/\/+$/, '');
 
 /** Per page language: the link's label and the question it prefills. */
 export const ASK = {
