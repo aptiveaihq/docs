@@ -77,7 +77,7 @@ export const nav = [
     primary: true,
     pinned: true,
     items: [
-      { label: 'Settings', slug: 'reference/settings', desc: 'Every section of Settings', es: { label: 'Configuración', desc: 'Cada sección de Configuración' } },
+      { label: 'Settings', slug: 'reference/settings', desc: 'Every section of Settings', es: { label: 'Ajustes', desc: 'Cada sección de Ajustes' } },
       { label: 'Personal sign-ins', slug: 'reference/settings/sign-ins', desc: 'Your own accounts an agent signs in to for you', es: { label: 'Inicios de sesión personales', desc: 'Tus propias cuentas, en las que un agente inicia sesión por ti' } },
       { label: 'Notifications', slug: 'reference/settings/notifications', desc: 'Which notifications reach you, and how', es: { label: 'Notificaciones', desc: 'Qué notificaciones te llegan y cómo' } },
     ],
