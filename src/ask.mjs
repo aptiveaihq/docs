@@ -13,6 +13,10 @@
  * `question` below is the same sentence the console's preset holds, kept here
  * for the page's own copy; change both together.
  *
+ * The console sends on arrival only when the click carries this site's
+ * origin as its Referer, which is why the links are `rel="noopener"` and
+ * never `noreferrer` (AskLink.astro); a link from anywhere else is prefilled.
+ *
  * "Search the docs" in the question is what makes the task load the console's
  * built-in `docs` skill, which reads this site through `/api/docs.json`.
  *

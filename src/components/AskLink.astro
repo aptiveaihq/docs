@@ -13,6 +13,11 @@
  *   variant="nav"    — first entry of the desktop header nav
  *   variant="drawer" — first row of the phone menu (MobileDrawer)
  *   variant="card"   — the landing page's lead card
+ *
+ * ⚠ `rel="noopener"`, NOT `noopener noreferrer`, on purpose: the console
+ * sends the question on arrival only when the request's Referer is this
+ * site's origin (`ask-ticket.ts` in aptiveaihq/core). Without it, the question
+ * is only prefilled and the reader has to press Send.
  */
 import { askFor, askHref } from '../ask.mjs';
 import NavIcon from './NavIcon.astro';
@@ -29,7 +34,7 @@ const href = askHref(locale);
 ---
 
 {variant === 'nav' && (
-  <a href={href} target="_blank" rel="noopener noreferrer" class="header-nav-link ask-nav-link agents-cta" data-ask-link>
+  <a href={href} target="_blank" rel="noopener" class="header-nav-link ask-nav-link agents-cta" data-ask-link>
     <NavIcon name="sparkles" strokeWidth={1.75} />
     <span>{ask.label}</span>
     <span aria-hidden="true" class="agents-cta-arrow">↗</span>
@@ -37,7 +42,7 @@ const href = askHref(locale);
 )}
 
 {variant === 'drawer' && (
-  <a href={href} target="_blank" rel="noopener noreferrer" class="bottom-nav-menu-item ask-drawer-link agents-cta" data-ask-link>
+  <a href={href} target="_blank" rel="noopener" class="bottom-nav-menu-item ask-drawer-link agents-cta" data-ask-link>
     <NavIcon name="sparkles" />
     <span class="bn-group-label">{ask.label}</span>
     <span aria-hidden="true" class="agents-cta-arrow">↗</span>
@@ -46,7 +51,7 @@ const href = askHref(locale);
 
 {variant === 'card' && (
   <div class="ask-card-wrap not-content">
-  <a href={href} target="_blank" rel="noopener noreferrer" class="ask-card" data-ask-link>
+  <a href={href} target="_blank" rel="noopener" class="ask-card" data-ask-link>
     <span class="ask-card-icon"><NavIcon name="sparkles" strokeWidth={1.75} /></span>
     <span class="ask-card-text">
       <span class="ask-card-title">{ask.cardTitle}</span>
