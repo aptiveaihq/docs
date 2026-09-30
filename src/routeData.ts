@@ -12,8 +12,13 @@ import { defineRouteMiddleware } from '@astrojs/starlight/route-data';
  *
  * Starlight's default title is page-first (`Page | Site`, via
  * `titleDelimiter`); this middleware rewrites the generated `<title>` head
- * entry to the brand-first order. It only touches the `title` tag — per-page
- * `og:*`/`twitter:*` overrides are left untouched.
+ * entry to the brand-first order.
+ *
+ * `og:title` follows it, without the dev prefix (a shared link is never a
+ * local tab): Starlight's default is the bare page title, so a link preview
+ * read "Tareas" while the tab read "AptiveAI Docs · Tareas". A page that sets
+ * its own `og:title` in frontmatter keeps it, as ClusterCode's landing page
+ * does for its share message.
  */
 const envPrefix = import.meta.env.DEV ? '[LOCAL Docs] ' : '';
 const BRAND = 'AptiveAI Docs';
@@ -38,4 +43,15 @@ export const onRequest = defineRouteMiddleware((context) => {
   titleTag.content = hasFrontmatterTitle
     ? `${envPrefix}${titleTag.content ?? ''}`
     : `${envPrefix}${pageTitle}`;
+
+  const frontmatterHead = starlightRoute.entry.data.head ?? [];
+  const hasFrontmatterOgTitle = frontmatterHead.some(
+    (tag) => tag.tag === 'meta' && tag.attrs?.property === 'og:title',
+  );
+  const ogTitle = starlightRoute.head.find(
+    (tag) => tag.tag === 'meta' && tag.attrs?.property === 'og:title',
+  );
+  if (ogTitle?.attrs && !hasFrontmatterOgTitle) {
+    ogTitle.attrs.content = hasFrontmatterTitle ? (titleTag.content ?? '').replace(envPrefix, '') : pageTitle;
+  }
 });
