@@ -1,6 +1,6 @@
 ---
 title: Cómo orientarte en AptiveAI Agents
-description: Un recorrido por AptiveAI Agents — la barra lateral, de Nueva tarea a Ayuda y configuración; cómo empezar a trabajar con un agente; las páginas Trabajo, Configurar y Ayuda y configuración y sus botones Preguntar; el panel Actividad; dónde están la Configuración, los agentes y el área de administración; y AptiveAI Agents en un teléfono.
+description: Un recorrido por AptiveAI Agents — la barra lateral, de Nueva tarea a Ayuda y Ajustes; cómo empezar a trabajar con un agente; las páginas Trabajo, Configurar y Ayuda y Ajustes y sus botones Preguntar; el panel Actividad; dónde están la Configuración, los agentes y el área de administración; y AptiveAI Agents en un teléfono.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -38,9 +38,9 @@ La barra lateral es la misma en todas las páginas. De arriba abajo:
 | **Agentes** | Haz clic para desplegar o plegar todos los agentes que puedes ver; la lista termina en **Todos los agentes**, que abre la [página Agentes](/es/concepts/agents#dónde-aparecen-los-agentes). |
 | **Actividad** | Abre el [panel Actividad](#el-panel-actividad) junto a la página en la que estás, en lugar de ir a otra página. |
 | **Bandeja de entrada** | Lo que tus agentes necesitan que veas — consulta la [Bandeja de entrada](/es/concepts/inbox). |
-| **Trabajo** | [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-configuración) para tareas, programaciones y la Bandeja de entrada. |
-| **Configurar** | [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-configuración) para agentes, conectores y habilidades. |
-| **Ayuda y configuración** | Al final de la barra lateral, debajo de una línea. [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-configuración) para preguntar sobre AptiveAI, esta documentación, tu configuración y el área de administración. |
+| **Trabajo** | [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-ajustes) para tareas, programaciones y la Bandeja de entrada. |
+| **Configurar** | [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-ajustes) para agentes, conectores y habilidades. |
+| **Ayuda y Ajustes** | Al final de la barra lateral, debajo de una línea. [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-ajustes) para preguntar sobre AptiveAI, esta documentación, tu configuración y el área de administración. |
 
 <ThemedImage
   dark={sidebarDark}
@@ -60,12 +60,12 @@ Cada fila de agente, fijada o dentro de **Agentes**, tiene un menú **…**:
 
 **Trabajo** queda resaltado mientras estás en una tarea o una programación,
 **Configurar** mientras estás en conectores o habilidades, y **Ayuda y
-configuración** mientras estás en Configuración, así que siempre sabes dónde
+Ajustes** mientras estás en Configuración, así que siempre sabes dónde
 estás.
 
 <Aside type="note">
   El propio personal de AptiveAI ve un grupo más en la barra lateral, encima de
-  **Ayuda y configuración**: **Admin maestro**. Contiene las herramientas que AptiveAI usa para operar el
+  **Ayuda y Ajustes**: **Admin maestro**. Contiene las herramientas que AptiveAI usa para operar el
   servicio, y los clientes nunca lo ven.
 </Aside>
 
@@ -93,9 +93,9 @@ frase de inicio, su mensaje se envía de inmediato; para escribir el tuyo, escri
 en el cuadro de mensajes. Quita la etiqueta para obtener una respuesta simple sin agente.
 [Tareas](/es/concepts/tasks#iniciar-una-tarea) explica lo que pasa después.
 
-## Las páginas Trabajo, Configurar y Ayuda y configuración
+## Las páginas Trabajo, Configurar y Ayuda y Ajustes
 
-**Trabajo**, **Configurar** y **Ayuda y configuración** abren cada una una página
+**Trabajo**, **Configurar** y **Ayuda y Ajustes** abren cada una una página
 de tarjetas, una tarjeta por cada lugar al que puedes ir. Trabajo reúne lo que hacen tus agentes y cuándo:
 [Tareas](/es/concepts/tasks), [Programaciones](/es/concepts/schedules) y la
 [Bandeja de entrada](/es/concepts/inbox).
@@ -120,14 +120,14 @@ Configurar reúne tus agentes y aquello con lo que trabajan:
   alt="La página Configurar: siete tarjetas — Agentes, Conectores, Habilidades, Inicios de sesión personales, Notificaciones, Configuración y Administración — cada una con una descripción y los enlaces Abrir y Preguntar, y un enlace Documentación en todas menos Administración. En el encabezado hay un botón Preguntar sobre Configurar."
 />
 
-**Ayuda y configuración** (`/help`) es adonde vas para pedir ayuda y para tu
+**Ayuda y Ajustes** (`/help`) es adonde vas para pedir ayuda y para tu
 propia configuración:
 
 | Tarjeta | Qué hace |
 |---|---|
 | **Pregunta sobre AptiveAI** | Inicia una tarea nueva que pregunta en qué te puede ayudar AptiveAI Agents, en tu idioma. Busca en esta documentación y responde de inmediato. |
 | **Documentación** | Abre esta documentación en una pestaña nueva. |
-| **Configuración** | La [Configuración](/es/reference/settings): tu plan y crédito de IA, la apariencia de la app y tu idioma. |
+| **Ajustes** | La [Configuración](/es/reference/settings): tu plan y crédito de IA, la apariencia de la app y tu idioma. |
 | **Inicios de sesión personales** | La sección [Inicios de sesión personales](/es/reference/settings/sign-ins) de Configuración. |
 | **Notificaciones** | La sección [Notificaciones](/es/reference/settings/notifications) de Configuración. |
 | **Administración** | [El área de administración](/es/administration/overview), en el portal. Solo la ven propietarios y administradores. |
@@ -140,7 +140,7 @@ Cada tarjeta tiene hasta tres enlaces:
 | **Documentación ↗** | Abre la página de esta documentación que lo explica. |
 | **Preguntar** | Inicia una tarea nueva con una pregunta preparada — *Explica Tareas: busca en la documentación, resúmelo y enlaza las páginas.* — y la abre, así que la respuesta empieza a llegar de inmediato. Si tu espacio de trabajo no puede iniciar tareas en este momento, la pregunta queda escrita en Nueva tarea. |
 
-**Preguntar sobre Trabajo**, **Preguntar sobre Configurar** y **Preguntar sobre Ayuda y configuración**, en el encabezado de
+**Preguntar sobre Trabajo**, **Preguntar sobre Configurar** y **Preguntar sobre Ayuda y Ajustes**, en el encabezado de
 la página, hacen lo mismo para toda la página: la pregunta pide qué puedes hacer
 en esa sección. Una tarea de Preguntar no tiene agente, así que responde a partir
 de esta documentación — sin computadora y sin acceso a tus sistemas.
@@ -238,12 +238,12 @@ en Tareas.
 | Una programación | **Trabajo → Programaciones** |
 | Una pregunta que te espera | **Bandeja de entrada**, o la parte superior de **Actividad** |
 | Todos los agentes, o uno nuevo | **Todos los agentes**, al final de la lista **Agentes** de la barra lateral, o **Configurar → Agentes** |
-| Tus propios inicios de sesión en los sitios web que abre un agente | **Ayuda y configuración → Inicios de sesión personales** — la sección [Inicios de sesión personales](/es/reference/settings/sign-ins) de Configuración |
-| Qué notificaciones te llegan, y cómo | **Ayuda y configuración → Notificaciones** — la sección [Notificaciones](/es/reference/settings/notifications) de Configuración |
-| Tu plan, el crédito de IA, el tema | **Ayuda y configuración → Configuración** |
+| Tus propios inicios de sesión en los sitios web que abre un agente | **Ayuda y Ajustes → Inicios de sesión personales** — la sección [Inicios de sesión personales](/es/reference/settings/sign-ins) de Configuración |
+| Qué notificaciones te llegan, y cómo | **Ayuda y Ajustes → Notificaciones** — la sección [Notificaciones](/es/reference/settings/notifications) de Configuración |
+| Tu plan, el crédito de IA, el tema | **Ayuda y Ajustes → Ajustes** |
 | El idioma y tu cuenta | El menú de la cuenta, bajo tu avatar en la esquina superior derecha |
-| Miembros, invitaciones y facturación | **Ayuda y configuración → Administración**, para propietarios y administradores — consulta [El área de administración](/es/administration/overview) |
-| Esta documentación, o una respuesta a partir de ella | **Ayuda y configuración → Documentación**, o **Pregunta sobre AptiveAI** |
+| Miembros, invitaciones y facturación | **Ayuda y Ajustes → Administración**, para propietarios y administradores — consulta [El área de administración](/es/administration/overview) |
+| Esta documentación, o una respuesta a partir de ella | **Ayuda y Ajustes → Documentación**, o **Pregunta sobre AptiveAI** |
 
 La **página Agentes** muestra todos los agentes que puedes ver, como mosaicos o
 como tabla, con el estado de cada uno, su última tarea y su próxima tarea
