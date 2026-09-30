@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import { toStarlightSidebar } from './src/nav.mjs';
+import { LANG_PARAM_SCRIPT } from './src/lang-param.mjs';
 
 // Same mechanism as the ClusterCode docs site (clustercodehq/docs): an Astro
 // Starlight site built by GitHub Actions and served from GitHub Pages behind a
@@ -13,6 +14,9 @@ export default defineConfig({
       // English at the root URLs (unchanged), Spanish under /es/ with the same
       // slugs: src/content/docs/es/<slug>.mdx. `pnpm check:nav` fails when a
       // page exists in one language and not the other.
+      // `?lang=es|en` switches to that language's copy of the page before
+      // paint (the console and portal link with it). See src/lang-param.mjs.
+      head: [{ tag: 'script', content: LANG_PARAM_SCRIPT }],
       defaultLocale: 'root',
       locales: {
         root: { label: 'English', lang: 'en' },
