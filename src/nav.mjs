@@ -110,7 +110,7 @@ export const nav = [
     external: true,
     items: [
       { label: 'Home', link: 'https://aptiveai.io', es: { label: 'Inicio' } },
-      { label: 'AI Assessment', link: 'https://aptiveai.io/assessment', es: { label: 'Evaluación de IA' } },
+      { label: 'AI Assessment', link: 'https://aptiveai.io/assessment', es: { label: 'Evalúa tu uso de IA' } },
       { label: 'Agents', link: 'https://console.aptiveai.io', es: { label: 'Agentes' } },
       { label: 'Admin', link: 'https://aptiveai.io/admin', es: { label: 'Administración' } },
     ],
