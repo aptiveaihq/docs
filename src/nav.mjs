@@ -64,6 +64,7 @@ export const nav = [
       { label: 'Schedules', slug: 'concepts/schedules', desc: 'Start a task on a recurring cadence', es: { label: 'Programaciones', desc: 'Inicia una tarea con una frecuencia recurrente' } },
       { label: 'Connectors', slug: 'concepts/connectors', desc: "Access to your company's systems", es: { label: 'Conectores', desc: 'Acceso a los sistemas de tu empresa' } },
       { label: 'Skills', slug: 'concepts/skills', desc: 'Reusable know-how an agent loads on demand', es: { label: 'Habilidades', desc: 'Conocimiento reutilizable que un agente carga cuando lo necesita' } },
+      { label: 'Sharing', slug: 'concepts/sharing', desc: 'Who can use a task, schedule, agent or skill', es: { label: 'Compartir', desc: 'Quién puede usar una tarea, una programación, un agente o una habilidad' } },
       { label: 'Files', slug: 'concepts/files', desc: 'Attach, view and get back files; knowledge files', es: { label: 'Archivos', desc: 'Adjunta, ve y recupera archivos; archivos de conocimiento' } },
       { label: 'Inbox', slug: 'concepts/inbox', desc: 'Notifications and what arrives when', es: { label: 'Bandeja de entrada', desc: 'Notificaciones y qué llega cuándo' } },
     ],

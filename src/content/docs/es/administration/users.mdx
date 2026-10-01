@@ -34,24 +34,22 @@ Un rol se aplica a toda la empresa. Lo que puede hacer cada uno:
 | Crear programaciones | ✓ | ✓ | ✓ |
 | Escribir habilidades para sí mismo | ✓ | ✓ | ✓ |
 | Guardar [inicios de sesión personales](/es/reference/settings/sign-ins) | ✓ | ✓ | ✓ |
-| Configurar, archivar y restaurar un agente compartido | ✓ | ✓ | — |
-| Compartir un agente o una habilidad con el espacio de trabajo | ✓ | ✓ | — |
+| Editar cualquier agente de su organización | ✓ | ✓ | — |
+| Compartir un agente, una habilidad, una tarea o una programación con personas concretas | ✓ | ✓ | ✓ (lo propio, o donde tiene Puede editar) |
+| Activar **Todos en ‹espacio de trabajo›** | ✓ | ✓ | — |
 | Dar acceso a conectores a los agentes y elegir cuáles están [disponibles para agentes personales](/es/concepts/connectors#disponible-para-agentes-personales) | ✓ | ✓ | — |
 | Aprobar o rechazar una solicitud de cambio de un agente | ✓ | ✓ | — |
-| Eliminar una tarea | ✓ | ✓ | — |
 | Entrar al área de administración; invitar a personas, reenviar y revocar invitaciones, quitar a personas | ✓ | ✓ | — |
 | Cambiar el rol de alguien | ✓ | — | — |
 | Ver la facturación, las facturas y el uso | ✓ | — | — |
 
-Para eliminar una tarea también hay que ser quien la inició o un propietario
-del espacio de trabajo; consulta [Tareas](/es/concepts/tasks#compartir-una-tarea-y-quién-la-ve).
+Una tarea solo la elimina quien la inició; consulta [Tareas](/es/concepts/tasks#compartir-una-tarea-y-quién-la-ve).
 Iniciar o configurar trabajo también requiere [acceso de pago](/es/administration/usage#acceso-de-pago),
 sea cual sea el rol.
 
 <Aside type="note">
-  Ver un agente, una tarea o una programación no depende solo del rol: los
-  agentes personales y las tareas privadas también están ocultos para los
-  administradores. Consulta [Acceso y uso compartido](/es/administration/access).
+  Ver un agente, una tarea o una programación no depende solo del rol: todo
+  es privado para quien lo crea hasta que se comparte. Consulta [Acceso y uso compartido](/es/administration/access).
 </Aside>
 
 ## Invitar a personas
@@ -142,8 +140,13 @@ empresa?* y, una vez confirmado:
 
 - elimina todos los accesos que tenía y la saca de la empresa: pierde el acceso
   la próxima vez que carga una página;
-- deja de compartir tus tareas y programaciones con ella;
-- **conserva** todo lo que creó: las tareas, los agentes y las habilidades se quedan.
+- quita todo lo que se compartió con ella y todo lo que ella compartía;
+- **pausa las programaciones que creó**, para que dejen de gastar crédito: un
+  propietario puede abrir una y volver a activarla;
+- **conserva** todo lo que creó: las tareas, los agentes, las habilidades y las
+  programaciones se quedan. Los propietarios aún pueden abrirlos con su enlace,
+  y los propietarios y administradores de la organización aún pueden editar sus
+  agentes.
 
 Su cuenta de AptiveAI en sí no se elimina. Se aplican las mismas reglas que
 para los roles: los propietarios y administradores quitan a personas, nadie se

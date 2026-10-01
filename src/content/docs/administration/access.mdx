@@ -1,6 +1,6 @@
 ---
 title: Access and sharing
-description: Who sees what in AptiveAI Agents — workspaces and how far a role reaches, personal and shared agents, who sees a task and a schedule, sharing them with colleagues, short links, and which connectors a personal agent may hold.
+description: Who sees what in AptiveAI Agents — workspaces and how far a role reaches, what owners and admins can open, the view-only live view, and which connectors a personal agent may hold. The sharing rules themselves are on the Sharing page.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -11,9 +11,9 @@ or member — decides which *kinds* of action they may take (see
 *things* they see: which workspaces, which agents, which tasks and schedules.
 This page is about access.
 
-The short version: agents are personal until they are shared, tasks and
-schedules are private to the people involved, and an admin role does not
-unlock anyone else's private work.
+The short version: everything is private to its creator until it is shared, and
+an admin role does not unlock anyone else's private work. How sharing works —
+Can use, Can edit, Everyone in a workspace — is on [Sharing](/concepts/sharing).
 
 ## Workspaces and how far a role reaches
 
@@ -38,85 +38,45 @@ by the AptiveAI team.
   on its own.
 </Aside>
 
-## Agents: personal and shared
+## What owners and admins can open
 
-| | Personal agent | Shared agent |
+Opening something by its link is wider than seeing it in a list. A **list** shows
+your own items and what is shared with you; an owner's list is no longer a view
+of everyone's work.
+
+| Role | Opens by link | Edits |
 |---|---|---|
-| **Who sees it and gives it tasks** | Only the person who created it — nobody else, admins and owners included | Everyone in the workspaces it is shared with |
-| **Who configures it** | Its creator | Owners and admins of those workspaces |
-| **Connectors it may hold** | Only connectors **available to personal agents** | Any connector in the workspace |
+| Member | Own items and what is shared with them | Own items, and where they have Can edit |
+| Admin | The same, plus any agent in their organization | The same, plus any agent in their organization |
+| Owner | Anything in their workspaces | The same as an admin |
+| AptiveAI | Anything in any enterprise | Any agent |
 
-- **Every new agent is personal.** Anyone, a member included, may create one
-  for themselves.
-- **Sharing** is **Shared with** in the agent's **Configure** tab, once the
-  agent is saved. Only owners and admins can share an agent, or take it back.
-  Everyone it is newly shared with is notified.
-- **An agent AptiveAI sets up for you** is visible to your workspace's owners
-  and admins before it is shared, so they can review it and share it with the
-  people who will use it.
+An owner opens someone else's **task** to look, not to work: it is read-only,
+and its live view is **view-only** — the screen is visible, but the mouse and
+keyboard reach nothing. To work on it, **Continue in my own task** starts a new
+task of their own. An owner can also open a **schedule** and pause, change or
+delete it.
 
-See [Agents → Personal and shared agents](/concepts/agents#personal-and-shared-agents).
+An admin who holds a role on one workspace only edits another person's agent
+if it was shared with them as Can edit.
 
-### Connectors for personal agents
+See [Sharing](/concepts/sharing) for the full rules, who can use and who can
+edit each kind, and what happens to a person's shares and schedules when they
+leave.
+
+## Connectors for personal agents
 
 Each [connector](/concepts/connectors) carries an **Available to personal
 agents** switch, which owners and admins turn on or off on the Connectors page.
-A personal agent may only be granted connectors that have it on, and the rule
-is checked again every time a task starts — so turning it off takes the
-connector away from every personal agent at its next task. The grants are
-kept, so turning it back on restores them.
-
-Leave it off for a connector that reaches something sensitive, and only
-shared agents — which only owners and admins configure — will be able to use
-it.
-
-## Tasks: private to the people involved
-
-A task is seen by:
-
-| Who | Sees and takes part | Deletes it, changes who has access |
-|---|:---:|:---:|
-| The person who started it | ✓ | ✓ |
-| People it was shared with | ✓ | — |
-| People who can see the schedule that started it | ✓ | — |
-| Workspace owners, when the task has an agent | ✓ | ✓ |
-| Anyone else, including admins | — | — |
-
-A task with no agent — a plain answer — is never an owner's to see. Everyone
-who can see a task takes part in it: they read it, watch its live view, send
-messages, answer its questions and stop it. See
-[Tasks → Sharing and who sees a task](/concepts/tasks#sharing-and-who-sees-a-task).
-
-## Schedules: private the same way
-
-| Who | Sees it | Edits, pauses, **Run now** or deletes it |
-|---|:---:|:---:|
-| The person who created it | ✓ | ✓ |
-| People it was shared with | ✓ — and every task it starts | — |
-| Workspace owners | ✓ | ✓ |
-| Anyone else, including admins | — | — |
-
-See [Schedules → Who sees a schedule](/concepts/schedules#who-sees-a-schedule).
-
-## Sharing a task or a schedule
-
-**Share** in a task's header, or on a schedule's page, adds people from your
-workspace. Each person is told with a notification. Sharing is the starter's —
-or a workspace owner's — to change.
-
-**Copy link** on a task gives a short `/s/…` address. The link only points the
-way: whoever opens it still needs access, and anyone without it is refused.
-
-When someone is [removed](/administration/users#removing-someone) from the
-enterprise, the tasks and schedules shared with them stop being shared with
+A personal agent — one not shared with Everyone in a workspace — may only be
+granted connectors that have it on, and the rule is checked again every time a
+task starts, so turning it off takes the connector away from every personal
+agent at its next task. The grants are kept, so turning it back on restores
 them.
 
-## Skills
-
-A skill someone writes is theirs alone until it is **shared** with the
-workspace, which only owners and admins can do. Only shared,
-organization-wide skills can be granted to an agent. See
-[Skills](/concepts/skills).
+Leave it off for a connector that reaches something sensitive, and only agents
+shared with the whole workspace will be able to use it. Connectors are not
+shared person to person.
 
 ## Next
 

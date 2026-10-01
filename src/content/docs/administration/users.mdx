@@ -34,23 +34,23 @@ A role applies to the whole enterprise. What each one may do:
 | Create schedules | ✓ | ✓ | ✓ |
 | Write skills for themselves | ✓ | ✓ | ✓ |
 | Keep [personal sign-ins](/reference/settings/sign-ins) | ✓ | ✓ | ✓ |
-| Configure, archive and restore a shared agent | ✓ | ✓ | — |
-| Share an agent or a skill with the workspace | ✓ | ✓ | — |
+| Edit any agent in their organization | ✓ | ✓ | — |
+| Share an agent, a skill, a task or a schedule with specific people | ✓ | ✓ | ✓ (their own, or where they have Can edit) |
+| Turn on **Everyone in ‹workspace›** | ✓ | ✓ | — |
 | Grant connectors to agents, and choose which are [available to personal agents](/concepts/connectors#available-to-personal-agents) | ✓ | ✓ | — |
 | Approve or reject an agent's change request | ✓ | ✓ | — |
-| Delete a task | ✓ | ✓ | — |
 | Enter the admin area; invite people, resend and revoke invitations, remove people | ✓ | ✓ | — |
 | Change someone's role | ✓ | — | — |
 | See billing, invoices and usage | ✓ | — | — |
 
-Deleting a task also takes being the person who started it or a workspace
-owner — see [Tasks](/concepts/tasks#sharing-and-who-sees-a-task). Starting or
+Only the person who started a task deletes it — see
+[Tasks](/concepts/tasks#sharing-and-who-sees-a-task). Starting or
 configuring work also needs [paid access](/administration/usage#paid-access),
 whatever the role.
 
 <Aside type="note">
   Seeing an agent, a task or a schedule is not a matter of role alone —
-  personal agents and private tasks are hidden from admins too. See
+  everything is private to its creator until it is shared. See
   [Access and sharing](/administration/access).
 </Aside>
 
@@ -140,8 +140,12 @@ enterprise?* and, once confirmed:
 
 - deletes every access they held and takes them out of the enterprise — they
   lose access on their next page load;
-- stops sharing your tasks and schedules with them;
-- **keeps** everything they created: tasks, agents and skills stay.
+- removes everything shared with them, and everything they had shared;
+- **pauses the schedules they created**, so they stop spending credit — an
+  owner can open one and turn it back on;
+- **keeps** everything they created: tasks, agents, skills and schedules stay.
+  Owners can still open them by link, and owners and admins of the organization
+  can still edit their agents.
 
 Their AptiveAI account itself is not deleted. The same rules as for roles
 apply: owners and admins remove people, nobody removes themselves, only an

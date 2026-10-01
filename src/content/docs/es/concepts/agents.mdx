@@ -183,23 +183,31 @@ así que no se pierde nada.
 
 ## Agentes personales y compartidos
 
-Un agente nuevo es **personal**: solo tú puedes verlo y darle tareas; nadie
-más en el espacio de trabajo, ni siquiera los administradores.
+Un agente nuevo es **personal**: solo tú puedes verlo y darle tareas. Para
+compartirlo usa el chip del encabezado del constructor; solo con agentes ya
+guardados.
 
-Un agente **compartido** se comparte con uno o más espacios de trabajo. Todos
-en ellos pueden verlo e iniciar tareas con él; solo sus editores pueden
-cambiarlo. Primero guarda el agente y luego elige los espacios de trabajo en
-**Compartido con**.
+- **Añade personas** con **Puede usar** (lo ven, lo mencionan con @ e inician
+  tareas con él) o **Puede editar** (además pueden cambiarlo y compartirlo).
+- **Todos en ‹espacio de trabajo›** publica el agente en todo el espacio de
+  trabajo, siempre con Puede usar. Lo hace un propietario o administrador de
+  ese espacio de trabajo; un miembro comparte su agente con un administrador
+  como Puede editar, y ese administrador puede publicarlo.
+- **Quién puede editar un agente:** quien lo creó, las personas con Puede
+  editar, los propietarios y administradores de su organización, y AptiveAI. Un
+  administrador de un solo espacio de trabajo solo edita los agentes que se
+  compartieron con él como Puede editar.
+- **Un agente que AptiveAI prepara para tu espacio de trabajo** pueden editarlo
+  los propietarios y administradores del espacio de trabajo, para revisarlo y
+  compartirlo con las personas que lo usarán.
+- **Hasta 10 agentes personales por persona.** Un agente que compartes con
+  Todos no cuenta. Para crear otro, elimina uno o compártelo con el espacio de
+  trabajo.
 
-| | Agente personal | Agente compartido |
-|---|---|---|
-| Quién lo ve y le da tareas | Solo la persona que lo creó | Todos en los espacios de trabajo con los que se comparte |
-| Quién puede configurarlo | La persona que lo creó | Propietarios y administradores de esos espacios de trabajo |
-| Conectores que puede tener | Solo conectores **disponibles para agentes personales** (consulta [Restricciones](#restricciones)) | Cualquier conector del espacio de trabajo |
-
-Un agente que AptiveAI prepara para tu espacio de trabajo es visible para sus
-propietarios y administradores antes de compartirse, para que puedan revisarlo
-y compartirlo con las personas que lo usarán.
+Los archivos de conocimiento siguen a su agente: quien puede editarlo edita sus
+archivos. Los conectores no se comparten así; consulta
+[Restricciones](#restricciones). Las reglas completas están en
+[Compartir](/es/concepts/sharing).
 
 ## Fijar agentes e iconos
 

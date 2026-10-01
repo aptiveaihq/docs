@@ -61,7 +61,6 @@ tasks that already used it keep the text they were given.
 | **Description** | Up to 500 characters. Shown beside the name when someone types `/`, and what an agent reads to decide whether to open it |
 | **Instructions** | The text itself, up to 10,000 characters. `{word}` becomes a blank |
 | **Scope** | **Organization-wide**, or one named agent |
-| **Share with your team** | Owners and admins only. Everyone in the workspace sees it, and it can be granted to an agent |
 
 ### Scope
 
@@ -70,8 +69,16 @@ tasks that already used it keep the text they were given.
 - **Organization-wide**, a skill is offered on tasks with no agent, and to any
   agent it is granted to in the [agent builder](/concepts/agents#skills).
 
-Only a skill that is both **shared** and **organization-wide** can be granted
-to an agent in the builder.
+### Sharing
+
+A skill is yours until you share it. Choose **Who can use** in the skill's row
+menu, or the chip in its editor, to open the share box: add people as
+**Can use** (they see it and can grant it to an agent they edit) or
+**Can edit**, or turn on **Everyone in ‹workspace›** (an owner or admin).
+Only the skill's creator deletes it. See [Sharing](/concepts/sharing).
+
+A skill can be granted to an agent in the builder when it is
+**organization-wide** and you can use it.
 
 ## Built-in skills
 
@@ -102,9 +109,11 @@ read this site.
 | Action | Who |
 |---|---|
 | Write a skill | Everyone in the workspace |
-| Edit or delete a skill | The person who wrote it |
-| Share or unshare a skill | Owners and admins |
-| Copy a shared skill to your own | Everyone who can see it |
+| Edit a skill | The person who wrote it, and people with **Can edit** |
+| Delete a skill | The person who wrote it |
+| Share a skill with people | The person who wrote it, and people with **Can edit** |
+| Share it with Everyone in the workspace | Owners and admins |
+| Copy a skill to your own | Everyone who can use it |
 
 ## Next
 

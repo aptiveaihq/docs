@@ -1,6 +1,6 @@
 ---
 title: Acceso y uso compartido
-description: "Quién ve qué en AptiveAI Agents: los espacios de trabajo y hasta dónde llega un rol, los agentes personales y compartidos, quién ve una tarea y una programación, compartirlas con colegas, los enlaces cortos y qué conectores puede tener un agente personal."
+description: "Quién ve qué en AptiveAI Agents: los espacios de trabajo y hasta dónde llega un rol, qué pueden abrir los propietarios y administradores, la vista en vivo de solo lectura y qué conectores puede tener un agente personal. Las reglas para compartir están en la página Compartir."
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -11,9 +11,10 @@ administrador o miembro— decide qué *tipos* de acciones puede realizar
 qué *cosas* ve: qué espacios de trabajo, qué agentes, qué tareas y
 programaciones. Esta página trata del acceso.
 
-En resumen: los agentes son personales hasta que se comparten, las tareas y
-las programaciones son privadas para las personas involucradas, y el rol de
-administrador no desbloquea el trabajo privado de nadie más.
+En resumen: todo es privado para quien lo crea hasta que se comparte, y el rol
+de administrador no desbloquea el trabajo privado de nadie más. Cómo funciona
+compartir —Puede usar, Puede editar, Todos en un espacio de trabajo— está en
+[Compartir](/es/concepts/sharing).
 
 ## Los espacios de trabajo y hasta dónde llega un rol
 
@@ -38,89 +39,46 @@ espacios de trabajo y esos límites los configura el equipo de AptiveAI.
   la empresa no basta por sí solo.
 </Aside>
 
-## Agentes: personales y compartidos
+## Qué pueden abrir los propietarios y administradores
 
-| | Agente personal | Agente compartido |
+Abrir algo con su enlace es más amplio que verlo en una lista. Una **lista**
+muestra tus propios elementos y lo que se compartió contigo; la lista de un
+propietario ya no es una vista del trabajo de todos.
+
+| Rol | Abre con enlace | Edita |
 |---|---|---|
-| **Quién lo ve y le da tareas** | Solo la persona que lo creó; nadie más, ni siquiera administradores y propietarios | Todos en los espacios de trabajo con los que se comparte |
-| **Quién lo configura** | Quien lo creó | Los propietarios y administradores de esos espacios de trabajo |
-| **Conectores que puede tener** | Solo conectores **disponibles para agentes personales** | Cualquier conector del espacio de trabajo |
+| Miembro | Lo propio y lo que se compartió con él | Lo propio, y donde tiene Puede editar |
+| Administrador | Lo mismo, y cualquier agente de su organización | Lo mismo, y cualquier agente de su organización |
+| Propietario | Cualquier cosa de sus espacios de trabajo | Lo mismo que un administrador |
+| AptiveAI | Cualquier cosa de cualquier empresa | Cualquier agente |
 
-- **Todo agente nuevo es personal.** Cualquiera, incluso un miembro, puede
-  crear uno para sí mismo.
-- **Compartir** se hace en **Compartido con**, en la pestaña **Configurar** del
-  agente, una vez que el agente está guardado. Solo los propietarios y
-  administradores pueden compartir un agente o dejar de compartirlo. Todas las
-  personas con quienes se comparte por primera vez reciben una notificación.
-- **Un agente que AptiveAI configura para ti** es visible para los
-  propietarios y administradores de tu espacio de trabajo antes de compartirse,
-  para que puedan revisarlo y compartirlo con las personas que lo van a usar.
+Un propietario abre la **tarea** de otra persona para mirar, no para trabajar:
+es de solo lectura, y su vista en vivo es **de solo lectura**: se ve la
+pantalla, pero el ratón y el teclado no llegan a nada. Para trabajar en ella,
+**Continuar en una tarea mía** inicia una tarea nueva suya. Un propietario
+también puede abrir una **programación** y pausarla, cambiarla o eliminarla.
 
-Consulta [Agentes → Agentes personales y compartidos](/es/concepts/agents#agentes-personales-y-compartidos).
+Un administrador con un rol en un solo espacio de trabajo solo edita el agente
+de otra persona si se lo compartió como Puede editar.
 
-### Conectores para agentes personales
+Consulta [Compartir](/es/concepts/sharing) para las reglas completas, quién
+puede usar y quién puede editar cada tipo, y qué pasa con lo compartido y con
+las programaciones de una persona cuando se va.
+
+## Conectores para agentes personales
 
 Cada [conector](/es/concepts/connectors) tiene un interruptor **Disponible para
 agentes personales**, que los propietarios y administradores activan o
-desactivan en la página de Conectores. A un agente personal solo se le puede
-dar acceso a conectores que lo tengan activado, y la regla se vuelve a
-comprobar cada vez que empieza una tarea, así que desactivarlo le quita el
-conector a todos los agentes personales en su siguiente tarea. Los accesos se
-conservan, así que volver a activarlo los restaura.
+desactivan en la página Conectores. A un agente personal —uno que no se
+comparte con Todos en un espacio de trabajo— solo se le pueden conceder
+conectores que lo tengan activado, y la regla se vuelve a comprobar cada vez que
+empieza una tarea; así que desactivarlo quita el conector a todos los agentes
+personales en su próxima tarea. Las concesiones se conservan, de modo que
+volver a activarlo las restablece.
 
-Déjalo desactivado para un conector que llega a algo delicado, y solo los
-agentes compartidos —que solo configuran los propietarios y administradores—
-podrán usarlo.
-
-## Tareas: privadas para las personas involucradas
-
-Ven una tarea:
-
-| Quién | La ve y participa | La elimina, cambia quién tiene acceso |
-|---|:---:|:---:|
-| La persona que la inició | ✓ | ✓ |
-| Las personas con quienes se compartió | ✓ | — |
-| Las personas que pueden ver la programación que la inició | ✓ | — |
-| Los propietarios del espacio de trabajo, cuando la tarea tiene un agente | ✓ | ✓ |
-| Cualquier otra persona, incluidos los administradores | — | — |
-
-Una tarea sin agente —una respuesta directa— nunca la ve un propietario. Todas
-las personas que pueden ver una tarea participan en ella: la leen, miran su
-vista en vivo, envían mensajes, responden sus preguntas y la detienen. Consulta
-[Tareas → Compartir y quién ve una tarea](/es/concepts/tasks#compartir-una-tarea-y-quién-la-ve).
-
-## Programaciones: privadas de la misma forma
-
-| Quién | La ve | La edita, la pausa, usa **Ejecutar ahora** o la elimina |
-|---|:---:|:---:|
-| La persona que la creó | ✓ | ✓ |
-| Las personas con quienes se compartió | ✓, y cada tarea que inicia | — |
-| Los propietarios del espacio de trabajo | ✓ | ✓ |
-| Cualquier otra persona, incluidos los administradores | — | — |
-
-Consulta [Programaciones → Quién ve una programación](/es/concepts/schedules#quién-ve-una-programación).
-
-## Compartir una tarea o una programación
-
-**Compartir**, en el encabezado de una tarea o en la página de una
-programación, agrega personas de tu espacio de trabajo. Cada persona recibe
-una notificación. Cambiar con quién se comparte le corresponde a quien la
-inició, o a un propietario del espacio de trabajo.
-
-**Copiar enlace** en una tarea da una dirección corta `/s/…`. El enlace solo
-indica el camino: quien lo abra sigue necesitando acceso, y a quien no lo
-tenga se le niega.
-
-Cuando alguien es [quitado](/es/administration/users#quitar-a-alguien) de la
-empresa, las tareas y programaciones compartidas con esa persona dejan de
-compartirse con ella.
-
-## Habilidades
-
-Una habilidad que alguien escribe es solo suya hasta que se **comparte** con el
-espacio de trabajo, algo que solo pueden hacer los propietarios y
-administradores. Solo las habilidades compartidas, para toda la organización,
-se pueden asignar a un agente. Consulta [Habilidades](/es/concepts/skills).
+Déjalo desactivado en un conector que llegue a algo sensible, y solo los
+agentes compartidos con todo el espacio de trabajo podrán usarlo. Los
+conectores no se comparten de persona a persona.
 
 ## Siguiente
 

@@ -173,22 +173,27 @@ them; restoring an older one records a new version, so nothing is lost.
 
 ## Personal and shared agents
 
-A new agent is **personal**: only you can see it and give it tasks — nobody
-else in the workspace, admins included.
+A new agent is **personal**: only you can see it and give it tasks. Use the
+chip in the builder's header to share it — saved agents only.
 
-A **shared** agent is shared with one or more workspaces. Everyone in them can
-see it and start tasks with it; only its editors can change it. Save the agent
-first, then choose the workspaces under **Shared with**.
+- **Add people** at **Can use** (they see it, @mention it and start tasks with
+  it) or **Can edit** (they can also change it and share it).
+- **Everyone in ‹workspace›** publishes the agent to the whole workspace, always
+  at Can use. It takes an owner or admin of that workspace; a member shares
+  their agent with an admin as Can edit, and that admin can publish it.
+- **Who can edit an agent:** its creator, people with Can edit, owners and
+  admins of its organization, and AptiveAI. An admin of a single workspace
+  edits only the agents shared with them as Can edit.
+- **An agent AptiveAI sets up for your workspace** can be edited by the
+  workspace's owners and admins, so they can review it and share it with the
+  people who will use it.
+- **Up to 10 personal agents per person.** An agent you share with Everyone
+  does not count. To make another, delete one or share one with the workspace.
 
-| | Personal agent | Shared agent |
-|---|---|---|
-| Who sees it and gives it tasks | Only the person who created it | Everyone in the workspaces it is shared with |
-| Who may configure it | The person who created it | Owners and admins of those workspaces |
-| Connectors it may hold | Only connectors **available to personal agents** (see [Restrictions](#restrictions)) | Any connector in the workspace |
-
-An agent AptiveAI sets up for your workspace is visible to its owners and
-admins before it is shared, so they can review it and share it with the
-people who will use it.
+Knowledge files follow their agent: whoever can edit it edits its files.
+Connectors are not shared this way — see
+[Restrictions](#personal-agents-hold-only-connectors-made-available-to-them).
+The full rules are in [Sharing](/concepts/sharing).
 
 ## Pinning and icons
 
