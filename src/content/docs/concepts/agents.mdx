@@ -85,7 +85,7 @@ The **Configure** tab has one section per part of the agent.
 **Icon** — the agent's picture, on the first row (see
 [The agent's icon](#the-agents-icon)). **Name** (up to 120 characters) and
 **Purpose** — one line, up to 500 characters, shown on the agent roster and in
-the Agents list — and who it is **Shared with** (see
+the Agents list — and who can use it — the access chip at the top of the builder (see
 [Personal and shared agents](#personal-and-shared-agents)).
 
 ### Instructions
@@ -295,20 +295,18 @@ saved.
 
 ### Roles
 
-What each workspace role may do with agents:
+Anyone can create agents (up to 10 personal ones). What happens next depends
+on who you are in relation to the agent:
 
-| Action | Owner | Admin | Member |
-|---|:---:|:---:|:---:|
-| See agents shared with them, and give them tasks | ✓ | ✓ | ✓ |
-| Create an agent (personal until shared) | ✓ | ✓ | ✓ |
-| Configure, archive and restore their own personal agent | ✓ | ✓ | ✓ |
-| Configure, archive and restore a shared agent | ✓ | ✓ | — |
-| Share an agent with workspaces | ✓ | ✓ | — |
-| Approve or reject a change request | ✓ | ✓ | — |
+- The owner of an agent, and anyone given **Can edit**, change it.
+- Owners and admins of the organization (and AptiveAI) can open and edit any
+  agent.
+- Owners and admins of the organization can archive and restore any agent. Only
+  AptiveAI deletes one permanently.
+- Members share their agents with people. Only owners and admins turn on
+  **Everyone in ‹workspace›**.
 
-Rights to a shared agent come from a role that covers the workspace the agent
-belongs to — being an admin of one workspace gives no rights over another
-workspace's agents.
+See [Sharing](/concepts/sharing) for the full table.
 
 ### Paid access
 

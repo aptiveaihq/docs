@@ -90,8 +90,8 @@ La pestaña **Configurar** tiene una sección por cada parte del agente.
 **Icono**: la imagen del agente, en la primera fila (consulta
 [El icono del agente](#el-icono-del-agente)). **Nombre** (hasta 120 caracteres) y
 **Propósito** —una línea, hasta 500 caracteres, que se muestra en la lista de
-agentes de Nueva tarea y en la página Agentes—, y **Compartido con**, con
-quién se comparte (consulta [Agentes personales y compartidos](#agentes-personales-y-compartidos)).
+agentes de Nueva tarea y en la página Agentes—, y quién puede usarlo: el chip de
+acceso en la parte superior del constructor (consulta [Agentes personales y compartidos](#agentes-personales-y-compartidos)).
 
 ### Instrucciones
 
@@ -316,20 +316,18 @@ tarea que inició una programación. También puedes enseñarle a un agente en
 
 ### Roles
 
-Lo que cada rol del espacio de trabajo puede hacer con los agentes:
+Cualquiera puede crear agentes (hasta 10 personales). Lo que sigue depende de
+tu relación con el agente:
 
-| Acción | Propietario | Administrador | Miembro |
-|---|:---:|:---:|:---:|
-| Ver los agentes compartidos con ellos y darles tareas | ✓ | ✓ | ✓ |
-| Crear un agente (personal hasta que se comparta) | ✓ | ✓ | ✓ |
-| Configurar, archivar y restaurar su propio agente personal | ✓ | ✓ | ✓ |
-| Configurar, archivar y restaurar un agente compartido | ✓ | ✓ | — |
-| Compartir un agente con espacios de trabajo | ✓ | ✓ | — |
-| Aprobar o rechazar una solicitud de cambio | ✓ | ✓ | — |
+- Quien es dueño de un agente, y quien tiene **Puede editar**, lo cambia.
+- Los propietarios y administradores de la organización (y AptiveAI) pueden
+  abrir y editar cualquier agente.
+- Los propietarios y administradores de la organización pueden archivar y
+  restaurar cualquier agente. Solo AptiveAI lo elimina de forma permanente.
+- Los miembros comparten sus agentes con personas. Solo los propietarios y
+  administradores activan **Todos en ‹espacio de trabajo›**.
 
-Los derechos sobre un agente compartido vienen de un rol que cubra el espacio
-de trabajo al que pertenece el agente: ser administrador de un espacio de
-trabajo no da ningún derecho sobre los agentes de otro.
+Consulta [Compartir](/es/concepts/sharing) para ver la tabla completa.
 
 ### Acceso de pago
 
