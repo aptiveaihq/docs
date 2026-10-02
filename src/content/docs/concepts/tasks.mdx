@@ -156,8 +156,11 @@ A task is yours until you share it. The chip in its header — **Only you**,
 **Copy link** gives a short `/s/…` address. The link only points the way: the
 person who opens it still needs access, or to be an owner.
 
-**Delete task** removes the task, its transcript and its documents, and cannot
-be undone. A task that is still working cannot be deleted.
+**Delete task** removes the task from every list, search and link straight
+away. A deleted task can be recovered for 30 days: ask your workspace owner or
+AptiveAI support. After that only its conversation can be recovered — see
+[How long a task is kept](#how-long-a-task-is-kept). A task that is still
+working cannot be deleted.
 
 The rules are the same for tasks, schedules, agents and skills — see
 [Sharing](/concepts/sharing).
@@ -196,6 +199,20 @@ a group of its own — with a **+** to start a new task with it — while **Stat
 groups them by status, and **None** (the default) shows one list. Tasks waiting
 on you come first. **Pin to the top** keeps a task at the head of the panel for
 everyone in the workspace.
+
+## How long a task is kept
+
+Every task is kept on the same clock, counted from its last activity — or, once
+it is deleted, from the moment it was deleted:
+
+| What | Kept for |
+|---|---|
+| The conversation: your messages, your answers and the agent's replies | 1 year |
+| The detail: each tool call, what came back, and system lines | 30 days |
+
+When the year is up, the task itself is removed with its conversation. A task
+that is still working or waiting on someone is never removed. Files have their
+own, shorter limits — see [Files](/concepts/files).
 
 ## Paid access
 
