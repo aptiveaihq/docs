@@ -171,8 +171,12 @@ para compartir.
 **Copiar enlace** da una dirección corta `/s/…`. El enlace solo indica el
 camino: quien lo abra sigue necesitando acceso, o ser propietario.
 
-**Eliminar tarea** borra la tarea, su transcripción y sus documentos, y no se
-puede deshacer. Una tarea que todavía está trabajando no se puede eliminar.
+**Eliminar tarea** quita la tarea de todas las listas, búsquedas y enlaces al
+instante. Una tarea eliminada se puede recuperar durante 30 días: pídeselo al
+propietario de tu espacio de trabajo o al soporte de AptiveAI. Después solo se
+puede recuperar su conversación; consulta
+[Cuánto tiempo se conserva una tarea](#cuánto-tiempo-se-conserva-una-tarea). Una
+tarea que todavía está trabajando no se puede eliminar.
 
 Las reglas son las mismas para tareas, programaciones, agentes y habilidades;
 consulta [Compartir](/es/concepts/sharing).
@@ -213,6 +217,20 @@ nueva con él —, mientras que **Estado** las agrupa por estado, y **Ninguno** 
 opción predeterminada) muestra una sola lista. Las tareas que te esperan van
 primero. **Fijar arriba** mantiene una tarea al principio del panel para todos en
 el espacio de trabajo.
+
+## Cuánto tiempo se conserva una tarea
+
+Todas las tareas siguen el mismo reloj, contado desde su última actividad o,
+si se eliminó, desde el momento en que se eliminó:
+
+| Qué | Se conserva |
+|---|---|
+| La conversación: tus mensajes, tus respuestas y las respuestas del agente | 1 año |
+| El detalle: cada llamada a herramientas, lo que devolvió y las líneas del sistema | 30 días |
+
+Cumplido el año, la tarea se elimina junto con su conversación. Una tarea que
+todavía está trabajando o esperando a alguien nunca se elimina. Los archivos
+tienen sus propios límites, más cortos; consulta [Archivos](/es/concepts/files).
 
 ## Acceso de pago
 
