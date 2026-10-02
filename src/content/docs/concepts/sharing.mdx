@@ -1,0 +1,89 @@
+---
+title: Sharing
+description: Who can use a task, a schedule, an agent or a skill — the owner, people you add with Can use or Can edit, and Everyone in a workspace. What owners and admins can open, read-only tasks, and Continue in my own task.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Tasks, schedules, agents and skills are shared the same way. Whatever you
+create is yours alone until you share it. The chip at the top of each one
+shows who has access — **Only you**, **You + 2**, **Everyone in Sales** — and
+selecting it opens the share box. In lists, the same chip is a badge, and
+**Shared with me** in the Tasks list's **Sharing** filter shows what others
+shared with you.
+
+## The share box
+
+- **Add people** from the same workspace. Each person gets a level:
+  - **Can use** — they see it and work with it: run the agent, follow the
+    schedule, grant the skill to an agent they edit.
+  - **Can edit** — they can also change it and share it with others.
+- **General access** — **Only people added**, or **Everyone in ‹workspace›**.
+  Only an owner or admin of that workspace can turn "Everyone" on, and it is
+  always **Can use**: a workspace never gets Can edit.
+- Changes apply as you make them. **Done** closes the box.
+- A skill's box opens from **Who can use** in its row menu or from its editor.
+
+A task has no choice of level: people added can see it and watch it, read-only.
+Only the person who started a task can share it, rename it or delete it.
+
+## Who can do what
+
+| | Task | Schedule | Agent | Skill |
+|---|---|---|---|---|
+| The person who made it | Everything | Everything | Everything | Everything |
+| Added, or Can use | See and watch it, read-only | See it and all its tasks, read-only | See it, @mention it, start tasks with it | See it, grant it to an agent they edit |
+| Can edit | — | Change, pause, **Run now**, share; answer and approve in its tasks | Change and share | Change and share |
+| Everyone in ‹workspace› | Same as Can use | Same as Can use | Same as Can use | Same as Can use |
+
+Only the creator deletes a task or a skill; a schedule is deleted by its creator
+or by a workspace owner. Knowledge files follow
+their agent: whoever can edit the agent edits its files.
+Connectors are not shared person to person; whether a personal agent may hold
+one is a workspace setting (see
+[Access](/administration/access#connectors-for-personal-agents)).
+
+## What owners and admins can open
+
+Opening by link is wider than listing. Your lists show your own items and what is
+shared with you — nothing more.
+
+- **Workspace owners** can open anything in their workspaces by its link, but it
+  does not appear in their lists. They can pause, change or delete a schedule
+  they open. A task they open is **read-only**.
+- **Owners and admins of an organization** can open and edit every agent in it,
+  personal ones included. An admin of a single workspace edits only the agents
+  shared with them as Can edit.
+- **AptiveAI** can open anything by link and edit any agent.
+
+<Aside>
+A task you can only view reads "You can view this task". Its live view is
+view-only: you see the screen, and your mouse and keyboard reach nothing.
+</Aside>
+
+## Continue in my own task
+
+On a task you can only view, **Continue in my own task** starts a new task of
+yours from that point. It keeps the conversation so far, with the same agent,
+on your own computer and browser, and nothing you do there touches the
+original. It needs an agent you can use; otherwise ask its owner to share it.
+
+## Personal agents
+
+An agent you own that is not shared with Everyone is **personal**. You can have
+up to **10**; an agent shared with Everyone does not count. To make another,
+delete one you no longer need or share one with the workspace.
+
+## When someone leaves
+
+When a person is removed from the enterprise, everything shared with them is
+unshared, and the schedules they created are paused with the note "Paused
+because the person who created it left the workspace." An owner can open those
+schedules and turn them back on. Their agents, skills and schedules stay, and
+owners and organization admins can still edit their agents.
+
+## Links
+
+**Copy link** in the share box (tasks and schedules) gives a short address. It
+does not grant access: the person who opens it still needs to be someone it is
+shared with, or an owner.

@@ -64,7 +64,6 @@ recibieron.
 | **Descripción** | Hasta 500 caracteres. Se muestra junto al nombre cuando alguien escribe `/`, y es lo que lee un agente para decidir si la abre |
 | **Instrucciones** | El texto en sí, hasta 10,000 caracteres. `{word}` se convierte en un espacio en blanco |
 | **Alcance** | **Toda la organización**, o un agente concreto |
-| **Compartir con tu equipo** | Solo propietarios y administradores. Todos en el espacio de trabajo la ven, y se puede conceder a un agente |
 
 ### Alcance
 
@@ -75,8 +74,17 @@ recibieron.
   agente y a cualquier agente al que se le conceda en el
   [constructor de agentes](/es/concepts/agents#habilidades).
 
-Solo una habilidad que sea a la vez **compartida** y **de toda la
-organización** se puede conceder a un agente en el constructor.
+### Compartir
+
+Una habilidad es tuya hasta que la compartes. Elige **Quién puede usarla** en el
+menú de su fila, o el chip de su editor, para abrir el cuadro para compartir:
+añade personas con **Puede usar** (la ven y pueden concederla a un agente que
+editan) o **Puede editar**, o activa **Todos en ‹espacio de trabajo›** (un
+propietario o administrador). Solo quien la creó la elimina. Consulta
+[Compartir](/es/concepts/sharing).
+
+Una habilidad se puede conceder a un agente en el constructor cuando es **de
+toda la organización** y puedes usarla.
 
 ## Habilidades integradas
 
@@ -109,9 +117,11 @@ este sitio.
 | Acción | Quién |
 |---|---|
 | Escribir una habilidad | Todos en el espacio de trabajo |
-| Editar o eliminar una habilidad | La persona que la escribió |
-| Compartir o dejar de compartir una habilidad | Propietarios y administradores |
-| Copiar una habilidad compartida como propia | Todos los que pueden verla |
+| Editar una habilidad | La persona que la escribió y quienes tienen **Puede editar** |
+| Eliminar una habilidad | La persona que la escribió |
+| Compartir una habilidad con personas | La persona que la escribió y quienes tienen **Puede editar** |
+| Compartirla con Todos en el espacio de trabajo | Propietarios y administradores |
+| Copiar una habilidad como propia | Todos los que pueden usarla |
 
 ## Siguiente
 
