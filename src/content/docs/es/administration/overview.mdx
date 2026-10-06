@@ -34,13 +34,13 @@ para ver qué significan los niveles para quién ve qué.
 
 | Rol | Entra al área de administración | Qué ve ahí |
 |---|:---:|---|
-| **Propietario** | ✓ | **Resumen**, **Usuarios**, **Uso** y **Facturación** |
-| **Administrador** | ✓ | **Usuarios** |
+| **Propietario** | ✓ | **Resumen**, **Usuarios**, **Uso**, **Actividad**, **Productividad** y **Facturación** |
+| **Administrador** | ✓ | **Usuarios** y **Productividad** |
 | **Miembro** | — | *No tienes acceso a esta página*: el área de administración es para los propietarios y administradores de tu empresa |
 
 Cada página de administración comprueba el rol por su cuenta, así que el menú
 solo muestra lo que puedes abrir. Un administrador que abre `/admin` va
-directamente a **Usuarios**, la única página que le corresponde. Ambos roles
+directamente a **Usuarios**, la página que gestiona. Ambos roles
 ven también **Agentes** en el menú, que te lleva de vuelta a AptiveAI Agents.
 
 <Aside type="note" title="Por qué la facturación es solo del propietario">
@@ -92,8 +92,22 @@ quita a alguien. Consulta [Usuarios y roles](/es/administration/users).
 ### Uso
 
 Para propietarios: el crédito de IA restante, en qué se gastó en los últimos
-30 días por agente y por persona, y cada movimiento de crédito. Consulta
-[Uso y crédito](/es/administration/usage).
+30 días por agente, y una tarjeta **Transacciones** que abre cada cargo al
+crédito y cada crédito añadido. Consulta [Uso y crédito](/es/administration/usage)
+y [Transacciones](/es/administration/transactions).
+
+### Actividad
+
+Para propietarios: lo que hicieron tus agentes en cualquier periodo y el uso de
+IA que hay detrás: tareas, objetivos cumplidos, agentes, modelos de IA y pasos
+de IA. Consulta [Actividad](/es/administration/activity).
+
+### Productividad
+
+Para propietarios y administradores: los objetivos cumplidos, el tiempo de
+trabajo de los agentes y el trabajo que hicieron en tus sistemas. Los
+administradores lo ven sin ninguna cifra de dinero. Consulta
+[Productividad](/es/administration/productivity).
 
 ### Facturación
 

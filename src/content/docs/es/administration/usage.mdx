@@ -1,6 +1,6 @@
 ---
 title: Uso y crédito
-description: "Qué es el crédito de IA y cómo se gasta: los tres tipos de crédito y su orden, por qué una tarea puede terminar con lo último que queda y la siguiente se rechaza, el tiempo de computadora, el registro de uso y sus filas de $0, los enlaces de crédito de AptiveAI, los avisos de la cuenta, cuándo los agentes no pueden empezar, y la página de Facturación de solo lectura del propietario."
+description: "Qué es el crédito de IA y cómo se gasta: los tres tipos de crédito y su orden, por qué una tarea puede terminar con lo último que queda y la siguiente se rechaza, el tiempo de computadora, la página de Uso del propietario y adónde pasó su registro, los enlaces de crédito de AptiveAI, los avisos de la cuenta, cuándo los agentes no pueden empezar, y la página de Facturación de solo lectura del propietario."
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -12,7 +12,10 @@ crédito, en qué se gasta, dónde consultarlo y qué pasa cuando se acaba.
 | Dónde | Quién | Muestra |
 |---|---|---|
 | AptiveAI Agents → **Ajustes → Plan y crédito** | Todos | El **Estado** de la cuenta, el **Crédito de IA restante** y si los agentes pueden empezar trabajo nuevo (**Puede empezar trabajo nuevo**) |
-| Administración → **Uso** | Propietarios | El crédito restante, los últimos 30 días por agente y por persona, y cada movimiento de crédito |
+| Administración → **Uso** | Propietarios | El crédito restante y los últimos 30 días por agente |
+| Administración → **Uso → Transacciones** | Propietarios | Cada cargo al crédito y cada crédito añadido; consulta [Transacciones](/es/administration/transactions) |
+| Administración → **Actividad** | Propietarios | Uso de IA, tareas, objetivos cumplidos y modelos en cualquier periodo; consulta [Actividad](/es/administration/activity) |
+| Administración → **Productividad** | Propietarios y administradores | Objetivos cumplidos, tiempo de trabajo y el trabajo que hicieron los agentes; consulta [Productividad](/es/administration/productivity) |
 | Administración → **Facturación** | Propietarios | El plan, el método de pago y todas las facturas |
 
 ## Acceso de pago
@@ -49,8 +52,9 @@ El estado de la cuenta es uno de **Esperando el primer pago**, **Prueba**,
 
 ## Crédito de IA
 
-Cada paso que da un agente cuesta un poco de crédito —normalmente una fracción
-de centavo— al precio que el proveedor de IA informa para ese paso. Gastan
+Cada paso que da un agente se cobra con un poco de crédito —normalmente una
+fracción de centavo—, según el modelo de IA que usa el agente y cuánto tiene
+que leer y escribir. Gastan
 crédito las tareas, las tareas que inicia una programación, **Pruébalo** en el
 constructor de agentes y el título corto que AptiveAI escribe para cada tarea.
 
@@ -117,43 +121,34 @@ Los propietarios abren **Uso** en el área de administración.
 | Mosaico | Muestra |
 |---|---|
 | **Restante** | Todo lo que los agentes aún pueden gastar: la misma cifra que usa el acceso de pago |
-| **Gastado** | Lo que se ha gastado |
+| **Gastado** | Lo que se cobró en los últimos 30 días |
 | **Promocional** | El crédito promocional sin vencer, cuando lo hay |
 | **Monedero** | El monedero, cuando tiene algo |
 
 Si no queda nada, dice *No hay crédito de IA disponible, así que no se pueden
 iniciar tareas nuevas. Contáctanos para agregar crédito.*
 
-**Últimos 30 días**: en qué se fue el gasto, **Por agente** y **Por persona**. Junto al nombre de cada agente puedes ver *Tareas sin agente*, *(probado
-en el constructor)*, *(computadora mantenida encendida)* e *(instrucciones
-editadas)*; el gasto que no inició ninguna persona —las tareas de una
-programación— aparece como *Programadas o sin atribuir*.
+**Últimos 30 días**: *En qué se gastó la IA y el tiempo de computadora*,
+**Por agente**. Junto al nombre de cada agente puedes ver *Tareas sin agente*,
+*(probado en el constructor)*, *(computadora mantenida encendida)* e
+*(instrucciones editadas)*. El gasto se muestra solo por agente, nunca por
+persona.
 
-**Actividad reciente**: cada movimiento de crédito de IA, del más reciente al
-más antiguo: **Cuándo**, **Qué se ejecutó** (el agente, o *Una tarea*),
-**Modelo**, **Tokens** e **Importe**. El gasto aparece como un importe negativo;
-el crédito que llega, como uno positivo, con el nombre de su tipo:
+**Transacciones**: una tarjeta que abre [Transacciones](/es/administration/transactions),
+cada cargo al crédito de IA y cada crédito añadido, con lo **Usado este mes**.
 
-| Fila | Significado |
-|---|---|
-| **Reinicio de periodo** | La asignación mensual del plan, agregada cuando se pagó una factura |
-| **Crédito promocional** | Se aceptó un enlace de crédito |
-| **Crédito promocional vencido** | El crédito promocional sin usar llegó a su vencimiento |
-| **Crédito promocional revocado** | AptiveAI retiró crédito promocional sin gastar |
-| **Excedente al monedero** | Gasto que pasó al monedero una vez usado el crédito del plan |
-| **Ajuste manual** | AptiveAI cambió el saldo a mano |
-
-Los importes menores a un centavo se muestran completos, por ejemplo `-$0.004396`.
-
-<Aside type="note" title="Las filas de $0.00 son a propósito">
-  Cada paso que da un agente deja exactamente una fila, aunque no se haya
-  cobrado nada: porque el proveedor no informó un precio, porque no había
-  crédito del cual consumir o porque el crédito se había acabado. Una fila de
-  $0.00 es la constancia de que el paso ocurrió, no un medidor roto. Y cuando
-  un proveedor informa los tokens que usó un paso pero no su precio, el paso se
-  cobra al precio de lista del modelo y el registro de AptiveAI marca el cobro
-  como estimado.
+<Aside type="note" title="Actividad reciente pasó a Transacciones">
+  La lista de cada movimiento de crédito —**Cuándo**, **Qué se ejecutó**,
+  **Modelo** e **Importe**— estaba al pie de esta página como **Actividad
+  reciente**. Ahora tiene su propia página: abre la tarjeta **Transacciones** o
+  ve a `aptiveai.io/admin/usage/transactions`. Qué significa cada fila se
+  explica en [Transacciones](/es/administration/transactions).
 </Aside>
+
+Para ver cómo les fue a tus agentes en cualquier periodo —tareas, objetivos
+cumplidos, uso de IA por agente y por modelo—, consulta
+[Actividad](/es/administration/activity) y
+[Productividad](/es/administration/productivity).
 
 ## Avisos
 
@@ -201,6 +196,8 @@ ni botón para cancelar; para cambiar cualquier cosa, usa **Contáctanos**.
 
 <CardGrid>
   <LinkCard title="Ajustes" href="/es/reference/settings#plan-y-crédito" description="Plan y crédito, tal como lo ve cada persona." />
+  <LinkCard title="Transacciones" href="/es/administration/transactions" description="Cada cargo a tu crédito de IA y cada crédito añadido." />
+  <LinkCard title="Actividad" href="/es/administration/activity" description="Uso de IA, tareas, objetivos cumplidos y modelos a lo largo del tiempo." />
   <LinkCard title="El área de administración" href="/es/administration/overview" description="Quién puede entrar y qué ve cada rol." />
   <LinkCard title="Agentes" href="/es/concepts/agents#acceso-de-pago" description="Lo que permite el acceso de pago." />
   <LinkCard title="Programaciones" href="/es/concepts/schedules#ejecuciones-omitidas" description="Ejecuciones omitidas por falta de crédito de IA." />

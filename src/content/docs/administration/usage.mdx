@@ -1,6 +1,6 @@
 ---
 title: Usage and credit
-description: What AI credit is and how it is spent — the three kinds of credit and their order, why a task can finish on the last of it and the next is refused, computer time, the usage ledger and its $0 rows, credit links from AptiveAI, account notices, when agents cannot start, and the owner's read-only Billing page.
+description: What AI credit is and how it is spent — the three kinds of credit and their order, why a task can finish on the last of it and the next is refused, computer time, the owner's Usage page and where its ledger moved, credit links from AptiveAI, account notices, when agents cannot start, and the owner's read-only Billing page.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -12,7 +12,10 @@ what spends it, where to read it, and what happens when it runs out.
 | Where | Who | Shows |
 |---|---|---|
 | AptiveAI Agents → **Settings → Plan & credit** | Everyone | The account's **Status**, the **AI credit left**, and whether agents **Can start new work** |
-| Admin → **Usage** | Owners | Credit left, the last 30 days by agent and by person, and every movement of credit |
+| Admin → **Usage** | Owners | Credit left, and the last 30 days by agent |
+| Admin → **Usage → Transactions** | Owners | Every charge to the credit and every credit added — see [Transactions](/administration/transactions) |
+| Admin → **Activity** | Owners | AI usage, tasks, goals met and models over any period — see [Activity](/administration/activity) |
+| Admin → **Productivity** | Owners and admins | Goals met, work time and the work agents handled — see [Productivity](/administration/productivity) |
 | Admin → **Billing** | Owners | The plan, the payment method and every invoice |
 
 ## Paid access
@@ -46,8 +49,9 @@ The account's status is one of **Awaiting first payment**, **Trial**,
 
 ## AI credit
 
-Every step an agent takes costs a little credit — usually a fraction of a
-cent — at the price the AI provider reports for it. Credit is spent by tasks,
+Every step an agent takes is charged a little credit — usually a fraction of
+a cent — depending on the AI model the agent uses and how much it has to read
+and write. Credit is spent by tasks,
 by tasks a schedule starts, by **Try it** in the agent builder, and by the
 short title AptiveAI writes for each task.
 
@@ -112,43 +116,33 @@ Owners open **Usage** in the admin area.
 | Tile | Shows |
 |---|---|
 | **Remaining** | Everything agents can still spend — the same number paid access reads |
-| **Spent** | What has been spent |
+| **Spent** | What was charged in the last 30 days |
 | **Promotional** | Unexpired promotional credit, when there is any |
 | **Wallet** | The wallet, when there is anything in it |
 
 With nothing left it says *No AI credit is available, so new tasks cannot be
 started. Contact us to add credit.*
 
-**Last 30 days** — where the spending went, **By agent** and **By person**. Besides each agent's name you may see *Tasks with no agent*, *(tested
-in the builder)*, *(computer kept warm)* and *(instructions edited)*; spend
-that no person started — a schedule's tasks — shows as *Scheduled or
-unattributed*.
+**Last 30 days** — *Where AI and computer spend went*, **By agent**. Besides
+each agent's name you may see *Tasks with no agent*, *(tested in the
+builder)*, *(computer kept warm)* and *(instructions edited)*. Spending is
+shown by agent only, never by person.
 
-**Recent activity** — every movement of AI credit, newest first: **When**,
-**What ran** (the agent, or *A task*), **Model**, **Tokens** and **Amount**.
-Spending shows as a negative amount; credit arriving as a positive one, named
-by its kind:
+**Transactions** — a card that opens [Transactions](/administration/transactions),
+every charge to the AI credit and every credit added, with what has been
+**Used this month**.
 
-| Row | Meaning |
-|---|---|
-| **Period reset** | The plan's monthly allowance, added when an invoice was paid |
-| **Promotional credit** | A credit link was accepted |
-| **Promotional credit expired** | Unused promotional credit reached its expiry |
-| **Promotional credit revoked** | AptiveAI withdrew unspent promotional credit |
-| **Wallet overflow** | Spending that went on to the wallet once the plan credit was used |
-| **Manual adjustment** | AptiveAI changed the balance by hand |
-
-Amounts smaller than a cent are shown in full, such as `-$0.004396`.
-
-<Aside type="note" title="Rows of $0.00 are on purpose">
-  Every step an agent takes leaves exactly one row, even when nothing was
-  charged — because the provider reported no price for it, because there was
-  no credit to draw on, or because the credit had run out. A $0.00 row is the
-  record that the step happened, not a broken meter. And when a provider
-  reports the tokens a step used but not its price, the step is charged at
-  the model's list price and AptiveAI's record marks the charge as
-  estimated.
+<Aside type="note" title="Recent activity moved to Transactions">
+  The list of every movement of credit — **When**, **What ran**, **Model** and
+  **Amount** — used to sit at the foot of this page as **Recent activity**. It
+  now has a page of its own: open the **Transactions** card, or go to
+  `aptiveai.io/admin/usage/transactions`. What each row means is on
+  [Transactions](/administration/transactions).
 </Aside>
+
+For how your agents did over any period — tasks, goals met, AI usage by agent
+and by model — see [Activity](/administration/activity) and
+[Productivity](/administration/productivity).
 
 ## Notices
 
@@ -194,6 +188,8 @@ anything, use **Contact us**.
 
 <CardGrid>
   <LinkCard title="Settings" href="/reference/settings#plan--credit" description="Plan & credit, as every person sees it." />
+  <LinkCard title="Transactions" href="/administration/transactions" description="Every charge to your AI credit, and every credit added." />
+  <LinkCard title="Activity" href="/administration/activity" description="AI usage, tasks, goals met and models over time." />
   <LinkCard title="The admin area" href="/administration/overview" description="Who can enter, and what each role sees." />
   <LinkCard title="Agents" href="/concepts/agents#paid-access" description="What paid access allows." />
   <LinkCard title="Schedules" href="/concepts/schedules#skipped-firings" description="Firings skipped for no AI credit." />
