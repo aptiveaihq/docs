@@ -1,0 +1,233 @@
+---
+title: Actividad
+description: "La página Actividad del propietario en el área de administración: el rango de tiempo, los mosaicos y tarjetas del Resumen, cómo le fue a cada agente con cada modelo y cuánto costaría el mismo trabajo con otro, Tendencias, Explorar y Tareas, y qué significa cada cifra, del uso de IA y los objetivos cumplidos a los pasos de IA."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Actividad** muestra lo que hicieron tus agentes durante un periodo y lo que
+se cobró por ello: cuántas tareas hicieron, cuántas cumplieron su objetivo,
+qué agentes y qué modelos de IA hicieron el trabajo, y el uso de IA que hay
+detrás. Es una página del [área de administración](/es/administration/overview)
+en `aptiveai.io/admin/activity`, la fila **Actividad** del menú de
+administración.
+
+| Rol | Ve Actividad |
+|---|---|
+| **Propietario** | ✓, de tu propia empresa |
+| **Administrador**, **Miembro** | —: *La actividad la ve el propietario de tu empresa.* Un administrador puede abrir [Productividad](/es/administration/productivity) en su lugar |
+
+<Aside type="note" title="No es el panel Actividad de AptiveAI Agents">
+  AptiveAI Agents tiene su propia fila **Actividad** en la barra lateral: la
+  lista en vivo de las tareas que están en curso o esperándote; consulta
+  [Cómo orientarte](/es/getting-started/finding-your-way#el-panel-actividad).
+  Esta página es la mirada del área de administración hacia un periodo pasado.
+</Aside>
+
+La página tiene cinco pestañas: **Resumen**, **Modelos**, **Tendencias**,
+**Explorar** y **Tareas**. **Actualizar** está al final de la fila de
+pestañas. El rango de tiempo y la pestaña se guardan en la dirección de la
+página, así que un enlace que compartas abre la misma vista.
+
+## Las cifras
+
+La misma palabra significa lo mismo en todas las pestañas y en
+[Productividad](/es/administration/productivity).
+
+| Cifra | Qué significa |
+|---|---|
+| **Uso de IA** | Lo que se le cobró a tu empresa por IA en el periodo: cada paso que dieron tus agentes, en dólares estadounidenses. Las comprobaciones internas de AptiveAI nunca están incluidas |
+| **Tareas** | Las tareas **iniciadas** en el periodo. Una tarea pertenece al día en que se inició, aunque terminara después. Las tareas eliminadas no cuentan |
+| **Objetivos cumplidos** | Las tareas que cumplieron su objetivo; consulta [Qué es un objetivo cumplido](#qué-es-un-objetivo-cumplido) |
+| **Sin evaluar** | Las tareas que aún no tienen veredicto, o que nunca lo tendrán. Nunca cuentan como cumplidas |
+| **Uso de IA por objetivo cumplido** | El uso de IA de **todas** las tareas del periodo, dividido entre el número de objetivos cumplidos. Incluye las tareas que no cumplieron su objetivo, así que responde a "cuánto costó cada éxito, contando los fracasos". Crear agentes y **Pruébalo** nunca están incluidos |
+| **Pasos de IA** | Cada llamada que hace un agente a su modelo de IA. Una tarea que lee muchas páginas, o que razona sobre un problema largo, da más pasos |
+| **Tiempo de computadora** | Cuánto tiempo estuvieron encendidas las [computadoras](/es/concepts/tasks#la-vista-en-vivo) de tus agentes, incluidos los pocos minutos que una se mantiene encendida después de una tarea para que la siguiente empiece más rápido. En pantalla se llama **Tiempo de ordenador** |
+
+### Qué es un objetivo cumplido
+
+Cada noche, AptiveAI lee las tareas que han terminado —qué se le pidió a cada
+una, el resumen final del agente y lo que hizo en realidad— y decide si
+**cumplió su objetivo**, si lo cumplió **en parte**, si quedó **bloqueada** o
+si **no** lo cumplió. Solo una tarea con ese veredicto puede contar como
+objetivo cumplido: una tarea que se completó pero aún no se ha evaluado está
+**sin evaluar**, no cumplida.
+
+Una tarea no se evalúa cuando:
+
+- sigue en curso, o se detuvo o se omitió: su resultado ya se conoce;
+- terminó hoy: el veredicto llega la noche siguiente;
+- la evaluación está desactivada para tu empresa, o el espacio de trabajo de
+  la tarea está marcado como regulado, así que sus tareas nunca se leen.
+
+El veredicto es un juicio, no un hecho. Las cifras que lo acompañan —registros
+leídos, acciones de conectores, aprobaciones, páginas visitadas— se cuentan, no
+se juzgan.
+
+## El rango de tiempo
+
+El **rango de tiempo** de la cabecera de la página elige el periodo que
+muestran todas las pestañas:
+
+**Última hora**, **Últimas 3 h**, **Últimas 6 h**, **Últimas 12 h**,
+**Últimas 24 h**, **Última semana**, **Últimos 30 días**, **Últimos 90 días**,
+**Este mes**, **Mes pasado**, **Este año**, **Todo el periodo**, o un
+**Rango personalizado** con **Desde** y **Hasta**.
+
+- **‹** y **›** pasan al periodo anterior o al siguiente de la misma duración.
+- **Todo el periodo** empieza con el primer uso de IA de tu empresa.
+- **Agrupación** —**Automática**, **Hora**, **Día**, **Semana** o **Mes**—
+  decide cómo agrupan el tiempo los gráficos. **Automática** usa horas hasta
+  dos días, días hasta unos dos meses, semanas hasta unos seis meses y meses a
+  partir de ahí. Una opción que dibujaría demasiados puntos para el periodo se
+  desactiva.
+- Las horas están en la zona horaria de tu navegador, así que un día empieza a
+  tu medianoche.
+- **frente al periodo anterior** compara una cifra con el periodo de la misma
+  duración justo anterior.
+
+El mismo rango de tiempo está en [Productividad](/es/administration/productivity).
+
+## Resumen
+
+Cinco mosaicos:
+
+| Mosaico | Qué muestra |
+|---|---|
+| **Uso de IA**: *Incluido en tus puestos* | Lo que se cobró por IA en el periodo, con el cambio frente al periodo anterior |
+| **Tareas**: *N objetivos cumplidos* | Las tareas iniciadas en el periodo y cuántas cumplieron su objetivo |
+| **Uso de IA por objetivo cumplido** | El uso de IA de todas las tareas del periodo ÷ objetivos cumplidos |
+| **Pasos de IA**: *Cada llamada de un agente a su modelo* | Con el cambio frente al periodo anterior |
+| **Cargos al monedero**: *IA más allá de lo que incluyen tus puestos* | Lo que realmente se descontó de tu **monedero** por IA en el periodo |
+
+Después, cuatro tarjetas:
+
+| Tarjeta | Qué muestra |
+|---|---|
+| **Capacidad del equipo** | Todas las personas de tu empresa, con las **Tareas** que iniciaron y sus **Pasos de IA**. No hay ninguna cifra de dinero por persona en ninguna parte de esta página. Hasta que se activen los niveles de puesto, la tarjeta dice *La capacidad aparecerá aquí cuando se activen los niveles de puesto.* |
+| **Monedero** | Su **Saldo** actual y lo **Cargado en este periodo**. *Paga la IA más allá de lo que incluyen tus puestos. Todos en tu empresa pueden usarlo.* |
+| **Agentes** | Las **Tareas**, los **Objetivos cumplidos**, el **Uso de IA** y el uso de IA **Por tarea** de cada agente |
+| **Modelos** | Los **Pasos de IA** y el **Uso de IA** de cada modelo de IA. *Los modelos premium consumen antes la capacidad de tu equipo.* |
+
+Un agente que se eliminó después aparece como **Un agente eliminado**, y una
+persona que dejó tu empresa como **Un exmiembro**. Un modelo sin nombre visible
+aparece como **Un modelo**.
+
+## Modelos
+
+**Impacto del modelo por agente** pone a cada uno de tus agentes junto a cada
+modelo de IA que usó en el periodo, para que un cambio de modelo se pueda
+juzgar con resultados reales.
+
+- **Una tarea cuenta una sola vez**, en el modelo que más usó.
+- Cuando un agente usó más de un modelo, sus filas aparecen juntas, para que la
+  diferencia se vea lado a lado.
+
+| Columna | Qué muestra |
+|---|---|
+| **Agente**, **Modelo** | Por su nombre |
+| **Tareas** | Las tareas de ese agente con ese modelo |
+| **Objetivo cumplido** | La proporción de tareas **evaluadas** que cumplieron su objetivo, con *de N evaluadas · M sin evaluar* al lado |
+| **Uso de IA por tarea** | El uso de IA de esas tareas ÷ tareas |
+| **Uso de IA por objetivo cumplido** | El uso de IA de esas tareas ÷ objetivos cumplidos |
+| **Pasos de IA** | Los pasos que dieron esas tareas |
+
+### Cuánto costaría el mismo trabajo con otro modelo
+
+**Comparar con** elige cualquier modelo que pueda usar un agente. La tabla
+suma entonces una columna, **Mismos tokens en ‹modelo› (estimación)**: lo que
+se habría cobrado por tarea con ese modelo por el mismo trabajo que hizo cada
+fila.
+
+Junto a cada estimación, *su modelo a precio de lista* da el mismo trabajo con
+el propio modelo de la fila a su precio estándar. Esa es la cifra con la que se
+compara la estimación, así que el cambio mostrado es solo la diferencia de
+precio, y comparar un modelo consigo mismo no muestra ningún cambio. Cuando un
+modelo no tiene precio estándar, la fila se compara con lo que realmente se
+cobró y lo indica: *su modelo no tiene precio de lista*.
+
+<Aside type="caution" title="Es una estimación">
+  Otro modelo no haría el trabajo exactamente igual ni con el mismo número de
+  pasos, y la estimación no dice nada sobre si sus tareas habrían cumplido su
+  objetivo. Úsala para ver qué modelos vale la pena probar; después prueba uno
+  en un solo agente y compara las filas reales en esta pestaña.
+</Aside>
+
+## Tendencias
+
+Tres secciones —**Modelos**, **Personas** y **Agentes**—, cada una con un
+gráfico del periodo junto a una lista **En tendencia**: los últimos 7 días
+completos frente a los 7 anteriores, con el cambio (o **Nuevo** cuando no hubo
+nada en la semana anterior) y una línea de 14 días. Hoy no está en ninguna de
+las dos semanas, así que un día todavía en curso nunca parece una caída.
+
+Modelos y Agentes se pueden medir en **Uso de IA** o en **Pasos de IA**. Las
+Personas se miden solo en **Pasos de IA**.
+
+## Explorar
+
+Elige una **Métrica** (**Uso de IA** o **Pasos de IA**), **Agrupar por**
+—**Agente**, **Persona**, **Modelo** o **Actividad**—, un **Y después por**
+opcional y **Mostrar los primeros** 5, 10 o 25. Empieza agrupado por
+**Agente**. El gráfico dibuja los cinco primeros y *Otros*; la tabla
+**Desglose** que hay debajo da la **Suma** de cada fila, su mínimo, máximo y
+media por intervalo, el último intervalo y su **% del total**. **Exportar CSV**
+descarga exactamente la tabla.
+
+**Actividad** reparte el uso de IA según para qué fue:
+
+| Actividad | Qué es |
+|---|---|
+| **Tareas** | Tareas que inició una persona |
+| **Programadas** | Tareas que inició una [programación](/es/concepts/schedules) |
+| **Creación de agentes** | Crear y editar agentes: la conversación del constructor, **Pruébalo** y generar el ícono de un agente |
+| **Gastos generales** | Trabajos pequeños alrededor de una tarea, como escribir su título corto |
+
+**Haz clic en una fila o una barra para ver el detalle**: se convierte en un
+filtro y la agrupación baja un nivel. Quita los filtros de uno en uno, o con
+**Quitar todos**. En cuanto hay una persona en la agrupación o en los filtros,
+la métrica es solo **Pasos de IA**.
+
+## Tareas
+
+| Mosaico | Qué muestra |
+|---|---|
+| **Tareas** | Las tareas iniciadas en el periodo: cuántas fueron programadas y cuántas manuales |
+| **Éxito** | Una sola proporción sobre todas las tareas terminadas: las evaluadas que cumplieron su objetivo, más las sin evaluar que se completaron. La pista da cada mitad |
+| **Tiempo activo mediano** | Cuánto trabajó de verdad un agente en una tarea típica, con la media al lado. El tiempo de espera a una persona, una pregunta o una aprobación no cuenta |
+| **Uso de IA por tarea** | Y el uso de IA por objetivo cumplido |
+| **Tiempo de ordenador** | El tiempo en tareas y el tiempo en espera para la siguiente tarea |
+
+Después:
+
+- **Tareas por resultado**: las tareas de cada intervalo según su veredicto, o
+  según cómo terminaron cuando no se evaluaron.
+- **Por qué no se completaron las tareas**: cómo terminaron las tareas
+  (detenidas por una persona, una aprobación rechazada o caducada, se agotó el
+  uso de IA, sin avances) y qué impidió cumplir su objetivo a las que no lo
+  cumplieron (faltaba información, faltaba un archivo, necesitaba iniciar
+  sesión, necesitaba la vista en vivo, sin permiso, error del sistema, fuera de
+  alcance).
+- **Por agente**: tareas, objetivo cumplido, tiempo activo medio, turnos,
+  herramientas y aprobaciones por tarea, tiempo de computadora, uso de IA y uso
+  de IA por tarea.
+- **Herramientas más usadas**: las diez herramientas que más usaron tus
+  agentes.
+- **Personas**: las tareas que inició cada persona. Un recuento, nunca dinero.
+
+## Actividad y lo que se descontó de tu crédito
+
+El uso de IA de Actividad y Productividad se calcula con los precios de hoy
+para cada fecha del periodo. Lo que realmente se descontó de tu crédito, paso a
+paso, está en [Transacciones](/es/administration/transactions), y las dos
+cifras pueden diferir en fechas antiguas. El mosaico **Cargos al monedero** y la
+tarjeta **Monedero** leen Transacciones.
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Productividad" href="/es/administration/productivity" description="Objetivos cumplidos, tiempo de trabajo y el trabajo que hicieron tus agentes." />
+  <LinkCard title="Uso y crédito" href="/es/administration/usage" description="El crédito de IA restante, en qué se gasta y la facturación." />
+  <LinkCard title="Transacciones" href="/es/administration/transactions" description="Cada cargo a tu crédito de IA y cada crédito añadido." />
+  <LinkCard title="Agentes" href="/es/concepts/agents" description="Configura un agente, incluido el modelo que usa." />
+</CardGrid>

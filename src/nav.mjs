@@ -100,6 +100,9 @@ export const nav = [
       { label: 'Users and roles', slug: 'administration/users', desc: 'Invite people, change roles, remove someone', es: { label: 'Usuarios y roles', desc: 'Invita personas, cambia roles, quita a alguien' } },
       { label: 'Access and sharing', slug: 'administration/access', desc: 'Workspaces, and who sees which agent, task and schedule', es: { label: 'Acceso y uso compartido', desc: 'Espacios de trabajo, y quién ve cada agente, tarea y programación' } },
       { label: 'Usage and credit', slug: 'administration/usage', desc: 'AI credit, what spends it, and billing', es: { label: 'Uso y crédito', desc: 'Crédito de IA, qué lo consume y facturación' } },
+      { label: 'Transactions', slug: 'administration/transactions', desc: 'Every charge to your AI credit, and every credit added', es: { label: 'Transacciones', desc: 'Cada cargo a tu crédito de IA y cada crédito añadido' } },
+      { label: 'Activity', slug: 'administration/activity', desc: 'AI usage, tasks, goals met and models over time', es: { label: 'Actividad', desc: 'Uso de IA, tareas, objetivos cumplidos y modelos a lo largo del tiempo' } },
+      { label: 'Productivity', slug: 'administration/productivity', desc: 'Goals met, work time and the work agents handled', es: { label: 'Productividad', desc: 'Objetivos cumplidos, tiempo de trabajo y el trabajo de los agentes' } },
     ],
   },
   {

@@ -1,0 +1,220 @@
+---
+title: Activity
+description: The owner's Activity page in the admin area — the time range, the Overview tiles and cards, how each agent did on each model and what the same work would cost on another, Trends, Explore and Tasks — and what each figure means, from AI usage and goals met to AI steps.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Activity** shows what your agents did over a period of time and what it was
+charged: how many tasks they handled, how many met their goal, which agents
+and AI models did the work, and the AI usage behind it. It is a page of the
+[admin area](/administration/overview) at `aptiveai.io/admin/activity`, the
+**Activity** row in the admin menu.
+
+| Role | Sees Activity |
+|---|---|
+| **Owner** | ✓ — your own enterprise |
+| **Admin**, **Member** | — *Activity is visible to your enterprise's owner.* An admin can open [Productivity](/administration/productivity) instead |
+
+<Aside type="note" title="Not the Activity panel in AptiveAI Agents">
+  AptiveAI Agents has its own **Activity** row in the sidebar: the live list
+  of tasks that are running or waiting on you — see
+  [Finding your way around](/getting-started/finding-your-way#the-activity-panel).
+  This page is the admin area's look back at a period of time.
+</Aside>
+
+The page has five tabs: **Overview**, **Models**, **Trends**, **Explore** and
+**Tasks**. **Refresh** sits at the end of the tab row. The time range and the
+tab are kept in the page's address, so a link you share opens on the same view.
+
+## The figures
+
+The same word means the same thing on every tab, and on
+[Productivity](/administration/productivity).
+
+| Figure | What it means |
+|---|---|
+| **AI usage** | What your enterprise was charged for AI over the period: every step your agents took, in US dollars. AptiveAI's own background checks are never in it |
+| **Tasks** | Tasks **started** in the period. A task belongs to the day it was started, even if it finished later. Deleted tasks are not counted |
+| **Goals met** | Tasks that met their goal — see [What a goal met is](#what-a-goal-met-is) |
+| **Not graded** | Tasks that have no verdict yet, or will never have one. They are never counted as met |
+| **AI usage per goal met** | The AI usage of **all** the period's tasks, divided by the number of goals met. Tasks that did not meet their goal are included, so it answers "what did each success cost, failures included". Building agents and **Try it** are never in it |
+| **AI steps** | Each call an agent makes to its AI model. A task that reads many pages, or thinks through a long problem, takes more steps |
+| **Computer time** | How long your agents' [computers](/concepts/tasks#the-live-view) were on, including the few minutes one is kept warm after a task so the next starts faster |
+
+### What a goal met is
+
+Each night, AptiveAI reads the tasks that have finished — what each was
+asked to do, the agent's final summary, and what it actually did — and
+decides whether it **met its goal**, **partly** met it, was **blocked**, or did
+**not** meet it. Only a task with that verdict can count as a goal met: a
+task that completed but has not been judged is **not graded**, not met.
+
+A task is not graded when:
+
+- it is still in progress, or was stopped or skipped — its outcome is already
+  known;
+- it finished today — the verdict arrives the next night;
+- grading is off for your enterprise, or the task's workspace is marked as
+  regulated, so its tasks are never read.
+
+The verdict is a judgement, not a fact. The counts beside it — records read,
+connector actions, approvals, pages visited — are counted, not judged.
+
+## The time range
+
+The **time range** in the page header picks the period every tab shows:
+
+**Last hour**, **Last 3h**, **Last 6h**, **Last 12h**, **Last 24h**,
+**Last week**, **Last 30 days**, **Last 90 days**, **This month**,
+**Last month**, **This year**, **All time**, or a **Custom range** with
+**From** and **To**.
+
+- **‹** and **›** step to the previous or next period of the same length.
+- **All time** starts at your enterprise's first AI usage.
+- **Rollup** — **Auto**, **Hour**, **Day**, **Week** or **Month** — sets
+  how the charts group time. **Auto** picks hours for up to two days, days up
+  to about two months, weeks up to about six months, and months beyond. A
+  choice that would draw too many points for the period is turned off.
+- Times are in your browser's time zone, so a day starts at your midnight.
+- **vs prior period** compares a figure with the period of the same length
+  just before.
+
+The same time range is on [Productivity](/administration/productivity).
+
+## Overview
+
+Five tiles:
+
+| Tile | What it shows |
+|---|---|
+| **AI usage** — *Included in your seats* | What was charged for AI in the period, with the change vs the prior period |
+| **Tasks** — *N goals met* | Tasks started in the period, and how many met their goal |
+| **AI usage per goal met** | AI usage of all the period's tasks ÷ goals met |
+| **AI steps** — *Each call an agent makes to its model* | With the change vs the prior period |
+| **Wallet charges** — *AI beyond what your seats include* | What was actually taken from your **wallet** for AI in the period |
+
+Then four cards:
+
+| Card | What it shows |
+|---|---|
+| **Team capacity** | Everyone in your enterprise, with the **Tasks** they started and their **AI steps**. There is no dollar figure per person, anywhere on this page. Until seat tiers are enabled the card says *Capacity appears here once seat tiers are enabled.* |
+| **Wallet** | Its **Balance** now, and what was **Charged this period**. *Pays for AI beyond what your seats include. Everyone in your enterprise draws from it.* |
+| **Agents** | Each agent's **Tasks**, **Goals met**, **AI usage** and AI usage **Per task** |
+| **Models** | Each AI model's **AI steps** and **AI usage**. *Premium models use your team's capacity faster.* |
+
+An agent that has since been deleted reads **A deleted agent**, and someone who
+has left your enterprise reads **A former member**. A model without a display
+name reads **A model**.
+
+## Models
+
+**Impact of model by agent** puts each of your agents next to each AI model it
+used in the period, so a change of model can be judged on real results.
+
+- **A task counts once**, under the model it used the most.
+- When an agent used more than one model, its rows sit together, so the
+  difference is side by side.
+
+| Column | What it shows |
+|---|---|
+| **Agent**, **Model** | By name |
+| **Tasks** | Tasks of that agent on that model |
+| **Goal met** | The share of **graded** tasks that met their goal, with *of N graded · M not graded* beside it |
+| **AI usage per task** | The AI usage of those tasks ÷ tasks |
+| **AI usage per goal met** | The AI usage of those tasks ÷ goals met |
+| **AI steps** | Steps those tasks took |
+
+### What the same work would cost on another model
+
+**Compare with** picks any model an agent can use. The table then gains a
+column, **Same tokens on ‹model› (estimate)**: what the same work each row
+did would have been charged on that model, per task.
+
+Beside each estimate, *own model at list price* gives the same work on the
+row's own model at its standard price. That is the figure the estimate is
+measured against, so the change shown is the difference in price alone, and
+comparing a model with itself shows no change. When a model has no standard
+price, the row is measured against what it was actually charged instead and
+says so: *its own model has no list price*.
+
+<Aside type="caution" title="It is an estimate">
+  Another model would not do the work in exactly the same way or the same
+  number of steps, and the estimate says nothing about whether its tasks would
+  have met their goal. Use it to see which models are worth trying, then try
+  one on a single agent and compare the real rows on this tab.
+</Aside>
+
+## Trends
+
+Three sections — **Models**, **People** and **Agents** — each a chart over the
+period beside a **Trending** list: the last 7 complete days against the 7
+before, with the change (or **New** when there was nothing in the earlier
+week) and a 14-day line. Today is in neither week, so a day still in progress
+never reads as a drop.
+
+Models and Agents can be measured in **AI usage** or **AI steps**. People are
+measured in **AI steps** only.
+
+## Explore
+
+Pick a **Metric** (**AI usage** or **AI steps**), **Group by** — **Agent**,
+**Person**, **Model** or **Activity** — an optional **Then by**, and
+**Show top** 5, 10 or 25. It starts grouped by **Agent**. The chart draws the top five and *Other*; the
+**Breakdown** table under it gives each row's **Sum**, its smallest, largest
+and average per period, the latest period and its **% of total**.
+**Export CSV** downloads exactly the table.
+
+**Activity** sorts AI usage by what it was for:
+
+| Activity | What it is |
+|---|---|
+| **Tasks** | Tasks a person started |
+| **Scheduled** | Tasks a [schedule](/concepts/schedules) started |
+| **Agent building** | Building and editing agents: the builder's chat, **Try it**, and generating an agent's icon |
+| **Overhead** | Small jobs around a task, such as writing its short title |
+
+**Click a row or a bar to drill in**: it becomes a filter, and the grouping
+moves one level down. Remove filters one at a time, or **Clear all**. Once a
+person is in the grouping or the filters, the metric is **AI steps** only.
+
+## Tasks
+
+| Tile | What it shows |
+|---|---|
+| **Tasks** | Tasks started in the period: how many were scheduled and how many started by hand |
+| **Success** | One rate over every finished task: graded tasks that met their goal, plus ungraded tasks that completed. The hint gives each half |
+| **Median active time** | How long an agent actually worked on a typical task, with the mean beside it. Time spent waiting for a person, a question or an approval is not counted |
+| **AI usage per task** | And AI usage per goal met |
+| **Computer time** | Time on tasks, and time kept warm for the next task |
+
+Then:
+
+- **Tasks by outcome** — each period's tasks by their verdict, or by how they
+  ended when they were not graded.
+- **Why tasks didn't complete** — how tasks ended (stopped by a person, an
+  approval declined or timed out, AI usage ran out, no progress) and what stood
+  in the way of the ones that did not meet their goal (missing information, a
+  missing file, a sign-in, the live view, not allowed, a system error, out of
+  scope).
+- **By agent** — tasks, goal met, average active time, turns, tools and
+  approvals per task, computer time, AI usage and AI usage per task.
+- **Top tools** — the ten tools your agents called most.
+- **People** — the tasks each person started. A count, never money.
+
+## Activity and what was taken from your credit
+
+AI usage on Activity and Productivity is worked out at today's prices for every
+date in the period. What was actually taken from your credit, step by step, is
+on [Transactions](/administration/transactions), and the two can differ for
+older dates. The **Wallet charges** tile and the **Wallet** card read
+Transactions.
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Productivity" href="/administration/productivity" description="Goals met, work time and the work your agents handled." />
+  <LinkCard title="Usage and credit" href="/administration/usage" description="AI credit left, what spends it, and billing." />
+  <LinkCard title="Transactions" href="/administration/transactions" description="Every charge to your AI credit, and every credit added." />
+  <LinkCard title="Agents" href="/concepts/agents" description="Configure an agent, including the model it uses." />
+</CardGrid>

@@ -1,0 +1,80 @@
+---
+title: Productivity
+description: The Productivity page in the admin area — goals met against tasks started, the agents' work time, the work they handled, what each goal met cost, why tasks fell short, and each agent's results — and why admins see it without money.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Productivity** answers one question: is what your agents do worth it? It
+shows how many tasks met their goal, how long the agents actually worked, the
+work they handled in your systems, and — for owners — what each goal met cost.
+Everything on it is measured; nothing is a "time saved" guess.
+
+It is a page of the [admin area](/administration/overview) at
+`aptiveai.io/admin/productivity`, the **Productivity** row in the admin menu.
+In AptiveAI Agents, owners and admins also find a **Productivity** card on the
+**Work** page.
+
+| Role | Sees Productivity |
+|---|---|
+| **Owner** | ✓ — your own enterprise, with AI usage in dollars |
+| **Admin** | ✓ — your own enterprise, **without any money**: no spend tile, no **Is it worth it?** chart, no AI usage columns |
+| **Member** | — *Productivity is visible to your enterprise's owners and admins.* |
+
+The page uses the same [time range](/administration/activity#the-time-range)
+as Activity, with **Refresh** in the header. Tasks are counted the same way:
+tasks **started** in the period, deleted tasks left out.
+
+## Tiles
+
+| Tile | What it shows |
+|---|---|
+| **Goals met** | Goals met ÷ **all tasks** started in the period. The hint gives *N of M tasks*, what **task status alone says** — the share that simply completed — and how many were **not graded** |
+| **Agent work time** | How long the agents actually worked on these tasks, with the average per task. Time spent waiting for a person, a question or an approval adds nothing |
+| **Spent per goal met** | *Owners only.* The AI usage of all the period's tasks ÷ goals met, with that AI usage in the hint |
+| **Work handled** | **Records read** — distinct records your [connectors](/concepts/connectors) returned to the agents — with connector actions, approved actions and pages visited |
+
+**Goals met** and *task status alone says* sit side by side on purpose. A task
+can complete and still not do what was asked; the gap between the two is the
+work that looked done and was not. What a goal met is, and when a task is
+graded, is explained on [Activity](/administration/activity#what-a-goal-met-is).
+
+A task with no verdict never counts as met, so many ungraded tasks pull the
+rate **down** rather than inflate it. A line under the tiles says how many
+tasks were not graded, and why that happens: *grading is off, the workspace is
+regulated, or the grade has not arrived yet.*
+
+<Aside type="note" title="Two different goal-met rates">
+  Productivity divides goals met by **all tasks** in the period. The
+  [Models tab](/administration/activity#models) on Activity divides by
+  **graded tasks only**, and shows how many were not graded. Each page says
+  which it uses.
+</Aside>
+
+## Charts
+
+- **Task outcomes** — each period's tasks: **Goal met**, **Partly met**,
+  **Blocked**, **Not met**, **Stopped** and **Not graded**.
+- **Why tasks didn't meet the goal** — what stood in the way of tasks that
+  did not meet their goal (missing information, a missing file, a sign-in, the
+  live view, not allowed, a system error, out of scope, something else), and
+  how ungraded tasks ended (stopped by a person, an approval declined or timed
+  out, AI usage ran out). No task is counted twice.
+- **Is it worth it?** — *Owners only.* AI usage per period; point at a bar for
+  what each goal met cost, with a line of the cost per goal met over the
+  periods that had one.
+
+## By agent
+
+One row per agent: **Tasks**, **Goals met**, **Success** (goals met ÷ tasks), **Work time**, work time **Per task**, **Records read**, **Connector
+actions** and **Approved actions**. Owners also see **AI usage** and AI usage
+**Per goal met**.
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Activity" href="/administration/activity" description="AI usage, tasks and models over time, for owners." />
+  <LinkCard title="Usage and credit" href="/administration/usage" description="AI credit left, what spends it, and billing." />
+  <LinkCard title="Tasks" href="/concepts/tasks" description="One piece of work, start to finish." />
+  <LinkCard title="Users and roles" href="/administration/users" description="What owners and admins can each do." />
+</CardGrid>
