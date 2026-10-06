@@ -1,0 +1,78 @@
+---
+title: Transacciones
+description: "La página Transacciones del propietario: cada cargo al crédito de IA de tu empresa y cada crédito añadido, qué significa cada fila y cada columna, por qué los importes llevan signo y toda su precisión, por qué se guardan las filas de $0.00, y la tarjeta Transacciones de Uso."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Transacciones** es el registro de tu empresa: cada cargo a su
+[crédito de IA](/es/administration/usage#crédito-de-ia) y cada crédito añadido,
+del más reciente al más antiguo. Los importes son lo que realmente se cobró o
+se añadió: nada en esta página es una estimación calculada después. Está en
+`aptiveai.io/admin/usage/transactions` y es para los **propietarios**: a
+cualquier otra persona se le indica *Las transacciones las ve el propietario de
+tu empresa.*
+
+## La tarjeta Transacciones
+
+[Uso](/es/administration/usage#la-página-de-uso) tiene una tarjeta
+**Transacciones**: *Cada cargo a tu crédito de IA y cada crédito añadido, del
+más reciente al más antiguo.* Toda la tarjeta es un enlace a esta página. En
+una pantalla más ancha también muestra **Usado este mes**: lo que se ha cobrado
+desde el primer día del mes, con una pequeña línea de los cargos de cada día.
+Ahí solo cuentan los cargos: el crédito añadido, la llegada de la asignación
+mensual o el vencimiento de crédito promocional nunca cuentan. Mientras la cifra
+se carga, o si no se puede leer, la tarjeta muestra *Tu historial* en su lugar.
+
+## El registro
+
+La página tiene una sola tabla, **Actividad reciente** —*Lo más reciente
+primero*—, con 25 filas por página.
+
+| Columna | Qué muestra |
+|---|---|
+| **Cuándo** | Cuándo ocurrió el cargo o el crédito |
+| **Qué se ejecutó** | El agente, con el nombre que tenía en ese momento; *Una tarea* cuando no había agente; o, para un crédito, qué tipo de crédito era |
+| **Modelo** | El modelo de IA que usó el agente, por su nombre: *Un modelo* cuando no tiene nombre visible, y un guion cuando no intervino ningún modelo |
+| **Importe** | **Negativo** para un cargo, positivo para el crédito que llega |
+
+Una fila sin agente se nombra por su tipo:
+
+| Fila | Significado |
+|---|---|
+| **Reinicio de periodo** | La asignación mensual de tu plan, agregada cuando se pagó una factura |
+| **Crédito promocional** | Se aceptó un enlace de crédito de AptiveAI |
+| **Crédito promocional vencido** | El crédito promocional sin usar llegó a su vencimiento |
+| **Crédito promocional revocado** | AptiveAI retiró crédito promocional sin gastar |
+| **Excedente al monedero** | Gasto que pasó al monedero una vez usado el crédito del plan |
+| **Ajuste manual** | AptiveAI cambió el saldo a mano |
+
+Los importes menores a un centavo se muestran completos, por ejemplo
+`-$0.004396`, porque redondear un paso a `$0.00` parecería un medidor roto.
+
+<Aside type="note" title="Un paso puede ocupar más de una fila">
+  El crédito se gasta en orden: primero el promocional, luego el crédito del
+  plan y después el monedero. Un cargo que agota un tipo y continúa en el
+  siguiente deja una fila por cada uno, con su parte del importe. Suma las
+  filas para obtener el cargo completo.
+</Aside>
+
+<Aside type="note" title="Las filas de $0.00 son a propósito">
+  Cada paso que da un agente deja una fila, aunque no se haya cobrado nada; por
+  ejemplo, un paso sin crédito del cual consumir. Una fila de $0.00 es la
+  constancia de que el paso ocurrió, no un medidor roto. Las comprobaciones
+  internas que AptiveAI hace sobre tus tareas también se registran a $0.00:
+  nunca se te cobran.
+</Aside>
+
+El registro dice qué se ejecutó, no quién lo inició: no tiene columna de
+personas. En qué se fue tu uso de IA, agente por agente, está en
+[Uso](/es/administration/usage#la-página-de-uso) y en
+[Actividad](/es/administration/activity).
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Uso y crédito" href="/es/administration/usage" description="El crédito de IA restante, en qué se gasta y la facturación." />
+  <LinkCard title="Actividad" href="/es/administration/activity" description="Uso de IA, tareas y modelos a lo largo del tiempo." />
+</CardGrid>

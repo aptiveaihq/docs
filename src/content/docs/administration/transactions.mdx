@@ -1,0 +1,76 @@
+---
+title: Transactions
+description: The owner's Transactions page — every charge to your enterprise's AI credit and every credit added, what each row and column means, why amounts carry a sign and full precision, why rows of $0.00 are kept, and the Transactions card on Usage.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Transactions** is your enterprise's ledger: every charge to its
+[AI credit](/administration/usage#ai-credit) and every credit added, newest
+first. The amounts are what was actually charged or added — nothing on this
+page is an estimate worked out later. It is at
+`aptiveai.io/admin/usage/transactions`, and it is for **owners**: anyone else
+is told *Transactions are visible to your enterprise's owner.*
+
+## The Transactions card
+
+[Usage](/administration/usage#the-usage-page) carries a **Transactions** card —
+*Every charge to your AI credit and every credit added, newest first.* The
+whole card is a link to this page. On a wider screen it also shows
+**Used this month**: what has been charged since the first of the month, with a
+small line of each day's charges. Only charges count there — credit added, a
+monthly allowance arriving or promotional credit expiring never does. While
+the figure loads, or if it cannot be read, the card shows *Your ledger*
+instead.
+
+## The ledger
+
+The page holds one table, **Recent activity** — *Newest first* — 25 rows to a
+page.
+
+| Column | What it shows |
+|---|---|
+| **When** | When the charge or the credit happened |
+| **What ran** | The agent, by the name it had at the time; *A task* when there was no agent; or, for credit, what kind of credit it was |
+| **Model** | The AI model the agent used, by name — *A model* when it has no display name, and a dash when no model was involved |
+| **Amount** | **Negative** for a charge, positive for credit arriving |
+
+A row with no agent is named by its kind:
+
+| Row | Meaning |
+|---|---|
+| **Period reset** | Your plan's monthly allowance, added when an invoice was paid |
+| **Promotional credit** | A credit link from AptiveAI was accepted |
+| **Promotional credit expired** | Unused promotional credit reached its expiry |
+| **Promotional credit revoked** | AptiveAI withdrew unspent promotional credit |
+| **Wallet overflow** | Spending that went on to the wallet once the plan credit was used |
+| **Manual adjustment** | AptiveAI changed the balance by hand |
+
+Amounts smaller than a cent are shown in full, such as `-$0.004396`, because
+rounding a step to `$0.00` would read as a broken meter.
+
+<Aside type="note" title="One step can be more than one row">
+  Credit is spent in order — promotional first, then plan credit, then the
+  wallet. A charge that empties one kind and continues into the next leaves a
+  row for each, with its own part of the amount. Add the rows together for the
+  whole charge.
+</Aside>
+
+<Aside type="note" title="Rows of $0.00 are on purpose">
+  Every step an agent takes leaves a row, even when nothing was charged — for
+  example a step with no credit left to draw on. A $0.00 row is the record that
+  the step happened, not a broken meter. AptiveAI's own background checks on
+  your tasks are recorded at $0.00 too: you are never charged for them.
+</Aside>
+
+The ledger names what ran, not who started it: it has no column for people.
+Where your AI usage went, agent by agent, is on
+[Usage](/administration/usage#the-usage-page) and
+[Activity](/administration/activity).
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Usage and credit" href="/administration/usage" description="AI credit left, what spends it, and billing." />
+  <LinkCard title="Activity" href="/administration/activity" description="AI usage, tasks and models over time." />
+</CardGrid>

@@ -34,13 +34,13 @@ what the levels mean for who sees what.
 
 | Role | Enters the admin area | What they see there |
 |---|:---:|---|
-| **Owner** | ✓ | **Overview**, **Users**, **Usage** and **Billing** |
-| **Admin** | ✓ | **Users** |
+| **Owner** | ✓ | **Overview**, **Users**, **Usage**, **Activity**, **Productivity** and **Billing** |
+| **Admin** | ✓ | **Users** and **Productivity** |
 | **Member** | — | *You don't have access to this page* — the admin area is for your enterprise's owners and admins |
 
 Every admin page checks the role for itself, so the menu only lists what you
 can open. An admin who opens `/admin` is taken straight to **Users**, the one
-page that is theirs. Both roles also see **Agents** in the menu, which takes
+page they manage. Both roles also see **Agents** in the menu, which takes
 you back to AptiveAI Agents.
 
 <Aside type="note" title="Why billing is the owner's alone">
@@ -89,9 +89,22 @@ See [Users and roles](/administration/users).
 
 ### Usage
 
-For owners: the AI credit left, what spent it over the last 30 days by agent
-and by person, and every movement of credit. See
-[Usage and credit](/administration/usage).
+For owners: the AI credit left, what spent it over the last 30 days by
+agent, and a **Transactions** card that opens every charge to the credit and
+every credit added. See [Usage and credit](/administration/usage) and
+[Transactions](/administration/transactions).
+
+### Activity
+
+For owners: what your agents did over any period and the AI usage behind it —
+tasks, goals met, agents, AI models and AI steps. See
+[Activity](/administration/activity).
+
+### Productivity
+
+For owners and admins: goals met, the agents' work time and the work they
+handled in your systems. Admins see it without any money. See
+[Productivity](/administration/productivity).
 
 ### Billing
 

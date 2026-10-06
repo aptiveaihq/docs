@@ -1,0 +1,87 @@
+---
+title: Productividad
+description: "La página Productividad del área de administración: los objetivos cumplidos frente a las tareas iniciadas, el tiempo de trabajo de los agentes, el trabajo que hicieron, cuánto costó cada objetivo cumplido, por qué las tareas se quedaron cortas y los resultados de cada agente, y por qué los administradores la ven sin dinero."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Productividad** responde a una pregunta: ¿vale la pena lo que hacen tus
+agentes? Muestra cuántas tareas cumplieron su objetivo, cuánto tiempo
+trabajaron de verdad los agentes, el trabajo que hicieron en tus sistemas y,
+para los propietarios, cuánto costó cada objetivo cumplido. Todo lo que
+muestra está medido; nada es una suposición de "tiempo ahorrado".
+
+Es una página del [área de administración](/es/administration/overview) en
+`aptiveai.io/admin/productivity`, la fila **Productividad** del menú de
+administración. En AptiveAI Agents, los propietarios y administradores también
+encuentran una tarjeta **Productividad** en la página **Trabajo**.
+
+| Rol | Ve Productividad |
+|---|---|
+| **Propietario** | ✓, de tu propia empresa, con el uso de IA en dólares |
+| **Administrador** | ✓, de tu propia empresa, **sin ninguna cifra de dinero**: sin el mosaico de gasto, sin el gráfico **¿Vale la pena?** y sin columnas de uso de IA |
+| **Miembro** | —: *La productividad la ven los propietarios y administradores de tu empresa.* |
+
+La página usa el mismo [rango de tiempo](/es/administration/activity#el-rango-de-tiempo)
+que Actividad, con **Actualizar** en la cabecera. Las tareas se cuentan igual:
+las tareas **iniciadas** en el periodo, sin las eliminadas.
+
+## Mosaicos
+
+| Mosaico | Qué muestra |
+|---|---|
+| **Objetivos cumplidos** | Objetivos cumplidos ÷ **todas las tareas** iniciadas en el periodo. La pista da *N de M tareas*, lo que dice **solo por estado** —la proporción que simplemente se completó— y cuántas quedaron **sin calificar** |
+| **Tiempo de trabajo de los agentes** | Cuánto tiempo trabajaron de verdad los agentes en estas tareas, con la media por tarea. El tiempo de espera a una persona, una pregunta o una aprobación no suma nada |
+| **Gasto por objetivo cumplido** | *Solo propietarios.* El uso de IA de todas las tareas del periodo ÷ objetivos cumplidos, con ese uso de IA en la pista |
+| **Trabajo realizado** | **Registros leídos** —registros distintos que tus [conectores](/es/concepts/connectors) devolvieron a los agentes—, con las acciones de conectores, las acciones aprobadas y las páginas visitadas |
+
+**Objetivos cumplidos** y *solo por estado* aparecen juntos a propósito. Una
+tarea puede completarse y aun así no hacer lo que se pidió; la diferencia entre
+las dos cifras es el trabajo que parecía hecho y no lo estaba. Qué es un
+objetivo cumplido, y cuándo se evalúa una tarea, se explica en
+[Actividad](/es/administration/activity#qué-es-un-objetivo-cumplido).
+
+Una tarea sin veredicto nunca cuenta como cumplida, así que muchas tareas sin
+calificar hacen **bajar** la proporción en lugar de inflarla. Una línea bajo
+los mosaicos dice cuántas tareas no se calificaron, y por qué ocurre: *la
+calificación está desactivada, el espacio de trabajo está regulado o la nota
+aún no ha llegado.*
+
+<Aside type="note" title="Dos proporciones distintas de objetivos cumplidos">
+  Productividad divide los objetivos cumplidos entre **todas las tareas** del
+  periodo. La [pestaña Modelos](/es/administration/activity#modelos) de
+  Actividad divide solo entre las **tareas evaluadas**, y muestra cuántas
+  quedaron sin evaluar. Cada página dice cuál usa.
+</Aside>
+
+## Gráficos
+
+- **Resultados de las tareas**: las tareas de cada intervalo: **Objetivo
+  cumplido**, **Cumplido en parte**, **Bloqueada**, **No cumplido**,
+  **Detenida** y **Sin calificar**.
+- **Por qué las tareas no cumplieron el objetivo**: lo que impidió cumplir su
+  objetivo a las tareas que no lo cumplieron (faltaba información, faltaba un
+  archivo, necesitaba iniciar sesión, necesitaba la vista en vivo, sin permiso,
+  error del sistema, fuera de alcance, otro motivo) y cómo terminaron las
+  tareas sin calificar (detenidas por una persona, una aprobación rechazada o
+  caducada, se agotó el uso de IA). Ninguna tarea se cuenta dos veces.
+- **¿Vale la pena?**: *Solo propietarios.* El uso de IA por intervalo; señala
+  una barra para ver lo que costó cada objetivo cumplido, con una línea del
+  gasto por objetivo cumplido en los intervalos que tuvieron alguno.
+
+## Por agente
+
+Una fila por agente: **Tareas**, **Objetivos cumplidos**, **Éxito** (objetivos
+cumplidos ÷ tareas), **Tiempo de trabajo**, tiempo de trabajo
+**Por tarea**, **Registros leídos**, **Acciones de conectores** y **Acciones
+aprobadas**. Los propietarios también ven el **Uso de IA** y el uso de IA
+**Por objetivo cumplido**.
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Actividad" href="/es/administration/activity" description="Uso de IA, tareas y modelos a lo largo del tiempo, para propietarios." />
+  <LinkCard title="Uso y crédito" href="/es/administration/usage" description="El crédito de IA restante, en qué se gasta y la facturación." />
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="Un trabajo, de principio a fin." />
+  <LinkCard title="Usuarios y roles" href="/es/administration/users" description="Lo que pueden hacer los propietarios y los administradores." />
+</CardGrid>
