@@ -1,0 +1,271 @@
+---
+title: Automations
+description: An automation is a task on repeat — one of your agents, or an instruction you write, run on a cadence you set. The Automations page and its sections, the status line and its buttons, the timeline, creating one by chat or form, approvals, limits, and who sees and changes an automation.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+An **automation** is a [task](/concepts/tasks) on repeat. It runs one of your
+[agents](/concepts/agents), or an instruction you write, on a cadence you set —
+sweep the invoices every weekday at 7am, check a supplier portal every hour,
+send a summary on Monday mornings. Each time it **fires**, a new task starts on
+a computer in your workspace, works to the end, and opens at `/tasks/<id>` like
+any other task.
+
+Open **Automations** from the sidebar, directly below **Agents**. The **Work**
+page has an **Automations** card that leads to the same place. You can also ask
+an agent in any task to set one up — see [From a task](#from-a-task).
+
+<Aside type="note">
+  Automations used to be called **Schedules**. Only the name changed: every
+  automation you had is still there, with its history.
+</Aside>
+
+## How it works
+
+```
+Cadence reaches its next time (e.g. weekdays at 7am, Europe/Madrid)
+  → Gates checked: business hours, anything to process, AI credit
+    → A task starts: the agent's instructions, then the automation's
+      → The agent works on its own computer until it is done
+        → The run appears in the automation's run list
+```
+
+If a check fails, the run is **skipped** instead, with a reason, and the
+automation waits for its next time — see [Skipped runs](#skipped-runs).
+
+## The Automations page
+
+The page opens with one sentence that says whether anything is wrong —
+*2 need your attention. 6 are running fine.*, *Everything is running fine.* or
+*Everything is paused.* Below it, owners and admins see what automations cost
+this month; everyone sees which one runs next and when.
+
+Filter by **Workspace**, **Created by**, **Agent** (each agent, or
+**Freeform instruction**) and **Status** (**Active**, **Paused**, **Needs you**,
+**Failing**), or search by name and instruction. The header switches between
+**Cards** and **Timeline** — your choice is remembered in this browser — and
+holds **New automation**.
+
+### Four sections
+
+Both views sort automations into the same sections, in this order. A section
+with nothing in it is not shown.
+
+| Section | What puts an automation there |
+|---|---|
+| **Needs your attention** | Its latest run is waiting for an answer or an OK, or its latest run failed |
+| **Working now** | Its latest run is running |
+| **All good** | Everything else |
+| **Paused** | It is switched off |
+
+A run that is waiting or running keeps a paused automation out of **Paused**:
+pausing stops future runs, not the one already going.
+
+### The status line and its buttons
+
+Every card and every timeline lane says where its automation stands in words,
+with the button that fixes it beside it:
+
+| It says | Then | Buttons |
+|---|---|---|
+| **Waiting for your OK** | How long, and what it is asking | **Answer**, **Open task** |
+| **Failed**, or **Failed 3 in a row** | Why, and **Next try** | **Fix sign-in** or **Run again**, and **Pause** |
+| **Running** | How long, and what it is doing | — |
+| **✓** and the time of the last run | What that run did | — |
+| **Skipped** | The [reason](#skipped-runs) | — |
+| **Paused**, or **Paused · has never run** | — | **Resume** |
+
+**Fix sign-in** appears when the failures were sign-ins that stopped working.
+It and **Answer** open the automation on that run, where you fix or answer in
+place.
+
+A button only appears if you may use it. **Answer** shows only to someone who
+may answer that task; anyone else reads *Waiting for an OK* and gets
+**Open task**. **Run again**, **Pause** and **Resume** need you to be able to
+change the automation (see [Who sees an automation](#who-sees-an-automation)).
+With **Can use** you get no buttons except **Open task**.
+
+Each card's **…** menu offers **Details →**, **Configure**, **Run now**,
+**Pause** / **Resume**, **Share…** and **Delete** to the people who may use
+them. **Run now** fires at once, through the same gates as a timed run, without
+moving the next time; a paused automation must be resumed first. **Delete**
+removes the automation; the finished tasks it started go with it and can be
+recovered for 30 days, like any [deleted task](/concepts/tasks#how-long-a-task-is-kept).
+A task it started that is still working carries on as a task of its own.
+
+### Cards and Timeline
+
+**Cards** shows one card per automation: who does it, its cadence, the status
+line, the last and next run, and a strip of its last 12 runs.
+
+**Timeline** fills the screen. Each automation is a lane, grouped by the same
+four sections, along a time axis you set to **12 h**, **24 h**, **3 d**, **7 d**
+or **15 d**, with **‹ Now ›** to move back and forward. Finished runs are bars
+as long as they took; a run waiting for you or still running stretches to *Now*;
+skipped runs and the runs coming up are marked along the lane. When an
+automation's sign-in has expired, its next run reads
+*will fail: sign-in expired* before it happens. Hover a bar for what that run
+did; click a bar, or a lane's name, to open the automation on that run.
+
+## One automation
+
+Clicking a card opens the automation over the page. On the left: one sentence —
+*Runs weekdays at 7:00 AM (Europe/Madrid). Next: tomorrow.*, or *Paused.* — who
+does the work and with which connectors, the tiles **Cost this month** (owners
+and admins only), **Computer time this month**, **Runs this month** and
+**Done**, the **Last 12 runs**, and **Run now** and **Edit**.
+
+On the right, every run, newest first: its **Outcome**, **When**, how long it
+**Took**, **What happened** and, for owners and admins, its **Cost**. Search the
+runs or narrow them with the **Outcome** filter. Selecting a run opens it in
+place: what it did, the files it made, the question it is waiting on (answer it
+there), and fixes such as **Update sign-in to …** or **Run again** when it failed.
+A running run offers **Watch →** for its live view. Open a run to go to its
+task.
+
+**Details →** in the **…** menu opens the automation's full page: its cadence,
+what it does each time, its gates, and its history with every skipped run's
+reason.
+
+## Creating an automation
+
+**New automation** opens a panel with two ways in, **Chat** and **Form**. Both
+fill in the same draft, so you can switch between them without losing anything.
+
+**Chat** — the automation assistant asks, one question at a time: *when* it
+should run (saying which time zone it used), *who* does it — one of your agents,
+or an instruction you write — *what* it should do, whether it should ask before
+acting (only when the job sends or changes something), and a name. Under its
+latest reply, a short list shows the automation so far — **When**, **Who**,
+**What**, **Approval** and **Name** — exactly as it will be created. If you
+already have as many automations as one person may, it says so first. It ends
+on **Create automation** or **Keep editing**, and then offers to run it
+once to test. Nothing is saved until you choose **Create automation**.
+
+**Form** — the same choices as fields:
+
+<Steps>
+
+1. **Name** — such as *Morning invoice sweep*.
+
+2. **Agent** — which agent does the work, or **No agent — free-form**. With an
+   agent, its instructions come first and the automation's follow. Only active
+   agents run. The agent cannot be changed later — create a second automation
+   instead.
+
+3. **What it does each time** — the instruction for every run. Optional with an
+   agent; the whole job without one.
+
+4. **When it needs your approval** — **Autonomous** (the default) runs to the
+   end without asking anyone. **Interactive** stops and waits for you before
+   sending, deleting, buying or submitting.
+
+5. **Cadence** — **Hourly**, **Daily**, **Weekdays**, **Weekly** or
+   **Custom cron** (five fields, e.g. `0 9 * * 1-5`), with a preview of the next
+   run, and the **Timezone** it is read in — so a 7am automation means 7am where
+   the work is, whoever edits it later.
+
+6. **Gates** — optional checks before each run (below).
+
+</Steps>
+
+**Configure**, in a card's **…** menu, opens the same panel with the automation
+loaded: *What do you want to change?* You never choose a computer: each run gets
+one in your workspace when it fires.
+
+### Gates
+
+| Gate | What it does |
+|---|---|
+| **Skip when there is nothing to process** | Looks first — in the place you describe under **Where to look**, such as *unpaid invoices older than 30 days* — and skips the run if there is nothing to do |
+| **Only fire during business hours** | Skips runs outside **From** – **Until** on the days you pick, in the automation's own timezone |
+| **Pause after repeated failures** | Pauses the automation after a number of **Consecutive failures** (5 by default) |
+
+### Limits
+
+These apply to everyone, owners included:
+
+- An automation runs **at most once every 30 minutes**.
+- One person's automations that are switched on must run **at least 30 minutes
+  apart** from each other. Paused ones do not count.
+- One person can have **at most 10 automations**, paused ones included. Delete
+  one to make room.
+
+A save that breaks a limit is refused with the reason and what to change.
+
+## Approvals
+
+<Aside type="caution" title="Autonomous means nobody is asked.">
+  An autonomous automation approves every action for you — including ones that
+  cannot be undone, and writes to your [connectors](/concepts/connectors) — at
+  your own risk. Choose **Interactive** when the work should wait for a person.
+</Aside>
+
+An **Interactive** automation stops at the first action that needs an OK: it
+moves to **Needs your attention**, reads **Waiting for your OK**, and the
+waiting task reaches you in the [Inbox](/concepts/inbox). **Answer** opens the
+run, where you approve or decline without leaving the page.
+
+## Skipped runs
+
+A run that cannot or should not go ahead is recorded as **Skipped**, with a
+reason, before any work starts. The common ones:
+
+| Reason | What happened |
+|---|---|
+| **Agent busy** | The agent was already working on another task |
+| **Previous task active** | This automation's previous run was still working |
+| **Nothing to process** | The *nothing to process* gate found nothing to do |
+| **Outside business hours** | The business-hours gate was closed |
+| **Could not check for work** | The *nothing to process* gate could not look |
+| **Paused after failures** | The automation paused itself after repeated failures |
+| **Agent not active** | The agent is a draft, paused or archived |
+| **Agent no longer shared** | The automation's creator can no longer use its agent |
+| **No AI credit** | The account has no AI credit to spend. It runs again at its next time once credit is added |
+| **Missed window** | The run's time had already passed |
+
+A skip never piles up work: the automation carries on from its **next** time,
+without replaying the runs it missed. **Agent busy**, **Previous task active**
+and **Nothing to process** are quiet — they are expected, and send no
+notification. Every other skip notifies the people who can see the automation.
+
+## Who sees an automation
+
+An automation runs as the person who created it — their browser, their sign-ins,
+their account's credit. It is theirs until they share it; the chip on its page
+shows who has access, and selecting it opens the share box.
+
+| Person | What they can do |
+|---|---|
+| The person who created it | Everything, including deleting it |
+| **Can edit** | Change it, pause it, **Run now**, share it |
+| **Can use**, or **Everyone in ‹workspace›** | See it and every task it has started, read-only |
+| Workspace owners and admins | See every automation in their workspaces, with what it costs; change, pause, run and delete it |
+
+An owner or admin who cannot use the automation's agent may still rename it,
+change its cadence, pause or delete it, but not run it or change its instruction.
+Anyone who can see an automation sees all of its tasks. In the Tasks list each
+of them carries an **Automation:** marker with its name.
+
+If the person who created an automation leaves the workspace, it is paused so
+it stops spending credit. An owner can turn it back on. See
+[Sharing](/concepts/sharing).
+
+## From a task
+
+You can ask an agent in any task to list, create, change, pause, resume, run or
+delete an automation — *"check the supplier portal every weekday at 8"*. It uses
+the built-in `schedules` [skill](/concepts/skills#built-in-skills), and every
+change stops on an approval card first — *The agent wants to create an
+automation "…". Allow it?* The change is made as you, under the same rules and
+limits as the Automations page. A task an automation started can never change
+automations itself.
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Tasks" href="/concepts/tasks" description="What every run becomes." />
+  <LinkCard title="Agents" href="/concepts/agents" description="The instructions an automation's tasks follow." />
+  <LinkCard title="Inbox" href="/concepts/inbox" description="Where skips and waiting tasks reach you." />
+</CardGrid>

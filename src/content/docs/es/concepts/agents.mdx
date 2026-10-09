@@ -11,7 +11,7 @@ revisar pedidos en un portal. Describes el trabajo una sola vez: para qué es,
 cómo lo hace tu empresa, a qué sistemas puede llegar y qué debe saber. Después,
 cualquier persona con quien se comparta el agente le da
 [tareas](/es/concepts/tasks) en lenguaje normal, o una
-[programación](/es/concepts/schedules) le da tareas por su cuenta.
+[automatización](/es/concepts/automations) le da tareas por su cuenta.
 
 Cada agente trabaja en una **computadora** propia para cada tarea: un
 escritorio aislado con un navegador, que puedes observar y controlar a través
@@ -30,7 +30,7 @@ por agente: todos los agentes tienen una.
   cuadro de mensajes le envía tu mensaje. La dirección es `/?agent=<id>`, así que puedes
   guardar la página en favoritos o compartirla.
 - **La página Agentes** (`/agents`). Todos los agentes como tarjetas o en una
-  tabla —con su **Estado**, **Última tarea** y **Próxima programada**—, con
+  tabla —con su **Estado**, **Última tarea** y **Próxima ejecución**—, con
   búsqueda y un filtro **Archivados** para mostrar los agentes archivados. Al
   hacer clic en un agente, o en su botón **Iniciar una tarea**, se abre Nueva
   tarea con ese agente elegido. Su menú **…** tiene las mismas opciones que en
@@ -41,7 +41,7 @@ por agente: todos los agentes tienen una.
 
 Un agente está en uno de cuatro estados:
 
-| Estado | Tareas a mano | Se ejecutan programaciones |
+| Estado | Tareas a mano | Se ejecutan automatizaciones |
 |---|:---:|:---:|
 | **Borrador**: en preparación | — | — |
 | **Activo** | ✓ | ✓ |
@@ -97,7 +97,7 @@ acceso en la parte superior del constructor (consulta [Agentes personales y comp
 
 Cómo hace tu empresa este trabajo, en Markdown, hasta 30,000 caracteres. Las
 instrucciones van primero en cada tarea en la que trabaja el agente, incluidas
-las tareas que inicia una programación. El asistente las escribe y las edita
+las tareas que inicia una automatización. El asistente las escribe y las edita
 por ti; también puedes editarlas a mano.
 
 Al final de las instrucciones, un agente puede reunir **reglas permanentes**
@@ -265,8 +265,8 @@ lograr una que sirva, y consume crédito de IA.
 tarea; nadie puede iniciar una tarea con él. Su historial de tareas se
 conserva. Pasan dos cosas más, y **Restaurar agente** deshace ambas:
 
-- Sus **programaciones activas se ponen en pausa**. Al restaurarlo se vuelven a
-  activar exactamente esas: una programación que alguien pausó a mano, o que
+- Sus **automatizaciones activas se ponen en pausa**. Al restaurarlo se vuelven
+  a activar exactamente esas: una automatización que alguien pausó a mano, o que
   se pausó sola tras varios fallos, sigue en pausa.
 - Sus **concesiones de conectores se conservan**, así que vuelve equipado. La
   página del conector lo sigue mostrando, marcado como **Archivado**.
@@ -276,7 +276,7 @@ El filtro **Archivados** de la página Agentes muestra los agentes archivados.
 
 <Aside type="note" title="Eliminar un agente definitivamente">
   Solo AptiveAI puede eliminar un agente archivado de forma permanente. Eso
-  elimina el agente con todo lo que tenía —sus programaciones, notificaciones,
+  elimina el agente con todo lo que tenía —sus automatizaciones, notificaciones,
   archivos de conocimiento, concesiones, habilidades, inicios de sesión y
   versiones— y no se puede deshacer. Sus tareas también se eliminan y, como
   cualquier [tarea eliminada](/es/concepts/tasks#cuánto-tiempo-se-conserva-una-tarea),
@@ -311,7 +311,7 @@ pidió. Un rechazo puede llevar una nota que explique por qué, y a la persona
 que la pidió se le avisa en cualquier caso.
 
 Los agentes se actualizan solo en tareas que inició una persona, nunca en una
-tarea que inició una programación. También puedes enseñarle a un agente en
+tarea que inició una automatización. También puedes enseñarle a un agente en
 **Pruébalo**, una vez que se ha guardado.
 
 ## Restricciones
@@ -376,7 +376,7 @@ alguien. Mientras tanto:
   agente para obtener una respuesta directa;
 - si lo envías de todos modos, se rechaza: *… ya está trabajando en una tarea.
   Espera a que termine*;
-- la ejecución de una programación se omite como **Agente ocupado**.
+- la ejecución de una automatización se omite como **Agente ocupado**.
 
 Distintos agentes trabajan al mismo tiempo, y también puede hacerlo la misma
 persona con varios agentes. Cuando un trabajo tiene que hacerse en paralelo,
@@ -388,5 +388,5 @@ dáselo a más de un agente.
   <LinkCard title="Tareas" href="/es/concepts/tasks" description="Dale trabajo a un agente y observa cómo lo hace." />
   <LinkCard title="Conectores" href="/es/concepts/connectors" description="Los sistemas a los que puede llegar un agente." />
   <LinkCard title="Habilidades" href="/es/concepts/skills" description="Instrucciones que un agente carga cuando las necesita." />
-  <LinkCard title="Programaciones" href="/es/concepts/schedules" description="Dale tareas a un agente con una cadencia." />
+  <LinkCard title="Automatizaciones" href="/es/concepts/automations" description="Dale tareas a un agente con una cadencia." />
 </CardGrid>

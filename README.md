@@ -56,7 +56,7 @@ verbatim from that repository.
 - **AptiveAI Connect** — what the customer's own ChatGPT or Claude can reach
   once it is connected, and what it cannot
 - **AptiveAI Agents** — browser and computer-use capabilities, what an agent can
-  drive, the live view, schedules, approvals, and the limits of each
+  drive, the live view, automations, approvals, and the limits of each
 - **Integrations** — connecting internal systems: the available MCP servers and
   clients, and what a new one costs
 - **Operations** — deployment, access control, observability

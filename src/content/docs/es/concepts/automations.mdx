@@ -1,0 +1,294 @@
+---
+title: Automatizaciones
+description: Una automatización es una tarea que se repite — uno de tus agentes, o una instrucción que escribes, ejecutado con la frecuencia que elijas. La página Automatizaciones y sus secciones, la línea de estado y sus botones, la cronología, crear una por chat o con el formulario, aprobaciones, límites y quién ve y cambia una automatización.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Una **automatización** es una [tarea](/es/concepts/tasks) que se repite.
+Ejecuta uno de tus [agentes](/es/concepts/agents), o una instrucción que
+escribes, con la frecuencia que elijas — revisar las facturas cada día laborable
+a las 7 a. m., comprobar el portal de un proveedor cada hora, enviar un resumen
+los lunes por la mañana. Cada vez que se **ejecuta**, empieza una tarea nueva en
+una computadora de tu espacio de trabajo, trabaja hasta terminar y se abre en
+`/tasks/<id>` como cualquier otra tarea.
+
+Abre **Automatizaciones** desde la barra lateral, justo debajo de **Agentes**.
+La página **Trabajo** tiene una tarjeta **Automatizaciones** que lleva al mismo
+sitio. También puedes pedirle a un agente en cualquier tarea que te configure
+una — consulta [Desde una tarea](#desde-una-tarea).
+
+<Aside type="note">
+  Las automatizaciones antes se llamaban **Programaciones**. Solo cambió el
+  nombre: todas las que tenías siguen ahí, con su historial.
+</Aside>
+
+## Cómo funciona
+
+```
+La cadencia llega a su próxima hora (p. ej., días laborables a las 7:00, Europe/Madrid)
+  → Se comprueban las reglas: horario laboral, algo que procesar, crédito de IA
+    → Empieza una tarea: las instrucciones del agente y luego las de la automatización
+      → El agente trabaja en su propia computadora hasta terminar
+        → La ejecución aparece en la lista de ejecuciones de la automatización
+```
+
+Si una comprobación falla, la ejecución se **omite**, con un motivo, y la
+automatización espera a su siguiente hora — consulta
+[Ejecuciones omitidas](#ejecuciones-omitidas).
+
+## La página Automatizaciones
+
+La página empieza con una frase que dice si algo va mal —
+*2 necesitan tu atención. 6 funcionan bien.*, *Todo funciona bien.* o
+*Todo está en pausa.* Debajo, los propietarios y administradores ven lo que
+cuestan las automatizaciones este mes; todos ven cuál se ejecuta a continuación
+y cuándo.
+
+Filtra por **Espacio de trabajo**, **Creada por**, **Agente** (cada agente, o
+**Instrucción libre**) y **Estado** (**Activas**, **En pausa**,
+**Te necesitan**, **Con fallos**), o busca por nombre e instrucción. El
+encabezado cambia entre **Tarjetas** y **Cronología** — tu elección se recuerda
+en este navegador — y tiene **Nueva automatización**.
+
+### Cuatro secciones
+
+Las dos vistas reparten las automatizaciones en las mismas secciones, en este
+orden. Una sección vacía no se muestra.
+
+| Sección | Qué pone ahí una automatización |
+|---|---|
+| **Necesitan tu atención** | Su última ejecución espera una respuesta o un visto bueno, o su última ejecución falló |
+| **Trabajando ahora** | Su última ejecución está en curso |
+| **Todo bien** | Todo lo demás |
+| **En pausa** | Está desactivada |
+
+Una ejecución que espera o que está en curso mantiene una automatización en
+pausa fuera de **En pausa**: pausar detiene las ejecuciones futuras, no la que
+ya está en marcha.
+
+### La línea de estado y sus botones
+
+Cada tarjeta y cada carril de la cronología dice con palabras cómo está su
+automatización, con el botón que lo arregla al lado:
+
+| Dice | Después | Botones |
+|---|---|---|
+| **Espera tu visto bueno** | Cuánto tiempo lleva y qué pregunta | **Responder**, **Abrir tarea** |
+| **Falló**, o **Falló 3 veces seguidas** | Por qué, y **Próximo intento** | **Arreglar el inicio de sesión** o **Volver a ejecutar**, y **Pausar** |
+| **En curso** | Cuánto tiempo lleva y qué está haciendo | — |
+| **✓** y la hora de la última ejecución | Qué hizo esa ejecución | — |
+| **Omitida** | El [motivo](#ejecuciones-omitidas) | — |
+| **En pausa**, o **En pausa · nunca se ha ejecutado** | — | **Reanudar** |
+
+**Arreglar el inicio de sesión** aparece cuando los fallos fueron inicios de
+sesión que dejaron de funcionar. Este botón y **Responder** abren la
+automatización en esa ejecución, donde arreglas o respondes ahí mismo.
+
+Un botón solo aparece si puedes usarlo. **Responder** solo lo ve quien puede
+responder esa tarea; los demás leen *Espera un visto bueno* y tienen
+**Abrir tarea**. **Volver a ejecutar**, **Pausar** y **Reanudar** requieren que
+puedas cambiar la automatización (consulta
+[Quién ve una automatización](#quién-ve-una-automatización)). Con
+**Puede usar** no tienes más botón que **Abrir tarea**.
+
+El menú **…** de cada tarjeta ofrece **Detalles →**, **Configurar**,
+**Ejecutar ahora**, **Pausar** / **Reanudar**, **Compartir…** y **Eliminar** a
+las personas que pueden usarlos. **Ejecutar ahora** la ejecuta de inmediato,
+pasando por las mismas reglas que una ejecución a su hora, sin mover la
+siguiente hora; una automatización en pausa tiene que reanudarse primero.
+**Eliminar** borra la automatización; las tareas finalizadas que inició se
+eliminan con ella y se pueden recuperar durante 30 días, como cualquier
+[tarea eliminada](/es/concepts/tasks#cuánto-tiempo-se-conserva-una-tarea). Una
+tarea que inició y que todavía está trabajando sigue como una tarea propia.
+
+### Tarjetas y Cronología
+
+**Tarjetas** muestra una tarjeta por automatización: quién la hace, su cadencia,
+la línea de estado, la última y la próxima ejecución, y una franja con sus
+últimas 12 ejecuciones.
+
+**Cronología** ocupa toda la pantalla. Cada automatización es un carril,
+agrupado en las mismas cuatro secciones, a lo largo de un eje de tiempo de
+**12 h**, **24 h**, **3 d**, **7 d** o **15 d**, con **‹ Ahora ›** para ir atrás
+y adelante. Las ejecuciones terminadas son barras tan largas como lo que
+tardaron; una ejecución que te espera o que sigue en curso se alarga hasta
+*Ahora*; las omitidas y las próximas se marcan a lo largo del carril. Cuando el
+inicio de sesión de una automatización caducó, su próxima ejecución dice
+*fallará: el inicio de sesión caducó* antes de que ocurra. Pasa el cursor por
+una barra para ver qué hizo esa ejecución; haz clic en una barra, o en el nombre
+de un carril, para abrir la automatización en esa ejecución.
+
+## Una automatización
+
+Al hacer clic en una tarjeta, la automatización se abre sobre la página. A la
+izquierda: una frase — *Se ejecuta días laborables a las 7:00 (Europe/Madrid).
+Próxima: mañana.*, o *En pausa.* —, quién hace el trabajo y con qué conectores,
+los mosaicos **Costo este mes** (solo propietarios y administradores),
+**Tiempo de computadora este mes**, **Ejecuciones este mes** y **Hechas**, las
+**Últimas 12 ejecuciones**, y **Ejecutar ahora** y **Editar**.
+
+A la derecha, todas las ejecuciones, la más reciente primero: su **Resultado**,
+**Cuándo**, su **Duración**, **Qué pasó** y, para propietarios y
+administradores, su **Costo**. Busca entre las ejecuciones o acótalas con el
+filtro **Resultado**. Al seleccionar una ejecución se abre ahí mismo: qué hizo,
+los archivos que generó, la pregunta que espera (respóndela ahí) y arreglos como
+**Actualizar el inicio de sesión de …** o **Ejecutar de nuevo** cuando falló.
+Una ejecución en curso ofrece **Ver →** para su vista en vivo. Abre una
+ejecución para ir a su tarea.
+
+**Detalles →**, en el menú **…**, abre la página completa de la automatización:
+su cadencia, qué hace cada vez, sus reglas y su historial, con el motivo de cada
+ejecución omitida.
+
+## Crear una automatización
+
+**Nueva automatización** abre un panel con dos caminos, **Chat** y
+**Formulario**. Los dos completan el mismo borrador, así que puedes cambiar
+entre ellos sin perder nada.
+
+**Chat** — el asistente de automatizaciones pregunta, de una en una: *cuándo*
+debe ejecutarse (diciendo qué zona horaria usó), *quién* la hace — uno de tus
+agentes, o una instrucción que escribes —, *qué* debe hacer, si debe preguntar
+antes de actuar (solo cuando el trabajo envía o cambia algo) y un nombre. Bajo
+su última respuesta, una lista breve muestra la automatización hasta ahora —
+**Cuándo**, **Quién**, **Qué**, **Aprobación** y **Nombre** — tal como se va a
+crear. Si ya tienes tantas automatizaciones como puede tener una persona, te lo
+dice primero. Termina con **Crear automatización** o
+**Seguir editando**, y después ofrece ejecutarla una vez para probarla. No se
+guarda nada hasta que eliges **Crear automatización**.
+
+**Formulario** — las mismas decisiones como campos:
+
+<Steps>
+
+1. **Nombre** — por ejemplo *Barrido matutino de facturas*.
+
+2. **Agente** — qué agente hace el trabajo, o **Sin agente — libre**. Con un
+   agente, sus instrucciones van primero y luego las de la automatización. Solo
+   se ejecutan los agentes activos. El agente no se puede cambiar después — crea
+   una segunda automatización en su lugar.
+
+3. **Qué hace cada vez** — la instrucción para cada ejecución. Opcional con un
+   agente; es todo el trabajo sin él.
+
+4. **Cuándo necesita tu aprobación** — **Autónoma** (la opción predeterminada)
+   se ejecuta hasta el final sin preguntar a nadie. **Interactiva** se detiene y
+   te espera antes de enviar, eliminar, comprar o presentar algo.
+
+5. **Cadencia** — **Cada hora**, **Diaria**, **Días laborables**, **Semanal** o
+   **Cron personalizado** (cinco campos, p. ej., `0 9 * * 1-5`), con una vista
+   previa de la próxima ejecución, y la **Zona horaria** en que se lee — así una
+   automatización de las 7 a. m. significa las 7 a. m. donde se hace el trabajo,
+   la edite quien la edite después.
+
+6. **Reglas** — comprobaciones opcionales antes de cada ejecución (abajo).
+
+</Steps>
+
+**Configurar**, en el menú **…** de una tarjeta, abre el mismo panel con la
+automatización cargada: *¿Qué quieres cambiar?* Nunca eliges una computadora:
+cada ejecución recibe una de tu espacio de trabajo al ejecutarse.
+
+### Reglas
+
+| Regla | Qué hace |
+|---|---|
+| **Omitir cuando no hay nada que procesar** | Revisa primero — en el lugar que describes en **Dónde buscar**, por ejemplo *facturas impagas de más de 30 días* — y omite la ejecución si no hay nada que hacer |
+| **Ejecutar solo en horario laboral** | Omite las ejecuciones fuera del horario **Desde** – **Hasta** en los días que elijas, en la zona horaria de la automatización |
+| **Pausar tras fallos repetidos** | Pausa la automatización tras un número de **Fallos consecutivos** (5 de forma predeterminada) |
+
+### Límites
+
+Se aplican a todos, también a los propietarios:
+
+- Una automatización se ejecuta **como mucho una vez cada 30 minutos**.
+- Las automatizaciones activas de una misma persona deben ejecutarse **con al
+  menos 30 minutos de separación** entre sí. Las que están en pausa no cuentan.
+- Una persona puede tener **como mucho 10 automatizaciones**, también las que
+  están en pausa. Elimina una para hacer sitio.
+
+Un guardado que no cumple un límite se rechaza con el motivo y qué cambiar.
+
+## Aprobaciones
+
+<Aside type="caution" title="Autónoma significa que no se le pregunta a nadie.">
+  Una automatización autónoma aprueba todas las acciones por ti — incluidas las
+  que no se pueden deshacer y las escrituras en tus
+  [conectores](/es/concepts/connectors) — bajo tu propio riesgo. Elige
+  **Interactiva** cuando el trabajo deba esperar a una persona.
+</Aside>
+
+Una automatización **Interactiva** se detiene en la primera acción que necesita
+un visto bueno: pasa a **Necesitan tu atención**, dice **Espera tu visto bueno**,
+y la tarea en espera te llega a la [Bandeja de entrada](/es/concepts/inbox).
+**Responder** abre la ejecución, donde apruebas o rechazas sin salir de la
+página.
+
+## Ejecuciones omitidas
+
+Una ejecución que no puede o no debe seguir adelante se registra como
+**Omitida**, con un motivo, antes de que empiece cualquier trabajo. Los más
+comunes:
+
+| Motivo | Qué pasó |
+|---|---|
+| **Agente ocupado** | El agente ya estaba trabajando en otra tarea |
+| **Tarea anterior activa** | La ejecución anterior de esta automatización seguía trabajando |
+| **Nada que procesar** | La regla *nada que procesar* no encontró nada que hacer |
+| **Fuera del horario laboral** | La regla de horario laboral estaba cerrada |
+| **No se pudo comprobar si hay trabajo** | La regla *nada que procesar* no pudo revisar |
+| **En pausa tras fallos** | La automatización se pausó sola tras fallos repetidos |
+| **Agente no activo** | El agente está en borrador, en pausa o archivado |
+| **Agente ya no compartido** | Quien creó la automatización ya no puede usar su agente |
+| **Sin crédito de IA** | La cuenta no tiene crédito de IA para gastar. Se vuelve a ejecutar a su siguiente hora una vez que se agrega crédito |
+| **Ventana perdida** | La hora de la ejecución ya había pasado |
+
+Una omisión nunca acumula trabajo: la automatización continúa desde su
+**próxima** hora, sin repetir las ejecuciones que se perdió. **Agente ocupado**,
+**Tarea anterior activa** y **Nada que procesar** son silenciosas — son
+esperables y no envían ninguna notificación. Cualquier otra omisión avisa a las
+personas que pueden ver la automatización.
+
+## Quién ve una automatización
+
+Una automatización se ejecuta como la persona que la creó — con su navegador,
+sus inicios de sesión y el crédito de su cuenta. Es suya hasta que la comparte;
+el chip de su página muestra quién tiene acceso, y al seleccionarlo se abre el
+cuadro para compartir.
+
+| Persona | Qué puede hacer |
+|---|---|
+| La persona que la creó | Todo, incluido eliminarla |
+| **Puede editar** | Cambiarla, pausarla, usar **Ejecutar ahora**, compartirla |
+| **Puede usar**, o **Todos en ‹espacio de trabajo›** | Verla y ver cada tarea que ha iniciado, en solo lectura |
+| Los propietarios y administradores del espacio de trabajo | Ver todas las automatizaciones de sus espacios de trabajo, con lo que cuestan; cambiarlas, pausarlas, ejecutarlas y eliminarlas |
+
+Un propietario o administrador que no puede usar el agente de la automatización
+aún puede renombrarla, cambiar su cadencia, pausarla o eliminarla, pero no
+ejecutarla ni cambiar su instrucción. Quien puede ver una automatización ve todas
+sus tareas. En la lista de Tareas cada una lleva una marca **Automatización:**
+con su nombre.
+
+Si la persona que creó una automatización deja el espacio de trabajo, la
+automatización se pausa para que deje de gastar crédito. Un propietario puede
+volver a activarla. Consulta [Compartir](/es/concepts/sharing).
+
+## Desde una tarea
+
+Puedes pedirle a un agente en cualquier tarea que liste, cree, cambie, pause,
+reanude, ejecute o elimine una automatización — *"revisa el portal del proveedor
+cada día laborable a las 8"*. Usa la
+[habilidad](/es/concepts/skills#habilidades-integradas) integrada `schedules`, y
+cada cambio se detiene primero en una tarjeta de aprobación — *El agente quiere
+crear una automatización "…". ¿Lo permites?* El cambio se hace en tu nombre, con
+las mismas reglas y límites que la página Automatizaciones. Una tarea que inició
+una automatización nunca puede cambiar automatizaciones por sí misma.
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="En qué se convierte cada ejecución." />
+  <LinkCard title="Agentes" href="/es/concepts/agents" description="Las instrucciones que siguen las tareas de una automatización." />
+  <LinkCard title="Bandeja de entrada" href="/es/concepts/inbox" description="Donde te llegan las omisiones y las tareas en espera." />
+</CardGrid>

@@ -1,12 +1,12 @@
 ---
 title: Inbox
-description: The Inbox collects everything an agent needs you for — a task waiting on an answer, finished work, a skipped schedule, a connector that stopped working. Every kind of notification, where it reaches you, and answering from it.
+description: The Inbox collects everything an agent needs you for — a task waiting on an answer, finished work, a skipped automation, a connector that stopped working. Every kind of notification, where it reaches you, and answering from it.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 The **Inbox** is everything an agent needed you for, in one place: a task
-waiting on your answer, work that finished or failed, a schedule that skipped,
+waiting on your answer, work that finished or failed, an automation that skipped,
 a connector that stopped working. Answer a question from the Inbox and the
 task carries on — you do not have to open it.
 
@@ -49,8 +49,8 @@ The bell in the header opens the same notifications as a panel, with
 | **A task finishes** | A task completes | The person who started it |
 | **A task fails** | A task fails | The person who started it |
 | **A task is waiting on an answer** | An agent asks a question, or stops for an approval | The person who started it |
-| **An agent sends you a message, or someone shares a task with you** | An agent messages you by name, or a task, schedule or agent is shared with you | That person |
-| **A schedule skips a task** | A [schedule's firing is skipped](/concepts/schedules#skipped-firings), except the quiet reasons | Everyone who can see the schedule |
+| **An agent sends you a message, or someone shares a task with you** | An agent messages you by name, or a task, automation or agent is shared with you | That person |
+| **An automation skips a task** | An [automation's run is skipped](/concepts/automations#skipped-runs), except the quiet reasons | Everyone who can see the automation |
 | **A connector needs reconnecting** | A [connector's](/concepts/connectors) credential stopped working | The workspace |
 | **Someone asks for a change to an agent** | An agent asks to [change itself](/concepts/agents#how-an-agent-updates-itself) in a task started by someone who cannot approve it | The owners and admins who can approve it |
 | **A change you asked for is approved or rejected** | That request is decided | The person who asked |
@@ -59,8 +59,8 @@ The bell in the header opens the same notifications as a panel, with
 | **A payment is overdue** | The latest invoice is unpaid | Owners and admins |
 
 A change request arrives with **Approve** and **Reject** on the card itself.
-A schedule that keeps skipping for the same reason sends one notification,
-not one per firing, and account notifications are sent once per condition, so
+An automation that keeps skipping for the same reason sends one notification,
+not one per run, and account notifications are sent once per condition, so
 a burst of activity does not flood you.
 
 ## By default
@@ -83,5 +83,5 @@ Every email carries an unsubscribe link that turns the same setting off.
 <CardGrid>
   <LinkCard title="Notification settings" href="/reference/settings/notifications" description="Choose what reaches you, and where." />
   <LinkCard title="Tasks" href="/concepts/tasks" description="Questions and approvals, in the task itself." />
-  <LinkCard title="Schedules" href="/concepts/schedules" description="Which skips notify, and which stay quiet." />
+  <LinkCard title="Automations" href="/concepts/automations" description="Which skips notify, and which stay quiet." />
 </CardGrid>

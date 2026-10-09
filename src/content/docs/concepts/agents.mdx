@@ -10,7 +10,7 @@ supplier invoices, triaging a support mailbox, checking orders in a portal.
 You describe the job once: what it is for, how your company does it, which
 systems it may reach and what it should know. After that, anyone the agent is
 shared with gives it [tasks](/concepts/tasks) in plain language, or a
-[schedule](/concepts/schedules) gives it tasks on its own.
+[automation](/concepts/automations) gives it tasks on its own.
 
 Every agent works on a **computer** of its own for each task: an isolated
 desktop with a browser, which you can watch and take over through the
@@ -28,7 +28,7 @@ every agent gets one.
   composer sends your message to it. The address is `/?agent=<id>`, so the page
   can be bookmarked or shared.
 - **The Agents page** (`/agents`). Every agent as a tile or in a table — with
-  its **State**, **Last task** and **Next scheduled** task — searchable, with
+  its **State**, **Last task** and **Next run** — searchable, with
   an **Archived** chip to show archived agents. Clicking an agent, or its
   **Start a task** button, opens New task with that agent chosen. Its **…**
   menu has the same items as in the sidebar: **Start new task**, **Configure**
@@ -38,7 +38,7 @@ every agent gets one.
 
 An agent is in one of four states:
 
-| State | Tasks by hand | Schedules fire |
+| State | Tasks by hand | Automations run |
 |---|:---:|:---:|
 | **Draft** — being set up | — | — |
 | **Active** | ✓ | ✓ |
@@ -91,8 +91,8 @@ the Agents list — and who can use it — the access chip at the top of the bui
 ### Instructions
 
 How your company does this job, in Markdown, up to 30,000 characters. The
-instructions come first in every task the agent works on, including tasks a
-schedule starts. The builder writes and edits them for you; you can also edit
+instructions come first in every task the agent works on, including tasks an
+automation starts. The builder writes and edits them for you; you can also edit
 them by hand.
 
 At the end of the instructions, an agent can collect **standing rules** it has
@@ -247,9 +247,9 @@ usable one, and it uses AI credit.
 nobody can start a task with it. Its task history is kept. Two more things
 happen, both undone by **Restore agent**:
 
-- Its **enabled schedules are paused**. Restoring turns back on exactly those —
-  a schedule someone paused by hand, or one that paused itself after failures,
-  stays paused.
+- Its **automations that are on are paused**. Restoring turns back on exactly
+  those — an automation someone paused by hand, or one that paused itself after
+  failures, stays paused.
 - Its **connector grants are kept**, so it comes back equipped. The connector's
   page still lists it, marked **Archived**.
 
@@ -258,7 +258,7 @@ A restored agent comes back as a **Draft**; activate it again to use it. The
 
 <Aside type="note" title="Deleting an agent for good">
   Only AptiveAI can delete an archived agent permanently. That removes the
-  agent with everything it had — its schedules, notifications, knowledge
+  agent with everything it had — its automations, notifications, knowledge
   files, grants, skills, sign-ins and versions — and cannot be undone. Its
   tasks are deleted too, and like any
   [deleted task](/concepts/tasks#how-long-a-task-is-kept) can be recovered for
@@ -288,8 +288,8 @@ The **Requests** tab lists every request with its **Status** — **Waiting**,
 **Approved**, **Rejected** or **Could not apply** — and who asked. A rejection
 can carry a note saying why, and the person who asked is told either way.
 
-Agents update themselves only in tasks a person started, never in a task a
-schedule started. You can also teach an agent in **Try it**, once it has been
+Agents update themselves only in tasks a person started, never in a task an
+automation started. You can also teach an agent in **Try it**, once it has been
 saved.
 
 ## Restrictions
@@ -351,7 +351,7 @@ holds its agent while it is working or waiting on someone. While it does:
   agent to get a plain answer instead;
 - sending anyway is refused — *… is already working on a task. Wait for it to
   finish*;
-- a schedule's firing is skipped as **Agent busy**.
+- an automation's run is skipped as **Agent busy**.
 
 Different agents work at the same time, and so can the same person with
 several agents. When one job needs to happen in parallel, give it to more than
@@ -363,5 +363,5 @@ one agent.
   <LinkCard title="Tasks" href="/concepts/tasks" description="Give an agent work, and watch it happen." />
   <LinkCard title="Connectors" href="/concepts/connectors" description="The systems an agent can reach." />
   <LinkCard title="Skills" href="/concepts/skills" description="Instructions an agent loads when it needs them." />
-  <LinkCard title="Schedules" href="/concepts/schedules" description="Give an agent tasks on a cadence." />
+  <LinkCard title="Automations" href="/concepts/automations" description="Give an agent tasks on a cadence." />
 </CardGrid>

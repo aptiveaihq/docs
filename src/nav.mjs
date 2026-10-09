@@ -47,7 +47,7 @@ export const nav = [
     ],
   },
   {
-    // The four nouns of AptiveAI Agents — agent, task, schedule, connector —
+    // The four nouns of AptiveAI Agents — agent, task, automation, connector —
     // plus the skills an agent loads, the files a task carries, and the Inbox
     // where the product tells you what happened. Tasks leads because it is
     // where work starts and where every other concept shows up.
@@ -61,10 +61,10 @@ export const nav = [
     items: [
       { label: 'Tasks', slug: 'concepts/tasks', desc: 'One piece of work, start to finish', es: { label: 'Tareas', desc: 'Un trabajo, de principio a fin' } },
       { label: 'Agents', slug: 'concepts/agents', desc: 'Configured AI workers on their own computers', es: { label: 'Agentes', desc: 'Trabajadores de IA configurados, cada uno en su propia computadora' } },
-      { label: 'Schedules', slug: 'concepts/schedules', desc: 'Start a task on a recurring cadence', es: { label: 'Programaciones', desc: 'Inicia una tarea con una frecuencia recurrente' } },
+      { label: 'Automations', slug: 'concepts/automations', desc: 'Tasks that run on their own at the times you set', es: { label: 'Automatizaciones', desc: 'Tareas que se ejecutan solas a las horas que fijes' } },
       { label: 'Connectors', slug: 'concepts/connectors', desc: "Access to your company's systems", es: { label: 'Conectores', desc: 'Acceso a los sistemas de tu empresa' } },
       { label: 'Skills', slug: 'concepts/skills', desc: 'Reusable know-how an agent loads on demand', es: { label: 'Habilidades', desc: 'Conocimiento reutilizable que un agente carga cuando lo necesita' } },
-      { label: 'Sharing', slug: 'concepts/sharing', desc: 'Who can use a task, schedule, agent or skill', es: { label: 'Compartir', desc: 'Quién puede usar una tarea, una programación, un agente o una habilidad' } },
+      { label: 'Sharing', slug: 'concepts/sharing', desc: 'Who can use a task, automation, agent or skill', es: { label: 'Compartir', desc: 'Quién puede usar una tarea, una automatización, un agente o una habilidad' } },
       { label: 'Files', slug: 'concepts/files', desc: 'Attach, view and get back files; knowledge files', es: { label: 'Archivos', desc: 'Adjunta, ve y recupera archivos; archivos de conocimiento' } },
       { label: 'Inbox', slug: 'concepts/inbox', desc: 'Notifications and what arrives when', es: { label: 'Bandeja de entrada', desc: 'Notificaciones y qué llega cuándo' } },
     ],
@@ -98,7 +98,7 @@ export const nav = [
     items: [
       { label: 'The admin area', slug: 'administration/overview', desc: 'Who can enter, and what each role sees', es: { label: 'El área de administración', desc: 'Quién puede entrar y qué ve cada rol' } },
       { label: 'Users and roles', slug: 'administration/users', desc: 'Invite people, change roles, remove someone', es: { label: 'Usuarios y roles', desc: 'Invita personas, cambia roles, quita a alguien' } },
-      { label: 'Access and sharing', slug: 'administration/access', desc: 'Workspaces, and who sees which agent, task and schedule', es: { label: 'Acceso y uso compartido', desc: 'Espacios de trabajo, y quién ve cada agente, tarea y programación' } },
+      { label: 'Access and sharing', slug: 'administration/access', desc: 'Workspaces, and who sees which agent, task and automation', es: { label: 'Acceso y uso compartido', desc: 'Espacios de trabajo, y quién ve cada agente, tarea y automatización' } },
       { label: 'Usage and credit', slug: 'administration/usage', desc: 'AI credit, what spends it, and billing', es: { label: 'Uso y crédito', desc: 'Crédito de IA, qué lo consume y facturación' } },
       { label: 'Transactions', slug: 'administration/transactions', desc: 'Every charge to your AI credit, and every credit added', es: { label: 'Transacciones', desc: 'Cada cargo a tu crédito de IA y cada crédito añadido' } },
       { label: 'Activity', slug: 'administration/activity', desc: 'AI usage, tasks, goals met and models over time', es: { label: 'Actividad', desc: 'Uso de IA, tareas, objetivos cumplidos y modelos a lo largo del tiempo' } },

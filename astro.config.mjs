@@ -7,6 +7,12 @@ import { toStarlightSidebar } from './src/nav.mjs';
 // custom domain (public/CNAME → docs.aptiveai.io).
 export default defineConfig({
   site: 'https://docs.aptiveai.io',
+  // Pages that moved, so old links keep working. Schedules became
+  // Automations in the product (aptiveaihq/core#171).
+  redirects: {
+    '/concepts/schedules': '/concepts/automations/',
+    '/es/concepts/schedules': '/es/concepts/automations/',
+  },
   integrations: [
     starlight({
       title: 'AptiveAI Docs',
