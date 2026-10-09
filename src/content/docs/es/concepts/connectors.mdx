@@ -89,12 +89,14 @@ a enviar. Respondes con:
 Aprobar una escritura en un conector cubre todas las escrituras posteriores en
 ese mismo conector durante el resto de la tarea, no solo esa operación.
 
-<Aside type="caution" title="Una tarea que inició una automatización no se detiene a preguntar.">
+<Aside type="caution" title="Una automatización que se ejecuta sola no se detiene a preguntar.">
   Nadie está pendiente de una tarea que inició una
-  [automatización](/es/concepts/automations), así que sus escrituras se ejecutan
-  sin tarjeta de aprobación, y la transcripción registra cada una como *Hecho sin
-  preguntar*. Asigna herramientas de escritura a un agente que automatizas solo
-  cuando estés de acuerdo con eso.
+  [automatización](/es/concepts/automations) configurada como **Se ejecuta
+  sola**, así que sus escrituras se ejecutan sin tarjeta de aprobación, y la
+  transcripción registra cada una como *Hecho sin preguntar*. Una automatización
+  configurada como **Pregunta antes de actuar** se detiene en cada una de esas
+  escrituras y espera tu aprobación. Asigna herramientas de escritura a un
+  agente que se ejecuta solo únicamente cuando estés de acuerdo con eso.
 </Aside>
 
 ## Ids que el agente no inventó

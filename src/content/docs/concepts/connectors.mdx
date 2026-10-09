@@ -81,11 +81,13 @@ is about to change something in a connected system, so it is waiting for you*
 Approving a write to a connector covers every later write to that same
 connector for the rest of the task, not just that one operation.
 
-<Aside type="caution" title="A task an automation started does not stop to ask.">
-  Nobody is watching a task an [automation](/concepts/automations) started, so
-  its writes go ahead without an approval card, and the transcript records each
-  one as *Done without asking*. Grant write tools to an agent you automate only
-  when you are comfortable with that.
+<Aside type="caution" title="An automation that runs on its own does not stop to ask.">
+  Nobody is watching a task an [automation](/concepts/automations) set to
+  **Runs on its own** started, so its writes go ahead without an approval card,
+  and the transcript records each one as *Done without asking*. An automation
+  set to **Asks before acting** stops at each of those writes and waits for an
+  OK instead. Grant write tools to an agent that runs on its own only when you
+  are comfortable with that.
 </Aside>
 
 ## Ids the agent did not make up
