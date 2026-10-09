@@ -12,7 +12,7 @@ A **task** is one piece of work: *"reconcile this week's supplier invoices"*,
 everything that happened: the conversation, every step the agent took, the
 questions it asked, the files it wrote and what it cost.
 
-A task can also be started by a [schedule](/concepts/schedules). Either way,
+A task can also be started by an [automation](/concepts/automations). Either way,
 it lives at its own page, `/tasks/<id>`, and in the [Tasks list](#the-tasks-list).
 
 ## Starting a task
@@ -147,8 +147,8 @@ A task is yours until you share it. The chip in its header — **Only you**,
 - **Continue in my own task** is how a person who can only view a task works on
   it. It starts a new task of theirs from that point, on their own computer and
   browser, and leaves the original untouched.
-- **People who can see the schedule** that started a task see it too. Only
-  people with **Can edit** on that schedule can answer and approve on its tasks.
+- **People who can see the automation** that started a task see it too. Only
+  people with **Can edit** on that automation can answer and approve on its tasks.
 - **Workspace owners** can open any task in their workspace by its link, to look
   — it is read-only for them, and it does not appear in their Tasks list.
 - Only the person who started a task can rename it, share it or delete it.
@@ -162,7 +162,7 @@ AptiveAI support. After that only its conversation can be recovered — see
 [How long a task is kept](#how-long-a-task-is-kept). A task that is still
 working cannot be deleted.
 
-The rules are the same for tasks, schedules, agents and skills — see
+The rules are the same for tasks, automations, agents and skills — see
 [Sharing](/concepts/sharing).
 
 ## The Tasks list
@@ -171,7 +171,7 @@ The rules are the same for tasks, schedules, agents and skills — see
 its summary or the question it is waiting on, the **Agent**, **Status**,
 **Started** and **Duration**. Tasks waiting on you are gathered in a
 **Needs you** band at the top, whatever the filters. Tasks started by the same
-schedule fold into one row you can open.
+automation fold into one row you can open.
 
 Filter by **Status**, **When** (today, 7 days, 30 days) and **Agent**, or type
 in the search box to match names, summaries, instructions and more. The list
@@ -212,7 +212,7 @@ it is deleted, from the moment it was deleted:
 
 An approval request keeps the conversation's year: the request, your answer and
 the record that you approved it, and, for a new agent or a change to an agent,
-its skills, knowledge or training, or to a schedule, what it proposed. The detail of any
+its skills, knowledge or training, or to an automation, what it proposed. The detail of any
 other approved action — a write to another application, or a secret the agent
 types — is a tool call, kept 30 days.
 
@@ -235,6 +235,6 @@ stopped halfway because credit ran out. See
 <CardGrid>
   <LinkCard title="Agents" href="/concepts/agents" description="Who works on a task, and how it is set up." />
   <LinkCard title="Inbox" href="/concepts/inbox" description="Where a task that needs you reaches you." />
-  <LinkCard title="Schedules" href="/concepts/schedules" description="Start tasks on a cadence." />
+  <LinkCard title="Automations" href="/concepts/automations" description="Start tasks on a cadence." />
   <LinkCard title="Files" href="/concepts/files" description="Files you attach, files the agent makes, and how long they are kept." />
 </CardGrid>

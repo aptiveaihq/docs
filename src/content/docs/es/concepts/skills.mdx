@@ -96,20 +96,20 @@ habilidad integrada, se usa la integrada.
 
 | Habilidad | Qué hace |
 |---|---|
-| `schedules` | Crear, cambiar, pausar, reanudar, ejecutar o eliminar una [programación](/es/concepts/schedules), o listarlas, desde una conversación |
+| `schedules` | Crear, cambiar, pausar, reanudar, ejecutar o eliminar una [automatización](/es/concepts/automations), o listarlas, desde una conversación |
 | `docs` | Responder una pregunta sobre cómo funciona AptiveAI Agents a partir de esta documentación, con un enlace a la página que leyó |
 
 Una habilidad integrada puede traer **herramientas** consigo, algo que una
 habilidad del espacio de trabajo no puede: `schedules` le da al agente una
-herramienta para gestionar programaciones, y `docs`, una herramienta para leer
+herramienta para gestionar automatizaciones, y `docs`, una herramienta para leer
 este sitio.
 
-<Aside type="note" title="Cambiar una programación desde una tarea siempre pregunta antes.">
-  Cada cambio de programación que hace la habilidad `schedules` se detiene en
-  una tarjeta de aprobación —*El agente quiere crear una programación …
+<Aside type="note" title="Cambiar una automatización desde una tarea siempre pregunta antes.">
+  Cada cambio de automatización que hace la habilidad `schedules` se detiene en
+  una tarjeta de aprobación —*El agente quiere crear una automatización …
   ¿Lo permites?*— y el cambio se hace en nombre de la persona que inició la
-  tarea. La habilidad nunca se ofrece en una tarea que inició una programación,
-  así que una programación no puede reescribir programaciones por su cuenta.
+  tarea. La habilidad nunca se ofrece en una tarea que inició una automatización,
+  así que una automatización no puede reescribir automatizaciones por su cuenta.
 </Aside>
 
 ## Quién puede hacer qué
@@ -128,5 +128,5 @@ este sitio.
 <CardGrid>
   <LinkCard title="Agentes" href="/es/concepts/agents" description="Concede habilidades compartidas a un agente en su constructor." />
   <LinkCard title="Tareas" href="/es/concepts/tasks" description="Dónde escribes / para agregar una habilidad." />
-  <LinkCard title="Programaciones" href="/es/concepts/schedules" description="Lo que gestiona la habilidad integrada schedules." />
+  <LinkCard title="Automatizaciones" href="/es/concepts/automations" description="Lo que gestiona la habilidad integrada schedules." />
 </CardGrid>

@@ -8,18 +8,19 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 Two things decide what a person can see and do. Their **role** — owner, admin
 or member — decides which *kinds* of action they may take (see
 [Users and roles](/administration/users#roles)). **Access** decides which
-*things* they see: which workspaces, which agents, which tasks and schedules.
+*things* they see: which workspaces, which agents, which tasks and automations.
 This page is about access.
 
 The short version: everything is private to its creator until it is shared, and
-an admin role does not unlock anyone else's private work. How sharing works —
+an admin role does not unlock anyone else's private work. The one exception is
+automations, which a workspace's owners and admins always see. How sharing works —
 Can use, Can edit, Everyone in a workspace — is on [Sharing](/concepts/sharing).
 
 ## Workspaces and how far a role reaches
 
 Your enterprise holds one or more organizations, and each organization one or
 more **workspaces**. A workspace is where the work lives — its tasks,
-schedules, agents and the computers they work on.
+automations, agents and the computers they work on.
 
 | Who | Reaches |
 |---|---|
@@ -54,14 +55,17 @@ of everyone's work.
 An owner opens someone else's **task** to look, not to work: it is read-only,
 and its live view is **view-only** — the screen is visible, but the mouse and
 keyboard reach nothing. To work on it, **Continue in my own task** starts a new
-task of their own. An owner can also open a **schedule** and pause, change or
-delete it.
+task of their own.
+
+**Automations** are the exception to "private until shared": owners and admins
+of a workspace see every [automation](/concepts/automations) in it, with what it
+costs, and can change, pause, run and delete it.
 
 An admin who holds a role on one workspace only edits another person's agent
 if it was shared with them as Can edit.
 
 See [Sharing](/concepts/sharing) for the full rules, who can use and who can
-edit each kind, and what happens to a person's shares and schedules when they
+edit each kind, and what happens to a person's shares and automations when they
 leave.
 
 ## Connectors for personal agents

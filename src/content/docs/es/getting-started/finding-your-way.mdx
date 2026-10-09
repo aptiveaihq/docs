@@ -36,9 +36,10 @@ La barra lateral es la misma en todas las páginas. De arriba abajo:
 | **Nueva tarea** | La primera página de AptiveAI Agents, donde empieza el trabajo. Consulta [Empezar a trabajar con un agente](#empezar-a-trabajar-con-un-agente). |
 | **Agentes fijados** | Los agentes que fijaste tienen una fila propia, justo debajo de Nueva tarea, marcada con un alfiler. Al hacer clic en uno, inicias una tarea con ese agente. |
 | **Agentes** | Haz clic para desplegar o plegar todos los agentes que puedes ver; la lista termina en **Todos los agentes**, que abre la [página Agentes](/es/concepts/agents#dónde-aparecen-los-agentes). |
+| **Automatizaciones** | Todas las [automatizaciones](/es/concepts/automations) que puedes ver: las tareas que se ejecutan solas. |
 | **Actividad** | Abre el [panel Actividad](#el-panel-actividad) junto a la página en la que estás, en lugar de ir a otra página. |
 | **Bandeja de entrada** | Lo que tus agentes necesitan que veas — consulta la [Bandeja de entrada](/es/concepts/inbox). |
-| **Trabajo** | [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-ajustes) para tareas, programaciones y la Bandeja de entrada. |
+| **Trabajo** | [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-ajustes) para tareas, automatizaciones y la Bandeja de entrada. |
 | **Configurar** | [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-ajustes) para agentes, conectores y habilidades. |
 | **Ayuda y Ajustes** | Al final de la barra lateral, debajo de una línea. [Una página de tarjetas](#las-páginas-trabajo-configurar-y-ayuda-y-ajustes) para preguntar sobre AptiveAI, esta documentación, tu configuración y el área de administración. |
 
@@ -46,7 +47,7 @@ La barra lateral es la misma en todas las páginas. De arriba abajo:
   dark={sidebarDark}
   light={sidebarLight}
   title="Nueva tarea"
-  alt="AptiveAI Agents con la barra lateral desplegada: Nueva tarea, dos agentes fijados (Accounts receivable follow-up y Service request intake), Agentes desplegado con sus cuatro agentes y Todos los agentes, luego Actividad, Bandeja de entrada, Trabajo y Configurar, y al final, debajo de una línea, Ayuda y Ajustes. Está abierto el menú … de la fila fijada Accounts receivable follow-up, con Nueva tarea, Configurar y Dejar de fijar."
+  alt="AptiveAI Agents con la barra lateral desplegada: Nueva tarea, dos agentes fijados (Accounts receivable follow-up y Service request intake), Agentes desplegado con sus cuatro agentes y Todos los agentes, luego Automatizaciones, Actividad, Bandeja de entrada, Trabajo y Configurar, y al final, debajo de una línea, Ayuda y Ajustes. Está abierto el menú … de la fila fijada Accounts receivable follow-up, con Nueva tarea, Configurar y Dejar de fijar."
 />
 
 Cada fila de agente, fijada o dentro de **Agentes**, tiene un menú **…**:
@@ -58,8 +59,8 @@ Cada fila de agente, fijada o dentro de **Agentes**, tiene un menú **…**:
   barra lateral, o lo quita de ahí. Los agentes fijados son solo tuyos; consulta
   [Fijar agentes e iconos](/es/concepts/agents#fijar-agentes-e-iconos).
 
-**Trabajo** queda resaltado mientras estás en una tarea o una programación,
-**Configurar** mientras estás en conectores o habilidades, y **Ayuda y
+**Trabajo** queda resaltado mientras estás en una tarea, **Automatizaciones**
+mientras estás en una automatización, **Configurar** mientras estás en conectores o habilidades, y **Ayuda y
 Ajustes** mientras estás en Ajustes, así que siempre sabes dónde
 estás.
 
@@ -97,7 +98,7 @@ en el cuadro de mensajes. Quita la etiqueta para obtener una respuesta simple si
 
 **Trabajo**, **Configurar** y **Ayuda y Ajustes** abren cada una una página
 de tarjetas, una tarjeta por cada lugar al que puedes ir. Trabajo reúne lo que hacen tus agentes y cuándo:
-[Tareas](/es/concepts/tasks), [Programaciones](/es/concepts/schedules) y la
+[Tareas](/es/concepts/tasks), [Automatizaciones](/es/concepts/automations) y la
 [Bandeja de entrada](/es/concepts/inbox).
 
 <ThemedImage
@@ -105,7 +106,7 @@ de tarjetas, una tarjeta por cada lugar al que puedes ir. Trabajo reúne lo que 
   light={workLight}
   url="console.aptiveai.io/work"
   title="Trabajo"
-  alt="La página Trabajo: la línea Las tareas que hacen tus agentes y cuándo se ejecutan: ahora o según una programación, encima de tres tarjetas — Tareas, Programaciones y Bandeja de entrada — cada una con una descripción y los enlaces Abrir, Documentación y Preguntar. En el encabezado hay un botón Preguntar sobre Trabajo."
+  alt="La página Trabajo: la línea Las tareas que hacen tus agentes y cuándo se ejecutan: ahora o según un horario, encima de tres tarjetas — Tareas, Automatizaciones y Bandeja de entrada — cada una con una descripción y los enlaces Abrir, Documentación y Preguntar. En el encabezado hay un botón Preguntar sobre Trabajo."
 />
 
 Configurar reúne tus agentes y aquello con lo que trabajan:
@@ -148,7 +149,7 @@ de esta documentación — sin computadora y sin acceso a tus sistemas.
 ## El panel Actividad
 
 **Actividad** es la lista en vivo de las tareas que puedes ver: las que iniciaste,
-las que se compartieron contigo y las tareas de las programaciones que se compartieron contigo ([quién ve una tarea](/es/concepts/tasks#compartir-una-tarea-y-quién-la-ve)).
+las que se compartieron contigo y las tareas de las automatizaciones que se compartieron contigo ([quién ve una tarea](/es/concepts/tasks#compartir-una-tarea-y-quién-la-ve)).
 La fila **Actividad** de la barra lateral la abre como un panel junto a la página
 en la que estés, para que puedas seguir tus tareas sin salir de esa página; la
 fila en sí no te lleva a ningún lado. Mientras el panel está abierto, la barra
@@ -224,8 +225,8 @@ Las tareas más antiguas también pueden mostrar **Incompleta**, **Omitida** o
   **Compacta** (una línea por tarea), **Normal** y **Detallada**, que agrega el
   estado, el agente y cuándo empezó la tarea.
 
-Una tarea que inició una [programación](/es/concepts/schedules) se apila con las
-demás tareas de esa programación en una sola tarjeta, que se abre para mostrarlas.
+Una tarea que inició una [automatización](/es/concepts/automations) se apila con las
+demás tareas de esa automatización en una sola tarjeta, que se abre para mostrarlas.
 Para lo demás, consulta [El panel Actividad](/es/concepts/tasks#el-panel-actividad)
 en Tareas.
 
@@ -234,7 +235,7 @@ en Tareas.
 | Buscas | Dónde está |
 |---|---|
 | Una tarea que iniciaste tú o un colega | **Actividad**, o **Trabajo → Tareas** |
-| Una programación | **Trabajo → Programaciones** |
+| Una automatización | **Automatizaciones**, o **Trabajo → Automatizaciones** |
 | Una pregunta que te espera | **Bandeja de entrada**, o la parte superior de **Actividad** |
 | Todos los agentes, o uno nuevo | **Todos los agentes**, al final de la lista **Agentes** de la barra lateral, o **Configurar → Agentes** |
 | Tus propios inicios de sesión en los sitios web que abre un agente | **Ayuda y Ajustes → Inicios de sesión personales** — la sección [Inicios de sesión personales](/es/reference/settings/sign-ins) de Ajustes |
@@ -245,8 +246,8 @@ en Tareas.
 | Esta documentación, o una respuesta a partir de ella | **Ayuda y Ajustes → Documentación**, o **Pregunta sobre AptiveAI** |
 
 La **página Agentes** muestra todos los agentes que puedes ver, como mosaicos o
-como tabla, con el estado de cada uno, su última tarea y su próxima tarea
-programada. **Iniciar una tarea** abre Nueva tarea con ese agente; **Nuevo
+como tabla, con el estado de cada uno, su última tarea y su próxima
+ejecución. **Iniciar una tarea** abre Nueva tarea con ese agente; **Nuevo
 agente** abre el editor.
 
 <ThemedImage
@@ -254,7 +255,7 @@ agente** abre el editor.
   light={agentsLight}
   url="console.aptiveai.io/agents"
   title="Agentes"
-  alt="La página Agentes: Todos los agentes (3) como mosaicos — Morning operations digest (Borrador), Accounts receivable follow-up (Activo) y Service request intake (Activo) — cada uno con su propósito, Última tarea, Próxima programada y Creado, un menú … y, en los agentes activos, un botón Iniciar una tarea. Encima hay una etiqueta Archivados, un cuadro de filtro y un selector de mosaicos/tabla; Nuevo agente está en el encabezado."
+  alt="La página Agentes: Todos los agentes (3) como mosaicos — Morning operations digest (Borrador), Accounts receivable follow-up (Activo) y Service request intake (Activo) — cada uno con su propósito, Última tarea, Próxima ejecución y Creado, un menú … y, en los agentes activos, un botón Iniciar una tarea. Encima hay una etiqueta Archivados, un cuadro de filtro y un selector de mosaicos/tabla; Nuevo agente está en el encabezado."
 />
 
 ## En un teléfono
@@ -279,7 +280,7 @@ lista ahí mismo.
     dark={phonePanelDark}
     light={phonePanelLight}
     title="Menú, con Agentes abierto"
-    alt="El panel lateral abierto desde Menú: Nueva tarea, los dos agentes fijados, Agentes abierto con sus cuatro agentes, un … en cada fila y Todos los agentes, luego Actividad, Bandeja de entrada, Trabajo y Configurar, y al final, debajo de una línea, Ayuda y Ajustes."
+    alt="El panel lateral abierto desde Menú: Nueva tarea, los dos agentes fijados, Agentes abierto con sus cuatro agentes, un … en cada fila y Todos los agentes, luego Automatizaciones, Actividad, Bandeja de entrada, Trabajo y Configurar, y al final, debajo de una línea, Ayuda y Ajustes."
   />
 </div>
 

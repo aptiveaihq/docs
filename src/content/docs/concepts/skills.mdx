@@ -90,18 +90,18 @@ is used.
 
 | Skill | What it does |
 |---|---|
-| `schedules` | Create, change, pause, resume, fire or delete a [schedule](/concepts/schedules), or list them — from a conversation |
+| `schedules` | Create, change, pause, resume, run or delete an [automation](/concepts/automations), or list them — from a conversation |
 | `docs` | Answer a how-it-works question about AptiveAI Agents from these docs, with a link to the page it read |
 
 A built-in skill can bring **tools** with it, which a workspace skill cannot:
-`schedules` gives the agent a tool to manage schedules, and `docs` a tool to
+`schedules` gives the agent a tool to manage automations, and `docs` a tool to
 read this site.
 
-<Aside type="note" title="Changing a schedule from a task always asks first.">
-  Every schedule change the `schedules` skill makes stops on an approval card —
-  *The agent wants to create a schedule … Allow it?* — and the change is made
-  as the person who started the task. The skill is never offered on a task a
-  schedule started, so a schedule cannot rewrite schedules on its own.
+<Aside type="note" title="Changing an automation from a task always asks first.">
+  Every automation change the `schedules` skill makes stops on an approval card —
+  *The agent wants to create an automation … Allow it?* — and the change is made
+  as the person who started the task. The skill is never offered on a task an
+  automation started, so an automation cannot rewrite automations on its own.
 </Aside>
 
 ## Who may do what
@@ -120,5 +120,5 @@ read this site.
 <CardGrid>
   <LinkCard title="Agents" href="/concepts/agents" description="Grant shared skills to an agent in its builder." />
   <LinkCard title="Tasks" href="/concepts/tasks" description="Where you type / to add a skill." />
-  <LinkCard title="Schedules" href="/concepts/schedules" description="What the built-in schedules skill manages." />
+  <LinkCard title="Automations" href="/concepts/automations" description="What the built-in schedules skill manages." />
 </CardGrid>

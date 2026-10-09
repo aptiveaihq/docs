@@ -9,10 +9,12 @@ Dos cosas deciden lo que una persona puede ver y hacer. Su **rol** —propietari
 administrador o miembro— decide qué *tipos* de acciones puede realizar
 (consulta [Usuarios y roles](/es/administration/users#roles)). El **acceso** decide
 qué *cosas* ve: qué espacios de trabajo, qué agentes, qué tareas y
-programaciones. Esta página trata del acceso.
+automatizaciones. Esta página trata del acceso.
 
 En resumen: todo es privado para quien lo crea hasta que se comparte, y el rol
-de administrador no desbloquea el trabajo privado de nadie más. Cómo funciona
+de administrador no desbloquea el trabajo privado de nadie más. La única
+excepción son las automatizaciones, que los propietarios y administradores de un
+espacio de trabajo siempre ven. Cómo funciona
 compartir —Puede usar, Puede editar, Todos en un espacio de trabajo— está en
 [Compartir](/es/concepts/sharing).
 
@@ -20,7 +22,7 @@ compartir —Puede usar, Puede editar, Todos en un espacio de trabajo— está e
 
 Tu empresa tiene una o más organizaciones, y cada organización uno o más
 **espacios de trabajo**. Un espacio de trabajo es donde vive el trabajo: sus
-tareas, programaciones, agentes y las computadoras en las que trabajan.
+tareas, automatizaciones, agentes y las computadoras en las que trabajan.
 
 | Quién | Llega a |
 |---|---|
@@ -55,15 +57,19 @@ propietario ya no es una vista del trabajo de todos.
 Un propietario abre la **tarea** de otra persona para mirar, no para trabajar:
 es de solo lectura, y su vista en vivo es **de solo lectura**: se ve la
 pantalla, pero el ratón y el teclado no llegan a nada. Para trabajar en ella,
-**Continuar en una tarea mía** inicia una tarea nueva suya. Un propietario
-también puede abrir una **programación** y pausarla, cambiarla o eliminarla.
+**Continuar en una tarea mía** inicia una tarea nueva suya.
+
+Las **automatizaciones** son la excepción a «privado hasta que se comparte»: los
+propietarios y administradores de un espacio de trabajo ven todas sus
+[automatizaciones](/es/concepts/automations), con lo que cuestan, y pueden
+cambiarlas, pausarlas, ejecutarlas y eliminarlas.
 
 Un administrador con un rol en un solo espacio de trabajo solo edita el agente
 de otra persona si se lo compartió como Puede editar.
 
 Consulta [Compartir](/es/concepts/sharing) para las reglas completas, quién
 puede usar y quién puede editar cada tipo, y qué pasa con lo compartido y con
-las programaciones de una persona cuando se va.
+las automatizaciones de una persona cuando se va.
 
 ## Conectores para agentes personales
 

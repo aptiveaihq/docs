@@ -26,8 +26,8 @@ Agents can start new work only while **both** hold:
 - it has **AI credit** left to spend — more than zero.
 
 Without paid access, no new work starts: nobody can start a task, create or
-configure an agent, create a schedule or grant a connector, and schedules skip
-their firings. AptiveAI Agents is not shown at all. Everyone who opens it is sent
+configure an agent, create an automation or grant a connector, and automations
+skip their runs. AptiveAI Agents is not shown at all. Everyone who opens it is sent
 to one page that says why, with **Contact us** — and, for an owner, **View
 billing**:
 
@@ -52,7 +52,7 @@ The account's status is one of **Awaiting first payment**, **Trial**,
 Every step an agent takes is charged a little credit — usually a fraction of
 a cent — depending on the AI model the agent uses and how much it has to read
 and write. Credit is spent by tasks,
-by tasks a schedule starts, by **Try it** in the agent builder, and by the
+by tasks an automation starts, by **Try it** in the agent builder, and by the
 short title AptiveAI writes for each task.
 
 ### Three kinds of credit, spent in order
@@ -72,7 +72,7 @@ three, and it is the number paid access reads.
 What a task will cost cannot be known before it runs, so a task only needs
 *some* credit to start, not enough for the whole job. A task that is working
 when the credit runs out **finishes**; its last steps take the balance below
-zero. The **next** task is refused, and a schedule's next firing is skipped as
+zero. The **next** task is refused, and an automation's next run is skipped as
 **No AI credit** — without piling up work for when credit returns.
 
 No task is ever stopped halfway for money.
@@ -192,5 +192,5 @@ anything, use **Contact us**.
   <LinkCard title="Activity" href="/administration/activity" description="AI usage, tasks, goals met and models over time." />
   <LinkCard title="The admin area" href="/administration/overview" description="Who can enter, and what each role sees." />
   <LinkCard title="Agents" href="/concepts/agents#paid-access" description="What paid access allows." />
-  <LinkCard title="Schedules" href="/concepts/schedules#skipped-firings" description="Firings skipped for no AI credit." />
+  <LinkCard title="Automations" href="/concepts/automations#skipped-runs" description="Runs skipped for no AI credit." />
 </CardGrid>

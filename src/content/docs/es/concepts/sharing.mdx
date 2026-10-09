@@ -1,11 +1,11 @@
 ---
 title: Compartir
-description: "Quién puede usar una tarea, una programación, un agente o una habilidad: quien la creó, las personas que añades con Puede usar o Puede editar, y Todos en un espacio de trabajo. Qué pueden abrir los propietarios y administradores, las tareas de solo lectura y Continuar en una tarea mía."
+description: "Quién puede usar una tarea, una automatización, un agente o una habilidad: quien la creó, las personas que añades con Puede usar o Puede editar, y Todos en un espacio de trabajo. Qué pueden abrir los propietarios y administradores, las tareas de solo lectura y Continuar en una tarea mía."
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-Las tareas, las programaciones, los agentes y las habilidades se comparten de
+Las tareas, las automatizaciones, los agentes y las habilidades se comparten de
 la misma forma. Todo lo que creas es solo tuyo hasta que lo compartes. El chip
 en la parte superior de cada uno muestra quién tiene acceso —**Solo tú**,
 **Tú + 2**, **Todos en Ventas**— y al seleccionarlo se abre el cuadro para
@@ -17,7 +17,7 @@ otras personas compartieron contigo.
 
 - **Añade personas** del mismo espacio de trabajo. Cada persona recibe un nivel:
   - **Puede usar**: la ve y trabaja con ella: usa el agente, sigue la
-    programación, concede la habilidad a un agente que edita.
+    automatización, concede la habilidad a un agente que edita.
   - **Puede editar**: además puede cambiarla y compartirla con otras personas.
 - **Acceso general**: **Solo las personas añadidas**, o **Todos en
   ‹espacio de trabajo›**. Solo un propietario o administrador de ese espacio de
@@ -33,15 +33,15 @@ el nombre o eliminarla.
 
 ## Quién puede hacer qué
 
-| | Tarea | Programación | Agente | Habilidad |
+| | Tarea | Automatización | Agente | Habilidad |
 |---|---|---|---|---|
 | Quien la creó | Todo | Todo | Todo | Todo |
 | Añadida, o Puede usar | La ve y la sigue, en solo lectura | La ve y ve todas sus tareas, en solo lectura | La ve, la menciona con @ e inicia tareas con ella | La ve y la concede a un agente que edita |
 | Puede editar | — | Cambiarla, pausarla, **Ejecutar ahora**, compartirla; responder y aprobar en sus tareas | Cambiarlo y compartirlo | Cambiarla y compartirla |
 | Todos en ‹espacio de trabajo› | Igual que Puede usar | Igual que Puede usar | Igual que Puede usar | Igual que Puede usar |
 
-Solo quien la creó elimina una tarea o una habilidad; una programación la
-elimina quien la creó o un propietario del espacio de trabajo. Los
+Solo quien la creó elimina una tarea o una habilidad; una automatización la
+elimina quien la creó o un propietario o administrador del espacio de trabajo. Los
 archivos de conocimiento siguen a su agente: quien puede editar el agente edita
 sus archivos. Los conectores no se comparten de persona a persona; que un agente
 personal pueda tener uno es un ajuste del espacio de trabajo (consulta
@@ -50,12 +50,16 @@ personal pueda tener uno es un ajuste del espacio de trabajo (consulta
 ## Qué pueden abrir los propietarios y administradores
 
 Abrir con un enlace es más amplio que aparecer en una lista. Tus listas
-muestran lo tuyo y lo que se compartió contigo, nada más.
+muestran lo tuyo y lo que se compartió contigo, nada más, salvo las
+automatizaciones para propietarios y administradores.
 
 - **Los propietarios del espacio de trabajo** pueden abrir cualquier cosa de su
-  espacio de trabajo con su enlace, pero no aparece en sus listas. Pueden
-  pausar, cambiar o eliminar una programación que abren. Una tarea que abren es
-  **de solo lectura**.
+  espacio de trabajo con su enlace, pero no aparece en sus listas. Una tarea que
+  abren es **de solo lectura**.
+- **Las automatizaciones sí aparecen en la lista**: los propietarios y
+  administradores de un espacio de trabajo ven en su lista todas sus
+  [automatizaciones](/es/concepts/automations), con lo que cuestan, y pueden
+  cambiarlas, pausarlas, ejecutarlas y eliminarlas.
 - **Los propietarios y administradores de una organización** pueden abrir y
   editar todos los agentes de ella, también los personales. Un administrador de
   un solo espacio de trabajo solo edita los agentes que se compartieron con él
@@ -85,15 +89,15 @@ que ya no necesites o compártelo con el espacio de trabajo.
 ## Cuando alguien se va
 
 Cuando se quita a una persona de la empresa, todo lo que se compartió con ella
-deja de compartirse, y las programaciones que creó se pausan con la nota
+deja de compartirse, y las automatizaciones que creó se pausan con la nota
 «Paused because the person who created it left the workspace.», que se muestra
-en inglés. Un propietario puede abrir esas programaciones y volver a
-activarlas. Sus agentes, habilidades y programaciones se quedan, y los
+en inglés. Un propietario puede abrir esas automatizaciones y volver a
+activarlas. Sus agentes, habilidades y automatizaciones se quedan, y los
 propietarios y administradores de la organización aún pueden editar sus
 agentes.
 
 ## Enlaces
 
-**Copiar enlace**, en el cuadro para compartir (tareas y programaciones), da una
+**Copiar enlace**, en el cuadro para compartir (tareas y automatizaciones), da una
 dirección corta. No concede acceso: quien la abra sigue necesitando ser una
 persona con quien se compartió, o un propietario.
