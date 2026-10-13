@@ -143,8 +143,8 @@ agent on the New task page; clicking one sends its message straight away.
 ### Connectors
 
 Which of your workspace's [connectors](/concepts/connectors) the agent may use,
-and optionally which of each connector's tools. Your AptiveAI contact connects
-the systems; granting them is per agent.
+and optionally which of each connector's tools. You add connectors yourself
+in [Connectors](/concepts/connectors#adding-a-connector); granting them is per agent.
 
 ### Skills
 
@@ -234,9 +234,9 @@ chip in the builder's header to share it — saved agents only.
 - **Everyone in ‹workspace›** publishes the agent to the whole workspace, always
   at Can use. It takes an owner or admin of that workspace; a member shares
   their agent with an admin as Can edit, and that admin can publish it.
-- **Who can edit an agent:** its creator, people with Can edit, owners and
-  admins of its organization, and AptiveAI. An admin of a single workspace
-  edits only the agents shared with them as Can edit.
+- **Who can edit an agent:** its creator, people with Can edit, the owner,
+  the admins of its workspace, and AptiveAI. An admin edits an agent in a
+  workspace they do not administer only if it was shared with them as Can edit.
 - **An agent AptiveAI sets up for your workspace** can be edited by the
   workspace's owners and admins, so they can review it and share it with the
   people who will use it.
@@ -380,8 +380,8 @@ Anyone can create agents (up to 10 personal ones). What happens next depends
 on who you are in relation to the agent:
 
 - The owner of an agent, and anyone given **Can edit**, change it.
-- Owners and admins of the organization (and AptiveAI) can open and edit any
-  agent.
+- The owner and the admins of an agent's workspace (and AptiveAI) can open and
+  edit any agent in it.
 - The owner of an agent and the owners and admins of its workspace can delete
   and recover it. Only AptiveAI removes a deleted agent immediately.
 - Members share their agents with people. Only owners and admins turn on
