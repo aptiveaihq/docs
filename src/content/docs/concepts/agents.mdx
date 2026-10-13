@@ -4,6 +4,9 @@ description: An agent is an AI worker you configure once — its instructions, t
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ThemedImage from '../../../components/ThemedImage.astro';
+import versionDiffDark from '../../../assets/screenshots/agent-version-diff-dark-20261013.png';
+import versionDiffLight from '../../../assets/screenshots/agent-version-diff-light-20261013.png';
 
 An **agent** is an AI worker set up for one job in your company — handling
 supplier invoices, triaging a support mailbox, checking orders in a portal.
@@ -207,7 +210,12 @@ A version is written every time you save a change. The **Versions** tab lists
 them, newest first — the newest is marked **Current** — each with the date and
 time it was saved, who saved it and a short list of what changed.
 
-{/* SHOT: agent-version-diff — the Versions tab with one version open: its card showing the date, the Locked badge and the inline before-and-after diff of the instructions, with the full-screen control on the diff. */}
+<ThemedImage
+  dark={versionDiffDark}
+  light={versionDiffLight}
+  title="Versions"
+  alt="The agent builder's Versions tab for Accounts receivable follow-up: Version 2 with a Locked badge, the date and who saved it, Hide changes and Restore buttons and a padlock; under them the changes, open as a before-and-after comparison of the instructions, in red for what was removed and green for what was added."
+/>
 
 - **See what changed** opens the version's diff inside its card — only the
   lines that changed, compared with the version before it. The diff can go full

@@ -4,6 +4,11 @@ description: Una tarea es un trabajo concreto, desde el mensaje que lo inicia ha
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ThemedImage from '../../../../components/ThemedImage.astro';
+import taskMenuDark from '../../../../assets/screenshots/task-menu-dark-20261013.png';
+import taskMenuLight from '../../../../assets/screenshots/task-menu-light-20261013.png';
+import taskBesideDark from '../../../../assets/screenshots/task-beside-page-dark-20261013.png';
+import taskBesideLight from '../../../../assets/screenshots/task-beside-page-light-20261013.png';
 
 Una **tarea** es un trabajo concreto: *"concilia las facturas de proveedores de
 esta semana"*, *"averigua por qué no se ha enviado el pedido 4471"*. La inicias
@@ -235,7 +240,12 @@ Si eliminas la tarea que tienes abierta, pasas a la lista de Tareas. Un cambio
 hecho desde el menú — cambiar el nombre, fijar, compartir, detener o eliminar —
 se ve en todas las listas a la vez, sin recargar.
 
-{/* SHOT: task-menu — the ⋯ menu open on a RECENT row, showing Fijar, Cambiar nombre, Abrir en paralelo, Compartir…, Detener and Eliminar */}
+<ThemedImage
+  dark={taskMenuDark}
+  light={taskMenuLight}
+  title="Menú de la tarea"
+  alt="El menú … abierto en la fila de una tarea de RECIENTES: Fijar, Cambiar nombre, Abrir en paralelo, Compartir… y Detener, y debajo de una línea, Eliminar. La fila es de una tarea en curso, marcada con un indicador de progreso."
+/>
 
 ## Junto a la página
 
@@ -243,7 +253,12 @@ Puedes mantener tareas abiertas **junto a la página** en la que estás, a su
 derecha, y seguir o guiar varias mientras trabajas en otra cosa. Esto es en una
 computadora; un teléfono no tiene la vista junto a la página.
 
-{/* SHOT: task-beside-page — a task docked to the right of the Tasks list, its window header showing the minimize, full-screen, open-as-a-page and close controls, and the "Tareas junto a la página" button with a count in the header */}
+<ThemedImage
+  dark={taskBesideDark}
+  light={taskBesideLight}
+  title="Tareas"
+  alt="La página Tareas con una tarea acoplada a su lado. A la izquierda, la lista de tareas con la que te espera arriba; a la derecha, la tarea abierta, Weekly overdue invoices report, con su transcripción, un encabezado con el agente, un candado, un menú …, un botón para minimizar y uno para cerrar, y el cuadro de mensajes debajo. El encabezado de la página muestra el botón Tareas junto a la página con un 1."
+/>
 
 Ábrelas de cualquiera de estas formas:
 

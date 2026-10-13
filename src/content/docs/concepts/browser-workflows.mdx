@@ -4,6 +4,9 @@ description: Teach your agents a website once. A browser workflow is a connector
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ThemedImage from '../../../components/ThemedImage.astro';
+import workflowConnectorDark from '../../../assets/screenshots/browser-workflow-connector-dark-20261013.png';
+import workflowConnectorLight from '../../../assets/screenshots/browser-workflow-connector-light-20261013.png';
 
 Many of the systems your team works in have no API: a supplier portal, an
 older records system, a site you sign in to and click through. A **browser
@@ -128,7 +131,12 @@ when AptiveAI published it to your company, **Browser workflow · From
 AptiveAI**. On the workflow's own page, **Create a connector from it** on the
 **Details** row does the same.
 
-{/* SHOT: browser-workflow-connector — the panel of a connector built from a browser workflow, open on the Connectors page: its icon and name, Settings with the filled-in site address, the Tools list showing its tools, and "Who can use it", with Test connection and Edit browser workflow among its actions */}
+<ThemedImage
+  dark={workflowConnectorDark}
+  light={workflowConnectorLight}
+  title="Connectors"
+  alt="The panel of a connector made from a browser workflow, Customer portal, open on the Connectors page: its icon and name, Connected, and cards for Who can use it, Name, Test connection, Reconnect, Disconnect and Edit browser workflow; Settings with the Site address filled in; Used by; and the Tools list, Find an order and List open tickets, each marked as reading."
+/>
 
 <Aside type="tip">
   The connector works like any other from here. Grant it to an agent in the

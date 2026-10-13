@@ -4,6 +4,9 @@ description: Enséñales un sitio web a tus agentes una sola vez. Un flujo de na
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ThemedImage from '../../../../components/ThemedImage.astro';
+import workflowConnectorDark from '../../../../assets/screenshots/browser-workflow-connector-dark-20261013.png';
+import workflowConnectorLight from '../../../../assets/screenshots/browser-workflow-connector-light-20261013.png';
 
 Muchos de los sistemas en los que trabaja tu equipo no tienen API: el portal de
 un proveedor, un sistema de registros antiguo, un sitio al que inicias sesión y
@@ -139,7 +142,12 @@ o, si AptiveAI lo publicó para tu empresa, **Flujo de navegador · De AptiveAI*
 En la página propia del flujo, **Crear un conector a partir de él** en la fila
 de **Detalles** hace lo mismo.
 
-{/* SHOT: browser-workflow-connector — the panel of a connector built from a browser workflow, open on the Connectors page: its icon and name, Settings with the filled-in site address, the Tools list showing its tools, and "Who can use it", with Test connection and Edit browser workflow among its actions */}
+<ThemedImage
+  dark={workflowConnectorDark}
+  light={workflowConnectorLight}
+  title="Conectores"
+  alt="El panel de un conector hecho a partir de un flujo de navegador, Customer portal, abierto en la página Conectores: su icono y nombre, Conectado, y tarjetas para quién puede usarlo, el nombre, probar la conexión, reconectar, desconectar y editar el flujo de navegador; los ajustes con la dirección del sitio ya rellena; Usado por; y la lista de herramientas, Find an order y List open tickets, cada una marcada como de lectura."
+/>
 
 <Aside type="tip">
   Desde aquí el conector funciona como cualquier otro. Asígnalo a un agente en

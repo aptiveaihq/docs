@@ -5,20 +5,24 @@ description: Un recorrido por AptiveAI Agents — la barra lateral, de Nueva tar
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import ThemedImage from '../../../../components/ThemedImage.astro';
-import sidebarDark from '../../../../assets/screenshots/console-sidebar-dark-20260930.png';
-import sidebarLight from '../../../../assets/screenshots/console-sidebar-light-20260930.png';
-import landingDark from '../../../../assets/screenshots/agent-landing-dark-20260929.png';
-import landingLight from '../../../../assets/screenshots/agent-landing-light-20260929.png';
-import workDark from '../../../../assets/screenshots/work-hub-dark-20260929.png';
-import workLight from '../../../../assets/screenshots/work-hub-light-20260929.png';
-import configureDark from '../../../../assets/screenshots/configure-hub-dark-20260930.png';
-import configureLight from '../../../../assets/screenshots/configure-hub-light-20260930.png';
-import agentsDark from '../../../../assets/screenshots/agents-list-dark-20260929.png';
-import agentsLight from '../../../../assets/screenshots/agents-list-light-20260929.png';
-import phoneBarDark from '../../../../assets/screenshots/phone-bottom-bar-dark-20260929.png';
-import phoneBarLight from '../../../../assets/screenshots/phone-bottom-bar-light-20260929.png';
-import phonePanelDark from '../../../../assets/screenshots/phone-side-panel-dark-20260930.png';
-import phonePanelLight from '../../../../assets/screenshots/phone-side-panel-light-20260930.png';
+import sidebarDark from '../../../../assets/screenshots/console-sidebar-dark-20261013.png';
+import sidebarLight from '../../../../assets/screenshots/console-sidebar-light-20261013.png';
+import landingDark from '../../../../assets/screenshots/agent-landing-dark-20261013.png';
+import landingLight from '../../../../assets/screenshots/agent-landing-light-20261013.png';
+import workDark from '../../../../assets/screenshots/work-hub-dark-20261013.png';
+import workLight from '../../../../assets/screenshots/work-hub-light-20261013.png';
+import configureDark from '../../../../assets/screenshots/configure-hub-dark-20261013.png';
+import configureLight from '../../../../assets/screenshots/configure-hub-light-20261013.png';
+import agentsDark from '../../../../assets/screenshots/agents-list-dark-20261013.png';
+import agentsLight from '../../../../assets/screenshots/agents-list-light-20261013.png';
+import phoneBarDark from '../../../../assets/screenshots/phone-bottom-bar-dark-20261013.png';
+import phoneBarLight from '../../../../assets/screenshots/phone-bottom-bar-light-20261013.png';
+import phonePanelDark from '../../../../assets/screenshots/phone-side-panel-dark-20261013.png';
+import phonePanelLight from '../../../../assets/screenshots/phone-side-panel-light-20261013.png';
+import recentDeckDark from '../../../../assets/screenshots/sidebar-recent-deck-dark-20261013.png';
+import recentDeckLight from '../../../../assets/screenshots/sidebar-recent-deck-light-20261013.png';
+import agentsGroupedDark from '../../../../assets/screenshots/sidebar-agents-grouped-dark-20261013.png';
+import agentsGroupedLight from '../../../../assets/screenshots/sidebar-agents-grouped-light-20261013.png';
 
 **AptiveAI Agents** es donde trabajas con tus agentes: ahí inicias
 [tareas](/es/concepts/tasks), las sigues, respondes a tus agentes y lo configuras
@@ -44,16 +48,26 @@ La barra lateral es la misma en todas las páginas. De arriba abajo:
   dark={sidebarDark}
   light={sidebarLight}
   title="Nueva tarea"
-  alt="AptiveAI Agents con la barra lateral desplegada: Nueva tarea, un agente fijado debajo, Bandeja de entrada con un número, Automatizaciones y Trabajo, luego la sección AGENTES con un agente fijado primero y sus últimas tareas debajo, la lista RECIENTES con los botones de búsqueda, filtro y densidad, y Configurar y ayuda al pie, debajo de una línea. La página al lado es Nueva tarea, con Tus agentes encima del cuadro de mensajes."
+  alt="AptiveAI Agents con la barra lateral desplegada: Nueva tarea, un agente fijado debajo, Bandeja de entrada, Automatizaciones y Trabajo, luego la sección AGENTES con el agente fijado primero y sus tres últimas tareas debajo, una que te espera, la lista RECIENTES con los botones de búsqueda, filtro y densidad, y Configurar y ayuda al pie, debajo de una línea. La página al lado es Nueva tarea, con Tus agentes encima del cuadro de mensajes."
 />
 
 **Trabajo** queda resaltado mientras estás en una tarea, **Automatizaciones**
 mientras estás en una automatización, y **Configurar y ayuda** mientras estás
 en conectores, habilidades o Ajustes, así que siempre sabes dónde estás.
 
-{/* SHOT: sidebar-recent-deck — the RECENT section with an automation's firings stacked into a deck and expanded in place, the count on the deck, a needs-you row with its amber badge and a pinned task. */}
+<ThemedImage
+  dark={recentDeckDark}
+  light={recentDeckLight}
+  title="Recientes"
+  alt="La sección RECIENTES de la barra lateral con AGENTES plegada: una tarea fijada, una tarea con la etiqueta ámbar Te necesitan, una tarea en curso y las seis tareas de la automatización Morning operations digest apiladas en un montón, abierto en su sitio con el botón del número, cada tarea en su propia fila."
+/>
 
-{/* SHOT: sidebar-agents-grouped — the AGENTS section open: a pinned agent first, then recent agents, each with its latest tasks beneath it and a See all link, ending in All agents. */}
+<ThemedImage
+  dark={agentsGroupedDark}
+  light={agentsGroupedLight}
+  title="Agentes"
+  alt="La sección AGENTES de la barra lateral abierta: Accounts receivable follow-up, el agente fijado, primero, con sus tres últimas tareas debajo, una con la etiqueta Te necesitan; Vendor onboarding checklist cerrado; Service request intake abierto con sus tres últimas tareas y Ver las 5; Morning operations digest; y Todos los agentes al final."
+/>
 
 <Aside type="note">
   El propio personal de AptiveAI ve dos filas más encima de **Configurar y
@@ -204,7 +218,7 @@ propietarios y administradores.
   light={configureLight}
   url="console.aptiveai.io/configure"
   title="Configurar y ayuda"
-  alt="La página Configurar y ayuda: tres grupos de tarjetas — Configurar (Agentes, Conectores, Habilidades), Ayuda y ajustes (Pregunta sobre AptiveAI, Documentación, Ajustes, Inicios de sesión personales, Notificaciones, Uso) y Tu empresa (Administración, Actividad, Productividad) — cada tarjeta con una descripción y los enlaces Abrir, Documentación y Preguntar. En el encabezado hay un botón Preguntar sobre Configurar y ayuda."
+  alt="La página Configurar y ayuda: tres grupos de tarjetas — Configurar (Agentes, Conectores, Habilidades), Ayuda y ajustes (Pregunta sobre AptiveAI, Documentación, Ajustes, Inicios de sesión personales, Notificaciones, Uso) y el encabezado de un tercer grupo, Tu empresa, al pie — cada tarjeta con una descripción y los enlaces Abrir, Documentación y Preguntar. En el encabezado hay un botón Preguntar sobre Configurar y ayuda."
 />
 
 | Tarjeta | Qué hace |
@@ -260,7 +274,7 @@ constructor.
   light={agentsLight}
   url="console.aptiveai.io/agents"
   title="Agentes"
-  alt="La página Agentes: Todos los agentes como mosaicos — Morning operations digest, Accounts receivable follow-up y Service request intake — cada uno con su propósito, Última tarea, Próxima ejecución y Creado, un menú … y un botón Iniciar una tarea. Encima hay un cuadro de filtro y un selector de mosaicos/tabla; Nuevo agente está en el encabezado."
+  alt="La página Agentes: Todos los agentes como mosaicos — Accounts receivable follow-up, Morning operations digest, Service request intake y Vendor onboarding checklist — cada uno con su propósito, Última tarea, Próxima ejecución y Creado, un menú …, un botón de Tareas y un botón Iniciar una tarea; dos llevan una insignia de estado. Encima hay un cuadro de filtro y un selector de mosaicos/tabla; Nuevo agente está en el encabezado."
 />
 
 ## En un teléfono
@@ -288,7 +302,7 @@ página Agentes; **Bandeja de entrada** muestra tu número de no leídas.
     dark={phonePanelDark}
     light={phonePanelLight}
     title="Menú, con Recientes"
-    alt="El panel lateral abierto desde Menú: Nueva tarea, Bandeja de entrada, Automatizaciones y Trabajo, la sección AGENTES con un agente fijado y sus tareas, la lista RECIENTES, y Configurar y ayuda al final, debajo de una línea."
+    alt="El panel lateral abierto desde Menú: Nueva tarea, Bandeja de entrada, Automatizaciones y Trabajo, la sección AGENTES abierta con el agente fijado abierto y sus últimas tareas debajo, los demás agentes y Todos los agentes, y el comienzo de la lista RECIENTES; Configurar y ayuda está al pie del panel, debajo de la lista."
   />
 </div>
 

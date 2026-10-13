@@ -4,6 +4,11 @@ description: A task is one piece of work, from the message that starts it to the
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ThemedImage from '../../../components/ThemedImage.astro';
+import taskMenuDark from '../../../assets/screenshots/task-menu-dark-20261013.png';
+import taskMenuLight from '../../../assets/screenshots/task-menu-light-20261013.png';
+import taskBesideDark from '../../../assets/screenshots/task-beside-page-dark-20261013.png';
+import taskBesideLight from '../../../assets/screenshots/task-beside-page-light-20261013.png';
 
 A **task** is one piece of work: *"reconcile this week's supplier invoices"*,
 *"find out why order 4471 has not shipped"*. You start it with a message, an
@@ -218,7 +223,12 @@ Deleting the task you have open takes you to the Tasks list. A change made from
 the menu — a rename, a pin, a share, a stop or a delete — shows in every list at
 once, with no refresh.
 
-{/* SHOT: task-menu — the ⋯ menu open on a RECENT row, showing Pin, Rename, Open side by side, Share…, Stop and Delete */}
+<ThemedImage
+  dark={taskMenuDark}
+  light={taskMenuLight}
+  title="Task menu"
+  alt="The … menu open on a task row in RECENT: Pin, Rename, Open side by side, Share… and Stop, then Delete below a line. The row is a task that is running now, marked with a spinner."
+/>
 
 ## Beside the page
 
@@ -226,7 +236,12 @@ You can keep tasks open **beside the page** you are on, to the right of it, and
 watch or steer several while you work elsewhere. This is on a computer; a phone
 has no beside-the-page view.
 
-{/* SHOT: task-beside-page — a task docked to the right of the Tasks list, its window header showing the minimize, full-screen, open-as-a-page and close controls, and the Tasks beside the page button with a count in the header */}
+<ThemedImage
+  dark={taskBesideDark}
+  light={taskBesideLight}
+  title="Tasks"
+  alt="The Tasks page with a task docked beside it. On the left, the list of tasks with the one waiting on you at the top; on the right, the open task, Weekly overdue invoices report, with its transcript, a header with the agent, a lock, a … menu, a minimize button and a close button, and the composer below. The page header shows the Tasks beside the page button with a count of 1."
+/>
 
 Open one in any of these ways:
 

@@ -4,6 +4,9 @@ description: Un agente es un trabajador de IA que configuras una vez —sus inst
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import ThemedImage from '../../../../components/ThemedImage.astro';
+import versionDiffDark from '../../../../assets/screenshots/agent-version-diff-dark-20261013.png';
+import versionDiffLight from '../../../../assets/screenshots/agent-version-diff-light-20261013.png';
 
 Un **agente** es un trabajador de IA preparado para un trabajo concreto en tu
 empresa: gestionar facturas de proveedores, clasificar un buzón de soporte,
@@ -222,7 +225,12 @@ Se escribe una versión cada vez que guardas un cambio. La pestaña
 lleva la etiqueta **Actual**—, cada una con la fecha y la hora en que se
 guardó, quién la guardó y una breve lista de lo que cambió.
 
-{/* SHOT: agent-version-diff — la pestaña Versiones con una versión abierta: su tarjeta con la fecha, la etiqueta Bloqueada y el diff de antes y después de las instrucciones dentro de la tarjeta, con el control de pantalla completa en el diff. */}
+<ThemedImage
+  dark={versionDiffDark}
+  light={versionDiffLight}
+  title="Versiones"
+  alt="La pestaña Versiones del constructor de agentes de Accounts receivable follow-up: la versión 2 con la etiqueta Bloqueada, la fecha y quién la guardó, los botones para ocultar los cambios y Restaurar, y un candado; debajo, los cambios abiertos como una comparación de antes y después de las instrucciones, en rojo lo que se quitó y en verde lo que se añadió."
+/>
 
 - **Ver qué cambió** abre el diff de la versión dentro de su tarjeta: solo las
   líneas que cambiaron, comparadas con la versión anterior. El diff puede

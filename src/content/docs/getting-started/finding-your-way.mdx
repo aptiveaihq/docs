@@ -5,20 +5,24 @@ description: A tour of AptiveAI Agents — the sidebar from New task to Configur
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import ThemedImage from '../../../components/ThemedImage.astro';
-import sidebarDark from '../../../assets/screenshots/console-sidebar-dark-20260930.png';
-import sidebarLight from '../../../assets/screenshots/console-sidebar-light-20260930.png';
-import landingDark from '../../../assets/screenshots/agent-landing-dark-20260929.png';
-import landingLight from '../../../assets/screenshots/agent-landing-light-20260929.png';
-import workDark from '../../../assets/screenshots/work-hub-dark-20260929.png';
-import workLight from '../../../assets/screenshots/work-hub-light-20260929.png';
-import configureDark from '../../../assets/screenshots/configure-hub-dark-20260930.png';
-import configureLight from '../../../assets/screenshots/configure-hub-light-20260930.png';
-import agentsDark from '../../../assets/screenshots/agents-list-dark-20260929.png';
-import agentsLight from '../../../assets/screenshots/agents-list-light-20260929.png';
-import phoneBarDark from '../../../assets/screenshots/phone-bottom-bar-dark-20260929.png';
-import phoneBarLight from '../../../assets/screenshots/phone-bottom-bar-light-20260929.png';
-import phonePanelDark from '../../../assets/screenshots/phone-side-panel-dark-20260930.png';
-import phonePanelLight from '../../../assets/screenshots/phone-side-panel-light-20260930.png';
+import sidebarDark from '../../../assets/screenshots/console-sidebar-dark-20261013.png';
+import sidebarLight from '../../../assets/screenshots/console-sidebar-light-20261013.png';
+import landingDark from '../../../assets/screenshots/agent-landing-dark-20261013.png';
+import landingLight from '../../../assets/screenshots/agent-landing-light-20261013.png';
+import workDark from '../../../assets/screenshots/work-hub-dark-20261013.png';
+import workLight from '../../../assets/screenshots/work-hub-light-20261013.png';
+import configureDark from '../../../assets/screenshots/configure-hub-dark-20261013.png';
+import configureLight from '../../../assets/screenshots/configure-hub-light-20261013.png';
+import agentsDark from '../../../assets/screenshots/agents-list-dark-20261013.png';
+import agentsLight from '../../../assets/screenshots/agents-list-light-20261013.png';
+import phoneBarDark from '../../../assets/screenshots/phone-bottom-bar-dark-20261013.png';
+import phoneBarLight from '../../../assets/screenshots/phone-bottom-bar-light-20261013.png';
+import phonePanelDark from '../../../assets/screenshots/phone-side-panel-dark-20261013.png';
+import phonePanelLight from '../../../assets/screenshots/phone-side-panel-light-20261013.png';
+import recentDeckDark from '../../../assets/screenshots/sidebar-recent-deck-dark-20261013.png';
+import recentDeckLight from '../../../assets/screenshots/sidebar-recent-deck-light-20261013.png';
+import agentsGroupedDark from '../../../assets/screenshots/sidebar-agents-grouped-dark-20261013.png';
+import agentsGroupedLight from '../../../assets/screenshots/sidebar-agents-grouped-light-20261013.png';
 
 **AptiveAI Agents** is where you work with your agents: you start
 [tasks](/concepts/tasks), follow them, answer your agents and set everything
@@ -44,16 +48,26 @@ The sidebar is the same on every page. From the top:
   dark={sidebarDark}
   light={sidebarLight}
   title="New task"
-  alt="AptiveAI Agents with the sidebar expanded: New task, a pinned agent under it, Inbox with a count, Automations and Work, then the AGENTS section with a pinned agent first and its latest tasks beneath, the RECENT list with search, filter and density buttons, and Configure & help at the foot below a line. The page beside it is New task, with Your agents above the composer."
+  alt="AptiveAI Agents with the sidebar expanded: New task, a pinned agent under it, Inbox, Automations and Work, then the AGENTS section with the pinned agent first and its three latest tasks beneath, one waiting on you, the RECENT list with search, filter and density buttons, and Configure & help at the foot below a line. The page beside it is New task, with Your agents above the composer."
 />
 
 **Work** stays highlighted while you are on a task, **Automations** while you
 are on an automation, and **Configure & help** while you are on connectors,
 skills or Settings, so you can always tell where you are.
 
-{/* SHOT: sidebar-recent-deck — the RECENT section with an automation's firings stacked into a deck and expanded in place, the count on the deck, a needs-you row with its amber badge and a pinned task. */}
+<ThemedImage
+  dark={recentDeckDark}
+  light={recentDeckLight}
+  title="Recent"
+  alt="The RECENT section of the sidebar with AGENTS folded away: a pinned task, a task with the amber Needs you badge, a task that is running, and the six tasks of the Morning operations digest automation stacked into one deck, opened in place with its count button, each task on a row of its own."
+/>
 
-{/* SHOT: sidebar-agents-grouped — the AGENTS section open: a pinned agent first, then recent agents, each with its latest tasks beneath it and a See all link, ending in All agents. */}
+<ThemedImage
+  dark={agentsGroupedDark}
+  light={agentsGroupedLight}
+  title="Agents"
+  alt="The AGENTS section of the sidebar open: Accounts receivable follow-up, the pinned agent, first, with its three latest tasks beneath it, one with the Needs you badge; Vendor onboarding checklist closed; Service request intake open with its three latest tasks and See all 5; Morning operations digest; and All agents at the end."
+/>
 
 <Aside type="note">
   AptiveAI's own staff see two more rows above **Configure & help**:
@@ -199,7 +213,7 @@ agents do and when: [Tasks](/concepts/tasks),
   light={configureLight}
   url="console.aptiveai.io/configure"
   title="Configure & help"
-  alt="The Configure & help page: three groups of cards — Configure (Agents, Connectors, Skills), Help & settings (Ask about AptiveAI, Docs, Settings, Personal sign-ins, Notifications, Usage) and Your enterprise (Admin, Activity, Productivity) — each card with a description and Open, Docs and Ask links. An Ask about Configure & help button sits in the header."
+  alt="The Configure & help page: three groups of cards — Configure (Agents, Connectors, Skills), Help & settings (Ask about AptiveAI, Docs, Settings, Personal sign-ins, Notifications, Usage) and the heading of a third group, Your enterprise, at the foot — each card with a description and Open, Docs and Ask links. An Ask about Configure & help button sits in the header."
 />
 
 | Card | What it does |
@@ -253,7 +267,7 @@ agent; **New agent** opens the builder.
   light={agentsLight}
   url="console.aptiveai.io/agents"
   title="Agents"
-  alt="The Agents page: All agents as tiles — Morning operations digest, Accounts receivable follow-up and Service request intake — each with its purpose, Last task, Next run and Created, a … menu and a Start a task button. A filter box and a tiles/table switch sit above them; New agent is in the header."
+  alt="The Agents page: All agents as tiles — Accounts receivable follow-up, Morning operations digest, Service request intake and Vendor onboarding checklist — each with its purpose, Last task, Next run and Created, a … menu, a Tasks button and a Start a task button; two carry a badge, Waiting on you and Running. A filter box and a tiles/table switch sit above them; New agent is in the header."
 />
 
 ## On a phone
@@ -280,7 +294,7 @@ page; **Inbox** shows your unread count.
     dark={phonePanelDark}
     light={phonePanelLight}
     title="Menu, with Recent open"
-    alt="The side panel opened from Menu: New task, Inbox, Automations and Work, the AGENTS section with a pinned agent and its tasks, the RECENT list, and Configure & help last, below a line."
+    alt="The side panel opened from Menu: New task, Inbox, Automations and Work, the AGENTS section open with the pinned agent open and its latest tasks beneath it, the other agents and All agents, and the start of the RECENT list; Configure & help is at the foot of the panel, below the list."
   />
 </div>
 
