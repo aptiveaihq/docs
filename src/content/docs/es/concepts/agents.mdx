@@ -1,6 +1,6 @@
 ---
 title: Agentes
-description: Un agente es un trabajador de IA que configuras una vez —sus instrucciones, los sistemas a los que puede llegar, lo que sabe— y al que luego le das tareas. Cómo crearlo y configurarlo, agentes personales y compartidos, fijarlos e iconos, archivarlos, cómo un agente se actualiza a sí mismo y las restricciones que aplican.
+description: Un agente es un trabajador de IA que configuras una vez —sus instrucciones, los sistemas a los que puede llegar, lo que sabe— y al que luego le das tareas. Cómo crearlo y configurarlo, agentes personales y compartidos, Refinar, versiones, fijarlos e iconos, eliminarlos y recuperarlos, cómo un agente se actualiza a sí mismo y las restricciones que aplican.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -20,33 +20,33 @@ por agente: todos los agentes tienen una.
 
 ## Dónde aparecen los agentes
 
-- **La barra lateral.** **Agentes** se despliega con todos los agentes que
-  puedes ver y termina en **Todos los agentes**. Cada fila tiene un menú **…**:
-  **Nueva tarea**, **Configurar** (solo si puedes editar el agente) y
-  **Fijar** / **Dejar de fijar**.
+- **La barra lateral.** Los agentes fijados tienen una fila propia debajo de
+  **Nueva tarea**. **AGENTES** muestra después tus agentes fijados primero, con
+  sus últimas tareas, y termina en **Todos los agentes**; consulta
+  [Los agentes en la barra lateral](/es/getting-started/finding-your-way#los-agentes-en-la-barra-lateral).
+  Cada fila tiene un menú **…**: **Nueva tarea**, **Nueva tarea en vista
+  dividida**, **Configurar** (solo si puedes editar el agente), **Clonar**,
+  **Compartir…**, **Fijar** / **Dejar de fijar** y **Eliminar** (solo si puedes
+  eliminar el agente).
 - **Nueva tarea.** La primera página de AptiveAI Agents muestra **Tus agentes**.
   Elige uno y estarás *trabajando con* él: su icono, su propósito y sus
   [frases de inicio](#frases-de-inicio) llenan la página, y el
   cuadro de mensajes le envía tu mensaje. La dirección es `/?agent=<id>`, así que puedes
   guardar la página en favoritos o compartirla.
 - **La página Agentes** (`/agents`). Todos los agentes como tarjetas o en una
-  tabla —con su **Estado**, **Última tarea** y **Próxima ejecución**—, con
-  búsqueda y un filtro **Archivados** para mostrar los agentes archivados. Al
-  hacer clic en un agente, o en su botón **Iniciar una tarea**, se abre Nueva
-  tarea con ese agente elegido. Su menú **…** tiene las mismas opciones que en
-  la barra lateral: **Nueva tarea**, **Configurar** (solo si puedes editar el
-  agente) y **Fijar** / **Dejar de fijar**. A un agente archivado no se le
-  pueden dar tareas, así que al hacer clic en él se abre su constructor, para
-  las personas que pueden editarlo.
+  tabla —con su **Última tarea** y **Próxima ejecución**, y **En ejecución** o
+  **Esperándote** cuando tiene una tarea en ese estado—, con búsqueda. Cada
+  tarjeta enlaza con las tareas del agente como **Tareas (N)**, que abre la
+  lista de Tareas filtrada por ese agente. Al hacer clic en un agente, o en su
+  botón **Iniciar una tarea**, se abre Nueva tarea con ese agente elegido. Su
+  menú **…** tiene las mismas opciones que en la barra lateral. Un filtro
+  **Eliminados** (**Solo** o **Con activos**) muestra los agentes que se
+  eliminaron; consulta [Eliminar y recuperar un agente](#eliminar-y-recuperar-un-agente).
 
-Un agente está en uno de cuatro estados:
-
-| Estado | Tareas a mano | Se ejecutan automatizaciones |
-|---|:---:|:---:|
-| **Borrador**: en preparación | — | — |
-| **Activo** | ✓ | ✓ |
-| **En pausa** | ✓ | — |
-| **Archivado**: retirado, consulta [Archivar](#archivar) | — | — |
+Un agente está activo desde el momento en que se crea: las personas con quienes
+se comparte pueden darle tareas, y sigue así hasta que se elimina. Para
+detener el trabajo programado de un agente sin eliminarlo, pausa una por una
+sus [automatizaciones](/es/concepts/automations).
 
 ## Crear un agente
 
@@ -72,14 +72,53 @@ paneles: una conversación con el asistente de un lado y **Pruébalo** del otro.
    agente inicia una **Computadora** propia, que se detiene cuando la cierras o
    sales. La conversación no se guarda.
 
-4. **Créalo.** **Crear agente** lo guarda como **Borrador**. **Activar** lo
-   deja disponible para tareas.
+4. **Créalo.** **Crear agente** lo guarda y queda listo para tareas de
+   inmediato.
 
 </Steps>
 
 En un agente guardado, la conversación del constructor se llama **Refinar**.
 Un cambio que hace en las instrucciones se guarda de inmediato como una nueva
-versión; cualquier otro cambio espera a **Guardar agente**.
+versión, y la conversación muestra lo que cambió en una tarjeta de antes y
+después; cualquier otro cambio espera a **Guardar agente**.
+
+### El encabezado del constructor
+
+El encabezado de un agente guardado tiene **Compartir**, **Iniciar una tarea** y
+**Clonar**. **Iniciar una tarea** abre Nueva tarea con el agente elegido, una
+vez guardados tus cambios: una tarea ejecuta el agente guardado, no lo que ves
+en pantalla. **Guardar agente** y **Descartar** aparecen mientras tengas cambios
+sin guardar. **Eliminar** está en el menú **⋯** al final del encabezado;
+consulta [Eliminar y recuperar un agente](#eliminar-y-recuperar-un-agente). En
+la barra lateral y en la página Agentes, la opción **Configurar** lleva un
+engranaje con un pequeño agente dentro.
+
+### Trabajar en Refinar
+
+- **Pantalla completa.** El control al final de las pestañas **Refinar ·
+  Configurar · Versiones** da todo el espacio a la parte izquierda; **Pruébalo**
+  se pliega en una franja estrecha a la derecha, y al elegir **Pruébalo** o
+  **Entrénalo** en la franja vuelve la vista dividida. Pruébalo tiene el mismo
+  control en sentido contrario. La elección se recuerda en este navegador. El
+  control de Refinar se oculta mientras hay una computadora abierta, para que la
+  computadora nunca tenga que compartir el panel, y no hay control de pantalla
+  completa en un teléfono, donde los dos paneles van apilados.
+- **Archivos.** Adjunta un archivo a un mensaje de Refinar con el clip —una
+  lista de precios, un procedimiento, una captura— y el asistente lo lee:
+  *"este es nuestro procedimiento de reembolsos, crea el agente a partir de
+  él"*. Las imágenes se le muestran directamente al asistente. Cualquier otro
+  archivo se coloca en la misma **computadora** que usa Pruébalo, y Refinar lo
+  lee allí; si no hay una computadora abierta, Refinar inicia una y aparece en
+  la tarjeta de Pruébalo. Los límites son los de los
+  [archivos de una tarea](/es/concepts/files). El contenido de un archivo se
+  trata como información, nunca como instrucciones para el asistente. Mientras
+  hay una sesión de entrenamiento abierta, Refinar lee imágenes pero no otros
+  archivos: dice *Termina o descarta la sesión de entrenamiento para leer
+  archivos aquí.*
+- **Nueva conversación.** El botón de actualizar junto al clip empieza Refinar
+  de nuevo. Solo borra la conversación: el agente, sus instrucciones guardadas,
+  tus cambios sin guardar, la computadora y el texto que estabas escribiendo no
+  se tocan. Aparece cuando hay mensajes, y espera mientras el asistente responde.
 
 ## Configurar un agente
 
@@ -178,8 +217,26 @@ instrucciones: no son una petición al modelo.
 ### Versiones
 
 Se escribe una versión cada vez que guardas un cambio. La pestaña
-**Versiones** las muestra; restaurar una anterior registra una nueva versión,
-así que no se pierde nada.
+**Versiones** las muestra, de la más reciente a la más antigua —la más reciente
+lleva la etiqueta **Actual**—, cada una con la fecha y la hora en que se
+guardó, quién la guardó y una breve lista de lo que cambió.
+
+{/* SHOT: agent-version-diff — la pestaña Versiones con una versión abierta: su tarjeta con la fecha, la etiqueta Bloqueada y el diff de antes y después de las instrucciones dentro de la tarjeta, con el control de pantalla completa en el diff. */}
+
+- **Ver qué cambió** abre el diff de la versión dentro de su tarjeta: solo las
+  líneas que cambiaron, comparadas con la versión anterior. El diff puede
+  pasar a pantalla completa y se cierra con la **×** redonda de su esquina.
+- **Restaurar** devuelve una versión anterior como la configuración del agente.
+  Registra una nueva versión, así que no se pierde nada.
+- **Bloquear esta versión** la conserva: una versión bloqueada muestra
+  **Bloqueada** y no se puede eliminar hasta que la desbloquees.
+- **Eliminar** quita de forma permanente una versión sin bloquear y anterior a
+  la actual. Para confirmar, escribes el nombre de la versión, por ejemplo
+  *Versión 3*. La configuración actual del agente no cambia.
+
+Cuando se eliminaron versiones intermedias, la más nueva dice *Comparada con la
+versión N; las versiones intermedias se eliminaron.* y oculta su lista de
+cambios, que describía un paso que ya no existe.
 
 ## Agentes personales y compartidos
 
@@ -212,11 +269,12 @@ archivos. Los conectores no se comparten así; consulta
 ## Fijar agentes e iconos
 
 Usa **Fijar** en el menú **…** de un agente en la barra lateral y tendrá una fila
-propia cerca de la parte superior, justo debajo de **Nueva tarea**: un clic
-para empezar a trabajar con él. Los agentes fijados son solo tuyos, se guardan
-en el orden en que los fijas, hasta 50. Un agente fijado sigue apareciendo en
-**Agentes**, con una marca de fijado. Un agente que se archiva, o que ya no
-puedes ver, sale de tus fijados por sí solo.
+propia justo debajo de **Nueva tarea**: un clic para empezar a trabajar con él.
+Junto a la fila, un control abre una tarea nueva con ese agente al lado de la
+página en la que estás. Los agentes fijados son solo tuyos, se guardan en el
+orden en que los fijas, hasta 50. Un agente fijado también encabeza la sección
+**AGENTES**, con sus últimas tareas, y lleva una marca de fijado. Un agente
+que se elimina, o que ya no puedes ver, sale de tus fijados por sí solo.
 
 ### El icono del agente
 
@@ -259,32 +317,60 @@ guardas el agente.
 Cada dibujo es una imagen hecha por el modelo, con hasta tres intentos para
 lograr una que sirva, y consume crédito de IA.
 
-## Archivar
+## Eliminar y recuperar un agente
 
-**Archivar agente** saca a un agente de la página Agentes y de la página Nueva
-tarea; nadie puede iniciar una tarea con él. Su historial de tareas se
-conserva. Pasan dos cosas más, y **Restaurar agente** deshace ambas:
+**Eliminar** aparta a un agente y lo conserva **30 días** para que puedas
+cambiar de opinión. Lo encuentras en el menú **⋯** del encabezado del
+constructor y en el menú **…** del agente, en la barra lateral y en la página
+Agentes. Se ofrece a quien creó el agente y a los propietarios y administradores
+del espacio de trabajo al que pertenece.
 
-- Sus **automatizaciones activas se ponen en pausa**. Al restaurarlo se vuelven
-  a activar exactamente esas: una automatización que alguien pausó a mano, o que
-  se pausó sola tras varios fallos, sigue en pausa.
-- Sus **concesiones de conectores se conservan**, así que vuelve equipado. La
-  página del conector lo sigue mostrando, marcado como **Archivado**.
+Antes de eliminar, una ventana dice qué pasará: el agente sale de tus agentes,
+nadie puede iniciar una tarea con él y se elimina para siempre a los 30 días.
+Enumera las **automatizaciones que se detienen hasta que lo recuperes**. Dos
+cosas pueden detenerte antes:
 
-Un agente restaurado vuelve como **Borrador**; actívalo otra vez para usarlo.
-El filtro **Archivados** de la página Agentes muestra los agentes archivados.
+- **Una tarea está trabajando o esperando a alguien.** La ventana dice *… tiene
+  tareas en marcha* con un enlace a cada una; detenlas y después elimina.
+- **Tienes cambios sin guardar.** **Eliminar** dice *Guarda o descarta tus
+  cambios antes de eliminar este agente.*
 
-<Aside type="note" title="Eliminar un agente definitivamente">
-  Solo AptiveAI puede eliminar un agente archivado de forma permanente. Eso
-  elimina el agente con todo lo que tenía —sus automatizaciones, notificaciones,
-  archivos de conocimiento, concesiones, habilidades, inicios de sesión y
-  versiones— y no se puede deshacer. Sus tareas también se eliminan y, como
-  cualquier [tarea eliminada](/es/concepts/tasks#cuánto-tiempo-se-conserva-una-tarea),
-  se pueden recuperar durante 30 días. Los
-  registros de crédito y de tiempo de computadora se conservan para la
-  facturación. Se rechaza mientras una de las tareas del agente esté
-  trabajando o esperando a alguien.
-</Aside>
+Mientras un agente está eliminado:
+
+- **Sus tareas se quedan.** Puedes leerlas durante los 30 días, pero un mensaje
+  enviado a una se rechaza con *El agente de esta tarea se eliminó, así que ya
+  no puede trabajar. Recupera el agente desde Agentes eliminados para
+  continuar.*.
+- **Sus automatizaciones se detienen.** Cada una muestra *Su agente se
+  eliminó*, y una ejecución que llega se omite como **Agente eliminado**. No se
+  pierde nada de ellas.
+- **Su nombre queda libre.** Puedes ponerle el mismo nombre a otro agente.
+- **No se puede usar.** Desaparece de Nueva tarea, de las menciones con @ y de
+  la barra lateral, y ya no se le pueden dar tareas, enseñarle, moverlo ni
+  concederle un conector.
+
+Para ver los agentes eliminados, abre la página Agentes y pon el filtro
+**Eliminados** en **Solo** (únicamente los eliminados) o **Con activos** (ambos).
+Un agente eliminado se ve atenuado y dice **Se elimina en N días**, o **Se
+elimina hoy** el último día. Ábrelo y su constructor es de solo lectura, con un
+aviso —*Eliminado · se borra en N días. Es de solo lectura hasta que lo
+recuperes.*— y sin la columna Pruébalo.
+
+**Recuperar** —en el aviso, o en el menú **…** del agente (el icono de
+restaurar de la papelera)— devuelve el agente activo y listo para tareas, y
+vuelve a activar sus automatizaciones: exactamente las que se detuvieron por la
+eliminación. Una que alguien pausó a mano sigue en pausa. Si reanudar una
+incumpliera los [límites de automatizaciones](/es/concepts/automations), sigue
+en pausa y explica el motivo en su propia página. Si otro agente ya tiene ese
+nombre, Recuperar te pide que le cambies el nombre a ese primero.
+
+A los 30 días el agente se elimina para siempre, con todo lo que tenía: sus
+automatizaciones, notificaciones, archivos de conocimiento, concesiones,
+habilidades, inicios de sesión y versiones. Sus tareas también se eliminan y,
+como cualquier [tarea eliminada](/es/concepts/tasks#cuánto-tiempo-se-conserva-una-tarea),
+se pueden recuperar durante 30 días pidiéndolo a soporte. Los registros de
+crédito y de tiempo de computadora se conservan para la facturación. AptiveAI
+también puede eliminar de inmediato un agente eliminado (**Eliminar ahora**).
 
 ## Cómo un agente se actualiza a sí mismo
 
@@ -324,8 +410,9 @@ tu relación con el agente:
 - Quien es dueño de un agente, y quien tiene **Puede editar**, lo cambia.
 - Los propietarios y administradores de la organización (y AptiveAI) pueden
   abrir y editar cualquier agente.
-- Los propietarios y administradores de la organización pueden archivar y
-  restaurar cualquier agente. Solo AptiveAI lo elimina de forma permanente.
+- Quien es dueño de un agente y los propietarios y administradores de su
+  espacio de trabajo pueden eliminarlo y recuperarlo. Solo AptiveAI elimina de
+  inmediato un agente eliminado.
 - Los miembros comparten sus agentes con personas. Solo los propietarios y
   administradores activan **Todos en ‹espacio de trabajo›**.
 

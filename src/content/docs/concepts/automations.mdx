@@ -62,6 +62,15 @@ with nothing in it is not shown.
 A run that is waiting or running keeps a paused automation out of **Paused**:
 pausing stops future runs, not the one already going.
 
+When the system paused an automation rather than a person, the automation says
+why, on its card and on its page. *Its agent was deleted* means its agent is
+in the trash — recovering the agent resumes it. *Paused by a product update*
+marks the automations paused once, when agents lost their draft and paused
+states: the owner of each was shown a notice, **We paused N automations**, with
+a **Resume** button per automation, and **Resume** works from the automation
+too. A person who paused an automation by hand is not second-guessed: recovering
+an agent never resumes it.
+
 ### The status line and its buttons
 
 Every card and every timeline lane says where its automation stands in words,
@@ -150,8 +159,8 @@ once to test. Nothing is saved until you choose **Create automation**.
 1. **Name** — such as *Morning invoice sweep*.
 
 2. **Agent** — which agent does the work, or **No agent — free-form**. With an
-   agent, its instructions come first and the automation's follow. Only active
-   agents run. The agent cannot be changed later — create a second automation
+   agent, its instructions come first and the automation's follow. A deleted
+   agent does not run. The agent cannot be changed later — create a second automation
    instead.
 
 3. **What it does each time** — the instruction for every run. Optional with an
@@ -220,7 +229,7 @@ reason, before any work starts. The common ones:
 | **Outside business hours** | The business-hours gate was closed |
 | **Could not check for work** | The *nothing to process* gate could not look |
 | **Paused after failures** | The automation paused itself after repeated failures |
-| **Agent not active** | The agent is a draft, paused or archived |
+| **Agent deleted** | The agent was deleted. Recover it to run the automation again |
 | **Agent no longer shared** | The automation's creator can no longer use its agent |
 | **No AI credit** | The account has no AI credit to spend. It runs again at its next time once credit is added |
 | **Missed window** | The run's time had already passed |

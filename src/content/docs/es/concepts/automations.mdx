@@ -67,6 +67,17 @@ Una ejecución que espera o que está en curso mantiene una automatización en
 pausa fuera de **En pausa**: pausar detiene las ejecuciones futuras, no la que
 ya está en marcha.
 
+Cuando fue el sistema quien pausó una automatización, y no una persona, la
+automatización dice por qué, en su tarjeta y en su página. *Su agente se
+eliminó* significa que su agente está en la papelera: al recuperarlo, la
+automatización se reanuda. *Pausada por una actualización* marca las
+automatizaciones que se pausaron una sola vez, cuando los agentes dejaron de
+tener estados de borrador y en pausa: a quien es dueño de cada una se le mostró
+un aviso, **Pausamos N automatizaciones**, con un botón **Reanudar** por
+automatización, y **Reanudar** también funciona desde la propia automatización.
+A una automatización que una persona pausó a mano no se le lleva la contraria:
+recuperar un agente nunca la reanuda.
+
 ### La línea de estado y sus botones
 
 Cada tarjeta y cada carril de la cronología dice con palabras cómo está su
@@ -165,8 +176,8 @@ guarda nada hasta que eliges **Crear automatización**.
 1. **Nombre** — por ejemplo *Barrido matutino de facturas*.
 
 2. **Agente** — qué agente hace el trabajo, o **Sin agente — libre**. Con un
-   agente, sus instrucciones van primero y luego las de la automatización. Solo
-   se ejecutan los agentes activos. El agente no se puede cambiar después — crea
+   agente, sus instrucciones van primero y luego las de la automatización. Un
+   agente eliminado no se ejecuta. El agente no se puede cambiar después — crea
    una segunda automatización en su lugar.
 
 3. **Qué hace cada vez** — la instrucción para cada ejecución. Opcional con un
@@ -239,7 +250,7 @@ comunes:
 | **Fuera del horario laboral** | La regla de horario laboral estaba cerrada |
 | **No se pudo comprobar si hay trabajo** | La regla *nada que procesar* no pudo revisar |
 | **En pausa tras fallos** | La automatización se pausó sola tras fallos repetidos |
-| **Agente no activo** | El agente está en borrador, en pausa o archivado |
+| **Agente eliminado** | El agente se eliminó. Recupéralo para que la automatización vuelva a ejecutarse |
 | **Agente ya no compartido** | Quien creó la automatización ya no puede usar su agente |
 | **Sin crédito de IA** | La cuenta no tiene crédito de IA para gastar. Se vuelve a ejecutar a su siguiente hora una vez que se agrega crédito |
 | **Ventana perdida** | La hora de la ejecución ya había pasado |

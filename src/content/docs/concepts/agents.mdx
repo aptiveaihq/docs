@@ -1,6 +1,6 @@
 ---
 title: Agents
-description: An agent is an AI worker you configure once — its instructions, the systems it may reach, what it knows — and then give tasks. Creating and configuring one, personal and shared agents, pinning and icons, archiving, how an agent updates itself, and the restrictions that apply.
+description: An agent is an AI worker you configure once — its instructions, the systems it may reach, what it knows — and then give tasks. Creating and configuring one, Refine, versions, personal and shared agents, pinning and icons, deleting and recovering, how an agent updates itself, and the restrictions that apply.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -19,31 +19,30 @@ every agent gets one.
 
 ## Where agents appear
 
-- **The sidebar.** **Agents** expands to every agent you can see, ending in
-  **All agents**. Each row has a **…** menu: **Start new task**, **Configure**
-  (only if you may edit the agent) and **Pin** / **Unpin**.
+- **The sidebar.** Pinned agents keep a row of their own under **New task**.
+  **AGENTS** then lists your pinned agents first, with their latest tasks, and
+  ends in **All agents** — see
+  [Agents in the sidebar](/getting-started/finding-your-way#agents-in-the-sidebar).
+  Each row has a **…** menu: **Start new task**, **New task in split view**,
+  **Configure** (only if you may edit the agent), **Clone**, **Share…**,
+  **Pin** / **Unpin** and **Delete** (only if you may delete the agent).
 - **New task.** The first page of AptiveAI Agents lists **Your agents**. Pick one
   and you are *working with* it: its icon, its purpose and its
   [conversation starters](#conversation-starters) fill the page, and the
   composer sends your message to it. The address is `/?agent=<id>`, so the page
   can be bookmarked or shared.
 - **The Agents page** (`/agents`). Every agent as a tile or in a table — with
-  its **State**, **Last task** and **Next run** — searchable, with
-  an **Archived** chip to show archived agents. Clicking an agent, or its
-  **Start a task** button, opens New task with that agent chosen. Its **…**
-  menu has the same items as in the sidebar: **Start new task**, **Configure**
-  (only if you may edit the agent) and **Pin** / **Unpin**. An archived agent
-  cannot be given tasks, so clicking it opens its builder instead, for people
-  who may edit it.
+  its **Last task** and **Next run**, and **Running** or **Waiting on you** when
+  it has a task in that state — searchable. Each card links to the agent's
+  tasks as **Tasks (N)**, which opens the Tasks list filtered to that agent.
+  Clicking an agent, or its **Start a task** button, opens New task with that
+  agent chosen. Its **…** menu has the same items as in the sidebar. A
+  **Deleted** filter chip (**Only** or **With live**) shows agents that were
+  deleted; see [Deleting and recovering an agent](#deleting-and-recovering-an-agent).
 
-An agent is in one of four states:
-
-| State | Tasks by hand | Automations run |
-|---|:---:|:---:|
-| **Draft** — being set up | — | — |
-| **Active** | ✓ | ✓ |
-| **Paused** | ✓ | — |
-| **Archived** — retired, see [Archiving](#archiving) | — | — |
+An agent is live from the moment it is created: anyone it is shared with can
+give it tasks, and it stays that way until it is deleted. To stop an agent's scheduled work without deleting it, pause
+its [automations](/concepts/automations) one by one.
 
 ## Creating an agent
 
@@ -67,14 +66,50 @@ conversation with the builder on one side, and **Try it** on the other.
    the agent starts a **Computer** of its own, which stops when you close it or
    leave. The conversation is not saved.
 
-4. **Create it.** **Create agent** saves it as a **Draft**. **Activate** makes
-   it available for tasks.
+4. **Create it.** **Create agent** saves it, and it is ready for tasks at
+   once.
 
 </Steps>
 
 On a saved agent the builder conversation is called **Refine**. A change it
-makes to the instructions is saved at once as a new version; every other
+makes to the instructions is saved at once as a new version, and the
+conversation shows what changed as a before-and-after card; every other
 change waits for **Save agent**.
+
+### The builder's header
+
+A saved agent's header has **Share**, **Start a task** and **Clone**. **Start a
+task** opens New task with the agent chosen, once your edits are saved — a task
+runs the saved agent, not what is on screen. **Save agent** and **Discard**
+appear while you have unsaved edits. **Delete** is in the **⋯** menu at the
+end of the header; see
+[Deleting and recovering an agent](#deleting-and-recovering-an-agent). In the
+sidebar and on the Agents page, the **Configure** item wears a gear with a
+small agent inside it.
+
+### Working in Refine
+
+- **Full screen.** The control at the end of the **Refine · Configure ·
+  Versions** tabs gives the left pane the whole page; **Try it** folds into a
+  narrow strip on the right, and picking **Try it** or **Train** from the
+  strip brings the split back. Try it has the same control the other way
+  round. The choice is remembered in this browser. Refine's control is hidden
+  while a computer is open, so the computer never has to share the pane, and
+  there is no full-screen control on a phone, where the two panes are stacked.
+- **Files.** Attach a file to a Refine message with the paperclip — a price
+  list, a procedure, a screenshot — and the builder reads it: *"here is our
+  refund procedure, build the agent from it"*. Pictures are shown to the
+  builder directly. Any other file is put on the same **computer** that Try it
+  uses, and Refine reads it there; if no computer is open, Refine starts one,
+  and it appears in the Try it card. The limits are those of a
+  [task's files](/concepts/files). A file's content is treated as information,
+  never as instructions to the builder. While a Train session is open, Refine
+  reads pictures but not other files — it says *Finish or discard the training
+  session to read files here.*
+- **New conversation.** The refresh button beside the paperclip starts Refine
+  over. It clears the conversation only: the agent, its saved instructions,
+  your unsaved edits, the computer and any text you were typing are untouched.
+  It appears once there are messages, and waits while the builder is answering.
 
 ## Configuring an agent
 
@@ -169,7 +204,25 @@ they are not a request to the model.
 ### Versions
 
 A version is written every time you save a change. The **Versions** tab lists
-them; restoring an older one records a new version, so nothing is lost.
+them, newest first — the newest is marked **Current** — each with the date and
+time it was saved, who saved it and a short list of what changed.
+
+{/* SHOT: agent-version-diff — the Versions tab with one version open: its card showing the date, the Locked badge and the inline before-and-after diff of the instructions, with the full-screen control on the diff. */}
+
+- **See what changed** opens the version's diff inside its card — only the
+  lines that changed, compared with the version before it. The diff can go full
+  screen, and closes from the round **×** in its corner.
+- **Restore** brings an older version back as the agent's configuration. It
+  records a new version, so nothing is lost.
+- **Lock this version** keeps it: a locked version shows **Locked** and cannot
+  be deleted until you unlock it.
+- **Delete** removes one unlocked version that is older than the current one,
+  permanently. You confirm by typing the version's name, such as *Version 3*.
+  The agent's current configuration does not change.
+
+When versions between two have been deleted, the newer one says *Compared with
+version N; the versions in between were deleted.* and hides its list of
+changes, which described a step that no longer exists.
 
 ## Personal and shared agents
 
@@ -198,10 +251,12 @@ The full rules are in [Sharing](/concepts/sharing).
 ## Pinning and icons
 
 **Pin** an agent from its **…** menu in the sidebar and it gets a row of its
-own near the top, just below **New task** — one click to start working with
-it. Pins are yours alone, kept in the order you pin them, up to 50. A pinned
-agent is still listed under **Agents**, with a pin mark. An agent that is
-archived, or that you can no longer see, drops out of your pins by itself.
+own just below **New task** — one click to start working with it. Beside the
+row, a control opens a new task with that agent next to the page you are on.
+Pins are yours alone, kept in the order you pin them, up to 50. A pinned agent
+also leads the **AGENTS** section, with its latest tasks, and carries a pin
+mark. An agent that is deleted, or that you can no longer see, drops out of
+your pins by itself.
 
 ### The agent's icon
 
@@ -241,30 +296,55 @@ agent's chosen icon is stored when you save the agent.
 Each drawing is a picture drawn by the model, with up to three tries to get a
 usable one, and it uses AI credit.
 
-## Archiving
+## Deleting and recovering an agent
 
-**Archive agent** takes an agent out of the Agents list and the New task page;
-nobody can start a task with it. Its task history is kept. Two more things
-happen, both undone by **Restore agent**:
+**Delete** takes an agent away, and keeps it for **30 days** so that you can
+change your mind. You find it in the builder header's **⋯** menu and in the
+agent's **…** menu in the sidebar and on the Agents page. It is offered to the
+agent's creator and to the owners and admins of the workspace it belongs to.
 
-- Its **automations that are on are paused**. Restoring turns back on exactly
-  those — an automation someone paused by hand, or one that paused itself after
-  failures, stays paused.
-- Its **connector grants are kept**, so it comes back equipped. The connector's
-  page still lists it, marked **Archived**.
+Before it deletes, a window names what will happen: the agent leaves your
+agents, nobody can start a task with it, and it is removed for good after 30
+days. It lists the **automations that stop until you recover it**. Two things
+can stop you first:
 
-A restored agent comes back as a **Draft**; activate it again to use it. The
-**Archived** chip on the Agents page shows archived agents.
+- **A task is working or waiting on someone.** The window says *… has tasks
+  running* with a link to each; stop them, then delete.
+- **You have unsaved edits.** **Delete** says *Save or discard your changes
+  before deleting this agent.*
 
-<Aside type="note" title="Deleting an agent for good">
-  Only AptiveAI can delete an archived agent permanently. That removes the
-  agent with everything it had — its automations, notifications, knowledge
-  files, grants, skills, sign-ins and versions — and cannot be undone. Its
-  tasks are deleted too, and like any
-  [deleted task](/concepts/tasks#how-long-a-task-is-kept) can be recovered for
-  30 days. Credit and computer-time records are kept for billing. It is refused while one of the agent's tasks is working or
-  waiting on someone.
-</Aside>
+While an agent is deleted:
+
+- **Its tasks stay.** You can read them for the 30 days, but a message sent to
+  one is refused with *This task's agent was deleted, so it can no longer work.
+  Recover the agent from Deleted agents to continue.*
+- **Its automations stop.** Each one shows *Its agent was deleted*, and a
+  firing that comes due is skipped as **Agent deleted**. Nothing about them is
+  lost.
+- **Its name is free.** You can give another agent the same name.
+- **It cannot be used.** It is gone from New task, @mentions and the sidebar,
+  and can no longer be given tasks, taught, moved or granted a connector.
+
+To see deleted agents, open the Agents page and set the **Deleted** chip to
+**Only** (just the deleted ones) or **With live** (both). A deleted agent is
+dimmed and says **Removed in N days**, or **Removed today** on the last day.
+Open it and its builder is read-only, with a banner — *Deleted · removed in N
+days. It is read-only until you recover it.* — and no Try it column.
+
+**Recover** — in the banner, or from the agent's **…** menu (the
+restore-from-trash icon) — brings the agent back live, ready for tasks, and
+turns its automations back on: exactly the ones that stopped because of the
+delete. One that was paused by hand stays paused. If resuming one would break
+the [automation limits](/concepts/automations), it stays paused and says why on
+its own page. If another agent now has the name, Recover asks you to rename
+that one first.
+
+After 30 days the agent is removed for good, with everything it had — its
+automations, notifications, knowledge files, grants, skills, sign-ins and
+versions. Its tasks are deleted too, and like any
+[deleted task](/concepts/tasks#how-long-a-task-is-kept) can be recovered for
+30 days by asking support. Credit and computer-time records are kept for
+billing. AptiveAI can also remove a deleted agent immediately (**Delete now**).
 
 ## How an agent updates itself
 
@@ -302,8 +382,8 @@ on who you are in relation to the agent:
 - The owner of an agent, and anyone given **Can edit**, change it.
 - Owners and admins of the organization (and AptiveAI) can open and edit any
   agent.
-- Owners and admins of the organization can archive and restore any agent. Only
-  AptiveAI deletes one permanently.
+- The owner of an agent and the owners and admins of its workspace can delete
+  and recover it. Only AptiveAI removes a deleted agent immediately.
 - Members share their agents with people. Only owners and admins turn on
   **Everyone in ‹workspace›**.
 
