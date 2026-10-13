@@ -13,30 +13,31 @@ This page is about access.
 
 The short version: everything is private to its creator until it is shared, and
 an admin role does not unlock anyone else's private work. The one exception is
-automations, which a workspace's owners and admins always see. How sharing works —
+automations, which a workspace's owners and admins always see. A task a person
+started stays theirs: an admin sees it only when it is shared with them. How sharing works —
 Can use, Can edit, Everyone in a workspace — is on [Sharing](/concepts/sharing).
 
 ## Workspaces and how far a role reaches
 
-Your enterprise holds one or more organizations, and each organization one or
-more **workspaces**. A workspace is where the work lives — its tasks,
-automations, agents and the computers they work on.
+Your enterprise holds one or more **workspaces**. A workspace is where the work
+lives — its tasks, automations, agents, connectors, skills and the computers
+they work on. Owners create them and decide who belongs to each; see
+[Workspaces](/administration/workspaces).
 
 | Who | Reaches |
 |---|---|
-| Owners and admins | Every organization and workspace in the enterprise |
-| A member invited from the admin area | Every workspace in the enterprise |
-| A member limited by AptiveAI | Only the organizations and workspaces they were given |
+| The owner | Every workspace in the enterprise |
+| An admin | The workspaces the owner made them admin of — as an admin there |
+| A member | The workspaces they were added to or invited into. May be several |
 
-Invitations sent from **Users** give access to the whole enterprise at the role
-you choose. If a member should see only some workspaces, or you need another
-workspace, ask your AptiveAI contact — workspaces and those limits are set up
-by the AptiveAI team.
+Nobody gets a workspace by being in the enterprise: an invitation names the
+workspace the person joins, and the owner or a workspace admin adds people to
+others later. A person in the enterprise who is in no workspace sees *You're not
+in a workspace yet* until someone adds them.
 
 <Aside type="note">
-  Rights over a shared agent come from a role that covers the workspace the
-  agent belongs to. Being an admin somewhere in the enterprise is not enough
-  on its own.
+  Rights over an agent come from the workspace it belongs to. Being an admin of
+  one workspace makes you a member in the others, not an admin of them.
 </Aside>
 
 ## What owners and admins can open
@@ -48,8 +49,8 @@ of everyone's work.
 | Role | Opens by link | Edits |
 |---|---|---|
 | Member | Own items and what is shared with them | Own items, and where they have Can edit |
-| Admin | The same, plus any agent in their organization | The same, plus any agent in their organization |
-| Owner | Anything in their workspaces | The same as an admin |
+| Admin | The same, plus any agent or connector in the workspaces they administer | The same, plus any agent, connector, automation or skill in the workspaces they administer |
+| Owner | Anything in any workspace | The same as an admin, in every workspace |
 | AptiveAI | Anything in any enterprise | Any agent |
 
 An owner opens someone else's **task** to look, not to work: it is read-only,
@@ -61,8 +62,8 @@ task of their own.
 of a workspace see every [automation](/concepts/automations) in it, with what it
 costs, and can change, pause, run and delete it.
 
-An admin who holds a role on one workspace only edits another person's agent
-if it was shared with them as Can edit.
+An admin edits another person's agent in a workspace they do not administer
+only if it was shared with them as Can edit.
 
 See [Sharing](/concepts/sharing) for the full rules, who can use and who can
 edit each kind, and what happens to a person's shares and automations when they
@@ -79,12 +80,17 @@ agent at its next task. The grants are kept, so turning it back on restores
 them.
 
 Leave it off for a connector that reaches something sensitive, and only agents
-shared with the whole workspace will be able to use it. Connectors are not
-shared person to person.
+shared with the whole workspace will be able to use it.
+
+Who can *see and use* a connector is a separate choice, made in its
+**Who can use it** share box on the Connectors page — private to whoever added
+it until they share it, with **Everyone in ‹workspace›** for owners and admins.
+See [Connectors](/concepts/connectors) and [Sharing](/concepts/sharing).
 
 ## Next
 
 <CardGrid>
+  <LinkCard title="Workspaces" href="/administration/workspaces" description="Several workspaces, and who administers each." />
   <LinkCard title="Users and roles" href="/administration/users" description="What each role may do, and inviting people." />
   <LinkCard title="Agents" href="/concepts/agents" description="Personal and shared agents, in full." />
   <LinkCard title="Tasks" href="/concepts/tasks" description="Sharing a task, short links and the Tasks list." />

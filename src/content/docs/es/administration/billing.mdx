@@ -1,0 +1,239 @@
+---
+title: Facturación y puestos
+description: "Cómo paga una empresa AptiveAI Agents: la prueba y la configuración que inicia una suscripción, los puestos y los cuatro niveles, la asignación de cada persona y qué pasa cuando se acaba, el monedero que paga las automatizaciones y la página Facturación del propietario para los puestos, la tarjeta, las facturas y la cancelación."
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+AptiveAI Agents se paga **por persona**. Cada persona que le encarga trabajo a
+los agentes ocupa un **puesto**, cada puesto tiene un **nivel**, y el
+propietario paga todos con una misma tarjeta, una vez al mes. Las
+[automatizaciones](/es/concepts/automations) se pagan de otra forma, desde un
+**monedero** prepagado. El propietario gestiona todo esto —puestos, tarjeta,
+monedero, facturas— desde **Facturación** en el [área de administración](/es/administration/overview),
+y nadie necesita contactar a AptiveAI para hacerlo.
+
+| Quién | Qué puede hacer |
+|---|---|
+| **Propietario** | Todo lo de esta página. **Facturación** es solo suya |
+| **Administrador** | Ve qué puesto tiene cada persona en **Usuarios** y puede invitar a personas a puestos que ya están pagados. No puede comprar puestos ni abrir **Facturación** |
+| **Miembro** | Trabaja con la asignación de su propio puesto y la lee en **Uso**: consulta [Uso y crédito](/es/administration/usage) |
+
+## Primeros pasos
+
+Cualquiera puede crear una cuenta de AptiveAI, pero un **espacio de trabajo es
+solo por invitación**: una cuenta nueva sin invitación ve *Esta cuenta aún no
+está configurada* hasta que alguien la invite; consulta
+[Usuarios y roles](/es/administration/users#alguien-se-registró-sin-invitación).
+AptiveAI configura tu empresa, con una prueba, e invita a su primer propietario.
+
+Durante la **prueba**, tu equipo comparte un solo fondo de crédito de IA y nadie
+necesita una tarjeta. Cuando la prueba termina —en su fecha, o cuando se acaba
+su crédito— la cuenta queda **en pausa** hasta que el propietario se suscriba.
+Antes de eso no se cobra nada.
+
+## Suscribirse
+
+Con la cuenta en pausa, al propietario se le lleva a **Configura tu
+suscripción** (`aptiveai.io/setup`) vaya donde vaya, en varios pasos.
+**Facturación** también ofrece **Configurar la facturación**, y **Suscribirse de
+nuevo** si una suscripción terminó.
+
+<Steps>
+
+1. **Puestos y niveles.** Cada persona de la empresa ocupa un puesto. Elige el
+   nivel de cada una (todas empiezan en **Bronce**), marca para quitar a quien
+   no deba quedarse e **Invitar personas** a quien falte. **Puestos libres**
+   compra puestos ahora para personas que invitarás más adelante. El **Total
+   mensual** se actualiza sobre la marcha y todavía no se cobra nada. Una
+   suscripción necesita al menos un puesto.
+
+2. **Datos de pago.** Escribe la tarjeta y su dirección de facturación. Se cobra
+   hoy el primer mes —**Suscribirme y pagar** muestra el importe— y el mismo día
+   de cada mes después.
+
+3. **Monedero.** Opcional: añade dinero para las automatizaciones, decide si las
+   personas pueden seguir trabajando con el monedero cuando agoten su
+   asignación y configura la recarga automática. Todo se puede cambiar después
+   en **Facturación**. **Terminar** cierra la configuración.
+
+</Steps>
+
+La última página dice *Tu suscripción está activa y tu espacio de trabajo vuelve
+a estar abierto*, con un recibo por correo y enlaces a la consola y a
+**Facturación**. Las personas que marcaste para quitar en el paso 1 salen de la
+empresa cuando empieza la suscripción, y se eliminan sus automatizaciones.
+
+<Aside type="note" title="Qué ven los miembros mientras está en pausa">
+  Quien no es propietario ve *Tu cuenta está desactivada: comunícate con tu
+  propietario, ‹nombre›, para activarla.* El propietario ve *Tu cuenta está en
+  pausa. Termina la configuración para volver a activarla.* Una tarea que ya
+  estaba trabajando termina. Una tarea que espera una respuesta sigue esperando
+  y continúa cuando el propietario se suscribe. Las automatizaciones no se
+  ejecutan mientras la cuenta está en pausa.
+</Aside>
+
+## Niveles de puesto
+
+Un puesto más grande usa más computadoras a la vez y hace más tareas al día.
+Cada persona puede tener un nivel distinto, y cada nivel cuesta lo mismo para
+todas las personas que lo tienen.
+
+| Nivel | Precio | Tareas al día | Computadoras a la vez |
+|---|---|---|---|
+| **Bronce** | $35 por puesto / mes | hasta 25 | 2 |
+| **Plata** | $70 por puesto / mes | hasta 50 | 3 |
+| **Oro** | $100 por puesto / mes | hasta 70 | 3 |
+| **Platino** | $150 por puesto / mes | hasta 100 | 4 |
+
+Las *tareas al día* son una estimación máxima para una combinación típica de
+trabajo con el modelo predeterminado, no un límite: una tarea larga, o un
+modelo más grande, consume más del puesto. Cada persona puede además tener
+abiertas tantas vistas en vivo a la vez como computadoras. Las cifras vigentes
+están siempre en la [página de precios](https://aptiveai.io/pricing). Si tu
+empresa tiene un precio propio, se acuerda con AptiveAI, y **Facturación**
+muestra lo que pagas.
+
+Empieza con todos en Bronce y sube de nivel a quien le encargue a los agentes
+más trabajo del que cabe en su puesto. [Uso y crédito](/es/administration/usage#capacidad-del-equipo)
+muestra quién está cerca de su límite.
+
+## Qué recibe cada persona
+
+Cada puesto incluye una **asignación** de IA que se renueva. Está dosificada
+para que nadie gaste la asignación de todo un periodo en un día: hay una
+**asignación semanal** y, dentro de ella, una **asignación de 5 horas** más
+pequeña. Ambas se muestran a la persona en porcentajes, nunca en dinero, en
+**Uso** y en [Ajustes → Plan y crédito](/es/reference/settings#plan-y-crédito),
+cada una con la hora a la que **Se renueva**.
+
+Cuando una persona agota la asignación de 5 horas o la semanal, no puede iniciar
+una tarea nueva por ahora:
+
+- Ve *Ya usaste tu asignación de estas 5 horas: se renueva el ‹hora›* o *Ya
+  usaste la asignación de esta semana: se renueva el ‹fecha›*, y Ajustes dice
+  *Tu asignación está agotada por ahora*.
+- Una tarea que ya tiene trabajando termina; la siguiente se rechaza.
+- Puede volver a empezar cuando la asignación se renueve. El mensaje añade
+  *Pídele a ‹propietario› que permita crédito extra*: consulta
+  [el monedero](#el-monedero).
+
+Subir a un nivel más alto da la asignación mayor de inmediato. La asignación no
+se acumula de un periodo de facturación al siguiente.
+
+## El monedero
+
+El monedero es dinero prepagado que el propietario guarda para dos cosas: las
+**automatizaciones**, que se pagan desde el monedero y nunca desde el puesto de
+nadie, y el **crédito extra** para quien llega a su asignación. **Facturación**
+lo muestra como **Saldo**.
+
+| Parte | Qué hace |
+|---|---|
+| **Añadir fondos** | Cobra a la tarjeta registrada de $10 a $500 y lo abona al monedero |
+| **Cuando alguien se queda sin asignación** | **Permitir seguir trabajando con el monedero**: más allá de su asignación, el trabajo de la persona se paga desde el monedero en vez de esperar. Desactivado, espera a que se renueve |
+| **Límite por persona** | **Sin límite**, o **Fijar un límite**: el máximo que una persona puede tomar del monedero cada mes, en dólares. Se muestra mientras el crédito extra está activado |
+| **Recarga automática** | Recarga el monedero con la tarjeta cuando el saldo baja de un importe que eliges, por un importe que eliges |
+| **Lo que cuesta una automatización** | Una calculadora: cada cuánto debe ejecutarse y si el trabajo es **Rápida**, **Estándar** o **Larga** da *unos ‹importe› al mes* |
+
+Una automatización con el monedero vacío no puede ejecutarse y queda registrada
+como omitida: consulta [Automatizaciones](/es/concepts/automations#ejecuciones-omitidas). Si falla el
+pago de una recarga, la recarga automática se desactiva sola y se avisa al
+propietario por correo. Con la sesión iniciada también puedes probar la misma
+calculadora en la [calculadora de precios](https://aptiveai.io/pricing/calculator).
+
+## La página Facturación
+
+**Facturación** es la página del propietario en el área de administración, con
+estas tarjetas:
+
+| Tarjeta | Qué muestra y qué hace |
+|---|---|
+| **Plan** | La insignia de **Estado** del plan, el **Precio mensual**, la **Próxima fecha de facturación** y la **Fecha de inicio de facturación**. Una prueba muestra cuándo vence su crédito |
+| **Niveles de puesto** | Por cada nivel, cuántos puestos tiene la suscripción, cuántos están ocupados y cuántos libres, con **Cambiar puestos** |
+| **Método de pago** | La tarjeta registrada —marca, últimos cuatro dígitos y vencimiento— con **Actualizar tarjeta**, o **Añadir tarjeta** si no hay ninguna |
+| **Facturas** | Cada factura con su **Fecha**, **Importe** y **Estado**, un cuadro de búsqueda y **Descargar** para el PDF |
+| **Saldo**, **Cuando alguien se queda sin asignación**, **Recarga automática**, **Lo que cuesta una automatización** | [El monedero](#el-monedero) |
+| **Cancelar suscripción** | [Cancelar](#cancelar-y-suscribirse-de-nuevo) |
+
+El estado es **Esperando el primer pago**, **Prueba**, **Activa**, **Pago
+vencido** o **Cancelada**.
+
+### Cambiar puestos
+
+**Cambiar puestos** (o **Cambiar** en un nivel) abre un diálogo para ese nivel.
+Usa **Un puesto más** y **Un puesto menos**; el **Resumen** muestra qué cambia
+antes de que lo confirmes.
+
+| Cambio | Qué pasa |
+|---|---|
+| **Añadir puestos** | Se cobra **hoy**, por los días que quedan del periodo. El diálogo muestra **A pagar hoy** y la próxima factura |
+| **Quitar puestos** | Se aplica **desde la próxima fecha de facturación**, sin reembolso: *La renovación cobra menos puestos* |
+
+Un cambio confirmado muestra *Puestos actualizados.* No puedes quitar un puesto
+que alguien ocupa: *Quita personas o invitaciones primero.*
+
+### El puesto de una persona
+
+En **Usuarios**, el **Puesto** de una persona muestra su nivel, y **Cambiar
+puesto** abre *¿Pasar a ‹nombre› a ‹nivel›?* con lo que cuesta.
+
+| Cambio | Qué pasa |
+|---|---|
+| **Subir** | La diferencia se cobra hoy, por el resto del periodo, y la asignación mayor empieza ya |
+| **Bajar** | Desde la próxima fecha de facturación. Hasta entonces no cambia nada y no hay reembolso. La fila dice *‹nivel› desde el ‹fecha›* |
+| **Volver al nivel actual** | Cancela un cambio que habías programado. *Se queda en ‹nivel›… Sin cargo* |
+
+### Invitar y quitar personas
+
+Una invitación ocupa un puesto de su nivel hasta que se acepta, se revoca o
+vence, así que solo puedes invitar a puestos libres. **Invitar a alguien** elige
+un **Puesto** para cada persona. Cuando no hay ningún puesto libre de ese nivel,
+al propietario se le ofrece **Añadir ‹n› puesto y enviar**, con el costo de hoy
+y la próxima factura; a un administrador se le indica que *pida a un
+propietario que añada un puesto*. Reenviar una invitación vencida vuelve a
+ocupar un puesto libre.
+
+Quitar a alguien de una empresa con suscripción ocurre al final del periodo de
+facturación: *‹nombre› mantiene el acceso hasta el ‹fecha›*, y después su puesto
+sale de la suscripción y **sus automatizaciones se eliminan**; el diálogo las
+enumera. No se reembolsa nada de ese periodo. Hasta entonces la fila dice *Sale
+el ‹fecha›*, con **Mantener** para deshacerlo. Durante una prueba, quitar es
+inmediato y sus automatizaciones se pausan en vez de eliminarse.
+
+### Un pago que falla
+
+Si una renovación no se paga, el estado pasa a **Pago vencido**. Durante los
+siguientes **7 días** todo sigue funcionando, y el propietario ve *Tu pago está
+vencido. Actualiza tu tarjeta antes del ‹fecha› para mantener tu cuenta
+activa.* **Actualizar tarjeta y pagar** toma la tarjeta nueva y paga lo
+pendiente. Pasados los 7 días, la cuenta queda en pausa, igual que cuando
+termina una prueba, y el propietario paga desde **Actualiza tu tarjeta**. Al
+pagar, la cuenta se reabre en unos minutos.
+
+### Cancelar y suscribirse de nuevo
+
+**Cancelar suscripción** pide confirmación. La suscripción sigue activa hasta el
+final del periodo que ya pagaste, y no se cobra nada más. **El día siguiente a
+esa fecha, la cuenta y todos sus datos —agentes, tareas, automatizaciones,
+conectores y archivos— se eliminan para siempre. No se conserva nada.**
+
+Mientras hay una cancelación programada, **Facturación** dice *Se cancela el
+‹fecha›*, sustituye **Próxima fecha de facturación** por **Acceso hasta** y
+ofrece **Reactivar**, que lo conserva todo. Entretanto no se pueden cambiar los
+puestos.
+
+<Aside type="caution" title="Cancelar elimina la cuenta">
+  Cancelar no es una pausa. Reactiva antes de la fecha para conservar tus
+  datos. Una suscripción terminada que todavía no se ha eliminado muestra *Esta
+  suscripción ha terminado* con **Suscribirse de nuevo**.
+</Aside>
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Uso y crédito" href="/es/administration/usage" description="Tu propia asignación, la vista del propietario y cuándo los agentes no pueden empezar." />
+  <LinkCard title="Usuarios y roles" href="/es/administration/users" description="Invita a personas, cambia roles, quita a alguien." />
+  <LinkCard title="Transacciones" href="/es/administration/transactions" description="Cada cargo y cada crédito añadido." />
+  <LinkCard title="Automatizaciones" href="/es/concepts/automations" description="Trabajo que se ejecuta solo, pagado desde el monedero." />
+</CardGrid>

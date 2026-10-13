@@ -1,15 +1,16 @@
 ---
 title: The admin area
-description: Where an enterprise's owners and admins manage it — who can enter the admin area, what each role sees there, how to reach it from AptiveAI Agents and the website, and what AptiveAI handles for you.
+description: Where an enterprise is managed — what each role sees in the admin area, how to reach it from AptiveAI Agents and the website, the pages in it, and what AptiveAI still handles for you.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-The **admin area** is where your company's account is looked after: the people
-in it, their roles, the invitations waiting to be accepted, and — for owners —
-billing and usage. It lives on the AptiveAI website at `aptiveai.io/admin`,
-beside AptiveAI Agents rather than inside it, and it is open to the **owners** and
-**admins** of your enterprise.
+The **admin area** is where your company's account is looked after: its
+workspaces, the people in them and their roles, the invitations waiting to be
+accepted, and — for owners — seats, billing and usage. It lives on the AptiveAI
+website at `aptiveai.io/admin`, beside AptiveAI Agents rather than inside it.
+**Owners** and **admins** manage the account there; **every person** can open
+it to read their own usage.
 
 Your day-to-day work — [tasks](/concepts/tasks), [agents](/concepts/agents),
 [automations](/concepts/automations), [connectors](/concepts/connectors) — stays in
@@ -27,35 +28,40 @@ customer account, the thing that is subscribed and invoiced. Inside it:
 | **Workspace** | Where the work lives: tasks, automations, agents and computers belong to a workspace |
 
 A new enterprise starts with one organization and one workspace, and most
-companies never need more. See [Access and sharing](/administration/access) for
-what the levels mean for who sees what.
+companies never need more. An owner can add workspaces — see
+[Workspaces](/administration/workspaces) — and
+[Access and sharing](/administration/access) says what the levels mean for who
+sees what.
 
 ## Who can enter
 
-| Role | Enters the admin area | What they see there |
-|---|:---:|---|
-| **Owner** | ✓ | **Overview**, **Users**, **Usage**, **Activity**, **Productivity** and **Billing** |
-| **Admin** | ✓ | **Users** and **Productivity** |
-| **Member** | — | *You don't have access to this page* — the admin area is for your enterprise's owners and admins |
+| Role | Sees in the admin area |
+|---|---|
+| **Owner** | **Overview**, **Workspaces**, **Users**, **Usage**, **Activity**, **Productivity** and **Billing** |
+| **Admin** | **Workspaces** and **Users** — for the workspaces they administer — and **Usage**, which is their own. **Productivity** too, when they administer every workspace |
+| **Member** | **Usage**, their own, and nothing else |
 
 Every admin page checks the role for itself, so the menu only lists what you
-can open. An admin who opens `/admin` is taken straight to **Users**, the one
-page they manage. Both roles also see **Agents** in the menu, which takes
-you back to AptiveAI Agents.
+can open. An admin who opens `/admin` is taken straight to **Users**, and a
+member to **Usage**. Everyone also sees **Agents** in the menu, which takes you
+back to AptiveAI Agents. Anyone who opens a page that is not theirs is told so:
+*The admin area is for your enterprise's owners and admins.*
 
 <Aside type="note" title="Why billing is the owner's alone">
-  Billing and usage are about money the company has agreed to pay, so they are
-  shown to owners only. An admin who opens **Billing** or **Usage** is told
-  that it is visible to the enterprise's owner. Everyone can still see the
-  account's status and the AI credit left in AptiveAI Agents, under
+  Billing is about money the company has agreed to pay, so it is shown to the
+  owner only. An admin who opens **Billing** is told that it is visible to the
+  enterprise's owner. Everyone can still see the account's status, and their own
+  allowance, in AptiveAI Agents under
   [Settings → Plan & credit](/reference/settings#plan--credit).
 </Aside>
 
 ## Getting there
 
-- **From AptiveAI Agents.** Open **Help and Settings** at the foot of the sidebar and choose the
-  **Admin** card — *Members, invitations and billing for your enterprise, in
-  the portal*. The card is only shown to owners and admins.
+- **From AptiveAI Agents.** Open **Configure & help** at the foot of the sidebar
+  and choose the **Admin** card — *Members, invitations and billing for your
+  enterprise, in the portal*. The card is only shown to owners and admins.
+  Everyone, members included, has a **Usage** card there that opens their own
+  usage.
 - **From the website.** Signed in at `aptiveai.io`, owners and admins have an
   **Admin** button in the header, and an **Admin** entry at the top of the
   menu on a phone.
@@ -70,7 +76,7 @@ admin menu sits in a bar at the bottom of the screen, with **Account** and
 
 ### Overview
 
-For owners: your enterprise at a glance.
+For owners: your enterprise at a glance. Its name has **Rename enterprise**.
 
 | Card | What it shows |
 |---|---|
@@ -81,17 +87,24 @@ For owners: your enterprise at a glance.
 An owner whose subscription has ended is taken to **Billing** instead, the
 one page still open to them.
 
+### Workspaces
+
+For owners and admins: the workspaces, who works in each, and who administers
+them. See [Workspaces](/administration/workspaces).
+
 ### Users
 
 Everyone in your enterprise and every invitation you have sent, on two tabs:
-**People** and **Invitations**. Invite people, change a role, remove someone.
-See [Users and roles](/administration/users).
+**People** and **Invitations**. Invite people, change a role or a seat, remove
+someone. An admin sees the people of the workspaces they administer. See
+[Users and roles](/administration/users).
 
 ### Usage
 
-For owners: the AI credit left, what spent it over the last 30 days by
-agent, and a **Transactions** card that opens every charge to the credit and
-every credit added. See [Usage and credit](/administration/usage) and
+For everyone: your own allowance and what you can do past it. Owners also see
+the wallet and what spent it over the last 30 days by agent, with a
+**Transactions** card; owners and admins see each person's capacity. See
+[Usage and credit](/administration/usage) and
 [Transactions](/administration/transactions).
 
 ### Activity
@@ -102,27 +115,26 @@ tasks, goals met, agents, AI models and AI steps. See
 
 ### Productivity
 
-For owners and admins: goals met, the agents' work time and the work they
-handled in your systems. Admins see it without any money. See
+For owners, and for admins of every workspace: goals met, the agents' work time
+and the work they handled in your systems. Admins see it without any money. See
 [Productivity](/administration/productivity).
 
 ### Billing
 
-For owners: the plan, its status, the payment method and every invoice, to
-download as a PDF. It is read-only. See
-[Usage and credit → Billing](/administration/usage#billing).
+For owners: the plan and its status, seats and tiers, the card, the wallet,
+every invoice, and cancelling — all of it self-serve. See
+[Billing and seats](/administration/billing).
 
 ## What AptiveAI handles
 
-Some things about an account are set up by the AptiveAI team rather than from
-a screen of yours. Ask your AptiveAI contact, or use **Contact us** on any page
-that offers it, for:
+You manage your own seats, card, wallet and workspaces. A few things about an
+account are still set up by the AptiveAI team rather than from a screen of
+yours. Ask your AptiveAI contact, or use **Contact us** on any page that offers
+it, for:
 
-- creating your enterprise and inviting its first owner;
-- adding workspaces or organizations, or limiting a member to some of them;
-- your subscription — creating it, changing how you pay, cancelling it;
-- adding AI credit;
-- connecting a new [connector](/concepts/connectors) to your company's systems;
+- creating your enterprise, with its trial, and inviting its first owner;
+- a price of your own, if your company has one;
+- adding organizations;
 - choosing the AI model an agent uses;
 - removing a deleted agent immediately, before its 30 days are up;
 - moving a person who already belongs to another enterprise into yours.
@@ -135,7 +147,9 @@ part of your admin area.
 
 <CardGrid>
   <LinkCard title="Users and roles" href="/administration/users" description="Invite people, change roles, remove someone." />
-  <LinkCard title="Access and sharing" href="/administration/access" description="Workspaces, and who sees which agent, task and automation." />
-  <LinkCard title="Usage and credit" href="/administration/usage" description="AI credit, what spends it, and billing." />
+  <LinkCard title="Workspaces" href="/administration/workspaces" description="Several workspaces, who administers each, and the people in them." />
+  <LinkCard title="Billing and seats" href="/administration/billing" description="Seats, the card, the wallet and invoices." />
+  <LinkCard title="Access and sharing" href="/administration/access" description="Who sees which agent, task and automation." />
+  <LinkCard title="Usage and credit" href="/administration/usage" description="Your allowance, what spends credit, and when agents cannot start." />
   <LinkCard title="Settings" href="/reference/settings" description="Each person's own preferences in AptiveAI Agents." />
 </CardGrid>

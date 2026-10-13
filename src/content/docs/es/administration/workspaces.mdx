@@ -1,0 +1,154 @@
+---
+title: Espacios de trabajo
+description: "Qué es un espacio de trabajo, cómo tiene varios una empresa, quién es propietario y quién administra cada uno, las páginas Espacios de trabajo del área de administración, agregar personas y elegir un espacio de trabajo principal, eliminar y restaurar un espacio de trabajo, y qué ve una persona que no está en ninguno."
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Un **espacio de trabajo** es donde vive el trabajo de un equipo: sus
+[tareas](/es/concepts/tasks), [automatizaciones](/es/concepts/automations),
+[agentes](/es/concepts/agents), [conectores](/es/concepts/connectors),
+[habilidades](/es/concepts/skills) y las computadoras en las que se ejecutan.
+Tu empresa es la cuenta que tiene la suscripción y recibe las facturas; los
+espacios de trabajo que hay dentro son la forma de repartir el trabajo. Una
+empresa nueva empieza con un espacio de trabajo, y la mayoría de las compañías
+nunca necesitan más.
+
+**No hay un selector de espacios de trabajo.** Una persona que pertenece a
+varios ve el trabajo de todos en una sola lista, y las páginas importantes
+indican en qué espacio de trabajo está cada cosa: consulta
+[Trabajar en más de un espacio de trabajo](#trabajar-en-más-de-un-espacio-de-trabajo).
+
+## Quién gestiona un espacio de trabajo
+
+| Rol | En un espacio de trabajo |
+|---|---|
+| **Propietario** | Gestiona todos los espacios de trabajo de la empresa: los crea, les cambia el nombre, los elimina y los restaura, elige quién administra cada uno, agrega y quita personas y fija el espacio de trabajo principal de cualquiera. También cambia el nombre de la empresa, y es el único que ve la facturación |
+| **Administrador** | Gestiona **los espacios de trabajo que le dio el propietario**, y solo esos: invita a personas a puestos que ya están pagados, agrega a personas que ya están en la empresa, quita personas del espacio de trabajo, le cambia el nombre, activa **Todos en ‹espacio de trabajo›** y edita o elimina los agentes, conectores, automatizaciones y habilidades de cualquiera en él |
+| **Miembro** | Trabaja en los espacios de trabajo a los que pertenece. Puede pertenecer a varios |
+
+Un administrador de un espacio de trabajo es administrador ahí y miembro en los
+demás. Un administrador no puede crear ni eliminar espacios de trabajo, hacer
+administrador a nadie, cambiar el rol de alguien en la empresa, quitar a nadie
+de la empresa ni abrir **Facturación**. **Las tareas siguen siendo privadas**
+sea cual sea el rol: un administrador ve la tarea de otra persona solo si se
+la compartió; consulta [Acceso y uso compartido](/es/administration/access).
+
+## La página Espacios de trabajo
+
+**Espacios de trabajo** está en el menú de administración para propietarios y
+administradores. Un propietario ve todos los espacios de trabajo; un
+administrador ve los que administra. A cualquier otra persona se le indica que
+solo el propietario y los administradores de un espacio de trabajo gestionan los
+espacios de trabajo.
+
+| Columna | Muestra |
+|---|---|
+| **Espacio de trabajo** | El nombre. *Tu principal* marca tu propio espacio de trabajo principal |
+| **Personas** | Cuántas personas pertenecen a él |
+| **Administradores** | Quién lo administra, o *Aún sin administradores* |
+| **Creado** | Cuándo se creó |
+
+Un espacio de trabajo no necesita administrador: lo gestiona el propietario
+hasta que lo haya.
+
+| Acción | Quién | Qué hace |
+|---|---|---|
+| **Nuevo espacio de trabajo** | Propietario | Pide un **Nombre del espacio de trabajo** (*Operaciones*) y lo crea. Los nombres deben ser distintos |
+| **Cambiar nombre** | Propietario y administradores de ese espacio de trabajo | Cambia el nombre |
+| **Eliminar** | Propietario | Consulta [Eliminar y restaurar](#eliminar-y-restaurar-un-espacio-de-trabajo) |
+| **Mostrar → Eliminados** | Propietario | Lista los espacios de trabajo eliminados, cada uno con **Restaurar** |
+
+Selecciona un espacio de trabajo para abrirlo.
+
+## Las personas de un espacio de trabajo
+
+La página de un espacio de trabajo enumera sus **Personas** —*quién trabaja en
+este espacio de trabajo y su rol en él*— con el **Rol aquí** y el **Puesto** de
+cada una, y una insignia **Principal** donde es su espacio de trabajo principal.
+Quitar a alguien aquí lo mantiene en la empresa, con su puesto y sus otros
+espacios de trabajo.
+
+| Acción | Quién | Qué hace |
+|---|---|---|
+| **Agregar persona** | Propietario, administrador del espacio de trabajo | Elige a alguien que ya está en tu empresa y todavía no en este espacio de trabajo. Usa el puesto que ya tiene |
+| **Invitar** | Propietario, administrador del espacio de trabajo | La invitación de siempre, con un **Puesto**, a este espacio de trabajo. Necesita un puesto libre: a un administrador se le indica que pida a un propietario que añada uno |
+| **Hacer administrador** / **Hacer miembro** | Propietario | La hace administradora de este espacio de trabajo, o de nuevo simple miembro |
+| **Hacer principal** | Propietario, administrador del espacio de trabajo | Fija este como el espacio de trabajo principal de la persona |
+| **Quitar del espacio de trabajo** | Propietario, administrador del espacio de trabajo | La saca solo de este espacio de trabajo |
+
+*Hacer administrador* explica lo que da: la persona puede invitar a personas a
+puestos libres, agregar y quitar personas aquí, cambiarle el nombre al espacio
+de trabajo y editar o eliminar lo que haya en él.
+
+En **Usuarios**, la columna **Espacios de trabajo** de cada persona enumera los
+espacios de trabajo a los que pertenece, con el principal marcado *(principal)*,
+y un propietario puede cambiar ahí el espacio de trabajo principal. **Invitar a
+alguien** pide el **Espacio de trabajo al que se une** cuando gestionas más de
+uno. Un administrador ve solo a las personas de los espacios de trabajo que
+administra, y solo puede invitar **Miembros**.
+
+## Espacio de trabajo principal
+
+Cada persona tiene un **espacio de trabajo principal**: donde acaba lo que crea
+cuando no se le pregunta. Es el que eligió el propietario o un administrador del
+espacio de trabajo; si no se eligió ninguno, o se eliminó o la persona salió de
+él, es el espacio de trabajo más antiguo al que pertenece.
+
+## Trabajar en más de un espacio de trabajo
+
+Una persona que está en un solo espacio de trabajo no ve ningún control de
+espacios de trabajo. Una persona que está en varios obtiene, para las
+[tareas](/es/concepts/tasks), [automatizaciones](/es/concepts/automations),
+[conectores](/es/concepts/connectors) y [habilidades](/es/concepts/skills):
+
+- una etiqueta de **Espacio de trabajo** en cada elemento y un filtro de
+  **Espacio de trabajo** en la lista;
+- un campo **Espacio de trabajo** al crear un agente, una automatización, un
+  conector o una habilidad, con su espacio de trabajo principal salvo que elija
+  otro. Solo puede elegir uno al que pertenece.
+
+Una tarea iniciada con un agente queda en el espacio de trabajo del agente si
+perteneces a él, y si no en tu espacio de trabajo principal. Una tarea iniciada
+sin agente queda en tu espacio de trabajo principal.
+
+## Eliminar y restaurar un espacio de trabajo
+
+Solo el propietario elimina un espacio de trabajo. **Eliminar** pregunta
+*¿Eliminar este espacio de trabajo?* y detalla lo que pasa:
+
+- todo lo que hay en él —agentes, conectores, automatizaciones, habilidades y
+  tareas— queda **oculto para todos**, y sus automatizaciones se **pausan**;
+- **no se borra nada** y nadie pierde su puesto;
+- el propietario puede restaurarlo desde **Espacios de trabajo → Eliminados →
+  Restaurar**. Todo vuelve, salvo que sus automatizaciones siguen en pausa hasta
+  que alguien las active de nuevo.
+
+<Aside type="note">
+  El último espacio de trabajo de la empresa no se puede eliminar, para que
+  siempre haya dónde trabajar.
+</Aside>
+
+## Una persona sin espacio de trabajo
+
+Una persona que está en la empresa pero en ningún espacio de trabajo —nunca la
+agregaron, la quitaron del último, o su único espacio de trabajo se eliminó—
+ve *Todavía no estás en un espacio de trabajo. Pídele a tu propietario,
+‹nombre›, que te agregue a un espacio de trabajo. Tu cuenta y tu puesto se
+conservan.* Hasta que alguien la agregue, aún puede abrir su propio **Uso** y su
+cuenta. Agrégala desde la página **Espacios de trabajo**, con **Agregar persona**
+en un espacio de trabajo.
+
+## Cambiar el nombre de la empresa
+
+El **Resumen** del propietario tiene una tarjeta con el nombre de la empresa y
+**Cambiar el nombre de la empresa**. Solo el propietario puede cambiarlo.
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Usuarios y roles" href="/es/administration/users" description="Invita a personas, cambia roles, quita a alguien." />
+  <LinkCard title="Acceso y uso compartido" href="/es/administration/access" description="Quién ve cada agente, tarea y automatización." />
+  <LinkCard title="Facturación y puestos" href="/es/administration/billing" description="Puestos, la tarjeta y el monedero." />
+  <LinkCard title="El área de administración" href="/es/administration/overview" description="Quién puede entrar y qué ve cada rol." />
+</CardGrid>

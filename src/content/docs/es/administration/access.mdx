@@ -14,31 +14,34 @@ automatizaciones. Esta página trata del acceso.
 En resumen: todo es privado para quien lo crea hasta que se comparte, y el rol
 de administrador no desbloquea el trabajo privado de nadie más. La única
 excepción son las automatizaciones, que los propietarios y administradores de un
-espacio de trabajo siempre ven. Cómo funciona
+espacio de trabajo siempre ven. Una tarea que inició una persona sigue siendo
+suya: un administrador la ve solo cuando se la comparten. Cómo funciona
 compartir —Puede usar, Puede editar, Todos en un espacio de trabajo— está en
 [Compartir](/es/concepts/sharing).
 
 ## Los espacios de trabajo y hasta dónde llega un rol
 
-Tu empresa tiene una o más organizaciones, y cada organización uno o más
-**espacios de trabajo**. Un espacio de trabajo es donde vive el trabajo: sus
-tareas, automatizaciones, agentes y las computadoras en las que trabajan.
+Tu empresa tiene uno o más **espacios de trabajo**. Un espacio de trabajo es donde
+vive el trabajo: sus tareas, automatizaciones, agentes, conectores, habilidades y
+las computadoras en las que trabajan. Los propietarios los crean y deciden quién
+pertenece a cada uno; consulta [Espacios de trabajo](/es/administration/workspaces).
 
 | Quién | Llega a |
 |---|---|
-| Propietarios y administradores | Todas las organizaciones y espacios de trabajo de la empresa |
-| Un miembro invitado desde el área de administración | Todos los espacios de trabajo de la empresa |
-| Un miembro limitado por AptiveAI | Solo las organizaciones y espacios de trabajo que se le asignaron |
+| El propietario | Todos los espacios de trabajo de la empresa |
+| Un administrador | Los espacios de trabajo de los que el propietario lo hizo administrador, como administrador ahí |
+| Un miembro | Los espacios de trabajo a los que lo agregaron o en los que lo invitaron. Pueden ser varios |
 
-Las invitaciones enviadas desde **Usuarios** dan acceso a toda la empresa con
-el rol que elijas. Si un miembro solo debe ver algunos espacios de trabajo, o
-necesitas otro espacio de trabajo, pídeselo a tu contacto en AptiveAI: los
-espacios de trabajo y esos límites los configura el equipo de AptiveAI.
+Nadie recibe un espacio de trabajo solo por estar en la empresa: una invitación
+indica el espacio de trabajo al que se une la persona, y el propietario o un
+administrador del espacio de trabajo agrega a las personas a otros más adelante.
+Una persona que está en la empresa pero en ningún espacio de trabajo ve
+*Todavía no estás en un espacio de trabajo* hasta que alguien la agregue.
 
 <Aside type="note">
-  Los derechos sobre un agente compartido vienen de un rol que cubre el espacio
-  de trabajo al que pertenece el agente. Ser administrador en alguna parte de
-  la empresa no basta por sí solo.
+  Los derechos sobre un agente vienen del espacio de trabajo al que pertenece.
+  Ser administrador de un espacio de trabajo te hace miembro en los demás, no
+  administrador de ellos.
 </Aside>
 
 ## Qué pueden abrir los propietarios y administradores
@@ -50,8 +53,8 @@ propietario ya no es una vista del trabajo de todos.
 | Rol | Abre con enlace | Edita |
 |---|---|---|
 | Miembro | Lo propio y lo que se compartió con él | Lo propio, y donde tiene Puede editar |
-| Administrador | Lo mismo, y cualquier agente de su organización | Lo mismo, y cualquier agente de su organización |
-| Propietario | Cualquier cosa de sus espacios de trabajo | Lo mismo que un administrador |
+| Administrador | Lo mismo, y cualquier agente o conector de los espacios de trabajo que administra | Lo mismo, y cualquier agente, conector, automatización o habilidad de los espacios de trabajo que administra |
+| Propietario | Cualquier cosa de cualquier espacio de trabajo | Lo mismo que un administrador, en todos los espacios de trabajo |
 | AptiveAI | Cualquier cosa de cualquier empresa | Cualquier agente |
 
 Un propietario abre la **tarea** de otra persona para mirar, no para trabajar:
@@ -64,8 +67,8 @@ propietarios y administradores de un espacio de trabajo ven todas sus
 [automatizaciones](/es/concepts/automations), con lo que cuestan, y pueden
 cambiarlas, pausarlas, ejecutarlas y eliminarlas.
 
-Un administrador con un rol en un solo espacio de trabajo solo edita el agente
-de otra persona si se lo compartió como Puede editar.
+Un administrador edita el agente de otra persona en un espacio de trabajo que no
+administra solo si se lo compartió como Puede editar.
 
 Consulta [Compartir](/es/concepts/sharing) para las reglas completas, quién
 puede usar y quién puede editar cada tipo, y qué pasa con lo compartido y con
@@ -83,12 +86,18 @@ personales en su próxima tarea. Las concesiones se conservan, de modo que
 volver a activarlo las restablece.
 
 Déjalo desactivado en un conector que llegue a algo sensible, y solo los
-agentes compartidos con todo el espacio de trabajo podrán usarlo. Los
-conectores no se comparten de persona a persona.
+agentes compartidos con todo el espacio de trabajo podrán usarlo.
+
+Quién puede *ver y usar* un conector es una decisión aparte, que se toma en su
+cuadro para compartir **Quién puede usarlo**, en la página Conectores: privado
+para quien lo añadió hasta que lo comparta, con **Todos en ‹espacio de trabajo›**
+para propietarios y administradores. Consulta [Conectores](/es/concepts/connectors)
+y [Compartir](/es/concepts/sharing).
 
 ## Siguiente
 
 <CardGrid>
+  <LinkCard title="Espacios de trabajo" href="/es/administration/workspaces" description="Varios espacios de trabajo, y quién administra cada uno." />
   <LinkCard title="Usuarios y roles" href="/es/administration/users" description="Qué puede hacer cada rol, e invitar a personas." />
   <LinkCard title="Agentes" href="/es/concepts/agents" description="Agentes personales y compartidos, en detalle." />
   <LinkCard title="Tareas" href="/es/concepts/tasks" description="Compartir una tarea, los enlaces cortos y la lista de tareas." />

@@ -19,7 +19,7 @@ is told *Transactions are visible to your enterprise's owner.*
 whole card is a link to this page. On a wider screen it also shows
 **Used this month**: what has been charged since the first of the month, with a
 small line of each day's charges. Only charges count there — credit added, a
-monthly allowance arriving or promotional credit expiring never does. While
+wallet top-up or promotional credit expiring never does. While
 the figure loads, or if it cannot be read, the card shows *Your ledger*
 instead.
 
@@ -39,20 +39,23 @@ A row with no agent is named by its kind:
 
 | Row | Meaning |
 |---|---|
-| **Period reset** | Your plan's monthly allowance, added when an invoice was paid |
+| **Period reset** | A new billing period began and the seats' allowances were renewed |
+| **Wallet top-up** | The owner added money to the wallet with the card |
+| **Wallet auto-recharge** | The wallet topped itself up from the card |
 | **Promotional credit** | A credit link from AptiveAI was accepted |
 | **Promotional credit expired** | Unused promotional credit reached its expiry |
 | **Promotional credit revoked** | AptiveAI withdrew unspent promotional credit |
-| **Wallet overflow** | Spending that went on to the wallet once the plan credit was used |
+| **Wallet overflow** | Work paid from the wallet because a person's allowance was used up |
 | **Manual adjustment** | AptiveAI changed the balance by hand |
 
 Amounts smaller than a cent are shown in full, such as `-$0.004396`, because
 rounding a step to `$0.00` would read as a broken meter.
 
 <Aside type="note" title="One step can be more than one row">
-  Credit is spent in order — promotional first, then plan credit, then the
-  wallet. A charge that empties one kind and continues into the next leaves a
-  row for each, with its own part of the amount. Add the rows together for the
+  A person's work is paid from their allowance first and, where the owner
+  allows it, from the wallet once the allowance is used. A charge that
+  empties one and continues into the next leaves a row for each, with its own
+  part of the amount. Add the rows together for the
   whole charge.
 </Aside>
 

@@ -20,8 +20,8 @@ tu empresa.*
 más reciente al más antiguo.* Toda la tarjeta es un enlace a esta página. En
 una pantalla más ancha también muestra **Usado este mes**: lo que se ha cobrado
 desde el primer día del mes, con una pequeña línea de los cargos de cada día.
-Ahí solo cuentan los cargos: el crédito añadido, la llegada de la asignación
-mensual o el vencimiento de crédito promocional nunca cuentan. Mientras la cifra
+Ahí solo cuentan los cargos: el crédito añadido, una recarga del
+monedero o el vencimiento de crédito promocional nunca cuentan. Mientras la cifra
 se carga, o si no se puede leer, la tarjeta muestra *Tu historial* en su lugar.
 
 ## El registro
@@ -40,21 +40,23 @@ Una fila sin agente se nombra por su tipo:
 
 | Fila | Significado |
 |---|---|
-| **Reinicio de periodo** | La asignación mensual de tu plan, agregada cuando se pagó una factura |
+| **Reinicio de periodo** | Empezó un nuevo periodo de facturación y se renovaron las asignaciones de los puestos |
+| **Recarga del monedero** | El propietario añadió dinero al monedero con la tarjeta |
+| **Recarga automática del monedero** | El monedero se recargó solo con la tarjeta |
 | **Crédito promocional** | Se aceptó un enlace de crédito de AptiveAI |
 | **Crédito promocional vencido** | El crédito promocional sin usar llegó a su vencimiento |
 | **Crédito promocional revocado** | AptiveAI retiró crédito promocional sin gastar |
-| **Excedente al monedero** | Gasto que pasó al monedero una vez usado el crédito del plan |
+| **Excedente al monedero** | Trabajo pagado con el monedero porque se agotó la asignación de una persona |
 | **Ajuste manual** | AptiveAI cambió el saldo a mano |
 
 Los importes menores a un centavo se muestran completos, por ejemplo
 `-$0.004396`, porque redondear un paso a `$0.00` parecería un medidor roto.
 
 <Aside type="note" title="Un paso puede ocupar más de una fila">
-  El crédito se gasta en orden: primero el promocional, luego el crédito del
-  plan y después el monedero. Un cargo que agota un tipo y continúa en el
-  siguiente deja una fila por cada uno, con su parte del importe. Suma las
-  filas para obtener el cargo completo.
+  El trabajo de una persona se paga primero con su asignación y, donde el
+  propietario lo permite, con el monedero cuando la asignación se agota. Un
+  cargo que agota una y continúa en el siguiente deja una fila por cada una, con
+  su parte del importe. Suma las filas para obtener el cargo completo.
 </Aside>
 
 <Aside type="note" title="Las filas de $0.00 son a propósito">

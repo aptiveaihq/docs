@@ -98,9 +98,11 @@ export const nav = [
     primary: true,
     items: [
       { label: 'The admin area', slug: 'administration/overview', desc: 'Who can enter, and what each role sees', es: { label: 'El área de administración', desc: 'Quién puede entrar y qué ve cada rol' } },
+      { label: 'Workspaces', slug: 'administration/workspaces', desc: 'Several workspaces, who administers each, and who is in them', es: { label: 'Espacios de trabajo', desc: 'Varios espacios de trabajo, quién administra cada uno y quién está en ellos' } },
       { label: 'Users and roles', slug: 'administration/users', desc: 'Invite people, change roles, remove someone', es: { label: 'Usuarios y roles', desc: 'Invita personas, cambia roles, quita a alguien' } },
-      { label: 'Access and sharing', slug: 'administration/access', desc: 'Workspaces, and who sees which agent, task and automation', es: { label: 'Acceso y uso compartido', desc: 'Espacios de trabajo, y quién ve cada agente, tarea y automatización' } },
-      { label: 'Usage and credit', slug: 'administration/usage', desc: 'AI credit, what spends it, and billing', es: { label: 'Uso y crédito', desc: 'Crédito de IA, qué lo consume y facturación' } },
+      { label: 'Access and sharing', slug: 'administration/access', desc: 'Who sees which agent, task and automation', es: { label: 'Acceso y uso compartido', desc: 'Quién ve cada agente, tarea y automatización' } },
+      { label: 'Billing and seats', slug: 'administration/billing', desc: 'Seats and tiers, the card, the wallet, invoices and cancelling', es: { label: 'Facturación y puestos', desc: 'Puestos y niveles, la tarjeta, el monedero, las facturas y la cancelación' } },
+      { label: 'Usage and credit', slug: 'administration/usage', desc: 'Your allowance, what spends AI credit, and when agents cannot start', es: { label: 'Uso y crédito', desc: 'Tu asignación, qué consume crédito de IA y cuándo los agentes no pueden empezar' } },
       { label: 'Transactions', slug: 'administration/transactions', desc: 'Every charge to your AI credit, and every credit added', es: { label: 'Transacciones', desc: 'Cada cargo a tu crédito de IA y cada crédito añadido' } },
       { label: 'Activity', slug: 'administration/activity', desc: 'AI usage, tasks, goals met and models over time', es: { label: 'Actividad', desc: 'Uso de IA, tareas, objetivos cumplidos y modelos a lo largo del tiempo' } },
       { label: 'Productivity', slug: 'administration/productivity', desc: 'Goals met, work time and the work agents handled', es: { label: 'Productividad', desc: 'Objetivos cumplidos, tiempo de trabajo y el trabajo de los agentes' } },

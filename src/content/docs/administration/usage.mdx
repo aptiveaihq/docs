@@ -1,87 +1,92 @@
 ---
 title: Usage and credit
-description: What AI credit is and how it is spent — the three kinds of credit and their order, why a task can finish on the last of it and the next is refused, computer time, the owner's Usage page and where its ledger moved, credit links from AptiveAI, account notices, when agents cannot start, and the owner's read-only Billing page.
+description: What AI credit is and how it is spent — each person's own Usage page with their 5-hour and weekly allowance, what the owner and admins see beyond it, team capacity, why a task can finish on the last of the credit, and when agents cannot start new work.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-Your enterprise pays AptiveAI a monthly subscription, and its agents spend
-**AI credit** as they work. This page explains where the credit comes from,
-what spends it, where to read it, and what happens when it runs out.
+Every step an agent takes spends **AI credit**. Where that credit comes from
+depends on who asked for the work: a person's own tasks draw on the
+**allowance** that comes with their seat, and automations draw on the
+enterprise's **wallet**. This page explains what each person and the owner can
+read about it, and what happens when it runs out. How seats, the allowance and
+the wallet are bought and managed is on [Billing and seats](/administration/billing).
 
 | Where | Who | Shows |
 |---|---|---|
-| AptiveAI Agents → **Settings → Plan & credit** | Everyone | The account's **Status**, the **AI credit left**, and whether agents **Can start new work** |
-| Admin → **Usage** | Owners | Credit left, and the last 30 days by agent |
-| Admin → **Usage → Transactions** | Owners | Every charge to the credit and every credit added — see [Transactions](/administration/transactions) |
+| AptiveAI Agents → **Settings → Plan & credit** | Everyone | The account's **Status**, whether you **Can start new work**, and **Your allowance** |
+| Admin → **Usage** | Everyone | Your own usage — and, for owners and admins, more (below) |
+| **Configure & help → Usage** | Everyone | The same page, from AptiveAI Agents |
+| Admin → **Usage → Transactions** | Owners | Every charge and every credit added — see [Transactions](/administration/transactions) |
 | Admin → **Activity** | Owners | AI usage, tasks, goals met and models over any period — see [Activity](/administration/activity) |
-| Admin → **Productivity** | Owners and admins | Goals met, work time and the work agents handled — see [Productivity](/administration/productivity) |
-| Admin → **Billing** | Owners | The plan, the payment method and every invoice |
+| Admin → **Productivity** | Owners, and admins of every workspace | Goals met, work time and the work agents handled — see [Productivity](/administration/productivity) |
+| Admin → **Billing** | Owners | The plan, seats, card, wallet and invoices — see [Billing and seats](/administration/billing) |
 
 ## Paid access
 
-Agents can start new work only while **both** hold:
+Agents can start new work for a person only while **both** hold:
 
-- the account's status is **Active** or **Trial**, and
-- it has **AI credit** left to spend — more than zero.
+- the account is in good standing — its status is **Active** or **Trial**, a
+  renewal is not unpaid for more than 7 days, and it is not paused or cancelled;
+  and
+- that person has something to spend: room in their **allowance**, or **extra
+  credit** from the wallet where the owner allows it.
 
-Without paid access, no new work starts: nobody can start a task, create or
-configure an agent, create an automation or grant a connector, and automations
-skip their runs. AptiveAI Agents is not shown at all. Everyone who opens it is sent
-to one page that says why, with **Contact us** — and, for an owner, **View
+Without it, nothing new starts: nobody can start a task, create or configure an
+agent, create an automation or grant a connector, and automations skip their
+runs. Everyone who opens AptiveAI Agents sees one page that says why — with
+**Contact us**, and for an owner **Finish setup**, **Subscribe again** or **View
 billing**:
 
 | Page | What it says |
 |---|---|
 | **This account is not active yet** | *AptiveAI is still setting up this account. You will be able to start work once your trial or subscription begins.* |
+| **This account is disabled** | *Your account is disabled — reach out to your owner, ‹name›, to enable it.* The account is paused: the trial ended, or a renewal went unpaid for 7 days. The owner is sent to [finish setup](/administration/billing#subscribing) |
 | **No trial credit is available** | *This account is on a trial, but it does not have enough AI credit to run your agents.* |
 | **No AI credit is available** | *The subscription is active, but this account does not have enough AI credit or balance to run your agents.* |
 | **A payment is overdue** | *The last invoice was not paid by its due date. Agents cannot start new work until it is settled.* |
-| **This subscription has ended** | *Agents and task history are no longer available on this account. To reactivate it, get in touch.* |
+| **This subscription has ended** | *Agents and task history are no longer available on this account.* If it was cancelled at your request, the account and its data are deleted the day after the paid period ended |
 
 The admin area stays open to owners and admins, with the same reason in a
-banner at the top, so an owner can still read **Billing** and **Usage**. A
-task that was already working when the credit ran out finishes — see
-[below](#why-a-task-can-finish-on-the-last-of-the-credit).
+banner at the top. A task that was already working when access stopped finishes
+— see [below](#why-a-task-can-finish-on-the-last-of-the-credit).
 
-The account's status is one of **Awaiting first payment**, **Trial**,
-**Active**, **Payment overdue** or **Cancelled**.
+When it is only a **person** who cannot start, because their allowance is used
+up, nothing else changes for the team. That person sees *You've used this week's
+allowance — it refreshes ‹date›*, or the same for these 5 hours, and
+**Settings → Plan & credit** reads *Your allowance is used for now*.
 
 ## AI credit
 
-Every step an agent takes is charged a little credit — usually a fraction of
-a cent — depending on the AI model the agent uses and how much it has to read
-and write. Credit is spent by tasks,
-by tasks an automation starts, by **Try it** in the agent builder, and by the
-short title AptiveAI writes for each task.
+Every step an agent takes is charged a little credit — usually a fraction of a
+cent — depending on the AI model the agent uses and how much it has to read and
+write. Credit is spent by tasks, by **Try it** in the agent builder, and by the
+short title AptiveAI writes for each task. Who pays:
 
-### Three kinds of credit, spent in order
+| Work | Paid from |
+|---|---|
+| A person's tasks, building an agent, **Try it** | The person's **allowance**, and — where the owner allows it — the wallet once the allowance is used |
+| A task an automation starts | The enterprise's **wallet** only, never anyone's seat |
 
-| Kind | Where it comes from | Expires |
-|---|---|---|
-| **Promotional** | A credit link from AptiveAI — see [Credit from AptiveAI](#credit-from-aptiveai) | Yes — unused credit expires on the date it was issued with |
-| **Plan credit** | Your plan's monthly AI allowance, added when an invoice is paid, once per invoice | No |
-| **Wallet** | Credit AptiveAI adds to your account directly | No |
-
-An agent draws on **promotional credit first** (the soonest to expire first),
-then **plan credit**, then the **wallet**. The credit left is the sum of all
-three, and it is the number paid access reads.
+During a **trial** there are no seats yet: the team shares one pool of AI
+credit, and the page says *Your team is on a trial and shares one AI credit*,
+with the **Credit left**.
 
 ### Why a task can finish on the last of the credit
 
 What a task will cost cannot be known before it runs, so a task only needs
 *some* credit to start, not enough for the whole job. A task that is working
-when the credit runs out **finishes**; its last steps take the balance below
-zero. The **next** task is refused, and an automation's next run is skipped as
-**No AI credit** — without piling up work for when credit returns.
+when the credit runs out **finishes**. The **next** task is refused, and an
+automation's next run is skipped as **No AI credit** — without piling up work
+for when credit returns.
 
 No task is ever stopped halfway for money.
 
 ### Credit from AptiveAI
 
-AptiveAI can send credit to a person in your enterprise as an emailed link.
-The page it opens — **Accept credit** — shows the amount, when unused credit
-expires and when the link itself expires.
+During a trial, AptiveAI can send credit to a person in your enterprise as an
+emailed link. The page it opens — **Accept credit** — shows the amount, when
+unused credit expires and when the link itself expires.
 
 <Steps>
 
@@ -94,55 +99,77 @@ expires and when the link itself expires.
 </Steps>
 
 Accepting credit on an account that is **Awaiting first payment** starts its
-**Trial**, which lasts as long as the credit does: it ends when the credit runs
-out or expires. A link that has expired, been withdrawn or been used says
-*This credit link is not valid*. If AptiveAI withdraws credit, whatever is
-unspent is removed; what was already spent stays spent.
-
-## Computer time
-
-Each task that needs a browser gets a [computer](/concepts/tasks#the-live-view).
-The time every computer is in use is recorded — including the few minutes one
-is kept ready after a task, so the next task starts faster. Computer time costs
-credit only if your plan sets a per-minute rate for it; otherwise it is
-recorded at $0.
+**Trial**, which lasts as long as the credit does. A link that has expired, been
+withdrawn or been used says *This credit link is not valid*.
 
 ## The Usage page
 
-Owners open **Usage** in the admin area.
+**Usage** is in the admin area for **every role**, and is the one admin page a
+member can open: a member who goes to `/admin` lands on it. It is also a card
+in **Configure & help** in AptiveAI Agents. What you see depends on your role.
 
-**AI credit** — *What your agents draw on.*
+### Your usage — everyone
+
+**Your usage** — *Your own AI allowance, and whether you can keep working past
+it. Shown as percentages.*
+
+| Row | Shows |
+|---|---|
+| **5-hour allowance** and **Weekly allowance** | How much of each you have used, as a bar and a percentage, and when it **Refreshes**. *Starts with your next task* until you have used any |
+| **Can you start new tasks** | **Yes**, or **Not right now** with the reason |
+| **Extra credit from the wallet** | Whether you can **Keep working from the wallet after your allowance** (**On** or **Off**); your **Limit per person**, as *‹n›% used* or *No limit per person*; and whether **The wallet has money** |
+
+The allowance is paced so that a whole period's worth cannot go in one day —
+the weekly allowance is what is left, spread over the weeks that remain, and
+the 5-hour allowance is a part of it. Both refresh on their own. **Refresh
+usage** reloads the figures. Below them, **Your activity** counts **Tasks you
+started** and **AI steps** over **7 days**, **30 days** or **90 days**.
+
+Who decides extra credit: an owner sees *You set this on Billing, under
+Wallet.* Everyone else sees *Set by your owner. Ask ‹owner› to change it.*
+
+### The owner's enterprise
+
+Above **Your usage**, an owner sees the enterprise:
+
+**AI credit** — *What your enterprise has for automations and extra credit.
+Each person's seat comes with its own AI credit, which is not counted here.*
 
 | Tile | Shows |
 |---|---|
-| **Remaining** | Everything agents can still spend — the same number paid access reads |
+| **Remaining** | What the wallet and any promotional credit can still pay for |
 | **Spent** | What was charged in the last 30 days |
 | **Promotional** | Unexpired promotional credit, when there is any |
 | **Wallet** | The wallet, when there is anything in it |
 
-With nothing left it says *No AI credit is available, so new tasks cannot be
-started. Contact us to add credit.*
+With an empty wallet it says *The wallet is empty, so automations and extra
+credit cannot be paid for. Each person can still work on their seat's credit.*,
+with **Add money** to **Billing**.
 
-**Last 30 days** — *Where AI and computer spend went*, **By agent**. Besides
-each agent's name you may see *Tasks with no agent*, *(tested in the
-builder)*, *(computer kept warm)* and *(instructions edited)*. Spending is
-shown by agent only, never by person.
+**Last 30 days** — *Where AI spend went*, **By agent**. Besides each agent's
+name you may see *Tasks with no agent*, *(tested in the builder)*, *(computer
+kept warm)* and *(instructions edited)*. Spending is shown by agent only, never
+by person.
 
 **Transactions** — a card that opens [Transactions](/administration/transactions),
-every charge to the AI credit and every credit added, with what has been
-**Used this month**.
+every charge and every credit added, with what has been **Used this month**.
 
-<Aside type="note" title="Recent activity moved to Transactions">
-  The list of every movement of credit — **When**, **What ran**, **Model** and
-  **Amount** — used to sit at the foot of this page as **Recent activity**. It
-  now has a page of its own: open the **Transactions** card, or go to
-  `aptiveai.io/admin/usage/transactions`. What each row means is on
-  [Transactions](/administration/transactions).
-</Aside>
+### Team capacity
 
-For how your agents did over any period — tasks, goals met, AI usage by agent
-and by model — see [Activity](/administration/activity) and
-[Productivity](/administration/productivity).
+*Each person's AI capacity on their seat, and how often this month they reached
+the limit.*
+
+| Column | Shows |
+|---|---|
+| **Person** and **Seat** | Who, and their tier |
+| **Capacity** | **Normal**, **Near limit** or **At limit** |
+| **At the limit** | *Not this month*, or *‹n› weeks this month* |
+
+It shows a status, never anyone's credit in dollars. A person who is often at
+the limit is the one to move to a bigger seat — see
+[Billing and seats](/administration/billing#a-persons-seat). Owners see it for
+the whole enterprise. **An admin sees it for the people of the workspaces they
+administer**, under their own usage, and nothing else about money.
 
 ## Notices
 
@@ -150,12 +177,10 @@ Owners and admins are told, in the [Inbox](/concepts/inbox) and by email:
 
 | Notice | When |
 |---|---|
-| **AI credit is running low** | The credit falls below the account's warning level, when one is set. At most once a month |
 | **The trial is about to end** | The trial ends within seven days |
 | **A payment is overdue** | The latest invoice is unpaid |
 
-Each is sent once per condition, however many tasks run in between. Which of
-them reach you, and how, is in
+Each is sent once per condition. Which of them reach you, and how, is in
 [Notification settings](/reference/settings/notifications).
 
 ## When the subscription ends or the account is suspended
@@ -174,23 +199,16 @@ already under way:
 
 ## Billing
 
-**Billing** in the admin area is the owner's. It is read-only: AptiveAI manages
-the subscription, so there is no card form and no cancel button — to change
-anything, use **Contact us**.
-
-| Section | What it shows |
-|---|---|
-| **Plan** | The plan, its status, the **Monthly price**, the **Next billing date** or **Billing start date**, when it **Ends** if it is ending, and when a trial's credit expires. When agents cannot start, the reason, with **Contact us** |
-| **Payment method** | The card on file — brand, last four digits and expiry — or *No card on file. This enterprise is invoiced, and each invoice is emailed to its billing contact.* |
-| **Invoices** | Every invoice, with its **Date**, **Amount** and **Status** — **Paid**, **Open**, **Draft**, **Uncollectible** or **Void** — and **Download** for the PDF |
+Seats, tiers, the card, the wallet, invoices and cancelling are all the
+owner's, on **Billing** — see [Billing and seats](/administration/billing).
 
 ## Next
 
 <CardGrid>
+  <LinkCard title="Billing and seats" href="/administration/billing" description="Seats, the card, the wallet and invoices." />
   <LinkCard title="Settings" href="/reference/settings#plan--credit" description="Plan & credit, as every person sees it." />
   <LinkCard title="Transactions" href="/administration/transactions" description="Every charge to your AI credit, and every credit added." />
   <LinkCard title="Activity" href="/administration/activity" description="AI usage, tasks, goals met and models over time." />
   <LinkCard title="The admin area" href="/administration/overview" description="Who can enter, and what each role sees." />
   <LinkCard title="Agents" href="/concepts/agents#paid-access" description="What paid access allows." />
-  <LinkCard title="Automations" href="/concepts/automations#skipped-runs" description="Runs skipped for no AI credit." />
 </CardGrid>

@@ -1,11 +1,11 @@
 ---
 title: Sharing
-description: Who can use a task, an automation, an agent or a skill — the owner, people you add with Can use or Can edit, and Everyone in a workspace. What owners and admins can open, read-only tasks, and Continue in my own task.
+description: Who can use a task, an automation, an agent, a skill or a connector — the owner, people you add with Can use or Can edit, and Everyone in a workspace. What owners and admins can open, read-only tasks, and Continue in my own task.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-Tasks, automations, agents and skills are shared the same way. Whatever you
+Tasks, automations, agents, skills and connectors are shared the same way. Whatever you
 create is yours alone until you share it. The chip at the top of each one
 shows who has access — **Only you**, **You + 2**, **Everyone in Sales** — and
 selecting it opens the share box. In lists, the same chip is a badge, and
@@ -23,24 +23,25 @@ shared with you.
   always **Can use**: a workspace never gets Can edit.
 - Changes apply as you make them. **Done** closes the box.
 - A skill's box opens from **Who can use** in its row menu or from its editor.
+  A connector's opens from **Who can use it** in its panel.
 
 A task has no choice of level: people added can see it and watch it, read-only.
 Only the person who started a task can share it, rename it or delete it.
 
 ## Who can do what
 
-| | Task | Automation | Agent | Skill |
-|---|---|---|---|---|
-| The person who made it | Everything | Everything | Everything | Everything |
-| Added, or Can use | See and watch it, read-only | See it and all its tasks, read-only | See it, @mention it, start tasks with it | See it, grant it to an agent they edit |
-| Can edit | — | Change, pause, **Run now**, share; answer and approve in its tasks | Change and share | Change and share |
-| Everyone in ‹workspace› | Same as Can use | Same as Can use | Same as Can use | Same as Can use |
+| | Task | Automation | Agent | Skill | Connector |
+|---|---|---|---|---|---|
+| The person who made it | Everything | Everything | Everything | Everything | Everything |
+| Added, or Can use | See and watch it, read-only | See it and all its tasks, read-only | See it, @mention it, start tasks with it | See it, grant it to an agent they edit | See it, its status and its tools |
+| Can edit | — | Change, pause, **Run now**, share; answer and approve in its tasks | Change and share | Change and share | Change its name, settings or sign-in, test it, disconnect it |
+| Everyone in ‹workspace› | Same as Can use | Same as Can use | Same as Can use | Same as Can use | Same as Can use |
 
 Only the creator deletes a task or a skill; an automation is deleted by its
 creator or by a workspace owner or admin. Knowledge files follow
 their agent: whoever can edit the agent edits its files.
-Connectors are not shared person to person; whether a personal agent may hold
-one is a workspace setting (see
+Granting a connector to an agent is for owners and admins, and whether a
+personal agent may hold a connector is a setting on the connector (see
 [Access](/administration/access#connectors-for-personal-agents)).
 
 ## What owners and admins can open
@@ -48,14 +49,14 @@ one is a workspace setting (see
 Opening by link is wider than listing. Your lists show your own items and what is
 shared with you — nothing more, except automations for owners and admins.
 
-- **Workspace owners** can open anything in their workspaces by its link, but it
-  does not appear in their lists. A task they open is **read-only**.
+- **The owner** can open anything in any workspace by its link, but it does not
+  appear in their lists. A task they open is **read-only**.
 - **Automations are listed, not just opened**: owners and admins of a workspace
   see every [automation](/concepts/automations) in it in their list, with what
   it costs, and can change, pause, run and delete it.
-- **Owners and admins of an organization** can open and edit every agent in it,
-  personal ones included. An admin of a single workspace edits only the agents
-  shared with them as Can edit.
+- **The owner**, and **the admins of a workspace**, can open and edit every
+  agent in that workspace, personal ones included. An admin edits an agent in a
+  workspace they do not administer only if it was shared with them as Can edit.
 - **AptiveAI** can open anything by link and edit any agent.
 
 <Aside>
@@ -79,10 +80,12 @@ delete one you no longer need or share one with the workspace.
 ## When someone leaves
 
 When a person is removed from the enterprise, everything shared with them is
-unshared, and the automations they created are paused with the note "Paused
-because the person who created it left the workspace." An owner can open those
-automations and turn them back on. Their agents, skills and automations stay, and
-owners and organization admins can still edit their agents.
+unshared. During a trial the automations they created are paused with the note
+"Paused because the person who created it left the workspace", and an owner can
+open them and turn them back on; on a subscription they are deleted when the
+person's seat ends at the end of the billing period. Their agents and skills
+stay, and owners and the admins of an agent's workspace can still edit their
+agents.
 
 ## Links
 

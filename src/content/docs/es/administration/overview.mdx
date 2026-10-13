@@ -1,15 +1,16 @@
 ---
 title: El área de administración
-description: "Donde los propietarios y administradores de una empresa la gestionan: quién puede entrar al área de administración, qué ve cada rol, cómo llegar a ella desde AptiveAI Agents y desde el sitio web, y de qué se encarga AptiveAI por ti."
+description: "Donde se gestiona una empresa: qué ve cada rol en el área de administración, cómo llegar a ella desde AptiveAI Agents y desde el sitio web, las páginas que contiene y de qué sigue encargándose AptiveAI por ti."
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-El **área de administración** es donde se cuida la cuenta de tu empresa: las
-personas que la forman, sus roles, las invitaciones pendientes de aceptar y,
-para los propietarios, la facturación y el uso. Está en el sitio web de
-AptiveAI, en `aptiveai.io/admin`, junto a AptiveAI Agents y no dentro de él, y
-está abierta a los **propietarios** y **administradores** de tu empresa.
+El **área de administración** es donde se cuida la cuenta de tu empresa: sus
+espacios de trabajo, las personas que hay en ellos y sus roles, las invitaciones
+pendientes de aceptar y, para los propietarios, los puestos, la facturación y el
+uso. Está en el sitio web de AptiveAI, en `aptiveai.io/admin`, junto a AptiveAI
+Agents y no dentro de él. Los **propietarios** y **administradores** gestionan
+ahí la cuenta; **cada persona** puede abrirla para leer su propio uso.
 
 Tu trabajo diario —[tareas](/es/concepts/tasks), [agentes](/es/concepts/agents),
 [automatizaciones](/es/concepts/automations), [conectores](/es/concepts/connectors)— sigue
@@ -27,37 +28,41 @@ cuenta de cliente, la que tiene la suscripción y recibe las facturas. Dentro de
 | **Espacio de trabajo** | Donde vive el trabajo: las tareas, las automatizaciones, los agentes y las computadoras pertenecen a un espacio de trabajo |
 
 Una empresa nueva empieza con una organización y un espacio de trabajo, y la
-mayoría de las compañías nunca necesitan más. Consulta [Acceso y uso compartido](/es/administration/access)
-para ver qué significan los niveles para quién ve qué.
+mayoría de las compañías nunca necesitan más. Un propietario puede agregar
+espacios de trabajo: consulta [Espacios de trabajo](/es/administration/workspaces);
+[Acceso y uso compartido](/es/administration/access) explica qué significan los
+niveles para quién ve qué.
 
 ## Quién puede entrar
 
-| Rol | Entra al área de administración | Qué ve ahí |
-|---|:---:|---|
-| **Propietario** | ✓ | **Resumen**, **Usuarios**, **Uso**, **Actividad**, **Productividad** y **Facturación** |
-| **Administrador** | ✓ | **Usuarios** y **Productividad** |
-| **Miembro** | — | *No tienes acceso a esta página*: el área de administración es para los propietarios y administradores de tu empresa |
+| Rol | Qué ve en el área de administración |
+|---|---|
+| **Propietario** | **Resumen**, **Espacios de trabajo**, **Usuarios**, **Uso**, **Actividad**, **Productividad** y **Facturación** |
+| **Administrador** | **Espacios de trabajo** y **Usuarios** —de los espacios de trabajo que administra— y **Uso**, que es el suyo. También **Productividad**, cuando administra todos los espacios de trabajo |
+| **Miembro** | **Uso**, el suyo, y nada más |
 
 Cada página de administración comprueba el rol por su cuenta, así que el menú
 solo muestra lo que puedes abrir. Un administrador que abre `/admin` va
-directamente a **Usuarios**, la página que gestiona. Ambos roles
-ven también **Agentes** en el menú, que te lleva de vuelta a AptiveAI Agents.
+directamente a **Usuarios**, y un miembro a **Uso**. Todos ven también
+**Agentes** en el menú, que te lleva de vuelta a AptiveAI Agents. A quien abre
+una página que no es suya se le indica: *El área de administración es para los
+propietarios y administradores de tu empresa.*
 
 <Aside type="note" title="Por qué la facturación es solo del propietario">
-  La facturación y el uso tratan del dinero que la empresa aceptó pagar, así
-  que solo se muestran a los propietarios. A un administrador que abre
-  **Facturación** o **Uso** se le indica que solo la ve el propietario de la
-  empresa. Aun así, todos pueden ver el estado de la cuenta y el crédito de IA
-  restante en AptiveAI Agents, en
+  La facturación trata del dinero que la empresa aceptó pagar, así que solo se
+  muestra al propietario. A un administrador que abre **Facturación** se le
+  indica que solo la ve el propietario de la empresa. Aun así, todos pueden ver
+  el estado de la cuenta, y su propia asignación, en AptiveAI Agents, en
   [Ajustes → Plan y crédito](/es/reference/settings#plan-y-crédito).
 </Aside>
 
 ## Cómo llegar
 
-- **Desde AptiveAI Agents.** Abre **Ayuda y Ajustes** al final de la barra lateral y elige la
-  tarjeta **Administración**: *Miembros, invitaciones y facturación de tu
-  empresa, en el portal*. La tarjeta solo se muestra a propietarios y
-  administradores.
+- **Desde AptiveAI Agents.** Abre **Configurar y ayuda** al final de la barra
+  lateral y elige la tarjeta **Administración**: *Miembros, invitaciones y
+  facturación de tu empresa, en el portal*. La tarjeta solo se muestra a
+  propietarios y administradores. Todos, también los miembros, tienen ahí una
+  tarjeta **Uso** que abre su propio uso.
 - **Desde el sitio web.** Con la sesión iniciada en `aptiveai.io`, los
   propietarios y administradores tienen un botón **Administración** en el
   encabezado, y una entrada **Administración** arriba del menú en el teléfono.
@@ -72,7 +77,8 @@ la pantalla, con **Cuenta** e **Inicio** al lado.
 
 ### Resumen
 
-Para propietarios: tu empresa de un vistazo.
+Para propietarios: tu empresa de un vistazo. Su nombre tiene **Cambiar el nombre
+de la empresa**.
 
 | Tarjeta | Qué muestra |
 |---|---|
@@ -83,18 +89,25 @@ Para propietarios: tu empresa de un vistazo.
 A un propietario cuya suscripción terminó se le lleva a **Facturación**, la
 única página que sigue abierta para él.
 
+### Espacios de trabajo
+
+Para propietarios y administradores: los espacios de trabajo, quién trabaja en
+cada uno y quién los administra. Consulta [Espacios de trabajo](/es/administration/workspaces).
+
 ### Usuarios
 
 Todas las personas de tu empresa y todas las invitaciones que enviaste, en dos
-pestañas: **Personas** e **Invitaciones**. Invita a personas, cambia un rol,
-quita a alguien. Consulta [Usuarios y roles](/es/administration/users).
+pestañas: **Personas** e **Invitaciones**. Invita a personas, cambia un rol o un
+puesto, quita a alguien. Un administrador ve a las personas de los espacios de
+trabajo que administra. Consulta [Usuarios y roles](/es/administration/users).
 
 ### Uso
 
-Para propietarios: el crédito de IA restante, en qué se gastó en los últimos
-30 días por agente, y una tarjeta **Transacciones** que abre cada cargo al
-crédito y cada crédito añadido. Consulta [Uso y crédito](/es/administration/usage)
-y [Transacciones](/es/administration/transactions).
+Para todos: tu propia asignación y lo que puedes hacer cuando se acaba. Los
+propietarios ven además el monedero y en qué se gastó en los últimos 30 días por
+agente, con una tarjeta **Transacciones**; propietarios y administradores ven la
+capacidad de cada persona. Consulta [Uso y crédito](/es/administration/usage) y
+[Transacciones](/es/administration/transactions).
 
 ### Actividad
 
@@ -104,28 +117,27 @@ de IA. Consulta [Actividad](/es/administration/activity).
 
 ### Productividad
 
-Para propietarios y administradores: los objetivos cumplidos, el tiempo de
-trabajo de los agentes y el trabajo que hicieron en tus sistemas. Los
-administradores lo ven sin ninguna cifra de dinero. Consulta
+Para propietarios y para administradores de todos los espacios de trabajo: los
+objetivos cumplidos, el tiempo de trabajo de los agentes y el trabajo que
+hicieron en tus sistemas. Los administradores lo ven sin ninguna cifra de dinero. Consulta
 [Productividad](/es/administration/productivity).
 
 ### Facturación
 
-Para propietarios: el plan, su estado, el método de pago y todas las facturas,
-para descargarlas en PDF. Es de solo lectura. Consulta
-[Uso y crédito → Facturación](/es/administration/usage#facturación).
+Para propietarios: el plan y su estado, los puestos y niveles, la tarjeta, el
+monedero, todas las facturas y la cancelación; todo por cuenta propia. Consulta
+[Facturación y puestos](/es/administration/billing).
 
 ## De qué se encarga AptiveAI
 
-Algunas cosas de una cuenta las configura el equipo de AptiveAI y no una
-pantalla tuya. Pídeselas a tu contacto en AptiveAI, o usa **Contáctanos** en
+Tú gestionas tus puestos, tu tarjeta, tu monedero y tus espacios de trabajo.
+Algunas cosas de una cuenta las sigue configurando el equipo de AptiveAI y no
+una pantalla tuya. Pídeselas a tu contacto en AptiveAI, o usa **Contáctanos** en
 cualquier página que lo ofrezca:
 
-- crear tu empresa e invitar a su primer propietario;
-- agregar espacios de trabajo u organizaciones, o limitar a un miembro a algunos de ellos;
-- tu suscripción: crearla, cambiar cómo pagas, cancelarla;
-- agregar crédito de IA;
-- conectar un nuevo [conector](/es/concepts/connectors) a los sistemas de tu empresa;
+- crear tu empresa, con su prueba, e invitar a su primer propietario;
+- un precio propio, si tu empresa lo tiene;
+- agregar organizaciones;
 - elegir el modelo de IA que usa un agente;
 - eliminar de inmediato un agente eliminado, antes de que pasen sus 30 días;
 - pasar a tu empresa a una persona que ya pertenece a otra empresa.
@@ -139,7 +151,9 @@ administración.
 
 <CardGrid>
   <LinkCard title="Usuarios y roles" href="/es/administration/users" description="Invita a personas, cambia roles, quita a alguien." />
-  <LinkCard title="Acceso y uso compartido" href="/es/administration/access" description="Espacios de trabajo, y quién ve cada agente, tarea y automatización." />
-  <LinkCard title="Uso y crédito" href="/es/administration/usage" description="El crédito de IA, en qué se gasta y la facturación." />
+  <LinkCard title="Espacios de trabajo" href="/es/administration/workspaces" description="Varios espacios de trabajo, quién administra cada uno y las personas que hay en ellos." />
+  <LinkCard title="Facturación y puestos" href="/es/administration/billing" description="Puestos, la tarjeta, el monedero y las facturas." />
+  <LinkCard title="Acceso y uso compartido" href="/es/administration/access" description="Quién ve cada agente, tarea y automatización." />
+  <LinkCard title="Uso y crédito" href="/es/administration/usage" description="Tu asignación, qué gasta crédito y cuándo los agentes no pueden empezar." />
   <LinkCard title="Ajustes" href="/es/reference/settings" description="Las preferencias propias de cada persona en AptiveAI Agents." />
 </CardGrid>

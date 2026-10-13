@@ -1,168 +1,195 @@
 ---
 title: Uso y crédito
-description: "Qué es el crédito de IA y cómo se gasta: los tres tipos de crédito y su orden, por qué una tarea puede terminar con lo último que queda y la siguiente se rechaza, el tiempo de computadora, la página de Uso del propietario y adónde pasó su registro, los enlaces de crédito de AptiveAI, los avisos de la cuenta, cuándo los agentes no pueden empezar, y la página de Facturación de solo lectura del propietario."
+description: "Qué es el crédito de IA y cómo se gasta: la página Uso de cada persona con su asignación de 5 horas y semanal, lo que ven además el propietario y los administradores, la capacidad del equipo, por qué una tarea puede terminar con lo último que queda de crédito y cuándo los agentes no pueden empezar trabajo nuevo."
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-Tu empresa paga a AptiveAI una suscripción mensual, y sus agentes gastan
-**crédito de IA** mientras trabajan. Esta página explica de dónde viene el
-crédito, en qué se gasta, dónde consultarlo y qué pasa cuando se acaba.
+Cada paso que da un agente gasta **crédito de IA**. De dónde sale ese crédito
+depende de quién pidió el trabajo: las tareas de una persona usan la
+**asignación** que trae su puesto, y las automatizaciones usan el **monedero** de
+la empresa. Esta página explica qué puede leer cada persona y el propietario
+sobre esto, y qué pasa cuando se acaba. Cómo se compran y se gestionan los
+puestos, la asignación y el monedero está en [Facturación y puestos](/es/administration/billing).
 
-| Dónde | Quién | Muestra |
+| Dónde | Quién | Qué muestra |
 |---|---|---|
-| AptiveAI Agents → **Ajustes → Plan y crédito** | Todos | El **Estado** de la cuenta, el **Crédito de IA restante** y si los agentes pueden empezar trabajo nuevo (**Puede empezar trabajo nuevo**) |
-| Administración → **Uso** | Propietarios | El crédito restante y los últimos 30 días por agente |
-| Administración → **Uso → Transacciones** | Propietarios | Cada cargo al crédito y cada crédito añadido; consulta [Transacciones](/es/administration/transactions) |
-| Administración → **Actividad** | Propietarios | Uso de IA, tareas, objetivos cumplidos y modelos en cualquier periodo; consulta [Actividad](/es/administration/activity) |
-| Administración → **Productividad** | Propietarios y administradores | Objetivos cumplidos, tiempo de trabajo y el trabajo que hicieron los agentes; consulta [Productividad](/es/administration/productivity) |
-| Administración → **Facturación** | Propietarios | El plan, el método de pago y todas las facturas |
+| AptiveAI Agents → **Ajustes → Plan y crédito** | Todos | El **Estado** de la cuenta, si **Puede empezar trabajo nuevo** y **Tu asignación** |
+| Administración → **Uso** | Todos | Tu propio uso y, para propietarios y administradores, más (abajo) |
+| **Configurar y ayuda → Uso** | Todos | La misma página, desde AptiveAI Agents |
+| Administración → **Uso → Transacciones** | Propietarios | Cada cargo y cada crédito añadido: consulta [Transacciones](/es/administration/transactions) |
+| Administración → **Actividad** | Propietarios | Uso de IA, tareas, objetivos cumplidos y modelos en cualquier periodo: consulta [Actividad](/es/administration/activity) |
+| Administración → **Productividad** | Propietarios, y administradores de todos los espacios de trabajo | Objetivos cumplidos, tiempo de trabajo y el trabajo que hicieron los agentes: consulta [Productividad](/es/administration/productivity) |
+| Administración → **Facturación** | Propietarios | El plan, los puestos, la tarjeta, el monedero y las facturas: consulta [Facturación y puestos](/es/administration/billing) |
 
 ## Acceso de pago
 
-Los agentes solo pueden empezar trabajo nuevo mientras se cumplan **las dos**
-condiciones:
+Los agentes pueden empezar trabajo nuevo para una persona solo mientras se
+cumplan **las dos** condiciones:
 
-- el estado de la cuenta es **Activa** o **Prueba**, y
-- le queda **crédito de IA** para gastar: más de cero.
+- la cuenta está al día: su estado es **Activa** o **Prueba**, ninguna renovación
+  lleva más de 7 días sin pagarse y no está en pausa ni cancelada; y
+- esa persona tiene algo que gastar: margen en su **asignación**, o **crédito
+  extra** del monedero donde el propietario lo permite.
 
-Sin acceso de pago, no empieza ningún trabajo nuevo: nadie puede iniciar una
-tarea, crear o configurar un agente, crear una automatización ni dar acceso a un
-conector, y las automatizaciones omiten sus ejecuciones. AptiveAI Agents no se
-muestra en absoluto. Todas las personas que lo abren van a una sola página que
-explica por qué, con **Contáctanos** y, para un propietario, **Ver
+Sin eso, no empieza nada nuevo: nadie puede iniciar una tarea, crear o configurar
+un agente, crear una automatización ni dar acceso a un conector, y las
+automatizaciones omiten sus ejecuciones. Todas las personas que abren AptiveAI
+Agents ven una página que explica el motivo, con **Contáctanos** y, para un
+propietario, **Terminar configuración**, **Suscribirse de nuevo** o **Ver
 facturación**:
 
 | Página | Qué dice |
 |---|---|
 | **Esta cuenta aún no está activa** | *AptiveAI todavía está configurando esta cuenta. Podrás empezar a trabajar en cuanto comience tu prueba o tu suscripción.* |
+| **Esta cuenta está desactivada** | *Tu cuenta está desactivada: comunícate con tu propietario, ‹nombre›, para activarla.* La cuenta está en pausa: terminó la prueba, o una renovación lleva 7 días sin pagarse. Al propietario se le lleva a [terminar la configuración](/es/administration/billing#suscribirse) |
 | **No hay crédito de prueba disponible** | *Esta cuenta está en periodo de prueba, pero no tiene suficiente crédito de IA para ejecutar tus agentes.* |
 | **No hay crédito de IA disponible** | *La suscripción está activa, pero esta cuenta no tiene suficiente crédito de IA ni saldo para ejecutar tus agentes.* |
 | **Hay un pago vencido** | *La última factura no se pagó antes de su fecha de vencimiento. Los agentes no pueden empezar trabajo nuevo hasta que se liquide.* |
-| **Esta suscripción terminó** | *Los agentes y el historial de tareas ya no están disponibles en esta cuenta. Para reactivarla, ponte en contacto con nosotros.* |
+| **Esta suscripción terminó** | *Los agentes y el historial de tareas ya no están disponibles en esta cuenta.* Si se canceló a petición tuya, la cuenta y sus datos se eliminan el día siguiente al final del periodo pagado |
 
-El área de administración sigue abierta para propietarios y administradores,
-con el mismo motivo en un banner en la parte superior, así que un propietario
-puede seguir consultando **Facturación** y **Uso**. Una tarea que ya estaba
-trabajando cuando se acabó el crédito termina; consulta
-[más abajo](#por-qué-una-tarea-puede-terminar-con-lo-último-que-queda-de-crédito).
+El área de administración sigue abierta para propietarios y administradores, con
+el mismo motivo en un aviso arriba. Una tarea que ya estaba trabajando cuando
+se cortó el acceso termina: consulta [más abajo](#por-qué-una-tarea-puede-terminar-con-lo-último-que-queda-de-crédito).
 
-El estado de la cuenta es uno de **Esperando el primer pago**, **Prueba**,
-**Activa**, **Pago vencido** o **Cancelada**.
+Cuando es solo una **persona** la que no puede empezar, porque agotó su
+asignación, nada más cambia para el equipo. Esa persona ve *Ya usaste la
+asignación de esta semana: se renueva el ‹fecha›*, o lo mismo para estas 5
+horas, y **Ajustes → Plan y crédito** dice *Tu asignación está agotada por
+ahora*.
 
 ## Crédito de IA
 
-Cada paso que da un agente se cobra con un poco de crédito —normalmente una
-fracción de centavo—, según el modelo de IA que usa el agente y cuánto tiene
-que leer y escribir. Gastan
-crédito las tareas, las tareas que inicia una automatización, **Pruébalo** en el
-constructor de agentes y el título corto que AptiveAI escribe para cada tarea.
+Cada paso que da un agente cuesta un poco de crédito —normalmente una fracción de
+centavo— según el modelo de IA que use el agente y cuánto tenga que leer y
+escribir. El crédito lo gastan las tareas, **Pruébalo** en el constructor de
+agentes y el título corto que AptiveAI escribe para cada tarea. Quién paga:
 
-### Tres tipos de crédito, gastados en orden
+| Trabajo | Se paga con |
+|---|---|
+| Las tareas de una persona, construir un agente, **Pruébalo** | La **asignación** de la persona y, donde el propietario lo permite, el monedero cuando la asignación se agota |
+| Una tarea que inicia una automatización | Solo el **monedero** de la empresa, nunca el puesto de nadie |
 
-| Tipo | De dónde viene | Vence |
-|---|---|---|
-| **Promocional** | Un enlace de crédito de AptiveAI; consulta [Crédito de AptiveAI](#crédito-de-aptiveai) | Sí: el crédito sin usar vence en la fecha con la que se emitió |
-| **Crédito del plan** | La asignación mensual de IA de tu plan, que se agrega cuando se paga una factura, una vez por factura | No |
-| **Monedero** | Crédito que AptiveAI agrega directamente a tu cuenta | No |
-
-Un agente consume primero el **crédito promocional** (primero el que vence
-antes), luego el **crédito del plan** y después el **monedero**. El crédito
-restante es la suma de los tres, y es la cifra que usa el acceso de pago.
+Durante una **prueba** todavía no hay puestos: el equipo comparte un solo fondo de
+crédito de IA, y la página dice *Tu equipo está en prueba y comparte un solo
+crédito de IA*, con lo que **Queda crédito**.
 
 ### Por qué una tarea puede terminar con lo último que queda de crédito
 
-Lo que costará una tarea no se puede saber antes de ejecutarla, así que una
-tarea solo necesita *algo* de crédito para empezar, no lo suficiente para todo
-el trabajo. Una tarea que está trabajando cuando se acaba el crédito
-**termina**; sus últimos pasos dejan el saldo por debajo de cero. La
+Lo que costará una tarea no se puede saber antes de ejecutarla, así que una tarea
+solo necesita *algo* de crédito para empezar, no lo suficiente para todo el
+trabajo. Una tarea que está trabajando cuando se acaba el crédito **termina**. La
 **siguiente** tarea se rechaza, y la siguiente ejecución de una automatización se
 omite como **Sin crédito de IA**, sin acumular trabajo para cuando vuelva el
 crédito.
 
-Ninguna tarea se detiene nunca a la mitad por dinero.
+Ninguna tarea se detiene a medias por dinero.
 
 ### Crédito de AptiveAI
 
-AptiveAI puede enviar crédito a una persona de tu empresa como un enlace por
-correo. La página que abre —**Aceptar crédito**— muestra el importe, cuándo
-vence el crédito sin usar y cuándo vence el propio enlace.
+Durante una prueba, AptiveAI puede enviar crédito a una persona de tu empresa
+como un enlace por correo. La página que abre —**Aceptar crédito**— muestra el
+importe, cuándo vence el crédito sin usar y cuándo vence el propio enlace.
 
 <Steps>
 
-1. **Inicia sesión con la dirección a la que se envió.** Si iniciaste sesión
-   con otra cuenta, la página dice **Cuenta incorrecta**.
+1. **Inicia sesión con la dirección a la que se envió.** Con otra cuenta, la
+   página dice **Cuenta incorrecta**.
 
-2. **Aceptar crédito.** Se agrega a la empresa en la que estás, como crédito
+2. **Aceptar crédito.** Se añade a la empresa en la que estás, como crédito
    promocional.
 
 </Steps>
 
-Aceptar crédito en una cuenta que está en **Esperando el primer pago** inicia
-su **Prueba**, que dura lo mismo que el crédito: termina cuando el crédito se
-acaba o vence. Un enlace que venció, se retiró o ya se usó dice *Este enlace de
-crédito no es válido*. Si AptiveAI retira crédito, se quita lo que no se haya
-gastado; lo que ya se gastó sigue gastado.
-
-## Tiempo de computadora
-
-Cada tarea que necesita un navegador recibe una [computadora](/es/concepts/tasks#la-vista-en-vivo).
-Se registra el tiempo que cada computadora está en uso, incluidos los pocos
-minutos que se mantiene lista después de una tarea, para que la siguiente
-empiece más rápido. El tiempo de computadora solo cuesta crédito si tu plan le
-fija una tarifa por minuto; si no, se registra a $0.
+Aceptar crédito en una cuenta que está **Esperando el primer pago** inicia su
+**Prueba**, que dura tanto como el crédito. Un enlace vencido, retirado o ya
+usado dice *Este enlace de crédito no es válido*.
 
 ## La página de Uso
 
-Los propietarios abren **Uso** en el área de administración.
+**Uso** está en el área de administración para **todos los roles**, y es la única
+página de administración que puede abrir un miembro: un miembro que va a `/admin`
+llega a ella. También es una tarjeta en **Configurar y ayuda** en AptiveAI
+Agents. Lo que ves depende de tu rol.
 
-**Crédito de IA**: *Lo que consumen tus agentes.*
+### Tu uso — todos
 
-| Mosaico | Muestra |
+**Tu uso** — *Tu propia asignación de IA y si puedes seguir trabajando cuando se
+acabe. En porcentajes.*
+
+| Fila | Qué muestra |
 |---|---|
-| **Restante** | Todo lo que los agentes aún pueden gastar: la misma cifra que usa el acceso de pago |
-| **Gastado** | Lo que se cobró en los últimos 30 días |
+| **Asignación de 5 horas** y **Asignación semanal** | Cuánto has usado de cada una, como barra y porcentaje, y cuándo **Se renueva**. *Empieza con tu próxima tarea* hasta que uses algo |
+| **¿Puedes iniciar tareas nuevas?** | **Sí**, o **Ahora no** con el motivo |
+| **Crédito extra del monedero** | Si puedes **Seguir trabajando con el monedero tras tu asignación** (**Activado** o **Desactivado**); tu **Límite por persona**, como *‹n›% usado* o *Sin límite por persona*; y si **El monedero tiene dinero** |
+
+La asignación está dosificada para que no pueda gastarse en un día lo de todo un
+periodo: la asignación semanal es lo que queda, repartido entre las semanas que
+faltan, y la de 5 horas es una parte de ella. Ambas se renuevan solas.
+**Actualizar uso** vuelve a cargar las cifras. Debajo, **Tu actividad** cuenta las
+**Tareas que iniciaste** y los **Pasos de IA** en **7 días**, **30 días** o **90
+días**.
+
+Quién decide el crédito extra: un propietario ve *Lo configuras en Facturación,
+en Monedero.* Todos los demás ven *Lo decide el propietario. Pídele a ‹propietario›
+que lo cambie.*
+
+### La empresa del propietario
+
+Encima de **Tu uso**, un propietario ve la empresa:
+
+**Crédito de IA** — *Lo que tu empresa tiene para automatizaciones y crédito
+adicional. El puesto de cada persona incluye su propio crédito de IA, que no se
+cuenta aquí.*
+
+| Tarjeta | Qué muestra |
+|---|---|
+| **Restante** | Lo que el monedero y el crédito promocional todavía pueden pagar |
+| **Gastado** | Lo cobrado en los últimos 30 días |
 | **Promocional** | El crédito promocional sin vencer, cuando lo hay |
 | **Monedero** | El monedero, cuando tiene algo |
 
-Si no queda nada, dice *No hay crédito de IA disponible, así que no se pueden
-iniciar tareas nuevas. Contáctanos para agregar crédito.*
+Con el monedero vacío dice *El monedero está vacío, así que no se pueden pagar
+automatizaciones ni crédito adicional. Cada persona puede seguir trabajando con el
+crédito de su puesto.*, con **Agrega dinero** hacia **Facturación**.
 
-**Últimos 30 días**: *En qué se gastó la IA y el tiempo de computadora*,
-**Por agente**. Junto al nombre de cada agente puedes ver *Tareas sin agente*,
-*(probado en el constructor)*, *(computadora mantenida encendida)* e
-*(instrucciones editadas)*. El gasto se muestra solo por agente, nunca por
-persona.
+**Últimos 30 días** — *En qué se fue el gasto de IA*, **Por agente**. Además del
+nombre de cada agente puedes ver *Tareas sin agente*, *(probado en el
+constructor)*, *(computadora mantenida encendida)* y *(instrucciones editadas)*. El
+gasto se muestra solo por agente, nunca por persona.
 
-**Transacciones**: una tarjeta que abre [Transacciones](/es/administration/transactions),
-cada cargo al crédito de IA y cada crédito añadido, con lo **Usado este mes**.
+**Transacciones** — una tarjeta que abre [Transacciones](/es/administration/transactions),
+cada cargo y cada crédito añadido, con lo **Usado este mes**.
 
-<Aside type="note" title="Actividad reciente pasó a Transacciones">
-  La lista de cada movimiento de crédito —**Cuándo**, **Qué se ejecutó**,
-  **Modelo** e **Importe**— estaba al pie de esta página como **Actividad
-  reciente**. Ahora tiene su propia página: abre la tarjeta **Transacciones** o
-  ve a `aptiveai.io/admin/usage/transactions`. Qué significa cada fila se
-  explica en [Transacciones](/es/administration/transactions).
-</Aside>
+### Capacidad del equipo
 
-Para ver cómo les fue a tus agentes en cualquier periodo —tareas, objetivos
-cumplidos, uso de IA por agente y por modelo—, consulta
-[Actividad](/es/administration/activity) y
-[Productividad](/es/administration/productivity).
+*La capacidad de IA de cada persona en su puesto, y cuántas veces este mes llegó
+al límite.*
+
+| Columna | Qué muestra |
+|---|---|
+| **Persona** y **Puesto** | Quién es, y su nivel |
+| **Capacidad** | **Normal**, **Cerca del límite** o **En el límite** |
+| **En el límite** | *Ninguna este mes*, o *‹n› semanas este mes* |
+
+Muestra un estado, nunca el crédito de nadie en dólares. Quien llega a menudo al
+límite es quien conviene pasar a un puesto más grande: consulta
+[Facturación y puestos](/es/administration/billing#el-puesto-de-una-persona). Los
+propietarios la ven de toda la empresa. **Un administrador la ve de las personas de
+los espacios de trabajo que administra**, debajo de su propio uso, y nada más sobre
+dinero.
 
 ## Avisos
 
-Los propietarios y administradores reciben avisos en la [Bandeja de entrada](/es/concepts/inbox)
+A los propietarios y administradores se les avisa en la [Bandeja de entrada](/es/concepts/inbox)
 y por correo:
 
 | Aviso | Cuándo |
 |---|---|
-| **El crédito de IA se está agotando** | El crédito baja del nivel de alerta de la cuenta, cuando hay uno definido. Como máximo una vez al mes |
-| **La prueba está por terminar** | La prueba termina dentro de siete días |
-| **Un pago está vencido** | La última factura no está pagada |
+| **La prueba está por terminar** | La prueba termina en menos de siete días |
+| **Hay un pago vencido** | La última factura no está pagada |
 
-Cada uno se envía una sola vez por situación, sin importar cuántas tareas se
-ejecuten mientras tanto. Cuáles te llegan, y cómo, se explica en
+Cada uno se envía una vez por condición. Cuáles te llegan, y cómo, está en
 [Ajustes de notificaciones](/es/reference/settings/notifications).
 
 ## Cuando la suscripción termina o la cuenta se suspende
@@ -170,35 +197,28 @@ ejecuten mientras tanto. Cuáles te llegan, y cómo, se explica en
 Quedarse sin crédito solo detiene el trabajo nuevo. Dos cosas detienen el
 trabajo que ya está en curso:
 
-- **La suscripción termina.** *Los agentes y el historial de tareas ya no
-  están disponibles en esta cuenta.* Las tareas que están trabajando terminan
-  en su siguiente paso, las tareas que esperan una respuesta se detienen, las
-  computadoras se apagan y los inicios de sesión guardados dejan de usarse. Un
-  propietario aún puede abrir **Facturación**.
-- **AptiveAI suspende la cuenta.** Todos ven *Esta cuenta está suspendida*, y
-  el trabajo se detiene de la misma forma. Si crees que es un error, contacta a
-  AptiveAI. Cuando se levanta una suspensión, los inicios de sesión guardados
-  vuelven a funcionar sin tener que rehacer nada.
+- **La suscripción termina.** *Los agentes y el historial de tareas ya no están
+  disponibles en esta cuenta.* Las tareas que están trabajando terminan en su
+  siguiente paso, las que esperan una pregunta se detienen, las computadoras se
+  apagan y los inicios de sesión guardados dejan de usarse. Un propietario aún
+  puede abrir **Facturación**.
+- **AptiveAI suspende la cuenta.** Todos ven *Esta cuenta está suspendida* y el
+  trabajo se detiene igual. Si crees que es un error, contacta a AptiveAI.
+  Cuando se levanta una suspensión, los inicios de sesión guardados funcionan de
+  nuevo sin que tengas que rehacer nada.
 
 ## Facturación
 
-**Facturación** en el área de administración es del propietario. Es de solo
-lectura: AptiveAI gestiona la suscripción, así que no hay formulario de tarjeta
-ni botón para cancelar; para cambiar cualquier cosa, usa **Contáctanos**.
-
-| Sección | Qué muestra |
-|---|---|
-| **Plan** | El plan, su estado, el **Precio mensual**, la **Próxima fecha de facturación** o la **Fecha de inicio de facturación**, cuándo **Termina** si va a terminar y cuándo vence el crédito de una prueba. Cuando los agentes no pueden empezar, el motivo, con **Contáctanos** |
-| **Método de pago** | La tarjeta registrada —marca, últimos cuatro dígitos y vencimiento— o *No hay tarjeta registrada. Esta empresa recibe facturas, y cada una se envía por correo a su contacto de facturación.* |
-| **Facturas** | Todas las facturas, con su **Fecha**, **Importe** y **Estado** —**Pagada**, **Abierta**, **Borrador**, **Incobrable** o **Anulada**— y **Descargar** para el PDF |
+Los puestos, los niveles, la tarjeta, el monedero, las facturas y la cancelación
+son del propietario, en **Facturación**: consulta [Facturación y puestos](/es/administration/billing).
 
 ## Siguiente
 
 <CardGrid>
+  <LinkCard title="Facturación y puestos" href="/es/administration/billing" description="Puestos, la tarjeta, el monedero y las facturas." />
   <LinkCard title="Ajustes" href="/es/reference/settings#plan-y-crédito" description="Plan y crédito, tal como lo ve cada persona." />
   <LinkCard title="Transacciones" href="/es/administration/transactions" description="Cada cargo a tu crédito de IA y cada crédito añadido." />
   <LinkCard title="Actividad" href="/es/administration/activity" description="Uso de IA, tareas, objetivos cumplidos y modelos a lo largo del tiempo." />
   <LinkCard title="El área de administración" href="/es/administration/overview" description="Quién puede entrar y qué ve cada rol." />
-  <LinkCard title="Agentes" href="/es/concepts/agents#acceso-de-pago" description="Lo que permite el acceso de pago." />
-  <LinkCard title="Automatizaciones" href="/es/concepts/automations#ejecuciones-omitidas" description="Ejecuciones omitidas por falta de crédito de IA." />
+  <LinkCard title="Agentes" href="/es/concepts/agents#acceso-de-pago" description="Qué permite el acceso de pago." />
 </CardGrid>

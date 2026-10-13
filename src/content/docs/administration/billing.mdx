@@ -1,0 +1,232 @@
+---
+title: Billing and seats
+description: How an enterprise pays for AptiveAI Agents — the trial and the setup that starts a subscription, seats and the four seat tiers, each person's allowance and what happens when it runs out, the wallet that pays for automations, and the owner's Billing page for seats, the card, invoices and cancelling.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+AptiveAI Agents is paid for **per person**. Everyone who hands work to agents
+holds a **seat**, each seat has a **tier**, and the owner pays for all of them
+on one card, once a month. [Automations](/concepts/automations) are paid
+differently, from a prepaid **wallet**. The owner manages all of it — seats,
+the card, the wallet, invoices — from **Billing** in the
+[admin area](/administration/overview), and nobody needs to contact AptiveAI to
+do it.
+
+| Who | What they can do |
+|---|---|
+| **Owner** | Everything on this page. **Billing** is the owner's alone |
+| **Admin** | Sees which seat each person has on **Users**, and can invite people into seats that are already paid for. Cannot buy seats or open **Billing** |
+| **Member** | Works on the allowance of their own seat, and reads it under **Usage** — see [Usage and credit](/administration/usage) |
+
+## Starting out
+
+Anyone can create an AptiveAI account, but a **workspace is by invitation**:
+a new account with no invitation sees *This account is not set up yet* until
+someone invites it — see [Users and roles](/administration/users#someone-signed-up-without-an-invitation).
+AptiveAI sets up your enterprise, with a trial, and invites its first owner.
+
+During the **trial** your team shares one pool of AI credit and nobody needs a
+card. When the trial ends — on its date, or when its credit is used up — the
+account is **paused** until the owner subscribes. Nothing is charged before
+that.
+
+## Subscribing
+
+When the account is paused, the owner is taken to **Set up your subscription**
+(`aptiveai.io/setup`) wherever they go, in steps. **Billing** also offers
+**Set up billing**, and **Subscribe again** if a subscription has ended.
+
+<Steps>
+
+1. **Seats and tiers.** Everyone in the enterprise holds a seat. Pick each
+   person's tier (everyone starts on **Bronze**), mark anyone who should not
+   stay for removal, and **Invite people** who are still missing. **Empty
+   seats** buys seats now for people you will invite later. The **Monthly
+   total** updates as you go, and nothing is charged yet. A subscription needs
+   at least one seat.
+
+2. **Payment details.** Enter the card and its billing address. It is charged
+   today for the first month — **Subscribe and pay** shows the amount — and on
+   the same day each month after.
+
+3. **Wallet.** Optional: add money for automations, decide whether people may
+   keep working from the wallet when their allowance runs out, and set up
+   auto-recharge. All of it can be changed later in **Billing**. **Finish**
+   ends the setup.
+
+</Steps>
+
+The last page says *Your subscription is active and your workspace is open
+again*, with a receipt by email and links to the console and to **Billing**.
+People marked for removal in step 1 leave the enterprise when the
+subscription starts, and their automations are deleted.
+
+<Aside type="note" title="What members see while it is paused">
+  Anyone who is not an owner sees *Your account is disabled — reach out to your
+  owner, ‹name›, to enable it.* The owner sees *Your account is paused. Finish
+  setup to turn it back on.* A task that is already working finishes. A task
+  waiting on a question stays waiting and carries on after the owner subscribes.
+  Automations do not run while the account is paused.
+</Aside>
+
+## Seat tiers
+
+A bigger seat runs more computers at once and does more tasks a day. Each
+person can be on a different tier, and every tier is the same price for
+everyone on it.
+
+| Tier | Price | Tasks a day | Computers at once |
+|---|---|---|---|
+| **Bronze** | $35 per seat / month | up to 25 | 2 |
+| **Silver** | $70 per seat / month | up to 50 | 3 |
+| **Gold** | $100 per seat / month | up to 70 | 3 |
+| **Platinum** | $150 per seat / month | up to 100 | 4 |
+
+*Tasks a day* is an upper estimate for a typical mix of work on the default
+model, not a limit: a long task, or a larger model, uses more of a seat. A
+person can also have as many live views open at once as they have computers.
+The current
+figures are always on the [pricing page](https://aptiveai.io/pricing). If your
+company has a price of its own, it is arranged with AptiveAI, and **Billing**
+shows what you pay.
+
+Start everyone on Bronze and move people up when they hand agents more work
+than their seat holds. [Usage and credit](/administration/usage#team-capacity)
+shows who is near their limit.
+
+## What each person gets
+
+Every seat comes with an AI **allowance** that refreshes. It is paced so that
+nobody uses a whole period's allowance in a day: there is a **weekly
+allowance** and, inside it, a smaller **5-hour allowance**. Both are shown to the
+person as percentages, never as money, under **Usage** and in
+[Settings → Plan & credit](/reference/settings#plan--credit), each with the
+time it **Refreshes**.
+
+When a person has used the 5-hour or the weekly allowance, they cannot start a
+new task for now:
+
+- They see *You've used your allowance for these 5 hours — it refreshes ‹time›*
+  or *You've used this week's allowance — it refreshes ‹date›*, and Settings
+  says *Your allowance is used for now*.
+- A task they already have working finishes; the next one is refused.
+- They can start again when the allowance refreshes. The message also says
+  *Ask ‹owner› to allow extra credit* — see [the wallet](#the-wallet).
+
+A move to a higher tier gives the person the higher allowance straight away.
+Allowance does not carry over from one billing period to the next.
+
+## The wallet
+
+The wallet is prepaid money the owner keeps for two things: **automations**,
+which are paid from the wallet and never from anyone's seat, and **extra
+credit** for people who reach their allowance. **Billing** shows it as
+**Balance**.
+
+| Part | What it does |
+|---|---|
+| **Add funds** | Charges the card on file from $10 to $500 and credits the wallet |
+| **When someone runs out** | **Let people keep working from the wallet** — past their allowance, a person's work is paid from the wallet instead of waiting. Off, they wait for it to refresh |
+| **Limit per person** | **No limit**, or **Set a limit**: the most one person may draw from the wallet each month, in dollars. Shown while extra credit is on |
+| **Auto-recharge** | Tops the wallet up from the card when the balance drops below an amount you choose, by an amount you choose |
+| **What an automation costs** | A calculator: how often it should run, and whether the job is **Quick**, **Standard** or **Long**, gives *about ‹amount› a month* |
+
+An automation whose wallet is empty cannot run, and is recorded as skipped —
+see [Automations](/concepts/automations#skipped-runs). If a recharge payment
+fails, auto-recharge turns itself off and the owner is emailed. Signed-in
+people can also try the same calculator on the public
+[pricing calculator](https://aptiveai.io/pricing/calculator).
+
+## The Billing page
+
+**Billing** is the owner's page in the admin area, with these cards:
+
+| Card | What it shows and does |
+|---|---|
+| **Plan** | The plan's **Status** badge, the **Monthly price**, the **Next billing date** and the **Billing start date**. A trial shows when its credit expires |
+| **Seat tiers** | For each tier, how many seats the subscription holds, how many are held and how many are free, with **Change seats** |
+| **Payment method** | The card on file — brand, last four digits and expiry — with **Update card**, or **Add card** if there is none |
+| **Invoices** | Every invoice with its **Date**, **Amount** and **Status**, a search box, and **Download** for the PDF |
+| **Balance**, **When someone runs out**, **Auto-recharge**, **What an automation costs** | [The wallet](#the-wallet) |
+| **Cancel subscription** | [Cancelling](#cancelling-and-subscribing-again) |
+
+The status is **Awaiting first payment**, **Trial**, **Active**, **Payment
+overdue** or **Cancelled**.
+
+### Changing seats
+
+**Change seats** (or **Change** on a tier) opens a dialog for that tier. Use
+**One more seat** and **One seat fewer**; the **Summary** shows what changes
+before you confirm it.
+
+| Change | What happens |
+|---|---|
+| **Add seats** | Charged **today**, for the days left in the period. The dialog shows **Due today** and the next invoice |
+| **Remove seats** | Takes effect **from the next billing date**, with no refund — *The renewal bills fewer seats* |
+
+A confirmed change shows *Seats updated.* You cannot remove a seat someone
+holds: *Remove people or invitations first.*
+
+### A person's seat
+
+On **Users**, a person's **Seat** shows their tier, and **Change seat** opens
+*Move ‹name› to ‹tier›?* with what it costs.
+
+| Change | What happens |
+|---|---|
+| **Up** | The difference is charged today, for the rest of the period, and the higher allowance starts now |
+| **Down** | From the next billing date. Until then nothing changes, and there is no refund. The row reads *‹tier› from ‹date›* |
+| **Back to the current tier** | Cancels a move you scheduled. *Stays on ‹tier›… No charge* |
+
+### Inviting and removing people
+
+An invitation holds a seat of its tier until it is accepted, revoked or
+expires, so you can only invite into seats that are free. **Invite someone**
+picks a **Seat** for each person. When there is no free seat of that tier, an
+owner is offered **Add ‹n› seat and send**, with the cost today and the next
+invoice; an admin is told to *ask an owner to add a seat*. Resending an
+expired invitation takes a free seat again.
+
+Removing someone from a subscribed enterprise happens at the end of the
+billing period: *‹name› keeps access until ‹date›*, then their seat leaves the
+subscription, and **their automations are deleted** — the dialog lists them.
+Nothing is refunded for the period. Until then the row reads *Leaves ‹date›*
+with **Keep** to undo it. During a trial a removal is immediate and their
+automations are paused instead.
+
+### A payment that fails
+
+If a renewal is not paid, the status becomes **Payment overdue**. For the next
+**7 days** everything keeps working, and the owner sees *Your payment is
+overdue. Update your card by ‹date› to keep your account active.* **Update
+card and pay** takes the new card and pays what is owed. After 7 days the
+account is paused, exactly as when a trial ends, and the owner pays from
+**Update your card**. Paying reopens the account within a few minutes.
+
+### Cancelling and subscribing again
+
+**Cancel subscription** asks for confirmation. The subscription stays active
+until the end of the period you have paid for, and nothing more is charged.
+**On the day after that date, the account and all its data — agents, tasks,
+automations, connectors and files — are permanently deleted. Nothing is
+kept.**
+
+While a cancellation is scheduled, **Billing** says *Set to cancel on ‹date›*,
+replaces **Next billing date** with **Access until**, and offers
+**Reactivate**, which keeps everything. Seats cannot be changed meanwhile.
+
+<Aside type="caution" title="Cancelling deletes the account">
+  Cancelling is not a pause. Reactivate before the date to keep your data. An
+  ended subscription that has not yet been deleted shows *This subscription has
+  ended* with **Subscribe again**.
+</Aside>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Usage and credit" href="/administration/usage" description="Your own allowance, the owner's view, and when agents cannot start." />
+  <LinkCard title="Users and roles" href="/administration/users" description="Invite people, change roles, remove someone." />
+  <LinkCard title="Transactions" href="/administration/transactions" description="Every charge and every credit added." />
+  <LinkCard title="Automations" href="/concepts/automations" description="Work that runs on its own, paid from the wallet." />
+</CardGrid>

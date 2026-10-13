@@ -1,12 +1,12 @@
 ---
 title: Compartir
-description: "Quién puede usar una tarea, una automatización, un agente o una habilidad: quien la creó, las personas que añades con Puede usar o Puede editar, y Todos en un espacio de trabajo. Qué pueden abrir los propietarios y administradores, las tareas de solo lectura y Continuar en una tarea mía."
+description: "Quién puede usar una tarea, una automatización, un agente, una habilidad o un conector: quien la creó, las personas que añades con Puede usar o Puede editar, y Todos en un espacio de trabajo. Qué pueden abrir los propietarios y administradores, las tareas de solo lectura y Continuar en una tarea mía."
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
-Las tareas, las automatizaciones, los agentes y las habilidades se comparten de
-la misma forma. Todo lo que creas es solo tuyo hasta que lo compartes. El chip
+Las tareas, las automatizaciones, los agentes, las habilidades y los conectores
+se comparten de la misma forma. Todo lo que creas es solo tuyo hasta que lo compartes. El chip
 en la parte superior de cada uno muestra quién tiene acceso —**Solo tú**,
 **Tú + 2**, **Todos en Ventas**— y al seleccionarlo se abre el cuadro para
 compartir. En las listas, el mismo chip es una insignia, y **Compartidas
@@ -25,7 +25,8 @@ otras personas compartieron contigo.
   trabajo nunca recibe Puede editar.
 - Los cambios se aplican a medida que los haces. **Listo** cierra el cuadro.
 - El cuadro de una habilidad se abre con **Quién puede usarla**, en el menú de su
-  fila, o desde su editor.
+  fila, o desde su editor. El de un conector, con **Quién puede usarlo**, en su
+  panel.
 
 Una tarea no tiene niveles: las personas que añades pueden verla y seguirla, en
 solo lectura. Solo la persona que inició una tarea puede compartirla, cambiarle
@@ -33,18 +34,19 @@ el nombre o eliminarla.
 
 ## Quién puede hacer qué
 
-| | Tarea | Automatización | Agente | Habilidad |
-|---|---|---|---|---|
-| Quien la creó | Todo | Todo | Todo | Todo |
-| Añadida, o Puede usar | La ve y la sigue, en solo lectura | La ve y ve todas sus tareas, en solo lectura | La ve, la menciona con @ e inicia tareas con ella | La ve y la concede a un agente que edita |
-| Puede editar | — | Cambiarla, pausarla, **Ejecutar ahora**, compartirla; responder y aprobar en sus tareas | Cambiarlo y compartirlo | Cambiarla y compartirla |
-| Todos en ‹espacio de trabajo› | Igual que Puede usar | Igual que Puede usar | Igual que Puede usar | Igual que Puede usar |
+| | Tarea | Automatización | Agente | Habilidad | Conector |
+|---|---|---|---|---|---|
+| Quien la creó | Todo | Todo | Todo | Todo | Todo |
+| Añadida, o Puede usar | La ve y la sigue, en solo lectura | La ve y ve todas sus tareas, en solo lectura | La ve, la menciona con @ e inicia tareas con ella | La ve y la concede a un agente que edita | Lo ve, con su estado y sus herramientas |
+| Puede editar | — | Cambiarla, pausarla, **Ejecutar ahora**, compartirla; responder y aprobar en sus tareas | Cambiarlo y compartirlo | Cambiarla y compartirla | Cambiar su nombre, sus ajustes o su inicio de sesión, probarlo, desconectarlo |
+| Todos en ‹espacio de trabajo› | Igual que Puede usar | Igual que Puede usar | Igual que Puede usar | Igual que Puede usar | Igual que Puede usar |
 
 Solo quien la creó elimina una tarea o una habilidad; una automatización la
 elimina quien la creó o un propietario o administrador del espacio de trabajo. Los
 archivos de conocimiento siguen a su agente: quien puede editar el agente edita
-sus archivos. Los conectores no se comparten de persona a persona; que un agente
-personal pueda tener uno es un ajuste del espacio de trabajo (consulta
+sus archivos. Dar acceso a un conector a un agente es cosa de propietarios y
+administradores, y que un agente personal pueda tener un conector es un ajuste del
+propio conector (consulta
 [Acceso](/es/administration/access#conectores-para-agentes-personales)).
 
 ## Qué pueden abrir los propietarios y administradores
@@ -53,17 +55,17 @@ Abrir con un enlace es más amplio que aparecer en una lista. Tus listas
 muestran lo tuyo y lo que se compartió contigo, nada más, salvo las
 automatizaciones para propietarios y administradores.
 
-- **Los propietarios del espacio de trabajo** pueden abrir cualquier cosa de su
-  espacio de trabajo con su enlace, pero no aparece en sus listas. Una tarea que
-  abren es **de solo lectura**.
+- **El propietario** puede abrir cualquier cosa de cualquier espacio de trabajo
+  con su enlace, pero no aparece en sus listas. Una tarea que abre es **de solo
+  lectura**.
 - **Las automatizaciones sí aparecen en la lista**: los propietarios y
   administradores de un espacio de trabajo ven en su lista todas sus
   [automatizaciones](/es/concepts/automations), con lo que cuestan, y pueden
   cambiarlas, pausarlas, ejecutarlas y eliminarlas.
-- **Los propietarios y administradores de una organización** pueden abrir y
-  editar todos los agentes de ella, también los personales. Un administrador de
-  un solo espacio de trabajo solo edita los agentes que se compartieron con él
-  como Puede editar.
+- **El propietario** y **los administradores de un espacio de trabajo** pueden
+  abrir y editar todos los agentes de ese espacio de trabajo, también los
+  personales. Un administrador edita un agente de un espacio de trabajo que no
+  administra solo si se compartió con él como Puede editar.
 - **AptiveAI** puede abrir cualquier cosa con su enlace y editar cualquier
   agente.
 
@@ -89,11 +91,12 @@ que ya no necesites o compártelo con el espacio de trabajo.
 ## Cuando alguien se va
 
 Cuando se quita a una persona de la empresa, todo lo que se compartió con ella
-deja de compartirse, y las automatizaciones que creó se pausan con la nota
-«Paused because the person who created it left the workspace.», que se muestra
-en inglés. Un propietario puede abrir esas automatizaciones y volver a
-activarlas. Sus agentes, habilidades y automatizaciones se quedan, y los
-propietarios y administradores de la organización aún pueden editar sus
+deja de compartirse. Durante una prueba, las automatizaciones que creó se pausan
+con la nota «Paused because the person who created it left the workspace.», que
+se muestra en inglés, y un propietario puede abrirlas y volver a activarlas; en
+una suscripción se eliminan cuando termina el puesto de la persona, al final del
+periodo de facturación. Sus agentes y habilidades se quedan, y los propietarios
+y los administradores del espacio de trabajo de un agente aún pueden editar sus
 agentes.
 
 ## Enlaces

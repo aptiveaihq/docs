@@ -1,0 +1,142 @@
+---
+title: Workspaces
+description: What a workspace is, how an enterprise holds several, who owns and who administers each one, the Workspaces pages in the admin area, adding people and choosing a main workspace, deleting and restoring a workspace, and what a person in no workspace sees.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A **workspace** is where a team's work lives: its [tasks](/concepts/tasks),
+[automations](/concepts/automations), [agents](/concepts/agents),
+[connectors](/concepts/connectors), [skills](/concepts/skills) and the
+computers they run on. Your enterprise is the account that is subscribed and
+invoiced; the workspaces inside it are how you divide the work. A new
+enterprise starts with one workspace, and most companies never need more.
+
+There is **no workspace switcher**. A person who belongs to several workspaces
+sees the work of all of them in one list, and the pages that matter say which
+workspace each thing is in — see [Working in more than one workspace](#working-in-more-than-one-workspace).
+
+## Who runs a workspace
+
+| Role | In a workspace |
+|---|---|
+| **Owner** | Runs every workspace in the enterprise: creates, renames, deletes and restores them, chooses who administers each, adds and removes people, and sets anyone's main workspace. Also renames the enterprise, and is the only one who sees billing |
+| **Admin** | Runs **the workspaces the owner gave them**, and only those: invites people into seats that are already paid for, adds people who are already in the enterprise, removes people from the workspace, renames it, turns on **Everyone in ‹workspace›**, and edits or deletes anyone's agents, connectors, automations and skills in it |
+| **Member** | Works in the workspaces they belong to. May belong to several |
+
+An admin of one workspace is an admin there and a member in the others. An
+admin cannot create or delete workspaces, make anyone an admin, change a role
+in the enterprise, remove anyone from the enterprise, or open **Billing**.
+**Tasks stay private** whatever the role: an admin sees someone else's task
+only when it was shared with them — see [Access and sharing](/administration/access).
+
+## The Workspaces page
+
+**Workspaces** is in the admin menu for owners and admins. An owner sees every
+workspace; an admin sees the ones they administer. Anyone else is told that
+only the owner and the admins of a workspace manage workspaces.
+
+| Column | Shows |
+|---|---|
+| **Workspace** | The name. *Your main* marks your own main workspace |
+| **People** | How many people belong to it |
+| **Admins** | Who administers it, or *No admins yet* |
+| **Created** | When it was created |
+
+A workspace does not need an admin: the owner manages it until there is one.
+
+| Action | Who | What it does |
+|---|---|---|
+| **New workspace** | Owner | Asks for a **Workspace name** (*Operations*) and creates it. Names must be different |
+| **Rename** | Owner, and the admins of that workspace | Changes the name |
+| **Delete** | Owner | See [Deleting and restoring](#deleting-and-restoring-a-workspace) |
+| **Show → Deleted** | Owner | Lists deleted workspaces, each with **Restore** |
+
+Select a workspace to open it.
+
+## People in a workspace
+
+A workspace's page lists its **People** — *who works in this workspace, and
+their role in it* — with each person's **Role here** and **Seat**, and a
+**Main** badge where it is their main workspace. Removing someone here keeps
+them in the enterprise, with their seat and their other workspaces.
+
+| Action | Who | What it does |
+|---|---|---|
+| **Add person** | Owner, workspace admin | Picks someone already in your enterprise who is not in this workspace yet. They use the seat they already have |
+| **Invite** | Owner, workspace admin | The usual invitation, with a **Seat**, into this workspace. It needs a free seat: an admin is told to ask an owner to add one |
+| **Make admin** / **Make member** | Owner | Makes them an admin of this workspace, or a plain member again |
+| **Make main** | Owner, workspace admin | Sets this as the person's main workspace |
+| **Remove from workspace** | Owner, workspace admin | Takes them out of this workspace only |
+
+*Make admin* explains what it gives: the person can invite people into free
+seats, add and remove people here, rename the workspace, and edit or delete
+anything in it.
+
+On **Users**, each person's **Workspaces** column lists the workspaces they
+belong to, with their main one marked *(main)*, and an owner can change the main
+workspace there. **Invite someone** asks for the **Workspace they join** when
+you manage more than one. An admin sees only the people of the workspaces they
+administer, and can invite **Members** only.
+
+## Main workspace
+
+Every person has a **main workspace**: where what they create lands when they
+are not asked. It is the one the owner or a workspace admin chose; when none was
+chosen, or it was deleted or the person left it, it is the oldest workspace they
+belong to.
+
+## Working in more than one workspace
+
+A person in a single workspace sees no workspace controls at all. A person in
+several gets, for [tasks](/concepts/tasks), [automations](/concepts/automations),
+[connectors](/concepts/connectors) and [skills](/concepts/skills):
+
+- a **Workspace** label on each item, and a **Workspace** filter on the list;
+- a **Workspace** field when they create an agent, an automation, a connector
+  or a skill, set to their main workspace unless they pick another. They can
+  only pick a workspace they belong to.
+
+A task started with an agent lands in the agent's workspace when you belong to
+it, and otherwise in your main workspace. A task started without an agent lands
+in your main workspace.
+
+## Deleting and restoring a workspace
+
+Only the owner deletes a workspace. **Delete** asks *Delete this workspace?* and
+spells out what happens:
+
+- everything in it — agents, connectors, automations, skills and tasks — is
+  **hidden from everyone**, and its automations are **paused**;
+- **nothing is erased**, and nobody loses their seat;
+- the owner can restore it from **Workspaces → Deleted → Restore**. Everything
+  comes back, except that its automations stay paused until someone turns them
+  on again.
+
+<Aside type="note">
+  The enterprise's last workspace cannot be deleted, so there is always
+  somewhere to work.
+</Aside>
+
+## A person in no workspace
+
+A person who is in the enterprise but in no workspace — never added, removed
+from the last one, or whose only workspace was deleted — sees *You're not in a
+workspace yet. Ask your owner, ‹name›, to add you to a workspace. Your account
+and your seat are kept.* Until someone adds them, they can still open their own
+**Usage** and their account. Add them from the **Workspaces** page, on a
+workspace's **Add person**.
+
+## Renaming the enterprise
+
+The owner's **Overview** has a card with the enterprise's name and **Rename
+enterprise**. Only the owner can change it.
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Users and roles" href="/administration/users" description="Invite people, change roles, remove someone." />
+  <LinkCard title="Access and sharing" href="/administration/access" description="Who sees which agent, task and automation." />
+  <LinkCard title="Billing and seats" href="/administration/billing" description="Seats, the card and the wallet." />
+  <LinkCard title="The admin area" href="/administration/overview" description="Who can enter, and what each role sees." />
+</CardGrid>

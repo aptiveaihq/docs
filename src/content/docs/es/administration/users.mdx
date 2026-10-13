@@ -1,6 +1,6 @@
 ---
 title: Usuarios y roles
-description: "Las personas de tu empresa: los tres roles y exactamente qué puede hacer cada uno, invitar a personas de una en una o desde un archivo, reenviar y revocar invitaciones, qué ve quien recibe la invitación, cambiar un rol, quitar a alguien y la regla del último propietario, y una cuenta que se registró sin invitación."
+description: "Las personas de tu empresa: los tres roles y exactamente qué puede hacer cada uno, los puestos y cambiar el nivel de una persona, invitar a personas de una en una o desde un archivo, reenviar y revocar invitaciones, qué ve quien recibe la invitación, cambiar un rol, quitar a alguien y la regla del último propietario, y una cuenta que se registró sin invitación."
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -13,7 +13,8 @@ ellas aceptan y ya están dentro.
 **Usuarios** tiene dos pestañas:
 
 - **Personas**: todas las personas de la empresa, con su **Nombre**, **Correo**,
-  **Rol** y cuándo **Se unió**. Busca con *Buscar personas…*.
+  **Rol**, **Puesto** y **Espacios de trabajo**. Busca con *Buscar personas…*.
+  Un administrador ve a las personas de los espacios de trabajo que administra.
 - **Invitaciones**: todas las invitaciones enviadas, con quién fue **Invitado** y
   por quién, el **Rol**, el **Estado** y cuándo fue **Creada**.
 
@@ -21,11 +22,13 @@ ellas aceptan y ya están dentro.
 
 | Rol | En resumen |
 |---|---|
-| **Propietario** | Todo lo que puede hacer un administrador, más roles, facturación y uso |
-| **Administrador** | Gestiona agentes, conectores y miembros |
+| **Propietario** | Todo lo que puede hacer un administrador, en todos los espacios de trabajo, más roles, espacios de trabajo, puestos y facturación |
+| **Administrador** | Gestiona agentes, conectores y miembros en los espacios de trabajo que le dio el propietario |
 | **Miembro** | Inicia tareas y les da seguimiento |
 
-Un rol se aplica a toda la empresa. Lo que puede hacer cada uno:
+El rol de un propietario cubre toda la empresa; un administrador lo es de
+[espacios de trabajo](/es/administration/workspaces) concretos, y es miembro en
+todos los demás. Lo que puede hacer cada uno:
 
 | Acción | Propietario | Administrador | Miembro |
 |---|:---:|:---:|:---:|
@@ -34,14 +37,17 @@ Un rol se aplica a toda la empresa. Lo que puede hacer cada uno:
 | Crear automatizaciones | ✓ | ✓ | ✓ |
 | Escribir habilidades para sí mismo | ✓ | ✓ | ✓ |
 | Guardar [inicios de sesión personales](/es/reference/settings/sign-ins) | ✓ | ✓ | ✓ |
-| Editar cualquier agente de su organización | ✓ | ✓ | — |
+| Editar cualquier agente de un espacio de trabajo que administra | ✓ | ✓ | — |
 | Compartir un agente, una habilidad, una tarea o una automatización con personas concretas | ✓ | ✓ | ✓ (lo propio, o donde tiene Puede editar) |
 | Activar **Todos en ‹espacio de trabajo›** | ✓ | ✓ | — |
 | Dar acceso a conectores a los agentes y elegir cuáles están [disponibles para agentes personales](/es/concepts/connectors#disponible-para-agentes-personales) | ✓ | ✓ | — |
 | Aprobar o rechazar una solicitud de cambio de un agente | ✓ | ✓ | — |
-| Entrar al área de administración; invitar a personas, reenviar y revocar invitaciones, quitar a personas | ✓ | ✓ | — |
-| Cambiar el rol de alguien | ✓ | — | — |
-| Ver la facturación, las facturas y el uso | ✓ | — | — |
+| Invitar miembros a puestos libres, agregar personas a un espacio de trabajo, reenviar y revocar invitaciones, sacar a personas de un espacio de trabajo que administra | ✓ | ✓ | — |
+| Invitar a un administrador; quitar a alguien de la empresa | ✓ | — | — |
+| Cambiar el rol o el puesto de alguien | ✓ | — | — |
+| Crear, eliminar y restaurar espacios de trabajo | ✓ | — | — |
+| Comprar puestos, cambiar la tarjeta, usar el monedero; ver la facturación y las facturas | ✓ | — | — |
+| Leer su propio uso | ✓ | ✓ | ✓ |
 
 Una tarea solo la elimina quien la inició; consulta [Tareas](/es/concepts/tasks#compartir-una-tarea-y-quién-la-ve).
 Iniciar o configurar trabajo también requiere [acceso de pago](/es/administration/usage#acceso-de-pago),
@@ -59,8 +65,10 @@ sea cual sea el rol.
 <Steps>
 
 1. **Agrega a cada persona.** Escribe una dirección de correo y elige un
-   **Rol**: **Administrador** o **Miembro**. **+ Agregar más** agrega una fila;
-   hasta 50 personas a la vez.
+   **Rol** —**Administrador** o **Miembro** (un administrador solo puede invitar
+   miembros)— y un **Puesto**, Bronce salvo que elijas otro. **+ Agregar más**
+   agrega una fila; hasta 50 personas a la vez. Si gestionas más de un espacio de
+   trabajo, un campo **Espacio de trabajo al que se une** pregunta a cuál.
 
 2. **O sube un archivo.** **Subir CSV** lee una hoja de cálculo exportada: una
    columna con el encabezado `email` (o simplemente una lista de direcciones) y,
@@ -82,6 +90,12 @@ El resultado se muestra fila por fila:
 | **Ya tiene cuenta** | La dirección ya pertenece a otra empresa de AptiveAI, así que no se puede invitar. Contacta al soporte de AptiveAI para pasarla a la tuya |
 | **No es una dirección** | No es una dirección de correo |
 
+Una invitación ocupa un puesto de su nivel hasta que se acepta, se revoca o vence.
+Cuando no hay ningún puesto libre de ese nivel, un propietario puede **Añadir ‹n›
+puesto y enviar** desde el diálogo —muestra el costo de hoy y la próxima
+factura— y a un administrador se le indica que pida a un propietario. Consulta
+[Facturación y puestos](/es/administration/billing#invitar-y-quitar-personas).
+
 **Propietario nunca se ofrece en una invitación.** Un propietario se nombra
 desde la fila de una persona que ya existe; consulta [Cambiar un rol](#cambiar-un-rol).
 
@@ -92,7 +106,8 @@ Cada invitación **vence a los 7 días**. Su **Estado** es **Pendiente**,
 
 - **Copiar enlace** copia el enlace para aceptar, para enviarlo por otro medio.
 - **Reenviar** la vuelve a enviar por correo con un enlace nuevo y un nuevo
-  vencimiento. El enlace anterior deja de funcionar.
+  vencimiento. El enlace anterior deja de funcionar. Reenviar una invitación
+  vencida vuelve a ocupar un puesto libre.
 - **Revocar** hace que el enlace deje de funcionar de inmediato. La fila se
   queda en la lista como constancia de que la persona fue invitada.
 
@@ -112,7 +127,8 @@ aceptar** o **Crear una cuenta**.
   **Cuenta incorrecta** y puede cerrar sesión y usar la correcta.
 </Aside>
 
-**Aceptar invitación** la agrega a tu empresa con el rol que elegiste. Si
+**Aceptar invitación** la agrega a tu empresa con el rol y el puesto que
+elegiste, en el espacio de trabajo que indicaste. Si
 vuelve a abrir el enlace después, dice *Te uniste a …*, con **Abrir AptiveAI
 Agents**. Una invitación que venció, se revocó o se reenvió muestra *Esta
 invitación no es válida: pídele a la persona que te invitó que te envíe una
@@ -130,28 +146,44 @@ en **Personas**. Las reglas:
 - **El último propietario no puede perder ese rol.** *Este es el último
   propietario de la empresa: primero haz propietario a otra persona.*
 
+Para hacer administrador a alguien de un solo espacio de trabajo, usa **Hacer
+administrador** en ese espacio de trabajo: consulta
+[Espacios de trabajo](/es/administration/workspaces#las-personas-de-un-espacio-de-trabajo).
 Para traspasar la empresa, primero haz propietaria a la nueva persona y luego
 cambia tu propio rol, o pídele que lo cambie ella.
+
+## Cambiar un puesto
+
+El **Puesto** de una persona es su nivel: **Bronce**, **Plata**, **Oro** o
+**Platino**. Solo un propietario lo cambia, con **Cambiar puesto** en la fila de
+la persona, que muestra lo que cuesta antes de confirmar. Subir se cobra hoy y
+empieza de inmediato; bajar empieza en la próxima fecha de facturación. Consulta
+[Facturación y puestos](/es/administration/billing#el-puesto-de-una-persona).
 
 ## Quitar a alguien
 
 Quitar a alguien desde su fila en **Personas** pregunta *¿Quitar a … de esta
-empresa?* y, una vez confirmado:
+empresa?*. **Un administrador no puede**: su fila dice *Pide a un propietario que
+quite a esta persona*; un administrador sí puede sacar a alguien de un espacio de
+trabajo que administra, lo que la deja en la empresa. Una vez que un propietario
+confirma, quitar:
 
-- elimina todos los accesos que tenía y la saca de la empresa: pierde el acceso
-  la próxima vez que carga una página;
+- la saca de la empresa. En una empresa con suscripción ocurre al final del
+  periodo de facturación: **mantiene el acceso hasta entonces** (*Sale el
+  ‹fecha›*, con **Mantener** para deshacerlo), después su puesto sale de la
+  suscripción, no se reembolsa nada y **sus automatizaciones se eliminan**.
+  Durante una prueba es inmediato;
 - quita todo lo que se compartió **con** ella; lo que ella compartió con otras
   personas sigue compartido;
-- **pausa las automatizaciones que creó**, para que dejen de gastar crédito: un
-  propietario puede abrir una y volver a activarla;
-- **conserva** todo lo que creó: las tareas, los agentes, las habilidades y las
-  automatizaciones se quedan. Los propietarios aún pueden abrirlos con su enlace,
-  y los propietarios y administradores de la organización aún pueden editar sus
-  agentes.
+- durante una prueba, **pausa las automatizaciones que creó**, para que dejen de
+  gastar crédito: un propietario puede abrir una y volver a activarla;
+- **conserva** todo lo que creó: las tareas, los agentes y las habilidades se
+  quedan (y, durante una prueba, las automatizaciones). Los propietarios aún
+  pueden abrirlos con su enlace, y los propietarios y los administradores del
+  espacio de trabajo de un agente aún pueden editar sus agentes.
 
 Su cuenta de AptiveAI en sí no se elimina. Se aplican las mismas reglas que
-para los roles: los propietarios y administradores quitan a personas, nadie se
-quita a sí mismo, solo un propietario quita a un propietario y el último
+para los roles: los propietarios quitan a personas, nadie se quita a sí mismo, solo un propietario quita a un propietario y el último
 propietario no se puede quitar.
 
 Una persona que ya no tiene ningún acceso pero sigue vinculada a la empresa

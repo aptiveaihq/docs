@@ -1,29 +1,33 @@
 ---
 title: Settings
-description: Every section of the Settings page in AptiveAI Agents — plan and AI credit, personal sign-ins, appearance, notifications and version — plus where language, your account and your team are managed.
+description: Every section of the Settings page in AptiveAI Agents — plan and your allowance, personal sign-ins, appearance, notifications and version — plus where language, your account, your usage and your team are managed.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-**Settings** holds your own preferences for AptiveAI Agents — open it from the
-sidebar under **Help and Settings**. Everything on it is **per person**: your sign-ins,
+**Settings** holds your own preferences for AptiveAI Agents — open it from
+**Configure & help** at the foot of the sidebar. Everything on it is **per person**: your sign-ins,
 your theme, the notifications you receive. The page is organised into the
 sections below, and the side navigation jumps between them.
 
 ## Plan & credit
 
-Whether this account can start new work, and what it has left to spend.
+Whether this account can start new work, and how much of your allowance is left.
 
 | Row | What it shows |
 |---|---|
 | **Status** | **Awaiting first payment**, **Trial**, **Active**, **Payment overdue** or **Cancelled** |
 | **AI credit left** | The credit the account can still spend on AI |
-| **Agents** | **Can start new work**, or the reason it cannot — such as *No AI credit is available* — with **Contact us** |
+| **Agents** | **Can start new work**, or the reason it cannot — such as *This account is disabled* or *Your allowance is used for now* — with **Contact us** |
+| **Your allowance** | Your **5-hour allowance** and **Weekly allowance** as bars, each with when it **Refreshes** (or *Starts with your next task*), and *Approaching limit* or *Limit reached* when it is close. *You have no allowance for this billing period* when your seat has none |
 
-Agents can start new work only while the status is **Active** or **Trial**
-*and* there is AI credit left — see [paid access](/concepts/agents#paid-access).
-An enterprise's owner sees links to **Billing** and **Usage** in Admin instead,
-where the plan, invoices and credit are.
+Agents can start new work only while the account is in good standing *and* you
+have room in your allowance — see [paid access](/concepts/agents#paid-access).
+Under the allowance, **See your usage** opens your **Usage** page: your
+allowance, extra credit from the wallet and what you have run. An enterprise's
+owner also sees links to **Billing**, **Usage** and **Activity** in Admin, where
+the plan, seats, invoices and credit are. How the allowance works is on
+[Usage and credit](/administration/usage#the-usage-page).
 
 ## Personal sign-ins
 
@@ -59,13 +63,14 @@ A few things you might look for here live elsewhere:
 |---|---|
 | **Language** — English or Spanish | The account menu, under your avatar. Your choice follows you to any device you sign in on |
 | **Your account** | **Account** in the account menu |
-| **Your team** — members, invitations, roles and billing | **Admin**, for owners and admins |
+| **Your usage** — your allowance and activity | **Usage** in **Configure & help**; every person has it |
+| **Your team** — members, invitations, roles, workspaces and billing | **Admin**, for owners and admins |
 | An agent's own sign-ins | The agent's builder, under **Configure → Sign-ins** |
 
 <Aside type="note">
-  **Help and Settings**, at the foot of the sidebar, gathers Settings, personal
-  sign-ins, notifications and Admin in one place — with a link to the docs for
-  each one — beside a way to ask about AptiveAI and a link to these docs.
+  **Configure & help**, at the foot of the sidebar, gathers Settings, personal
+  sign-ins, notifications, Usage and Admin in one place — with a link to the docs
+  for each one — beside a way to ask about AptiveAI and a link to these docs.
 </Aside>
 
 ## Next
