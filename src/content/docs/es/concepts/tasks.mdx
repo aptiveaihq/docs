@@ -74,6 +74,10 @@ hecho en tus sistemas queda hecho.
 Una tarea que se completó, falló, se detuvo o está en pausa se retoma cuando le
 envías otro mensaje.
 
+La página de una tarea terminada sigue atenta. Cuando algo la despierta — un
+mensaje de otra tarea, o uno que enviaste desde otra pestaña o dispositivo — la
+página se actualiza sola, sin recargar.
+
 ### Preguntas y aprobaciones
 
 Cuando el agente te necesita, la tarea se detiene y una tarjeta ocupa el lugar
@@ -105,6 +109,62 @@ tarea.
   [inicio de sesión personal](/es/reference/settings/sign-ins).
 </Aside>
 
+### Cuando el agente llega a su límite de pasos
+
+Un agente da un número limitado de pasos con un mensaje sin consultarte. Si llega
+a ese límite sin haber terminado, la tarea ya no se acaba ahí: una tarjeta
+**Límite de pasos** pregunta *¿Seguir hasta N pasos más?* Lo que ha hecho se
+conserva, y eliges:
+
+| Botón | Efecto |
+|---|---|
+| **Continuar** | El agente sigue desde donde se detuvo, hasta ese número de pasos más |
+| **Detener aquí** | El agente se detiene y te dice hasta dónde llegó |
+
+También hay un cuadro, *O dile al agente qué hacer en su lugar*, para darle otra
+instrucción.
+
+### Cuando los datos de un conector llegan incompletos
+
+A veces un [conector](/es/concepts/connectors) responde solo con una parte de lo
+que el agente pidió. La transcripción lo dice: *Un resultado de … no le llegó
+completo al agente, así que trabajó con una parte. Revisa cualquier lista,
+conteo o total que reporte de ese paso.*
+
+Mientras haya datos así sin resolver, al agente se le impide enviar nada con
+base en ellos. Verás *No se envió nada: el agente intentó enviar mientras los
+datos de un paso anterior estaban incompletos, y se le detuvo.* Responde para
+indicarle que obtenga el resto primero, o que siga con lo que tiene. Un archivo
+que el agente creó con datos incompletos lleva también un aviso, para que lo
+revises antes de compartirlo.
+
+### Las tareas pueden enviarse mensajes entre sí
+
+Un agente puede revisar tus otras tareas y enviarle un mensaje a una de ellas —
+«dile a la tarea de las facturas que revise también marzo». Pídeselo por el
+nombre de la otra tarea; mientras lo hace muestra una línea de paso (*Revisando
+tus tareas*, *Enviando un mensaje a …*, con *(se espera respuesta)* cuando quiere
+una respuesta de vuelta).
+
+- **Solo tus propias tareas.** Un agente puede escribirles a las tareas que tú
+  iniciaste, nunca a las de otra persona.
+- **La tarea que lo recibe lo trata como un mensaje que tú escribiste.** Sigue si
+  estaba en ejecución y se retoma si había terminado. Si espera una pregunta o una
+  aprobación tuya, el mensaje espera detrás de la tarjeta; tu respuesta va
+  primero.
+- **Dice de dónde viene.** Bajo el mensaje, un chip **De la tarea** nombra la
+  tarea que lo envió y la abre; una respuesta que vuelve lleva **Respuesta de la
+  tarea**. Si quien lo envió ya no existe, el chip dice *una tarea que ya no
+  existe*.
+- **Pregunta cuando varias coinciden.** Si un nombre corresponde a más de una
+  tarea, el agente no envía nada y te pregunta a cuál te refieres.
+- **No se desboca.** Un intercambio de ida y vuelta entre tareas se detiene tras
+  unos pocos mensajes, y el agente te pregunta antes de seguir. Enviar no pide una
+  tarjeta de aprobación, pero las aprobaciones propias de la tarea que recibe
+  siguen aplicando.
+- **Una tarea iniciada por una automatización puede recibir** mensajes, pero no
+  enviarlos.
+
 ## La vista en vivo
 
 La **vista en vivo** es la computadora del agente, en vivo: su pantalla real,
@@ -134,18 +194,82 @@ Tres pestañas junto a la transcripción, que pueden ubicarse a la derecha o deb
   tarea; las **Herramientas** que tenía, y cualquier herramienta otorgada que no
   pudo usar; y los **Detalles de la tarea**: estado, la instrucción, el agente, la
   duración, lo que costó (por ejemplo *$0.004 de IA · 3 min en una computadora*)
-  y, en **Más detalles**, el modelo y cuándo empezó y terminó.
+  y, en **Más detalles**, el modelo y cuándo empezó y terminó. Una tarea que inició
+  una automatización también nombra aquí la **Automatización**.
 - **Documentos** — todos los archivos de la tarea: los que se le adjuntaron, los
   que devolvió un conector y los que creó el agente. Consulta
   [Archivos](/es/concepts/files).
+
+Una tarea que inició una [automatización](/es/concepts/automations) muestra esa
+automatización como un pequeño ícono en su encabezado, junto al título.
+Selecciona el ícono, o el nombre de la automatización en **Detalles**, para abrir
+la página de automatizaciones con esa automatización a la vista y resaltada.
 
 ## Nombres
 
 Una tarea toma su nombre de su primer mensaje hasta que, después de su primera
 respuesta, recibe un título corto propio. Un agente también puede ponerle título
 a una tarea cuando sus instrucciones dicen cómo. Haz clic en el título para
-cambiarle el nombre; un nombre que escribe una persona siempre tiene prioridad, y
+cambiarle el nombre (en un teléfono, usa **Cambiar nombre** en el menú **…** del
+encabezado); un nombre que escribe una persona siempre tiene prioridad, y
 si lo borras vuelve el título automático.
+
+## El menú de la tarea
+
+Cada tarea tiene un solo menú **…**, y es el mismo dondequiera que aparezca la
+tarea: en su fila de **RECIENTES** (consulta [Tareas recientes](/es/getting-started/finding-your-way#tareas-recientes)),
+en su fila de la [lista de Tareas](#la-lista-de-tareas) y en el encabezado de la
+página de la tarea. Aparece al apuntar a la fila, y en una pantalla táctil
+siempre está visible.
+
+| Elemento | Qué hace | Se muestra cuando |
+|---|---|---|
+| **Fijar** / **Dejar de fijar** | Mantiene la tarea al principio de **RECIENTES** para todos en el espacio de trabajo | Puedes fijar tareas |
+| **Cambiar nombre** | Edita el título ahí mismo | El lugar donde estás permite editar el título y puedes cambiar nombres |
+| **Abrir en paralelo** | Abre la tarea [junto a la página](#junto-a-la-página) | En una computadora, no en un teléfono |
+| **Compartir…** | Abre el cuadro para compartir — consulta [Compartir](#compartir-una-tarea-y-quién-la-ve) | Siempre |
+| **Detener** | Interrumpe la tarea donde está, como el botón de detener del cuadro de mensajes; envíale un mensaje para continuar | La tarea está en ejecución y puedes detenerla |
+| **Eliminar** | Te pide confirmar y luego elimina la tarea | Tú iniciaste la tarea |
+
+Si eliminas la tarea que tienes abierta, pasas a la lista de Tareas. Un cambio
+hecho desde el menú — cambiar el nombre, fijar, compartir, detener o eliminar —
+se ve en todas las listas a la vez, sin recargar.
+
+{/* SHOT: task-menu — the ⋯ menu open on a RECENT row, showing Fijar, Cambiar nombre, Abrir en paralelo, Compartir…, Detener and Eliminar */}
+
+## Junto a la página
+
+Puedes mantener tareas abiertas **junto a la página** en la que estás, a su
+derecha, y seguir o guiar varias mientras trabajas en otra cosa. Esto es en una
+computadora; un teléfono no tiene la vista junto a la página.
+
+{/* SHOT: task-beside-page — a task docked to the right of the Tasks list, its window header showing the minimize, full-screen, open-as-a-page and close controls, and the "Tareas junto a la página" button with a count in the header */}
+
+Ábrelas de cualquiera de estas formas:
+
+- **Abrir en paralelo** en el [menú](#el-menú-de-la-tarea) de una tarea. Si abres
+  la tarea que estás viendo, pasa junto a la página y la página vuelve a la lista
+  de Tareas.
+- El control al final de la fila **Nueva tarea** de la barra lateral, que abre una
+  tarea nueva junto a la página — una ventana con el cuadro de mensajes. Al
+  enviar, se convierte en la tarea, en el mismo lugar.
+- El control de la fila de un agente fijado, bajo **Nueva tarea**, que hace lo
+  mismo con ese agente ya elegido.
+- **Nueva tarea junto a la página**, en el encabezado, justo antes de la campana.
+
+Cada ventana tiene **Minimizar**, **Pantalla completa**, **Abrir como página** y
+**Cerrar**. Una ventana minimizada se pliega en una tira con el ícono del agente,
+el título y su estado; mientras una está en pantalla completa, las demás y la
+página se pliegan en tiras, y **Restaurar la página** la devuelve. Arrastra los
+bordes entre ventanas para cambiar su tamaño; doble clic para igualarlas.
+
+Cuando hay una tarea abierta junto a la página, el encabezado muestra **Tareas
+junto a la página** con cuántas hay. Su menú te deja **Mostrar tareas** u
+**Ocultar tareas** (ocultarlas las conserva para después), **Cerrar todo**,
+**Organizar automáticamente** o elegir una distribución — pantalla completa, 2 o 3
+columnas o filas, o una cuadrícula de hasta 4×4 — y luego hacer clic en una celda
+para mover una ventana allí. Las ventanas que tienes abiertas se recuerdan en este
+navegador y vuelven después de recargar.
 
 ## Compartir una tarea y quién la ve
 
@@ -186,12 +310,25 @@ consulta [Compartir](/es/concepts/sharing).
 **Tareas** (en **Trabajo**) muestra todas las tareas que puedes ver: el nombre en
 **Tarea**, con su resumen o la pregunta que espera respuesta, el **Agente**, el
 **Estado**, el **Inicio** y la **Duración**. Las tareas que te esperan se reúnen
-en una franja **Te necesitan** arriba, sean cuales sean los filtros. Las tareas
+en una franja **Te necesitan** arriba, arriba. Las tareas
 iniciadas por la misma automatización se agrupan en una fila que puedes abrir.
 
-Filtra por **Estado**, **Cuándo** (hoy, 7 días, 30 días) y **Agente**, o escribe
-en el cuadro de búsqueda para buscar en nombres, resúmenes, instrucciones y más.
-La lista se actualiza sola.
+Acota la lista con el embudo, **Filtrar tareas**. Cada filtro que pones se vuelve
+una etiqueta que puedes cambiar o quitar, y el embudo lleva un punto, así una
+lista filtrada nunca se confunde con la completa:
+
+| Filtro | Opciones |
+|---|---|
+| **Estado** | **Te necesitan**, **En curso**, **Terminadas**, **Fallidas** |
+| **Cuándo** | **Hoy**, los últimos 7 días, los últimos 30 días |
+| **Origen** | **Todas**, **Mías**, **Automatizaciones**, **Compartidas conmigo** |
+| **Agente** | Uno de tus agentes. Si llegas desde **Ver todas** de un agente (`/tasks?agent=…`), su etiqueta siempre aparece, para que puedas quitarla |
+| **Espacio de trabajo** | Solo si estás en más de un espacio de trabajo: acota la lista a uno. Cada fila también nombra su espacio de trabajo |
+
+La franja **Te necesitan** sigue los mismos filtros, así que un filtro que deja
+fuera las tareas que te esperan también la vacía. Escribe en el cuadro de
+búsqueda para buscar en nombres, resúmenes, instrucciones y más. La lista se
+actualiza sola.
 
 ### Estados
 
@@ -208,15 +345,12 @@ Las tareas más antiguas también pueden mostrar **Incompleta**, **Omitida** o
 **Vencida**, estados que las tareas más nuevas registran como **Detenida** con un
 motivo.
 
-### El panel Actividad
+### Recientes, en la barra lateral
 
-**Actividad**, en la barra lateral, abre tus tareas como un panel junto a la
-página en la que estés. **Agrupar por** **Agente** le da a cada agente con el que
-puedes iniciar una tarea un grupo propio — con un **+** para iniciar una tarea
-nueva con él —, mientras que **Estado** las agrupa por estado, y **Ninguno** (la
-opción predeterminada) muestra una sola lista. Las tareas que te esperan van
-primero. **Fijar arriba** mantiene una tarea al principio del panel para todos en
-el espacio de trabajo.
+La lista **RECIENTES** de la barra lateral muestra las mismas tareas en formato
+corto, con el mismo menú **…** en cada fila y el mismo filtro. Úsala para saltar
+entre tareas; usa la lista de Tareas cuando quieras buscar o mirar más atrás.
+Consulta [Tareas recientes](/es/getting-started/finding-your-way#tareas-recientes).
 
 ## Cuánto tiempo se conserva una tarea
 

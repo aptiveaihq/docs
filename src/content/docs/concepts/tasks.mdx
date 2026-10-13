@@ -71,6 +71,10 @@ its computer; anything it already did in your systems stays done.
 A task that has completed, failed, been stopped or paused picks up again when
 you send it another message.
 
+A finished task's page keeps listening. When something wakes it — a message from
+another task, or a message you sent from another tab or device — the page fills
+in by itself, without a reload.
+
 ### Questions and approvals
 
 When the agent needs you, the task stops and a card takes the composer's place.
@@ -99,6 +103,58 @@ A task waiting on you shows as **Needs you**, and reaches you in the
   [personal sign-in](/reference/settings/sign-ins) instead.
 </Aside>
 
+### When the agent reaches its step limit
+
+An agent takes a limited number of steps on one message without checking in.
+If it reaches that and has not finished, the task no longer ends there: a
+**Step limit** card asks *Carry on for up to N more steps?* Its work so far is
+kept, and you choose:
+
+| Button | Effect |
+|---|---|
+| **Continue** | The agent carries on from where it stopped, for up to that many more steps |
+| **Stop here** | The agent stops and tells you how far it got |
+
+There is also a box, *Or tell the agent what to do instead*, for a different
+instruction.
+
+### When a connector's data comes back incomplete
+
+Sometimes a [connector](/concepts/connectors) answers with only part of what
+the agent asked for. The transcript then says so: *A result from … did not
+reach the agent in full, so it worked from part of it. Check any list, count or
+total it reports from that step.*
+
+While data like that is unresolved, the agent is stopped from sending anything
+on the strength of it. You see *Nothing was sent: the agent tried to send while
+data from an earlier step was incomplete, and it was stopped.* Reply to tell
+it to get the rest first, or to go ahead with what it has. A file the agent made
+from incomplete data carries a note too, so you check it before you share it.
+
+### Tasks can message each other
+
+An agent can look at your other tasks and send a message to one of them — "tell
+the invoices task to check March as well". Ask it by the other task's name; it
+shows a step line as it goes (*Looking at your tasks*, *Sending a message to …*,
+with *(reply expected)* when it wants an answer back).
+
+- **Only your own tasks.** An agent can message the tasks you started, never
+  someone else's.
+- **The receiving task treats it like a message you typed.** It carries on if it
+  was running, and picks up again if it had finished. If it is waiting on a
+  question or approval from you, the message waits behind the card; your answer
+  still comes first.
+- **It says where it came from.** Under the message, a **From task** chip names
+  the task that sent it and opens that task; an answer that comes back carries
+  **Reply from task**. If the sender no longer exists, the chip reads *a task that
+  no longer exists*.
+- **It asks when several tasks match.** If a name fits more than one task, the
+  agent sends nothing and asks you which one you mean.
+- **It does not run away.** A back-and-forth between tasks stops after a few
+  exchanges, and the agent asks you before going on. It never needs an approval
+  card to send, but the receiving task's own approvals still apply.
+- **A task an automation started can receive** messages, but cannot send them.
+
 ## The live view
 
 The **live view** is the agent's computer, live: its real screen, as the agent
@@ -125,16 +181,77 @@ Three tabs beside the transcript, which can sit to the right or below
   used; the **Tools** it had, and any granted tools it could not use; and
   **Task details**: status, the instruction, the agent, duration, what it cost
   (such as *$0.004 AI · 3 min on a computer*) and, under **More details**, the
-  model and when it started and finished.
+  model and when it started and finished. A task an automation started also
+  names the **Automation** here.
 - **Documents** — every file in the task: the ones attached to it, the ones a
   connector returned and the ones the agent made. See [Files](/concepts/files).
+
+A task an [automation](/concepts/automations) started shows that automation as a
+small icon in its header, next to the title. Select the icon, or the automation's
+name in **Details**, to open the automations page with that automation scrolled
+into view and highlighted.
 
 ## Names
 
 A task is named from its first message until, after its first reply, it gets
 a short title of its own. An agent can also title a task when its instructions
-say how. Click the title to rename it; a name a person types always wins, and
+say how. Click the title to rename it (on a phone, use **Rename** in the header's **…** menu); a name a person types always wins, and
 clearing it brings the automatic title back.
+
+## The task menu
+
+Every task has one **…** menu, and it is the same wherever the task is listed:
+on its row in **RECENT** (see [Recent tasks](/getting-started/finding-your-way#recent-tasks)),
+on its row in the [Tasks list](#the-tasks-list), and in the task page's header.
+It appears when you point at the row, and is always shown on a touch screen.
+
+| Item | What it does | Shown when |
+|---|---|---|
+| **Pin** / **Unpin** | Keeps the task at the head of **RECENT** for everyone in the workspace | You may pin tasks |
+| **Rename** | Edits the title in place | The place you are in can edit the title, and you may rename |
+| **Open side by side** | Opens the task [beside the page](#beside-the-page) | On a computer, not on a phone |
+| **Share…** | Opens the share box — see [Sharing](#sharing-and-who-sees-a-task) | Always |
+| **Stop** | Interrupts the task where it is, as the stop button in the composer does; send it a message to carry on | The task is running and you may stop it |
+| **Delete** | Asks you to confirm, then deletes the task | You started the task |
+
+Deleting the task you have open takes you to the Tasks list. A change made from
+the menu — a rename, a pin, a share, a stop or a delete — shows in every list at
+once, with no refresh.
+
+{/* SHOT: task-menu — the ⋯ menu open on a RECENT row, showing Pin, Rename, Open side by side, Share…, Stop and Delete */}
+
+## Beside the page
+
+You can keep tasks open **beside the page** you are on, to the right of it, and
+watch or steer several while you work elsewhere. This is on a computer; a phone
+has no beside-the-page view.
+
+{/* SHOT: task-beside-page — a task docked to the right of the Tasks list, its window header showing the minimize, full-screen, open-as-a-page and close controls, and the Tasks beside the page button with a count in the header */}
+
+Open one in any of these ways:
+
+- **Open side by side** in a task's [menu](#the-task-menu). If you open the
+  task you are looking at, it moves beside the page and the page goes back to the
+  Tasks list.
+- The control at the end of the sidebar's **New task** row, which opens a new
+  task beside the page — a window with the composer in it. Sending turns it into
+  the task, in the same place.
+- The control on a pinned agent's row under **New task**, which does the same
+  with that agent already chosen.
+- **New task beside the page** in the header, just before the bell.
+
+Each window has **Minimize**, **Full screen**, **Open as a page** and **Close**.
+A minimized window folds to a strip showing the agent's icon, the title and its
+status; while one is full screen the others and the page fold to strips, and
+**Restore the page** brings it back. Drag the edges between windows to resize
+them; double-click to even them out.
+
+Once a task is open beside the page, the header shows **Tasks beside the page**
+with how many there are. Its menu lets you **Show tasks** or **Hide tasks**
+(hiding keeps them for later), **Close all**, **Auto arrange** or pick a layout —
+full screen, 2 or 3 columns or rows, or a grid up to 4×4 — and then click a cell
+to move a window there. The windows you have open are remembered in this browser
+and come back after a reload.
 
 ## Sharing and who sees a task
 
@@ -170,12 +287,24 @@ The rules are the same for tasks, automations, agents and skills — see
 **Tasks** (under **Work**) lists every task you can see: its **Task** name with
 its summary or the question it is waiting on, the **Agent**, **Status**,
 **Started** and **Duration**. Tasks waiting on you are gathered in a
-**Needs you** band at the top, whatever the filters. Tasks started by the same
+**Needs you** band at the top. Tasks started by the same
 automation fold into one row you can open.
 
-Filter by **Status**, **When** (today, 7 days, 30 days) and **Agent**, or type
-in the search box to match names, summaries, instructions and more. The list
-refreshes by itself.
+Narrow the list with the funnel, **Filter tasks**. Each filter you set becomes a
+chip you can change or remove, and the funnel shows a dot, so a filtered list
+never passes for the whole one:
+
+| Filter | Choices |
+|---|---|
+| **Status** | **Needs you**, **Running**, **Finished**, **Failed** |
+| **When** | **Today**, the last 7 days, the last 30 days |
+| **Source** | **All**, **By me**, **Automations**, **Shared with me** |
+| **Agent** | One of your agents. Arriving from an agent's **See all** (`/tasks?agent=…`) always shows its chip, so you can remove it |
+| **Workspace** | Only if you are in more than one workspace: narrows the list to one. Each row also names its workspace |
+
+The **Needs you** band follows the same filters, so a filter that leaves out
+tasks waiting on you also empties it. Type in the search box to match names,
+summaries, instructions and more. The list refreshes by itself.
 
 ### Statuses
 
@@ -191,14 +320,12 @@ refreshes by itself.
 Older tasks may also show **Incomplete**, **Skipped** or **Expired**, statuses
 that newer tasks record as **Stopped** with a reason.
 
-### The Activity panel
+### Recent, in the sidebar
 
-**Activity** in the sidebar opens your tasks as a panel beside whatever page
-you are on. **Group by** **Agent** gives every agent you can start a task with
-a group of its own — with a **+** to start a new task with it — while **Status**
-groups them by status, and **None** (the default) shows one list. Tasks waiting
-on you come first. **Pin to the top** keeps a task at the head of the panel for
-everyone in the workspace.
+The sidebar's **RECENT** list shows the same tasks in a short form, with the same
+**…** menu on each row and the same filter. Use it to jump between tasks; use
+the Tasks list when you want to search or look further back. See
+[Recent tasks](/getting-started/finding-your-way#recent-tasks).
 
 ## How long a task is kept
 
