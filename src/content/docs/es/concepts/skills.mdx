@@ -54,16 +54,30 @@ Cada fila muestra el **Nombre** de la habilidad, sus **Espacios en blanco**, su
 la quita para todos; las tareas que ya la usaron conservan el texto que
 recibieron.
 
+Si estás en más de un espacio de trabajo, cada fila también indica su **Espacio
+de trabajo**, y un filtro **Espacio de trabajo** acota la lista a uno.
+
+Las herramientas de un [flujo de navegador](/es/concepts/browser-workflows)
+también son habilidades, pero pertenecen a su conector: no aparecen en esta
+lista ni en el menú `/`.
+
 ## Escribir una habilidad
 
-**Nueva habilidad** abre el editor:
+**Nueva habilidad** abre una página propia, con un solo **Guardar** en su
+encabezado:
 
-| Campo | Qué contiene |
+| Sección | Qué contiene |
 |---|---|
-| **Nombre** | Hasta 120 caracteres |
-| **Descripción** | Hasta 500 caracteres. Se muestra junto al nombre cuando alguien escribe `/`, y es lo que lee un agente para decidir si la abre |
+| **Detalles** | El **Nombre** (hasta 120 caracteres); la **Descripción** (hasta 500 — se muestra junto al nombre cuando alguien escribe `/`, y es lo que lee un agente para decidir si la abre); el **Alcance**, **Toda la organización** o un agente concreto; y, solo si estás en más de un espacio de trabajo, el **Espacio de trabajo** al que pertenece — el principal, salvo que elijas otro |
 | **Instrucciones** | El texto en sí, hasta 10,000 caracteres. `{word}` se convierte en un espacio en blanco |
-| **Alcance** | **Toda la organización**, o un agente concreto |
+| **Scripts** | Código que los pasos ejecutan en la computadora del agente, siempre igual. **Agregar script** le da una ruta como `scripts/check.py` y su contenido; los scripts se guardan en carpetas y cada uno se puede editar, renombrar o eliminar. Cuando un agente carga la habilidad, sus scripts se colocan en la computadora |
+| **Historial** | Aparece tras el primer guardado. Cada vez que guardas se crea una versión: **Ver qué cambió** compara dos, y **Restaurar** devuelve una anterior como una versión nueva (el nombre no cambia) |
+
+Quien puede usar una habilidad pero no cambiarla la ve en solo lectura —
+*Puedes usar esta habilidad, pero no cambiarla. Cópiala para tener la tuya.* — y
+tiene **Copiar a las mías**, que abre una habilidad nueva ya rellenada; no se
+guarda nada hasta **Guardar**. Salir de una página con cambios sin guardar
+pregunta antes.
 
 ### Alcance
 

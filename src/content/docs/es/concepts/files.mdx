@@ -62,14 +62,43 @@ hoja de cálculo o CSV. El archivo se guarda con la tarea y el agente recibe su
 ruta, su tipo y tamaño, y una vista previa de su contenido. Una exportación
 grande puede llegar en varias partes.
 
-Una respuesta demasiado grande para entregársela entera al agente — cualquier
-cosa de más de 32 KB — se guarda del mismo modo, como archivo `.json` (o `.csv`
-o `.txt` cuando la respuesta es texto plano), y el agente recibe en su lugar una
-vista previa y la ruta. Luego lee lo que necesita del archivo en su
-computadora, en lugar de arrastrar la respuesta completa por la conversación.
+Si un archivo de una respuesta no se puede guardar, el resto de la respuesta le
+llega igual al agente, con una nota que indica qué archivo no se guardó y por qué.
 
-Si un archivo no se puede guardar, la respuesta del conector le llega igual al
-agente, con una nota que indica qué archivo no se guardó y por qué.
+Una respuesta demasiado grande para entregársela entera al agente — unos 20 KB
+o más — se guarda del mismo modo, como archivo `.json` (o `.csv` o `.txt` cuando
+la respuesta es texto plano), y el agente recibe en su lugar una vista previa y
+la ruta. Luego lee lo que necesita del archivo en su computadora, en lugar de
+arrastrar la respuesta completa por la conversación.
+
+**Los datos de un conector nunca se cortan por la mitad.** Con qué puedes contar:
+
+- **Un resultado se conserva entero o no se conserva.** Un resultado grande
+  nunca se recorta a su primera parte. Si no se pudo guardar como archivo, el
+  agente no recibe ninguna de sus filas — solo una nota que dice que no se pudo
+  guardar — y se le indica que pida menos (un filtro, una página más pequeña, un
+  rango de fechas más corto) o que diga que no se pudieron leer los datos. No
+  rellena el hueco.
+- **Una lista también es un archivo.** Una respuesta con diez filas o más se
+  guarda además como archivo de datos, para que el agente pueda calcular sobre
+  todas las filas con código. Lee las filas de ese archivo; no vuelve a teclear
+  cifras en un script ni las suma de cabeza. El archivo indica cuándo se
+  obtuvieron los datos, porque se quedan desactualizados.
+- **Un archivo que se retiró de la computadora vuelve.** Los archivos que
+  devolvió un conector pueden retirarse de la computadora del agente unos
+  minutos después de llegar; cuando el código del agente necesita uno de nuevo,
+  se vuelve a colocar. Un archivo que ya superó su plazo de conservación no
+  vuelve: al agente se le dice cuándo se obtuvo y le pide los datos otra vez al
+  conector.
+- **Las descargas lentas se esperan.** Cuando el agente descarga un archivo de
+  un sitio web — una exportación, un PDF — espera a que la descarga termine
+  (hasta 30 segundos) y guarda el resultado en la carpeta `downloads` de la
+  tarea, en lugar de trabajar con un archivo a medio escribir o con lo que
+  muestra la página.
+
+Si una parte de un resultado aun así no llegó al agente, la transcripción lo
+dice y se impide que el agente envíe nada construido sobre ella; consulta
+[Cuando los datos de un conector llegan incompletos](/es/concepts/tasks#cuando-los-datos-de-un-conector-llegan-incompletos).
 
 ## Archivos que crea el agente
 

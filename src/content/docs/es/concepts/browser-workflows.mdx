@@ -1,0 +1,202 @@
+---
+title: Flujos de navegador
+description: Enséñales un sitio web a tus agentes una sola vez. Un flujo de navegador es un conector hecho de herramientas que el agente ejecuta en su propio navegador — cómo crear uno, cómo una empresa lo convierte en conector y quién puede verlo, cambiarlo y quitarlo.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Muchos de los sistemas en los que trabaja tu equipo no tienen API: el portal de
+un proveedor, un sistema de registros antiguo, un sitio al que inicias sesión y
+por el que navegas con clics. Un **flujo de navegador** les enseña uno de esos
+sitios a tus agentes una sola vez. Es un [conector](/es/concepts/connectors)
+cuyas **herramientas** no son llamadas a una API sino procedimientos escritos
+— cada una es una [habilidad](/es/concepts/skills) con sus instrucciones y sus
+scripts — que el agente sigue en su navegador, en su propia computadora.
+
+Se usan dos palabras en todo momento, y son cosas distintas:
+
+| Palabra | Qué es | Dónde la encuentras |
+|---|---|---|
+| **Flujo de navegador** | Lo que alguien crea una vez: sus detalles, sus variables y sus herramientas | El mosaico **Flujo de navegador** en **Añadir un conector**, y la página propia del flujo |
+| **Conector** | Lo que una empresa crea *a partir de* un flujo de navegador, con sus propios valores — y luego comparte y asigna como cualquier conector | La lista de Conectores, el editor de agentes, **Añadir un conector** en una tarea |
+
+Un mismo flujo de navegador puede estar detrás de muchos conectores. Quien lo
+crea escribe los pasos; cada empresa que lo usa solo indica cuál es su
+dirección del sitio (u otro valor).
+
+## Crear un flujo de navegador
+
+Abre **Conectores** y baja en **Añadir un conector** hasta **Avanzado**. El
+primer mosaico, **Flujo de navegador** — *Enséñales un sitio web a tus agentes
+una sola vez. Cada herramienta es una habilidad que ejecutan en su propia
+computadora.* — abre **Nuevo flujo de navegador**.
+
+<Aside type="note">
+  Crearlo requiere permiso para agregar tus propios conectores; sin él, la
+  página lo dice y te remite a un propietario o administrador de tu espacio de
+  trabajo. Un espacio de trabajo que guarda datos regulados no puede crear uno.
+</Aside>
+
+La página tiene la misma forma que el editor de un agente. El encabezado lleva
+las acciones — **Crear flujo de navegador** en una página nueva; **Descartar**,
+**Guardar** y **Archivar flujo de navegador** en una ya guardada — y una
+etiqueta indica en qué punto está: **Sin guardar**, **Borrador** hasta que se
+enciende su primera herramienta, **Activo** o **Archivado**. Una página nueva
+conserva todo lo que agregas — detalles, icono, variables, herramientas y sus
+scripts — hasta que pulsas **Crear flujo de navegador**, que lo guarda todo de
+una vez; si la creación se rechaza, no pierdes nada de lo que escribiste.
+
+| Sección | Qué contiene |
+|---|---|
+| **Detalles** | El icono, el **Nombre** y la **Descripción**, como los verá cada empresa |
+| **Variables** | Valores que cada empresa completa al crear su conector — normalmente la dirección del sitio. Dale a cada una una **Etiqueta**, una **Clave**, un **Tipo** (**Texto** o **Dirección web**) y si es **Obligatorio** |
+| **Herramientas** | Lo que tus agentes pueden hacer en el sitio, una herramienta por tarea |
+| **Conectores creados a partir de él** | Los conectores creados a partir de este flujo que puedes ver. Abre uno para cambiarlo en la página de Conectores |
+
+### Variables
+
+Todo lo que cambia de una empresa a otra va en una variable, no en una
+herramienta. Nómbrala entre llaves dentro de las instrucciones de una
+herramienta — `{site_url}` — y el valor propio de cada conector se completa
+cuando el agente carga la herramienta. Una herramienta escrita así funciona
+para todas las empresas sin copiarse.
+
+### Herramientas
+
+**Agregar herramienta** abre el formulario de la herramienta junto a la
+página — el mismo formulario que una [habilidad del espacio de trabajo](/es/concepts/skills#escribir-una-habilidad):
+
+| Campo | Qué contiene |
+|---|---|
+| **Nombre** | Cómo se llama la herramienta |
+| **Cuándo usarla** | Lo que el agente lee para decidir si la carga |
+| **Instrucciones** | Los pasos que sigue el agente. Nombra una variable entre llaves, como `{site_url}` |
+| **Scripts** | Código que los pasos ejecutan en la computadora del agente, siempre igual — se agregan con **Agregar script** y se guardan en carpetas |
+| **Historial** | Cada vez que guardas se crea una versión. **Ver qué cambió**, o **Restaurar** una anterior |
+
+La fila de una herramienta en la lista **Herramientas** tiene **Apagar** y
+**Encender**, y **Quitar**. Una herramienta apagada no se ofrece a ninguna tarea
+desde la siguiente; quitar una herramienta nunca perturba una tarea que ya la
+cargó. Un flujo de navegador pasa a **Activo** cuando su primera herramienta
+está encendida, y no se puede crear un conector a partir de uno que no tenga
+ninguna encendida.
+
+Las herramientas de un flujo de navegador son solo suyas: no aparecen en la
+página **Habilidades** ni en el menú `/`, y un agente no puede cambiar una desde
+una tarea.
+
+### Generar con el agente
+
+No hace falta escribir los pasos a mano. **Generar con el agente** abre la
+pestaña **Agente**: *Dile al agente con qué sitio web trabajar. Trabaja contigo
+en un navegador y propone las herramientas cuando estés listo.* Exploren el
+sitio juntos, muéstrale qué hacer con **Grabar** si quieres, y pídele que
+proponga las herramientas.
+
+No se guarda nada hasta que apruebes. La propuesta del agente llega como una
+tarjeta con cada herramienta — las nuevas marcadas, las existentes tal como
+están — y **Aprobar** guarda todo lo que contiene en el flujo de una vez; puedes
+editar una herramienta en la tarjeta antes. Cada empresa que usa el flujo recibe
+las herramientas nuevas desde su siguiente tarea.
+
+- **Es una sesión en una computadora.** Gasta crédito de IA como cualquier
+  tarea y sigue las mismas reglas que una tarea cuando se agota una asignación.
+- **Una sesión por flujo.** Si recargas la página, se vuelve a conectar a ella.
+  Si la inició otra persona, puedes seguirla, pero esa persona trabaja en ella y
+  la termina.
+- **El inicio de sesión queda fuera del flujo.** Cuando el sitio pide iniciar
+  sesión, el agente usa un inicio de sesión que ya tienes guardado
+  ([Inicios de sesión personales](/es/reference/settings/sign-ins)); ninguna
+  contraseña se escribe en una herramienta.
+- **Terminar la sesión** conserva la conversación como una tarea. Las
+  herramientas que aprobaste quedan guardadas; una propuesta que no aprobaste,
+  no.
+
+### El icono
+
+Elige el icono en **Detalles**: **Subir** uno, **Desde un sitio web** (el icono
+que el sitio muestra en la pestaña del navegador) o **Generar**. Si no
+eliges ninguno, se genera uno una sola vez, automáticamente, la primera vez que
+el flujo tiene lo necesario.
+
+## Usar un flujo de navegador
+
+Cuando un flujo está activo, cualquiera que pueda verlo crea un conector a
+partir de él: abre **Conectores**, haz clic en su mosaico en **Añadir un
+conector** y completa:
+
+- **Nombre** — opcional; si lo dejas en blanco, el conector toma el nombre del
+  flujo.
+- Sus **variables** — por ejemplo **Dirección del sitio**. Las obligatorias
+  están marcadas.
+- **Quién puede usarlo** — el mismo cuadro para compartir que cualquier
+  conector.
+- **Espacio de trabajo** — solo si estás en más de uno; se elige tu espacio
+  principal salvo que elijas otro.
+
+Luego **Conectar**. El mosaico dice **Flujo de navegador · Creado por tu equipo**
+o, si AptiveAI lo publicó para tu empresa, **Flujo de navegador · De AptiveAI**.
+En la página propia del flujo, **Crear un conector a partir de él** en la fila
+de **Detalles** hace lo mismo.
+
+{/* SHOT: browser-workflow-connector — the panel of a connector built from a browser workflow, open on the Connectors page: its icon and name, Settings with the filled-in site address, the Tools list showing its tools, and "Who can use it", with Test connection and Edit browser workflow among its actions */}
+
+<Aside type="tip">
+  Desde aquí el conector funciona como cualquier otro. Asígnalo a un agente en
+  el editor, en **Conectores** (todas sus herramientas, o algunas), o agrégalo a
+  una sola tarea con (+) o `@`. En la tarea el agente carga la herramienta que
+  necesita — la transcripción la muestra como una habilidad que se carga — con
+  los valores propios del conector ya completados y sus scripts colocados en la
+  computadora.
+</Aside>
+
+En el panel del conector:
+
+| | |
+|---|---|
+| **Ajustes** | Los valores de las variables. Al guardarlos se comprueban: se rechaza un valor obligatorio vacío o una dirección web que no empiece por `http://` o `https://` |
+| **Herramientas** | Sus herramientas, las que ofrece su flujo |
+| **Probar conexión** | Comprueba que el flujo sigue existiendo, disponible para tu empresa y activo, con una herramienta encendida y todos los valores obligatorios completados. No abre el sitio |
+| **Editar flujo de navegador** | Abre el flujo — solo para quien puede cambiarlo |
+| **Desconectar** | Elimina este conector y sus ajustes. El flujo no cambia |
+
+Si un flujo gana una variable obligatoria, todos los conectores creados a partir
+de él muestran un error que nombra el valor que falta hasta que su propietario
+lo completa, y mientras tanto las tareas no reciben ninguna de sus herramientas.
+
+## Quién puede hacer qué
+
+| Acción | Quién |
+|---|---|
+| Ver el mosaico de un flujo y crear un conector a partir de él | Cualquiera en una empresa que lo creó o a la que AptiveAI lo publicó, mientras esté activo |
+| Cambiar un flujo de navegador | La persona que lo creó, o AptiveAI. No otro administrador, ni el propietario del espacio de trabajo; lo ven en solo lectura: *Puedes usar este flujo de navegador, pero no puedes cambiarlo.* |
+| Publicarlo para otras empresas | AptiveAI |
+| Usar y compartir un conector creado a partir de él | Quien lo creó y aquellos con quienes se comparte, como cualquier conector |
+| Cambiar sus ajustes, probarlo o desconectarlo | Quien lo creó y otros que puedan editarlo |
+
+Un flujo en **Borrador** solo lo ven las personas que pueden cambiarlo.
+
+## Quitar, archivar y restaurar
+
+En el mosaico de **Añadir un conector**, quien puede editar tiene **Editar** y
+**Quitar** junto a **Conectar**:
+
+- **Quitar** sin ningún conector creado a partir de él **elimina** el flujo para
+  siempre, con sus herramientas, scripts e historial. No se puede deshacer.
+- **Quitar** mientras hay conectores que lo usan lo **archiva**, y la pregunta
+  dice cuántos son: dejan de funcionar hasta que se restaure. **Restaurar flujo
+  de navegador** los devuelve; **Eliminar para siempre** aparece en el
+  encabezado de la página cuando ya no queda ninguno.
+
+Un flujo archivado termina cualquier sesión abierta, muestra un error en cada
+conector creado a partir de él — *el flujo de navegador a partir del cual se
+creó este conector ya no está disponible aquí* — y no ofrece sus herramientas a
+ninguna tarea.
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Conectores" href="/es/concepts/connectors" description="Todos los tipos de conector, la aprobación de escrituras y quién puede cambiar qué." />
+  <LinkCard title="Habilidades" href="/es/concepts/skills" description="El mismo formulario que usan las herramientas de un flujo de navegador." />
+  <LinkCard title="Inicios de sesión personales" href="/es/reference/settings/sign-ins" description="Dónde encuentra el agente tu acceso a un sitio." />
+</CardGrid>

@@ -1,6 +1,6 @@
 ---
 title: Connectors
-description: A connector gives your agents tools inside one of your company's systems — a mailbox, or any HTTP API with an OpenAPI document. What each kind does, how writes are approved, and who may change what.
+description: A connector gives your agents tools inside one of your company's systems — a mailbox, a drive, a chat, an API, or a website. What you can add, how writes are approved, how tools stay current, and who may change what.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -11,49 +11,84 @@ mailbox, look up an order, create a record — and the agent calls those tools
 while it works a [task](/concepts/tasks), the same way it uses the browser on
 its computer.
 
-Your **AptiveAI contact** sets each connector up for you: they create it, store
-its credential and choose which of its operations become tools. Your team then
-decides which [agents](/concepts/agents) may use it. Open **Connectors** from
-the sidebar to see every system your workspace is connected to.
+You add connectors yourself. Open **Connectors** from the sidebar: your own
+connectors are listed at the top, and **Add a connector** below offers ready-made
+ones that AptiveAI hosts and keeps up to date. Pick one, sign in, and it is
+yours; your team then decides which [agents](/concepts/agents) may use it.
 
 <Aside type="note">
-  Connectors are one connection per system, shared by the workspace. There is
-  no per-person sign-in to a connector: its single credential is stored
-  encrypted, and it is never shown again, never logged and never returned by
-  the API. For your *own* accounts on websites an agent opens, use
+  Each connection holds one credential — a sign-in, or a key you paste — and
+  everyone who uses the connector acts through it. It is stored encrypted and
+  never shown again, never logged and never returned by the API. For your *own*
+  accounts on websites an agent opens, use
   [Personal sign-ins](/reference/settings/sign-ins) instead.
+</Aside>
+
+## Adding a connector
+
+**Add a connector** groups what it offers by category, with a search box:
+
+| Category | Connectors |
+|---|---|
+| **Email & calendar** | Outlook, Gmail, Google Calendar |
+| **Files & docs** | Google Drive, OneDrive |
+| **Messaging** | Microsoft Teams, Slack, Twilio SMS, Telegram |
+| **Work tracking** | Trello, DocuSign |
+| **Advanced** | **Custom MCP server**, **HTTP API**, **Browser workflow**, and any browser workflow your team or AptiveAI has made |
+
+Clicking one opens a panel with what it does, the tools it brings and how it
+signs in. A hosted connector signs in with the provider itself — **Sign in with
+Microsoft**, **Google** or **Slack**, where the provider's own page asks you to
+choose the account and AptiveAI never sees your password — or takes a token or
+key you paste in (Trello, Telegram, Twilio SMS). The panel also asks:
+
+- **Name** — optional. Shown on its pills as “Outlook · Work”; left blank, the
+  connector is named after the account. Connect a second account of the same
+  kind to have two.
+- **Who can use it** — **Change…** opens the share box. It starts private;
+  **Everyone in ‹workspace›** is for owners and admins.
+- **Workspace** — only if you are in more than one workspace: where the connector
+  lives. Your main workspace is chosen unless you pick another.
+
+**Connect** finishes it, and the connector's tools are read from the service.
+Owners and admins can add a connector for the whole workspace; anyone can add
+one for themselves.
+
+<Aside type="note" title="Microsoft Teams">
+  Teams works with work or school accounts only, and your Microsoft 365
+  administrator may have to approve AptiveAI once for your organization before
+  anyone can sign in.
 </Aside>
 
 ## Kinds of connector
 
-Two kinds ship today. A new kind is added by AptiveAI, not from AptiveAI Agents.
+| Kind | What it connects |
+|---|---|
+| **Hosted connectors** | The ready-made services above. AptiveAI hosts the connector and its server, and keeps its tools up to date — see [Server versions](#server-versions-and-refresh-tools) |
+| **Custom MCP server** | Any server that speaks the Model Context Protocol over Streamable HTTP — a vendor's official one or an open-source one. Its tools are read from the server when you connect |
+| **HTTP API** | Any API described by an OpenAPI 3 document: one tool per operation |
+| **Browser workflow** | A website with no API, taught to your agents once — see [Browser workflows](/concepts/browser-workflows) |
 
-| Kind | What it connects | Tools |
-|---|---|---|
-| **Mailbox (IMAP)** | A mail account the agent reads over IMAP — to triage, search and summarise | Three, all read-only: list messages, search messages, read a message. It never sends, deletes or moves mail |
-| **OpenAPI service** | Any HTTP API that has an OpenAPI 3 document | One tool per operation in the document |
+### Custom MCP server
 
-### Mailbox (IMAP)
+Give it a **Name**, the **Server URL** and the **Authentication** it uses: none,
+an **API key** sent as `Authorization: Basic`, `Authorization: Bearer` or a
+custom header, or **The server's own sign-in**, for a vendor's hosted server that
+sends you to its sign-in page. A server that does not say how to sign in, is not
+served over https, or does not meet the sign-in's security requirements is
+refused with a message saying which.
 
-A mailbox connector is configured with its **IMAP host**, **Port** (993 for
-TLS, 143 for plain), **Use TLS**, the **Mailbox** to read (INBOX by default)
-and, where needed, **Allow a self-signed certificate**. Its credential is a
-**Username** and a **Password or app password**. A long message is read in
-pages, so an agent can work through a large email without loading all of it
-at once.
+### HTTP API
 
-### OpenAPI service
-
-An OpenAPI connector is built from the API's own description. Its schema comes
+An HTTP API connector is built from the API's own description. Its schema comes
 either from a **URL** (fetched over https, reachable without a credential) or
 from a **pasted document** in JSON or YAML — the format is detected. The
 connector calls the API at its **Base URL** (the document's first server when
 left blank), authenticating with an **API key** sent as `Authorization: Basic`,
 `Authorization: Bearer` or a custom header, or with none.
 
-Importing the schema turns every operation into a tool and reports what it did
-— *Imported N tools; N operations were skipped; N changes to review*. When the
-API changes, the connector is re-imported and its tools reclassified.
+Connecting imports every operation as a tool. When the API changes, the
+connector is re-imported and its tools reclassified.
 
 ## Reads, writes and approval
 
@@ -106,39 +141,91 @@ and a preview. It can then open or process the file on its computer like any
 other. Size limits and how long such a file is kept are in
 [Files](/concepts/files#files-a-connector-returns).
 
+## Data is never cut in the middle
+
+What a connector returns reaches the agent whole, or the agent is told it did
+not:
+
+- A large result is kept as a **file** rather than trimmed, and the agent reads
+  what it needs from that file.
+- It works out totals and counts from the data itself, with code, rather than
+  retyping figures or adding them up in its head.
+- If part of a result could not be kept, the agent is told — and stopped from
+  sending anything that depends on it. What you see in the transcript is
+  described in
+  [When a connector's data comes back incomplete](/concepts/tasks#when-a-connectors-data-comes-back-incomplete).
+
+The detail, including how a file you need later is brought back, is in
+[Files a connector returns](/concepts/files#files-a-connector-returns).
+
 ## Status
 
 | Status | What it means |
 |---|---|
 | **Connected** | Working. Agents granted it can use it |
-| **Needs reconnecting** | Its credential was rejected. Your AptiveAI contact reconnects it; agents using it fail until then, and the workspace is notified |
+| **Reconnect** | Its sign-in or key was rejected. Use **Sign in again** (or **Enter a new key**) on its panel; agents using it fail until then, and the workspace is notified |
 | **Unavailable** | The system could not be reached. It is tested again automatically whenever a task starts |
-| **Not connected** | Created, but not connected yet. Your AptiveAI contact sets this up |
+| **Not connected** | Added, but not connected yet |
 
-A connector can also be configured but switched off, in which case agents
-granted it cannot use it. A server error or one bad call does not mark a
-connector as needing reconnection — only a rejected credential does.
+A server error or one bad call does not mark a connector as needing
+reconnection — only a rejected sign-in or key does. A connector made from a
+[browser workflow](/concepts/browser-workflows) shows an error instead when its
+workflow was archived or is no longer available to your company.
 
 When a task starts while a connector is broken, its tools are held back from
 that task and the transcript says how many granted tools are not available.
 
+## Server versions and Refresh tools
+
+A hosted connector runs on a server AptiveAI looks after, and that server is
+released from time to time. Its release is shown beside **hosted by AptiveAI** on
+the connector's entry — for example *v0.1.1* — with the day it was deployed.
+
+A connection keeps the tools it read when you connected it. When the server
+moves on, the connector's panel tells whoever manages it: *Outlook's server
+was updated to v0.1.2. This connection's tools may be from an earlier release.
+Review its tools to pick up any changes.* — or, for a rebuild of the same
+release, *…was redeployed on …*.
+
+**Refresh tools** reads the server's tools again and shows what would change —
+tools **Added**, **Removed** or **Changed** (their description, name, inputs,
+paging, or whether they read or write) — or *The stored tools already match the
+server.* Nothing changes until you press **Apply changes**; if the server
+changed while you were reviewing, you are shown the new comparison first. An
+agent granted a removed tool can no longer call it. A new tool that writes is
+marked *writes, asks first*.
+
 ## The Connectors page
 
-The list shows each **Connector** with its **Status**, how many **Agents** use
-it, how many **Tools** it has and when it was **Last used**, with a status
-filter and a search box.
+The list shows each **Connector** with its **Status**, who can use it
+(**Access**) and who it was **Made by**, with a filter box. A person in more than
+one workspace also gets a **Workspace** column and a **Workspace** filter, to
+narrow the list to one.
 
-Opening one shows three sections:
+Click a connector to open its panel:
 
-- **Connection** — the kind of system, how it connects, when it was last used
-  and connected, and its non-secret settings, read-only.
-- **What it can do** — its tools, each marked as a read or as
-  **Writes — asks first**.
-- **Agents using it** — every agent granted it, with the tools each may use and
-  whether the grant is **Enabled** or **Off**. A [deleted agent](/concepts/agents#deleting-and-recovering-an-agent)
+- **Made by** — who added it, and where it lives.
+- **Settings** — for a connector with settings, such as a browser workflow's
+  site address.
+- **Tools** — each marked as a read or as **Writes — asks first**
+  (**Set by hand** when someone chose that for it), with the tools each agent
+  may use.
+- **Used by** — every agent granted it, and whether the grant is **Enabled** or
+  **Off**. A [deleted agent](/concepts/agents#deleting-and-recovering-an-agent)
   keeps its grant and is listed last with a **Deleted** badge, so recovering
   it brings it back equipped. Grants are changed in the agent's own builder,
   not here.
+- **Who can use it** — the share box.
+- Actions: **Name…**, **Test connection** (*Check it still answers*), **Sign in
+  again** or **Enter a new key**, **Disconnect** (*Remove it for everyone using
+  it*) and, for a browser workflow's connector, **Edit browser workflow**.
+
+**Test connection** shows whether it **Works** or *Didn't work*, what was
+performed, how long it took and how many tools it found, and what to do next
+when it fails.
+
+A connector you can use but not change shows *You can use this connector. Only
+someone who can edit it can change it.*
 
 ### Available to personal agents
 
@@ -152,10 +239,13 @@ restores them.
 
 | Action | Who |
 |---|---|
-| See connectors, their status and tools | Everyone in the workspace |
+| See a connector, its status and tools | Everyone it is shared with, and its owner |
+| Add a connector for yourself | Everyone |
+| Add a connector for the whole workspace | Owners and admins |
+| Change its name, settings or sign-in, test it or disconnect it | Whoever can edit it: its owner and people it is shared with as editors |
 | Grant a connector to an agent | Owners and admins |
 | Turn **Available to personal agents** on or off | Owners and admins |
-| Create a connector, store its credential, import its schema, edit its tools, test or disconnect it | Your AptiveAI contact |
+| Build, change, publish or remove a [browser workflow](/concepts/browser-workflows#who-can-do-what) | See that page |
 
 Granting a connector is also one of the actions that needs
 [paid access](/concepts/agents#restrictions).
@@ -164,6 +254,7 @@ Granting a connector is also one of the actions that needs
 
 <CardGrid>
   <LinkCard title="Agents" href="/concepts/agents" description="Grant a connector to an agent in its builder." />
+  <LinkCard title="Browser workflows" href="/concepts/browser-workflows" description="Teach your agents a website with no API." />
   <LinkCard title="Tasks" href="/concepts/tasks" description="Where approval cards appear and are answered." />
   <LinkCard title="Personal sign-ins" href="/reference/settings/sign-ins" description="Your own accounts, for websites an agent opens." />
 </CardGrid>

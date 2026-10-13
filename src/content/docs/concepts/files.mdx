@@ -58,14 +58,39 @@ The file is kept with the task and the agent is given its path, its type and
 size, and a preview of its contents. A large export may arrive as several
 parts.
 
-An answer too large to hand the agent whole — anything over 32 KB — is kept
+If a file in an answer cannot be kept, the rest of the answer still reaches the
+agent, with a note saying which file was not kept and why.
+
+An answer too large to hand the agent whole — roughly 20 KB or more — is kept
 the same way, as a `.json` file (or `.csv` or `.txt` when the answer is plain
 text), and the agent gets a preview and the path instead. It then reads what
 it needs from the file on its computer, rather than carrying the whole answer
 through the conversation.
 
-If a file cannot be kept, the connector's answer still reaches the agent, with
-a note saying which file was not kept and why.
+**A connector's data is never cut in the middle.** What you can rely on:
+
+- **A result is kept whole or not at all.** A large result is never trimmed to
+  its first part. If it could not be saved as a file, the agent gets none of its
+  rows — only a note that it could not be saved — and is told to ask for less (a
+  filter, a smaller page, a shorter date range) or to say the data could not be
+  read. It does not fill the gap in.
+- **A list is also a file.** An answer with ten or more rows is saved as a data
+  file as well, so the agent can compute over every row with code. It reads the
+  rows from that file; it does not retype figures into a script or add them up in
+  its head. The file notes when the data was fetched, because it goes out of date.
+- **A file that was taken off the computer comes back.** Files a connector
+  returned may be removed from the agent's computer a few minutes after they
+  arrive; when the agent's code needs one again, it is put back. A file past its
+  retention is not: the agent is told when it was fetched and asks the connector
+  again.
+- **Slow downloads are waited for.** When the agent downloads a file from a
+  website — an export, a PDF — it waits for the download to finish (up to 30
+  seconds) and keeps the result in the task's `downloads` folder, rather than
+  working from a half-written file or from what the page shows.
+
+If part of a result still did not reach the agent, the transcript says so and the
+agent is stopped from sending anything built on it; see
+[When a connector's data comes back incomplete](/concepts/tasks#when-a-connectors-data-comes-back-incomplete).
 
 ## Files the agent makes
 

@@ -1,0 +1,189 @@
+---
+title: Browser workflows
+description: Teach your agents a website once. A browser workflow is a connector made of tools the agent runs in its own browser — how to build one, how a company turns it into a connector, and who can see, change and remove it.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Many of the systems your team works in have no API: a supplier portal, an
+older records system, a site you sign in to and click through. A **browser
+workflow** teaches your agents one of those sites once. It is a
+[connector](/concepts/connectors) whose **tools** are not API calls but
+written procedures — each one a [skill](/concepts/skills) with its
+instructions and scripts — that the agent follows in its browser, on its own
+computer.
+
+Two words are used throughout, and they are different things:
+
+| Word | What it is | Where you meet it |
+|---|---|---|
+| **Browser workflow** | What someone builds once: its details, its variables and its tools | The **Browser workflow** tile in **Add a connector**, and the workflow's own page |
+| **Connector** | What a company creates *from* a browser workflow, filling in its own values — then shares and grants like any connector | The Connectors list, the agent builder, a task's **Add a connector** |
+
+One browser workflow can sit behind many connectors. The person who builds it
+writes the steps; each company that uses it only says which site address (or
+other value) is theirs.
+
+## Building a browser workflow
+
+Open **Connectors** and scroll **Add a connector** to **Advanced**. The first
+tile there, **Browser workflow** — *Teach your agents a website once. Each tool
+is a skill they run on their own computer.* — opens **New browser workflow**.
+
+<Aside type="note">
+  Building needs permission to add your own connectors; without it the page
+  says so and points you to an owner or admin of your workspace. A workspace
+  that holds regulated data cannot build one.
+</Aside>
+
+The page has the same shape as an agent's builder. The header carries the
+actions — **Create browser workflow** on a new page; **Discard**, **Save** and
+**Archive browser workflow** on a saved one — and a chip shows where it stands:
+**Unsaved**, **Draft** until its first tool is switched on, **Active**, or
+**Archived**. A new page keeps everything you add — details, icon, variables,
+tools and their scripts — until you press **Create browser workflow**, which
+saves it in one go; if the create is refused, nothing you entered is lost.
+
+| Section | What it holds |
+|---|---|
+| **Details** | The icon, **Name** and **Description**, as every company will see them |
+| **Variables** | Values each company fills in when it creates its connector — usually the site address. Give each a **Label**, a **Key**, a **Kind** (**Text** or **Web address**), and whether it is **Required** |
+| **Tools** | What your agents can do on the site, one tool per job |
+| **Connectors made from it** | The connectors created from this workflow that you can see. Open one to change it on the Connectors page |
+
+### Variables
+
+Anything that differs from one company to the next belongs in a variable, not
+in a tool. Name it in braces inside a tool's instructions — `{site_url}` — and
+each connector's own value is filled in when the agent loads the tool. A tool
+written this way works for every company without being copied.
+
+### Tools
+
+**Add tool** opens the tool form beside the page — the same form as a
+[workspace skill](/concepts/skills#writing-a-skill):
+
+| Field | What it holds |
+|---|---|
+| **Name** | What the tool is called |
+| **When to use it** | What the agent reads to decide whether to load it |
+| **Instructions** | The steps the agent follows. Name a variable in braces, like `{site_url}` |
+| **Scripts** | Code the steps run on the agent's computer, the same way every time — added with **Add script**, kept in folders |
+| **History** | Every save is a version. **See what changed**, or **Restore** an earlier one |
+
+A tool's row in the **Tools** list has **Switch off** and **Switch on**, and
+**Remove**. A tool that is off is offered to no task from its next one;
+removing a tool never disturbs a task that already loaded it. A browser
+workflow becomes **Active** once its first tool is on, and a connector cannot
+be made from one that has none switched on.
+
+A browser workflow's tools are theirs alone: they do not appear on the
+**Skills** page or in the `/` menu, and an agent cannot change one from a task.
+
+### Generate with agent
+
+You do not have to write the steps by hand. **Generate with agent** opens the
+**Agent** tab: *Tell the agent which website to work with. It works in a
+browser with you and proposes the tools when you are ready.* Explore the site
+together, show it what to do with **Record** if you like, then ask it to
+propose the tools.
+
+Nothing is saved until you approve. The agent's proposal arrives as a card
+listing each tool — new ones marked, existing ones left as they are — and
+**Approve** saves everything on it to the workflow at once; you can edit a
+tool on the card first. Every company that uses the workflow gets the new
+tools from its next task.
+
+- **It is a session on a computer.** It spends AI credit like any task and
+  follows the same rules as one when an allowance is used up.
+- **One session per workflow.** A reload reattaches to it. If someone else
+  started it you can follow along, but they work in it and end it.
+- **Signing in stays out of the workflow.** When the site needs a login, the
+  agent uses a sign-in already stored for you
+  ([Personal sign-ins](/reference/settings/sign-ins)); no password is written
+  into a tool.
+- **End session** keeps the conversation as a task. Tools you approved stay
+  saved; a proposal you did not approve does not.
+
+### The icon
+
+Choose the icon in **Details** by uploading one, taking one **From a website**
+(the icon the site shows in a browser tab) or **Generate**. If you set none, one
+is generated once, automatically, the first time the workflow has what it
+needs.
+
+## Using a browser workflow
+
+Once a workflow is active, anyone who can see it creates a connector from it:
+open **Connectors**, click its tile in **Add a connector**, and fill in:
+
+- **Name** — optional; left blank, the connector takes the workflow's name.
+- Its **variables** — for example **Site address**. Required ones are marked.
+- **Who can use it** — the same share box as any connector.
+- **Workspace** — only if you are in more than one workspace; your main one is
+  chosen unless you pick another.
+
+Then **Connect**. The tile reads **Browser workflow · Built by your team** or,
+when AptiveAI published it to your company, **Browser workflow · From
+AptiveAI**. On the workflow's own page, **Create a connector from it** on the
+**Details** row does the same.
+
+{/* SHOT: browser-workflow-connector — the panel of a connector built from a browser workflow, open on the Connectors page: its icon and name, Settings with the filled-in site address, the Tools list showing its tools, and "Who can use it", with Test connection and Edit browser workflow among its actions */}
+
+<Aside type="tip">
+  The connector works like any other from here. Grant it to an agent in the
+  builder under **Connectors** (all its tools, or some), or add it to one task
+  with (+) or `@`. In the task the agent loads the tool it needs — the
+  transcript shows it as a skill loading — with the connector's own values
+  filled in and its scripts placed on the computer.
+</Aside>
+
+On the connector's panel:
+
+| | |
+|---|---|
+| **Settings** | The variables' values. Saving them is checked: a missing required value or a web address that is not `http://` or `https://` is refused |
+| **Tools** | Its tools, the ones its workflow offers |
+| **Test connection** | Checks that the workflow is still there, available to your company and active, with a tool on and every required value filled in. It does not open the site |
+| **Edit browser workflow** | Opens the workflow — only for whoever may change it |
+| **Disconnect** | Deletes this connector and its settings. The workflow is not changed |
+
+If a workflow gains a required variable, every connector made from it shows an
+error naming the missing value until its owner fills it in, and tasks get none
+of its tools meanwhile.
+
+## Who can do what
+
+| Action | Who |
+|---|---|
+| See a workflow's tile and create a connector from it | Anyone in a company that built it or that AptiveAI published it to, while it is active |
+| Change a browser workflow | The person who built it, or AptiveAI. Not another admin, and not the owner of the workspace; they see it read-only: *You can use this browser workflow, but you cannot change it.* |
+| Publish it to other companies | AptiveAI |
+| Use and share a connector made from it | Its creator, and whoever it is shared with, as any connector |
+| Change its settings, test or disconnect it | Its creator, and others who can edit it |
+
+A workflow in **Draft** is visible only to the people who can change it.
+
+## Removing, archiving and restoring
+
+On the **Add a connector** tile, an editor has **Edit** and **Remove** beside
+**Connect**:
+
+- **Remove** with no connector made from it **deletes** the workflow for good,
+  with its tools, scripts and history. This cannot be undone.
+- **Remove** while connectors use it **archives** it instead, and the question
+  says how many: they stop working until it is restored. **Restore browser
+  workflow** brings them back; **Delete permanently** appears in the page
+  header once none is left.
+
+An archived workflow ends any open session, shows an error on every connector
+made from it — *the browser workflow this connector was made from is no longer
+available here* — and offers its tools to no task.
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Connectors" href="/concepts/connectors" description="Every kind of connector, approval of writes, and who may change what." />
+  <LinkCard title="Skills" href="/concepts/skills" description="The same form a browser workflow's tools use." />
+  <LinkCard title="Personal sign-ins" href="/reference/settings/sign-ins" description="Where the agent finds your login for a site." />
+</CardGrid>

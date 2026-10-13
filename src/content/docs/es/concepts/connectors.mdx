@@ -1,6 +1,6 @@
 ---
 title: Conectores
-description: Un conector les da a tus agentes herramientas dentro de uno de los sistemas de tu empresa — un buzón de correo o cualquier API HTTP con un documento OpenAPI. Qué hace cada tipo, cómo se aprueban las escrituras y quién puede cambiar qué.
+description: Un conector les da a tus agentes herramientas dentro de uno de los sistemas de tu empresa — un buzón, una unidad de archivos, un chat, una API o un sitio web. Qué puedes añadir, cómo se aprueban las escrituras, cómo se mantienen al día las herramientas y quién puede cambiar qué.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -11,54 +11,91 @@ empresa. Cada conector da a los agentes a los que se asigna un conjunto de
 y el agente usa esas herramientas mientras trabaja en una
 [tarea](/es/concepts/tasks), igual que usa el navegador de su computadora.
 
-Tu **contacto de AptiveAI** configura cada conector por ti: lo crea, guarda su
-credencial y elige cuáles de sus operaciones se convierten en herramientas.
-Luego tu equipo decide qué [agentes](/es/concepts/agents) pueden usarlo. Abre
-**Conectores** desde la barra lateral para ver todos los sistemas a los que
-está conectado tu espacio de trabajo.
+Tú mismo añades los conectores. Abre **Conectores** desde la barra lateral: tus
+propios conectores aparecen arriba, y **Añadir un conector** más abajo ofrece
+conectores listos que AptiveAI aloja y mantiene al día. Elige uno, inicia sesión
+y ya es tuyo; luego tu equipo decide qué [agentes](/es/concepts/agents) pueden
+usarlo.
 
 <Aside type="note">
-  Los conectores son una conexión por sistema, compartida por el espacio de
-  trabajo. No hay un inicio de sesión por persona en un conector: su única
-  credencial se guarda cifrada, y nunca se vuelve a mostrar, nunca se registra
-  en los logs y la API nunca la devuelve. Para tus *propias* cuentas en los
-  sitios web que abre un agente, usa en su lugar los
+  Cada conexión guarda una credencial — un inicio de sesión, o una clave que
+  pegas — y todas las personas que usan el conector actúan a través de ella. Se
+  guarda cifrada y nunca se vuelve a mostrar, nunca se registra en los logs y la
+  API nunca la devuelve. Para tus *propias* cuentas en los sitios web que abre un
+  agente, usa en su lugar los
   [inicios de sesión personales](/es/reference/settings/sign-ins).
+</Aside>
+
+## Añadir un conector
+
+**Añadir un conector** agrupa lo que ofrece por categoría, con un cuadro de
+búsqueda:
+
+| Categoría | Conectores |
+|---|---|
+| **Correo y calendario** | Outlook, Gmail, Google Calendar |
+| **Archivos y documentos** | Google Drive, OneDrive |
+| **Mensajería** | Microsoft Teams, Slack, Twilio SMS, Telegram |
+| **Seguimiento del trabajo** | Trello, DocuSign |
+| **Avanzado** | **Servidor MCP personalizado**, **API HTTP**, **Flujo de navegador**, y cualquier flujo de navegador que tu equipo o AptiveAI haya creado |
+
+Al hacer clic en uno se abre un panel con lo que hace, las herramientas que trae
+y cómo inicia sesión. Un conector alojado inicia sesión con el propio proveedor —
+**Iniciar sesión con Microsoft**, **Google** o **Slack**, donde la página del
+proveedor te pide elegir la cuenta y AptiveAI nunca ve tu contraseña — o toma un
+token o una clave que pegas (Trello, Telegram, Twilio SMS). El panel también
+pide:
+
+- **Nombre** — opcional. Se muestra en sus etiquetas como “Outlook · Trabajo”; si
+  lo dejas en blanco, el conector toma el nombre de la cuenta. Conecta una
+  segunda cuenta del mismo tipo para tener dos.
+- **Quién puede usarlo** — **Cambiar…** abre el cuadro para compartir. Empieza
+  en privado; **Todos en ‹espacio de trabajo›** es para propietarios y
+  administradores.
+- **Espacio de trabajo** — solo si estás en más de uno: dónde vive el conector.
+  Se elige tu espacio de trabajo principal, salvo que elijas otro.
+
+**Conectar** lo termina, y las herramientas del conector se leen del servicio.
+Los propietarios y administradores pueden añadir un conector para todo el
+espacio de trabajo; cualquier persona puede añadir uno para sí misma.
+
+<Aside type="note" title="Microsoft Teams">
+  Teams funciona solo con cuentas de trabajo o de centro educativo, y es posible
+  que tu administrador de Microsoft 365 tenga que aprobar AptiveAI una vez para
+  tu organización antes de que alguien pueda iniciar sesión.
 </Aside>
 
 ## Tipos de conector
 
-Hoy hay dos tipos disponibles. Los tipos nuevos los agrega AptiveAI, no se
-crean desde AptiveAI Agents.
+| Tipo | Qué conecta |
+|---|---|
+| **Conectores alojados** | Los servicios listos de arriba. AptiveAI aloja el conector y su servidor, y mantiene sus herramientas al día — consulta [Versiones del servidor](#versiones-del-servidor-y-actualizar-herramientas) |
+| **Servidor MCP personalizado** | Cualquier servidor que hable el Model Context Protocol por Streamable HTTP — uno oficial de un proveedor o uno de código abierto. Sus herramientas se leen del servidor al conectarlo |
+| **API HTTP** | Cualquier API descrita por un documento OpenAPI 3: una herramienta por operación |
+| **Flujo de navegador** | Un sitio web sin API, que se les enseña a tus agentes una sola vez — consulta [Flujos de navegador](/es/concepts/browser-workflows) |
 
-| Tipo | Qué conecta | Herramientas |
-|---|---|---|
-| **Buzón de correo (IMAP)** | Una cuenta de correo que el agente lee por IMAP — para clasificar, buscar y resumir | Tres, todas de solo lectura: listar mensajes, buscar mensajes, leer un mensaje. Nunca envía, elimina ni mueve correo |
-| **Servicio OpenAPI** | Cualquier API HTTP que tenga un documento OpenAPI 3 | Una herramienta por cada operación del documento |
+### Servidor MCP personalizado
 
-### Buzón de correo (IMAP)
+Dale un **Nombre**, la **URL del servidor** y la **Autenticación** que usa:
+ninguna, una **clave de API** enviada como `Authorization: Basic`,
+`Authorization: Bearer` o un encabezado personalizado, o **El inicio de sesión
+del propio servidor**, para el servidor alojado de un proveedor que te envía a su
+página de inicio de sesión. Un servidor que no indica cómo iniciar sesión, que no
+se sirve por https o que no cumple los requisitos de seguridad del inicio de
+sesión se rechaza con un mensaje que dice cuál es el motivo.
 
-Un conector de buzón se configura con su **Host IMAP**, **Puerto** (993 para
-TLS, 143 para texto plano), **Usar TLS**, el **Buzón** que se lee (INBOX de
-forma predeterminada) y, cuando hace falta, **Permitir un certificado
-autofirmado**. Su credencial es un **Nombre de usuario** y una **Contraseña o
-contraseña de aplicación**. Un mensaje largo se lee por páginas, así que un
-agente puede recorrer un correo grande sin cargarlo entero de una vez.
+### API HTTP
 
-### Servicio OpenAPI
+Un conector de API HTTP se construye a partir de la propia descripción de la API.
+Su esquema viene de una **URL del documento** (que se descarga por https y debe
+ser accesible sin credencial) o de un documento **Pegado** en JSON o YAML — el
+formato se detecta solo. El conector llama a la API en su **URL base** (el primer
+servidor del documento si se deja en blanco), y se autentica con una **clave de
+API** enviada como `Authorization: Basic`, `Authorization: Bearer` o un
+encabezado personalizado, o sin autenticación.
 
-Un conector OpenAPI se construye a partir de la propia descripción de la API.
-Su esquema viene de una **URL** (que se descarga por https y debe ser accesible
-sin credencial) o de un **documento pegado** en JSON o YAML — el formato se
-detecta solo. El conector llama a la API en su **URL base** (el primer servidor
-del documento si se deja en blanco), y se autentica con una **clave de API**
-enviada como `Authorization: Basic`, `Authorization: Bearer` o un encabezado
-personalizado, o sin autenticación.
-
-Al importar el esquema, cada operación se convierte en una herramienta y se
-informa lo que se hizo — *Se importaron N herramientas; se omitieron N
-operaciones; N cambios para revisar*. Cuando la API cambia, el conector se
-vuelve a importar y sus herramientas se reclasifican.
+Al conectar, cada operación se importa como una herramienta. Cuando la API
+cambia, el conector se vuelve a importar y sus herramientas se reclasifican.
 
 ## Lecturas, escrituras y aprobación
 
@@ -111,47 +148,100 @@ Esto evita que un agente actúe sobre un id que adivinó o escribió mal.
 
 Cuando un conector responde con un archivo, o con un resultado demasiado grande
 para entregárselo entero al agente, el archivo se guarda con la tarea y el
-agente recibe su ruta y una vista previa. Luego puede abrir o procesar el
-archivo en su computadora como cualquier otro. Los límites de tamaño y el
-tiempo que se guarda ese archivo están en
+agente recibe su ruta y una vista previa. Luego puede abrirlo o procesarlo en su
+computadora como cualquier otro. Los límites de tamaño y cuánto tiempo se
+conserva un archivo así están en
 [Archivos](/es/concepts/files#archivos-que-devuelve-un-conector).
+
+## Los datos nunca se cortan por la mitad
+
+Lo que devuelve un conector llega al agente entero, o se le dice que no llegó:
+
+- Un resultado grande se conserva como **archivo** en lugar de recortarse, y el
+  agente lee del archivo lo que necesita.
+- Saca totales y recuentos de los propios datos, con código, en lugar de volver a
+  teclear cifras o sumarlas de cabeza.
+- Si una parte de un resultado no se pudo conservar, se le dice al agente — y se
+  le impide enviar nada que dependa de ella. Lo que ves en la transcripción se
+  describe en
+  [Cuando los datos de un conector llegan incompletos](/es/concepts/tasks#cuando-los-datos-de-un-conector-llegan-incompletos).
+
+El detalle, incluido cómo vuelve un archivo que necesitas más tarde, está en
+[Archivos que devuelve un conector](/es/concepts/files#archivos-que-devuelve-un-conector).
 
 ## Estado
 
 | Estado | Qué significa |
 |---|---|
-| **Conectado** | Funciona. Los agentes a los que se asignó pueden usarlo |
-| **Hay que reconectarlo** | Su credencial fue rechazada. Tu contacto de AptiveAI lo reconecta; los agentes que lo usan fallan hasta entonces, y se notifica al espacio de trabajo |
-| **No disponible** | No se pudo acceder al sistema. Se vuelve a probar automáticamente cada vez que empieza una tarea |
-| **Sin conectar** | Creado, pero todavía sin conectar. Tu contacto de AptiveAI lo configura |
+| **Conectado** | Funciona. Los agentes a los que se asigna pueden usarlo |
+| **Reconectar** | Se rechazó su inicio de sesión o su clave. Usa **Vuelve a iniciar sesión** (o **Introduce una clave nueva**) en su panel; los agentes que lo usan fallan hasta entonces, y se avisa al espacio de trabajo |
+| **No disponible** | No se pudo llegar al sistema. Se vuelve a probar automáticamente cada vez que empieza una tarea |
+| **Sin conectar** | Añadido, pero todavía sin conectar |
 
-Un conector también puede estar configurado pero desactivado, y en ese caso los
-agentes a los que se asignó no pueden usarlo. Un error del servidor o una
-llamada fallida no marcan un conector como que hay que reconectarlo — solo lo
-hace una credencial rechazada.
+Un error del servidor o una sola llamada fallida no marca un conector como que
+necesita reconexión — solo lo hace un inicio de sesión o una clave rechazados.
+Un conector creado a partir de un [flujo de navegador](/es/concepts/browser-workflows)
+muestra en cambio un error cuando su flujo se archivó o ya no está disponible
+para tu empresa.
 
-Cuando una tarea empieza mientras un conector está averiado, sus herramientas
-se retienen para esa tarea y la transcripción indica cuántas herramientas
-asignadas no están disponibles.
+Cuando empieza una tarea mientras un conector está averiado, sus herramientas se
+retienen para esa tarea y la transcripción indica cuántas herramientas asignadas
+no están disponibles.
+
+## Versiones del servidor y Actualizar herramientas
+
+Un conector alojado funciona en un servidor que AptiveAI mantiene, y ese
+servidor se publica de vez en cuando. Su versión se muestra junto a **alojado
+por AptiveAI** en la entrada del conector — por ejemplo *v0.1.1* — con el día en
+que se desplegó.
+
+Una conexión conserva las herramientas que leyó cuando la conectaste. Cuando el
+servidor avanza, el panel del conector se lo dice a quien lo administra: *El
+servidor de Outlook se actualizó a v0.1.2. Las herramientas de esta conexión
+pueden ser de una versión anterior. Revisa sus herramientas para incorporar los
+cambios.* — o, si es una reconstrucción de la misma versión, *…se volvió a
+desplegar el …*.
+
+**Actualizar herramientas** vuelve a leer las herramientas del servidor y muestra
+qué cambiaría — herramientas **Nuevas**, **Eliminadas** o **Modificadas** (su
+descripción, nombre, entradas, paginación, o si leen o escriben) — o *Las
+herramientas guardadas ya coinciden con el servidor.* No cambia nada hasta que
+pulsas **Aplicar cambios**; si el servidor cambió mientras revisabas, primero se
+te muestra la comparación nueva. Un agente al que se asignó una herramienta
+eliminada ya no puede llamarla. Una herramienta nueva que escribe se marca
+*escribe, pide aprobación*.
 
 ## La página Conectores
 
-La lista muestra cada **Conector** con su **Estado**, cuántos **Agentes** lo
-usan, cuántas **Herramientas** tiene y su **Último uso**, con un filtro de
-estado y un cuadro de búsqueda.
+La lista muestra cada **Conector** con su **Estado**, quién puede usarlo
+(**Acceso**) y quién lo creó (**Creado por**), con un cuadro de filtro. Quien
+está en más de un espacio de trabajo tiene además una columna **Espacio de
+trabajo** y un filtro **Espacio de trabajo**, para acotar la lista a uno.
 
-Al abrir uno, se ven tres secciones:
+Haz clic en un conector para abrir su panel:
 
-- **Conexión** — el tipo de sistema, cómo se conecta, cuándo se usó y se
-  conectó por última vez, y su configuración no secreta, en solo lectura.
-- **Qué puede hacer** — sus herramientas, cada una marcada como lectura o como
-  **Escribe: pide aprobación**.
-- **Agentes que la usan** — cada agente al que se asignó, con las herramientas
-  que puede usar cada uno y si la asignación está **Activado** o
-  **Desactivado**. Un [agente eliminado](/es/concepts/agents#eliminar-y-recuperar-un-agente)
-  conserva su asignación y aparece al final con una etiqueta **Eliminado**, así
-  que al recuperarlo vuelve equipado. Las asignaciones se cambian en el propio
-  creador del agente, no aquí.
+- **Creado por** — quién lo añadió y dónde vive.
+- **Ajustes** — para un conector que los tiene, como la dirección del sitio de
+  un flujo de navegador.
+- **Herramientas** — cada una marcada como lectura o como **Escribe: pide
+  aprobación** (**Fijado a mano** cuando alguien lo eligió así), con las
+  herramientas que puede usar cada agente.
+- **Lo usan** — cada agente al que se asignó, y si la asignación está
+  **Activado** o **Desactivado**. Un [agente eliminado](/es/concepts/agents#eliminar-y-recuperar-un-agente)
+  conserva su asignación y aparece al final con una insignia **Eliminado**, de
+  modo que al recuperarlo vuelve equipado. Las asignaciones se cambian en el
+  editor del propio agente, no aquí.
+- **Quién puede usarlo** — el cuadro para compartir.
+- Acciones: **Nombre…**, **Probar conexión** (*Comprueba que sigue
+  respondiendo*), **Vuelve a iniciar sesión** o **Introduce una clave nueva**,
+  **Desconectar** (*Lo quita para todos los que lo usan*) y, para el conector de
+  un flujo de navegador, **Editar flujo de navegador**.
+
+**Probar conexión** muestra si **Funciona** o *No funcionó*, qué se hizo, cuánto
+tardó y cuántas herramientas encontró, y qué hacer a continuación cuando falla.
+
+Un conector que puedes usar pero no cambiar muestra *Puedes usar este conector.
+Solo alguien que pueda editarlo puede cambiarlo.*
 
 ### Disponible para agentes personales
 
@@ -165,18 +255,22 @@ asignaciones se conservan, así que al volver a activarlo se restauran.
 
 | Acción | Quién |
 |---|---|
-| Ver los conectores, su estado y sus herramientas | Todos en el espacio de trabajo |
+| Ver un conector, su estado y sus herramientas | Las personas con quienes se comparte, y su propietario |
+| Añadir un conector para ti | Todos |
+| Añadir un conector para todo el espacio de trabajo | Propietarios y administradores |
+| Cambiar su nombre, sus ajustes o su inicio de sesión, probarlo o desconectarlo | Quien pueda editarlo: su propietario y las personas con quienes se comparte como editoras |
 | Asignar un conector a un agente | Propietarios y administradores |
 | Activar o desactivar **Disponible para agentes personales** | Propietarios y administradores |
-| Crear un conector, guardar su credencial, importar su esquema, editar sus herramientas, probarlo o desconectarlo | Tu contacto de AptiveAI |
+| Crear, cambiar, publicar o quitar un [flujo de navegador](/es/concepts/browser-workflows#quién-puede-hacer-qué) | Consulta esa página |
 
-Asignar un conector también es una de las acciones que requieren
+Asignar un conector es también una de las acciones que requieren
 [acceso de pago](/es/concepts/agents#restricciones).
 
 ## Siguiente
 
 <CardGrid>
   <LinkCard title="Agentes" href="/es/concepts/agents" description="Asigna un conector a un agente en su creador." />
+  <LinkCard title="Flujos de navegador" href="/es/concepts/browser-workflows" description="Enséñales a tus agentes un sitio web sin API." />
   <LinkCard title="Tareas" href="/es/concepts/tasks" description="Donde aparecen y se responden las tarjetas de aprobación." />
   <LinkCard title="Inicios de sesión personales" href="/es/reference/settings/sign-ins" description="Tus propias cuentas, para los sitios web que abre un agente." />
 </CardGrid>
