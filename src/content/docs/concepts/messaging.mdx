@@ -1,0 +1,281 @@
+---
+title: AptiveAI Messaging
+description: Let your agents text and email people who do not use AptiveAI Agents — drivers, patients, customers. Turning it on, verifying your number for texts, what it costs, when it asks first, who may be messaged, and how people opt out.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Launches December 1, 2026">
+  AptiveAI Messaging is not available yet. This page describes it as it will
+  work at launch, and the program's terms are at
+  [aptiveai.io/messaging](https://aptiveai.io/messaging).
+</Aside>
+
+**AptiveAI Messaging** lets your agents send **text messages** and **emails**
+to people who do not use AptiveAI Agents: the drivers who missed a step, the
+patient whose appointment moved, the customer waiting on an answer. It is a
+[connector](/concepts/connectors) that AptiveAI runs for you: texts go out from
+a toll-free number verified for your business, emails from an address of your
+own on AptiveAI's sending domain, and every message is paid from your
+enterprise wallet.
+
+It sits beside the connectors you sign in to yourself. If you already send
+texts through your own Twilio account, the Twilio SMS connector keeps working
+as it does; AptiveAI Messaging is for everyone else, with no account of your
+own to set up.
+
+<Aside type="note">
+  Only an **owner of your enterprise** can turn AptiveAI Messaging on, change
+  its settings, turn it off or remove it, because every message is paid from
+  the enterprise's wallet. A workspace owner cannot. Everyone else sees the
+  card with *Ask your owner to turn this on*.
+</Aside>
+
+## Turning it on
+
+1. Open **Connectors** from the sidebar and choose **AptiveAI Messaging** in
+   the catalogue.
+2. Press **Turn on**. A dialog says what it does and what it costs: agents you
+   allow can text and email people outside AptiveAI Agents, each message is
+   paid from your enterprise wallet, a task someone is watching asks before it
+   sends, and an automation set to run on its own sends without asking.
+3. Press **Turn on** again. Your enterprise now has one AptiveAI Messaging
+   connection, owned by the organization rather than by you, so it keeps
+   working if you leave.
+
+**Email works straight away.** Texts show **Pending verification** until your
+toll-free number is approved (below).
+
+The connection has its own page, **Connectors → AptiveAI Messaging**, with
+these sections:
+
+| Section | What is in it |
+|---|---|
+| **Status** | Whether email is ready and the address it sends from; where texts stand (**Not requested**, **Pending verification**, **Approved** with your number, or **Rejected** with the carriers' reason); what was spent this month |
+| **Email** | The **Sender name** — the From name on every email and the start of every text — and the **Reply-to address**, where replies go |
+| **Texts** | Verifying your business for texts, and its status |
+| **Spending** | An optional **Monthly limit** in dollars, and this month's spend against it |
+| **Activity** | Every message your agents sent |
+| **Opt-outs** | Who cannot be messaged, and why |
+| **Sharing** | Who may grant AptiveAI Messaging to their agents |
+| **Danger zone** | **Turn off** and **Remove** |
+
+## Verifying your business for texts
+
+US carriers verify every business that texts from a toll-free number, and your
+business is the sender of record. So your enterprise gets its own number,
+verified under your own details. Under **Texts**, press **Verify your
+business** and fill in the form; AptiveAI submits it to the carriers for you.
+
+The form asks for:
+
+- **Company** — the legal company name (exactly as registered with your tax
+  ID), website, business type, and the tax ID number, its type and the country
+  that issued it;
+- **Address** and a **Contact** — first and last name, support email and
+  support phone;
+- **Policies** — the public URLs of your privacy policy and your terms;
+- **How people agree to receive texts** — how they agree, a sentence or two on
+  where they give their number and what they are told, and a screenshot (a PNG
+  of at most 400 KB) of where they agree, such as a sign-up form;
+- **What the texts are for** — the use case, texts per month, and one to three
+  sample messages your agents would really send.
+
+Carrier review takes **days to weeks**. Email works in the meantime, and the
+enterprise's owners get a notification when the carriers decide. If they
+reject it, their reason is shown under **Status**; press **Correct and submit
+again**.
+
+## Sharing it and granting it to an agent
+
+Two steps, as with any connector:
+
+1. **Share it** from its **Sharing** section with the people who should use it.
+   They get **Can use** only: whatever share someone holds, only an owner of
+   your enterprise changes the settings, the limit, turns it off or removes it.
+2. **Grant it to an agent** in that agent's builder, like any other connector.
+
+## What an agent can do with it
+
+An agent granted AptiveAI Messaging gets three tools:
+
+| Tool | What it does | Limits |
+|---|---|---|
+| **Send a text message** | Texts one message to a list of US phone numbers | 1 to 50 numbers; 1 to 1,600 characters |
+| **Send an email** | Emails one message to a list of addresses | 1 to 50 addresses; subject up to 200 characters; plain-text body up to 20,000 characters |
+| **Check message status** | Looks up whether messages this task sent were delivered | Only messages from the same task |
+
+Sending to a list is one call, so one approval covers the whole batch — "text
+every driver on this list" is one decision, not fifty.
+
+### Texts
+
+- **US numbers only.** A number from another country is refused.
+- **Every text starts with your sender name** — "Acme Logistics: …" — so the
+  recipient knows who it is from, as carriers expect.
+- **The first text to each number ends with "Reply STOP to opt out."** That is
+  once per number for your whole enterprise, not once per agent.
+- **Curly quotes, long dashes, ellipses and non-breaking spaces are replaced**
+  with their plain equivalents, so the message stays in the standard text
+  alphabet.
+- **A text is billed in parts** (segments): up to 160 characters in one part,
+  153 per part when it is longer. A character outside the standard alphabet,
+  such as an emoji, makes it 70 characters in one part and 67 per part. The
+  approval card and the Activity list always show the number of parts.
+
+### Emails
+
+- They are sent **from your sender name at your enterprise's own address on
+  AptiveAI's sending domain** — `Acme Logistics <acme-logistics@notify.aptiveai.io>` —
+  with your **Reply-to address**, so replies come to you.
+- The body is plain text in a simple layout, with no AptiveAI marketing.
+- Every email carries an **unsubscribe link** and a one-click unsubscribe
+  header. No attachments.
+
+<Aside type="caution" title="Texts are not private.">
+  A text message is not encrypted end to end. The agents are told to keep
+  personal and health details out of messages and to say only what the
+  recipient needs to act — "Please call the office about today's change".
+  Write your agents' instructions the same way.
+</Aside>
+
+## When it asks first
+
+Every send is treated as a final act — a text cannot be unsent, and it costs
+money.
+
+| Where the send happens | What happens |
+|---|---|
+| A task someone is watching | **Every send asks.** The card shows the recipients (all of them, folded past ten), the message exactly as it will arrive, the number of parts and the charge. **Approve all does not cover sends**: each one asks again |
+| An **Autonomous** [automation](/concepts/automations) | The agent **sends without asking**, and the transcript records each send |
+| An **Interactive** automation | It stops at each send and waits, like a watched task |
+| The **Try it** pane of the agent builder | **Nothing is ever sent or charged.** The agent is told what the send would have done — how many people, how many parts, about what it would cost |
+| A skill's trial or a training test | If you let that trial or test make this kind of change, its sends go ahead without a card of their own — you approved them when you approved the trial |
+
+## Who an agent may message
+
+An agent can only message a phone number or address that came into the task
+from somewhere you trust:
+
+- a message a person wrote in the task;
+- what a connector returned in the task, including the files it returned;
+- the agent's knowledge files, or a file attached to the task;
+- text the agent read on a web page with its browser;
+- the output of code the agent ran in the task, or a page of these docs.
+
+A number or address the agent produced from nowhere — made up, or remembered
+from another task — is not sent, and the agent is told which recipient was not
+found. Each message records where its recipient came from, and the Activity
+list shows it.
+
+<Aside type="caution" title="A web page counts as a source.">
+  Because page text is a source, a page an agent visits could plant a number.
+  What limits the damage is the 50-recipient cap per send, your monthly limit,
+  the opt-out list, the sender name at the start of every text, and the record
+  of where each recipient came from. Grant AptiveAI Messaging to an agent an
+  Autonomous automation runs only when you are comfortable with that.
+</Aside>
+
+A send is also refused, before anything is charged, when:
+
+- a recipient is on your enterprise's opt-out list;
+- a number is not a US number;
+- AptiveAI Messaging is turned off, or texts are not approved yet;
+- the send would pass your monthly limit;
+- your wallet cannot cover it.
+
+If any recipient in a batch is refused, nothing in that batch is sent. The
+agent is told which recipients failed and why, and may send again to the rest.
+
+## What it costs
+
+Every message is paid from your **enterprise wallet** — never from the AI
+credit included with your plan or from promotional credit. Today a text costs
+about **1.8¢ per part** and email **$0.15 per 1,000 messages**; the turn-on
+dialog and the [pricing page](https://aptiveai.io/pricing) always show the
+current figures. The toll-free number itself costs you nothing.
+
+- **The charge is known before the message goes out**, so a send your wallet
+  cannot cover is refused rather than run up as a debt. Add funds to your
+  wallet to send again — having AI credit is not enough. See
+  [Usage and credit](/administration/usage).
+- **A monthly limit** in the **Spending** section stops sends once this
+  month's messaging would pass it.
+- When a send is refused for the wallet or the limit, **the enterprise's
+  owners get a notification**, at most once a day.
+- If the carrier or the mail service refuses a message outright, that
+  recipient's share is refunded. A message that was accepted and then fails to
+  arrive is not refunded.
+
+Messaging spend shows up as its own line: on the task, beside AI usage, and on
+the wallet card of [Activity](/administration/activity). It is never counted as
+AI usage.
+
+## Opt-outs
+
+Your enterprise keeps one opt-out list. Nobody on it can be messaged by any of
+your agents.
+
+| How someone gets on it | Shown as |
+|---|---|
+| They reply **STOP** to a text | **Replied STOP** |
+| They use the unsubscribe link in an email and confirm | **Unsubscribed** |
+| An email to them bounces permanently | **Bounced** |
+| They mark an email as spam | **Marked as spam** |
+| An owner adds them | **Added by an owner** |
+
+An owner can add a number or address under **Opt-outs → Add an address**.
+Nobody can take an address off the list. The unsubscribe link opens a page that
+asks the recipient to confirm, so a mail scanner that follows links cannot
+unsubscribe anyone by accident.
+
+## Activity
+
+The **Activity** section lists every message your agents sent: when, the
+channel, the recipient, where the recipient came from, the status, the number
+of parts, the charge, and whether a person approved it or an automation sent
+it, with a link to the task. Filter it by channel, status or agent.
+
+| Status | What it means |
+|---|---|
+| **Queued** | Charged and about to go out |
+| **Sent** | Handed to the carrier or the mail service |
+| **Delivered** | The carrier or the recipient's mail service confirmed it |
+| **Failed** | It was accepted but could not be delivered |
+| **Bounced** | The recipient's mail service rejected the email |
+| **Marked as spam** | The recipient reported the email |
+| **Refused** | Refused outright, and refunded |
+| **Unknown** | It is not known whether it went out; it is not sent again on its own |
+
+## Turning it off, and removing it
+
+- **Turn off** pauses it: every send is refused at once. The phone number, the
+  history and the opt-out list are kept, and an owner can turn it on again at
+  any time.
+- **Remove** also releases the phone number. Turning texts on again later
+  means verifying a new number, which takes days.
+
+AptiveAI may turn AptiveAI Messaging off for an enterprise when it sees abuse —
+for example many complaints, opt-outs or bounces. While AptiveAI has it turned
+off, only AptiveAI can turn it back on, and it cannot be removed; contact your
+AptiveAI contact. Messages may only go to people who agreed to receive them,
+never to a purchased list, and carriers' rules apply (see the
+[Terms of Service](https://aptiveai.io/terms)).
+
+## Who may do what
+
+| Action | Who |
+|---|---|
+| Turn it on, change the sender name, reply-to address and monthly limit, verify texts, add to the opt-out list, see Activity, turn it off or remove it | An owner of the enterprise |
+| Share it | An owner of the enterprise |
+| Grant it to an agent | Anyone it is shared with, in an agent they may edit |
+| Have an agent send | Anyone whose agent it is granted to and who may use it |
+| Turn it off for abuse, and back on after that | AptiveAI |
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Connectors" href="/concepts/connectors" description="Every kind of connector, and how writes are approved." />
+  <LinkCard title="Automations" href="/concepts/automations" description="Autonomous or Interactive — what decides whether a send asks." />
+  <LinkCard title="Usage and credit" href="/administration/usage" description="The wallet, and the other kinds of credit." />
+</CardGrid>
