@@ -7,8 +7,8 @@ import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components'
 import ThemedImage from '../../../components/ThemedImage.astro';
 import taskMenuDark from '../../../assets/screenshots/task-menu-dark-20261013.png';
 import taskMenuLight from '../../../assets/screenshots/task-menu-light-20261013.png';
-import taskBesideDark from '../../../assets/screenshots/task-beside-page-dark-20261013.png';
-import taskBesideLight from '../../../assets/screenshots/task-beside-page-light-20261013.png';
+import taskBesideDark from '../../../assets/screenshots/task-beside-page-dark-20261014.png';
+import taskBesideLight from '../../../assets/screenshots/task-beside-page-light-20261014.png';
 
 A **task** is one piece of work: *"reconcile this week's supplier invoices"*,
 *"find out why order 4471 has not shipped"*. You start it with a message, an
@@ -60,6 +60,10 @@ agent's replies, and each step it took in plain words — *Opening …*,
 *Clicking …*, *Titled the task: …*. Consecutive steps fold into one line such
 as **12 steps**; open the fold to read them. A fold says on its closed line
 when something **didn't work** or is still **working…**.
+
+An agent can set part of a reply apart as a coloured callout: **Caution**, in
+red, for a problem that needs you to act, and **Warning**, **Important**,
+**Tip** and **Note** for the rest.
 
 ### Steering it
 
@@ -173,7 +177,7 @@ sign-in, show the agent where something is — and a composer over the screen
 
 The live view is yours to open and close; the agent cannot open or close it.
 When the agent tells you what its computer is doing, it has just checked
-rather than assumed. After a task ends, its computer is kept for five minutes — so the
+rather than assumed. After a task ends, its computer is kept for three minutes — so the
 next task starts faster and the screen is still there — and then released.
 
 ## The side panel
@@ -315,7 +319,7 @@ never passes for the whole one:
 | **Status** | **Needs you**, **Running**, **Finished**, **Failed** |
 | **When** | **Today**, the last 7 days, the last 30 days |
 | **Source** | **All**, **By me**, **Automations**, **Shared with me** |
-| **Agent** | One of your agents. Arriving from an agent's **See all N** (`/tasks?agent=…`) always shows its chip, so you can remove it |
+| **Agent** | One of your agents. Arriving from an agent's **Tasks** button on the Agents page (`/tasks?agent=…`) always shows its chip, so you can remove it |
 | **Workspace** | Only if you are in more than one workspace: narrows the list to one. Each row also names its workspace |
 
 The **Needs you** band follows the same filters, so a filter that leaves out

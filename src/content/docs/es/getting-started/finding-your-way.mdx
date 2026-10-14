@@ -5,24 +5,24 @@ description: Un recorrido por AptiveAI Agents — la barra lateral, de Nueva tar
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import ThemedImage from '../../../../components/ThemedImage.astro';
-import sidebarDark from '../../../../assets/screenshots/console-sidebar-dark-20261013.png';
-import sidebarLight from '../../../../assets/screenshots/console-sidebar-light-20261013.png';
-import landingDark from '../../../../assets/screenshots/agent-landing-dark-20261013.png';
-import landingLight from '../../../../assets/screenshots/agent-landing-light-20261013.png';
-import workDark from '../../../../assets/screenshots/work-hub-dark-20261013.png';
-import workLight from '../../../../assets/screenshots/work-hub-light-20261013.png';
-import configureDark from '../../../../assets/screenshots/configure-hub-dark-20261013.png';
-import configureLight from '../../../../assets/screenshots/configure-hub-light-20261013.png';
-import agentsDark from '../../../../assets/screenshots/agents-list-dark-20261013.png';
-import agentsLight from '../../../../assets/screenshots/agents-list-light-20261013.png';
-import phoneBarDark from '../../../../assets/screenshots/phone-bottom-bar-dark-20261013.png';
-import phoneBarLight from '../../../../assets/screenshots/phone-bottom-bar-light-20261013.png';
-import phonePanelDark from '../../../../assets/screenshots/phone-side-panel-dark-20261013.png';
-import phonePanelLight from '../../../../assets/screenshots/phone-side-panel-light-20261013.png';
+import sidebarDark from '../../../../assets/screenshots/console-sidebar-dark-20261014.png';
+import sidebarLight from '../../../../assets/screenshots/console-sidebar-light-20261014.png';
+import landingDark from '../../../../assets/screenshots/agent-landing-dark-20261014.png';
+import landingLight from '../../../../assets/screenshots/agent-landing-light-20261014.png';
+import workDark from '../../../../assets/screenshots/work-hub-dark-20261014.png';
+import workLight from '../../../../assets/screenshots/work-hub-light-20261014.png';
+import configureDark from '../../../../assets/screenshots/configure-hub-dark-20261014.png';
+import configureLight from '../../../../assets/screenshots/configure-hub-light-20261014.png';
+import agentsDark from '../../../../assets/screenshots/agents-list-dark-20261014.png';
+import agentsLight from '../../../../assets/screenshots/agents-list-light-20261014.png';
+import phoneBarDark from '../../../../assets/screenshots/phone-bottom-bar-dark-20261014.png';
+import phoneBarLight from '../../../../assets/screenshots/phone-bottom-bar-light-20261014.png';
+import phonePanelDark from '../../../../assets/screenshots/phone-side-panel-dark-20261014.png';
+import phonePanelLight from '../../../../assets/screenshots/phone-side-panel-light-20261014.png';
 import recentDeckDark from '../../../../assets/screenshots/sidebar-recent-deck-dark-20261013.png';
 import recentDeckLight from '../../../../assets/screenshots/sidebar-recent-deck-light-20261013.png';
-import agentsGroupedDark from '../../../../assets/screenshots/sidebar-agents-grouped-dark-20261013.png';
-import agentsGroupedLight from '../../../../assets/screenshots/sidebar-agents-grouped-light-20261013.png';
+import agentsGroupedDark from '../../../../assets/screenshots/sidebar-agents-grouped-dark-20261014.png';
+import agentsGroupedLight from '../../../../assets/screenshots/sidebar-agents-grouped-light-20261014.png';
 
 **AptiveAI Agents** es donde trabajas con tus agentes: ahí inicias
 [tareas](/es/concepts/tasks), las sigues, respondes a tus agentes y lo configuras
@@ -48,7 +48,7 @@ La barra lateral es la misma en todas las páginas. De arriba abajo:
   dark={sidebarDark}
   light={sidebarLight}
   title="Nueva tarea"
-  alt="AptiveAI Agents con la barra lateral desplegada: Nueva tarea, un agente fijado debajo, Bandeja de entrada, Automatizaciones y Trabajo, luego la sección AGENTES con el agente fijado primero y sus tres últimas tareas debajo, una que te espera, la lista RECIENTES con los botones de búsqueda, filtro y densidad, y Configurar y ayuda al pie, debajo de una línea. La página al lado es Nueva tarea, con Tus agentes encima del cuadro de mensajes."
+  alt="AptiveAI Agents con la barra lateral desplegada: Nueva tarea, un agente fijado debajo, Bandeja de entrada, Automatizaciones y Trabajo, luego la sección AGENTES con el agente fijado primero y sus tres últimas tareas y + Nueva tarea debajo, una tarea que te espera, la lista RECIENTES con los botones de búsqueda, filtro y densidad, y Configurar y ayuda al pie, debajo de una línea. La página al lado es Nueva tarea, con Tus agentes encima del cuadro de mensajes."
 />
 
 **Trabajo** queda resaltado mientras estás en una tarea, **Automatizaciones**
@@ -66,7 +66,7 @@ en conectores, habilidades o Ajustes, así que siempre sabes dónde estás.
   dark={agentsGroupedDark}
   light={agentsGroupedLight}
   title="Agentes"
-  alt="La sección AGENTES de la barra lateral abierta: Accounts receivable follow-up, el agente fijado, primero, con sus tres últimas tareas debajo, una con la etiqueta Te necesitan; Vendor onboarding checklist cerrado; Service request intake abierto con sus tres últimas tareas y Ver las 5; Morning operations digest; y Todos los agentes al final."
+  alt="La sección AGENTES de la barra lateral abierta: Accounts receivable follow-up, el agente fijado, primero, con sus tres últimas tareas debajo, una con la etiqueta Te necesitan; Vendor onboarding checklist cerrado; Service request intake abierto con sus tres últimas tareas, un botón 2 más en color de acento y + Nueva tarea; Morning operations digest cerrado; y Todos los agentes. Las filas de agente en AGENTES no llevan marca de fijado. Debajo empieza RECIENTES."
 />
 
 <Aside type="note">
@@ -125,15 +125,14 @@ Haz clic en el título **AGENTES** para plegar o desplegar la sección. Empieza
 desplegada si tienes un agente fijado y plegada si no tienes ninguno, y
 recuerda cómo la dejaste en este navegador.
 
-Debajo de cada agente están sus últimas tres tareas y **Ver las N**, que abre
-la lista de Tareas filtrada por ese agente (`/tasks?agent=…`). Haz clic en el
-nombre de un agente para mostrar u ocultar esas tareas. El **+** al final de la
-fila inicia una tarea con ese agente. Un agente que aún no tiene tareas muestra
-*Aún no hay tareas*.
+Haz clic en el nombre de un agente para mostrar u ocultar lo que tiene debajo:
+sus últimas tres tareas, luego **N más** si tiene otras — cada clic agrega
+cinco más ahí mismo — y al final **+ Nueva tarea**, que inicia una tarea con
+ese agente. Un agente que aún no tiene tareas muestra solo **+ Nueva tarea**.
 
 Cada fila de agente tiene un menú **…**:
 
-- **Nueva tarea** — lo mismo que el **+**.
+- **Nueva tarea** — lo mismo que **+ Nueva tarea** debajo del agente.
 - **Nueva tarea en vista dividida** — una tarea nueva con este agente, junto a
   la página en la que estás.
 - **Configurar** — abre el constructor del agente. Solo aparece si puedes
@@ -163,7 +162,7 @@ en una línea. A partir de diez agentes aparece encima un cuadro **Filtrar
 agentes...**.
 
 También llegas a la misma pantalla desde la fila de un agente fijado, desde el
-**+** de un agente en la barra lateral o desde **Iniciar una tarea** en la
+**+ Nueva tarea** de un agente en la barra lateral o desde **Iniciar una tarea** en la
 página Agentes.
 
 Cuando no hay ningún agente elegido, una breve franja de sugerencia junto al
@@ -252,7 +251,7 @@ sistemas.
 | Buscas | Dónde está |
 |---|---|
 | Una tarea que iniciaste tú o un colega | **RECIENTES** en la barra lateral, o **Trabajo → Tareas** |
-| Las tareas de un agente | Debajo del agente en **AGENTES**, o **Ver las N** debajo de ellas |
+| Las tareas de un agente | Debajo del agente en **AGENTES**, con **N más** para las anteriores; o el botón **Tareas** del agente en la página Agentes |
 | Una automatización | **Automatizaciones**, o **Trabajo → Automatizaciones** |
 | Una pregunta que te espera | **Bandeja de entrada**, o las filas **Te necesitan** al principio de **RECIENTES** |
 | Todos los agentes, o uno nuevo | **Todos los agentes**, al final de la lista **AGENTES**, o **Configurar y ayuda → Agentes** |
@@ -281,13 +280,14 @@ constructor.
 
 En un teléfono, la barra lateral se convierte en una barra en la parte inferior
 de la pantalla: **Menú**, **Trabajo**, **Nueva tarea** en el centro,
-**Agentes** y **Bandeja de entrada**. **Menú** abre la barra lateral completa
+**Agentes** y **Tareas**. **Menú** abre la barra lateral completa
 como un panel lateral — las mismas filas, con **AGENTES** y **RECIENTES**, los
 mismos menús **…** y **Configurar y ayuda** al final, debajo de una línea. Ahí
 vive **RECIENTES** en un teléfono; no hay un panel de tareas aparte. Las filas
 son más altas para el dedo, los menús **…** están siempre visibles y se abren
 como una hoja, y no hay botón de densidad. **Agentes** en la barra abre la
-página Agentes; **Bandeja de entrada** muestra tu número de no leídas.
+página Agentes y **Tareas** la lista de Tareas. **Bandeja de entrada** está en
+**Menú**, y la campana del encabezado muestra tu número de no leídas.
 
 <div class="phone-row">
   <ThemedImage
@@ -295,14 +295,14 @@ página Agentes; **Bandeja de entrada** muestra tu número de no leídas.
     dark={phoneBarDark}
     light={phoneBarLight}
     title="La barra inferior"
-    alt="Nueva tarea en un teléfono: Tus agentes como mosaicos de dos por fila encima del cuadro de mensajes, y la barra inferior — Menú, Trabajo, Nueva tarea en el centro, Agentes y Bandeja de entrada."
+    alt="Nueva tarea en un teléfono: Tus agentes como mosaicos de dos por fila encima del cuadro de mensajes, y la barra inferior flotante de iconos — Menú, Trabajo, Nueva tarea elevada en el centro, Agentes y Tareas."
   />
   <ThemedImage
     frame="phone"
     dark={phonePanelDark}
     light={phonePanelLight}
     title="Menú, con Recientes"
-    alt="El panel lateral abierto desde Menú: Nueva tarea, Bandeja de entrada, Automatizaciones y Trabajo, la sección AGENTES abierta con el agente fijado abierto y sus últimas tareas debajo, los demás agentes y Todos los agentes, y el comienzo de la lista RECIENTES; Configurar y ayuda está al pie del panel, debajo de la lista."
+    alt="El panel lateral abierto desde Menú: Nueva tarea, Bandeja de entrada, Automatizaciones y Trabajo, la sección AGENTES abierta con el agente fijado abierto y sus últimas tareas debajo, y + Nueva tarea, los demás agentes plegados y Todos los agentes, y debajo el título RECIENTES."
   />
 </div>
 

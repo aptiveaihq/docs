@@ -7,8 +7,8 @@ import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components'
 import ThemedImage from '../../../../components/ThemedImage.astro';
 import taskMenuDark from '../../../../assets/screenshots/task-menu-dark-20261013.png';
 import taskMenuLight from '../../../../assets/screenshots/task-menu-light-20261013.png';
-import taskBesideDark from '../../../../assets/screenshots/task-beside-page-dark-20261013.png';
-import taskBesideLight from '../../../../assets/screenshots/task-beside-page-light-20261013.png';
+import taskBesideDark from '../../../../assets/screenshots/task-beside-page-dark-20261014.png';
+import taskBesideLight from '../../../../assets/screenshots/task-beside-page-light-20261014.png';
 
 Una **tarea** es un trabajo concreto: *"concilia las facturas de proveedores de
 esta semana"*, *"averigua por qué no se ha enviado el pedido 4471"*. La inicias
@@ -62,6 +62,10 @@ agente y cada paso que dio, en palabras simples — *Abriendo …*, *Haciendo cl
 en …*, *Tituló la tarea: …*. Los pasos consecutivos se agrupan en una sola línea,
 como **12 pasos**; abre el grupo para leerlos. Un grupo cerrado indica en su línea
 cuando algo **no funcionó** o sigue **trabajando…**.
+
+Un agente puede destacar parte de una respuesta como un aviso de color:
+**Precaución**, en rojo, para un problema que requiere que actúes, y
+**Advertencia**, **Importante**, **Consejo** y **Nota** para lo demás.
 
 ### Guiarla
 
@@ -186,7 +190,7 @@ abre un comentario de sus pasos a medida que avanza.
 Abrir y cerrar la vista en vivo te corresponde a ti; el agente no puede abrirla
 ni cerrarla. Cuando el agente te dice qué está haciendo su computadora, lo acaba
 de comprobar en lugar de suponerlo. Cuando una tarea termina, su computadora se
-conserva cinco minutos — así la siguiente tarea empieza más rápido y la pantalla
+conserva tres minutos — así la siguiente tarea empieza más rápido y la pantalla
 sigue ahí — y luego se libera.
 
 ## El panel lateral
@@ -337,7 +341,7 @@ lista filtrada nunca se confunde con la completa:
 | **Estado** | **Te necesitan**, **En curso**, **Terminadas**, **Fallidas** |
 | **Cuándo** | **Hoy**, los últimos 7 días, los últimos 30 días |
 | **Origen** | **Todas**, **Mías**, **Automatizaciones**, **Compartidas conmigo** |
-| **Agente** | Uno de tus agentes. Si llegas desde **Ver las N** de un agente (`/tasks?agent=…`), su etiqueta siempre aparece, para que puedas quitarla |
+| **Agente** | Uno de tus agentes. Si llegas desde el botón **Tareas** de un agente en la página Agentes (`/tasks?agent=…`), su etiqueta siempre aparece, para que puedas quitarla |
 | **Espacio de trabajo** | Solo si estás en más de un espacio de trabajo: acota la lista a uno. Cada fila también nombra su espacio de trabajo |
 
 La franja **Te necesitan** sigue los mismos filtros, así que un filtro que deja

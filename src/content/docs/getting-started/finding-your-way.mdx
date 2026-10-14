@@ -5,24 +5,24 @@ description: A tour of AptiveAI Agents — the sidebar from New task to Configur
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import ThemedImage from '../../../components/ThemedImage.astro';
-import sidebarDark from '../../../assets/screenshots/console-sidebar-dark-20261013.png';
-import sidebarLight from '../../../assets/screenshots/console-sidebar-light-20261013.png';
-import landingDark from '../../../assets/screenshots/agent-landing-dark-20261013.png';
-import landingLight from '../../../assets/screenshots/agent-landing-light-20261013.png';
-import workDark from '../../../assets/screenshots/work-hub-dark-20261013.png';
-import workLight from '../../../assets/screenshots/work-hub-light-20261013.png';
-import configureDark from '../../../assets/screenshots/configure-hub-dark-20261013.png';
-import configureLight from '../../../assets/screenshots/configure-hub-light-20261013.png';
-import agentsDark from '../../../assets/screenshots/agents-list-dark-20261013.png';
-import agentsLight from '../../../assets/screenshots/agents-list-light-20261013.png';
-import phoneBarDark from '../../../assets/screenshots/phone-bottom-bar-dark-20261013.png';
-import phoneBarLight from '../../../assets/screenshots/phone-bottom-bar-light-20261013.png';
-import phonePanelDark from '../../../assets/screenshots/phone-side-panel-dark-20261013.png';
-import phonePanelLight from '../../../assets/screenshots/phone-side-panel-light-20261013.png';
+import sidebarDark from '../../../assets/screenshots/console-sidebar-dark-20261014.png';
+import sidebarLight from '../../../assets/screenshots/console-sidebar-light-20261014.png';
+import landingDark from '../../../assets/screenshots/agent-landing-dark-20261014.png';
+import landingLight from '../../../assets/screenshots/agent-landing-light-20261014.png';
+import workDark from '../../../assets/screenshots/work-hub-dark-20261014.png';
+import workLight from '../../../assets/screenshots/work-hub-light-20261014.png';
+import configureDark from '../../../assets/screenshots/configure-hub-dark-20261014.png';
+import configureLight from '../../../assets/screenshots/configure-hub-light-20261014.png';
+import agentsDark from '../../../assets/screenshots/agents-list-dark-20261014.png';
+import agentsLight from '../../../assets/screenshots/agents-list-light-20261014.png';
+import phoneBarDark from '../../../assets/screenshots/phone-bottom-bar-dark-20261014.png';
+import phoneBarLight from '../../../assets/screenshots/phone-bottom-bar-light-20261014.png';
+import phonePanelDark from '../../../assets/screenshots/phone-side-panel-dark-20261014.png';
+import phonePanelLight from '../../../assets/screenshots/phone-side-panel-light-20261014.png';
 import recentDeckDark from '../../../assets/screenshots/sidebar-recent-deck-dark-20261013.png';
 import recentDeckLight from '../../../assets/screenshots/sidebar-recent-deck-light-20261013.png';
-import agentsGroupedDark from '../../../assets/screenshots/sidebar-agents-grouped-dark-20261013.png';
-import agentsGroupedLight from '../../../assets/screenshots/sidebar-agents-grouped-light-20261013.png';
+import agentsGroupedDark from '../../../assets/screenshots/sidebar-agents-grouped-dark-20261014.png';
+import agentsGroupedLight from '../../../assets/screenshots/sidebar-agents-grouped-light-20261014.png';
 
 **AptiveAI Agents** is where you work with your agents: you start
 [tasks](/concepts/tasks), follow them, answer your agents and set everything
@@ -48,7 +48,7 @@ The sidebar is the same on every page. From the top:
   dark={sidebarDark}
   light={sidebarLight}
   title="New task"
-  alt="AptiveAI Agents with the sidebar expanded: New task, a pinned agent under it, Inbox, Automations and Work, then the AGENTS section with the pinned agent first and its three latest tasks beneath, one waiting on you, the RECENT list with search, filter and density buttons, and Configure & help at the foot below a line. The page beside it is New task, with Your agents above the composer."
+  alt="AptiveAI Agents with the sidebar expanded: New task, a pinned agent under it, Inbox, Automations and Work, then the AGENTS section with the pinned agent first and its three latest tasks and + New task beneath, one task waiting on you, the RECENT list with search, filter and density buttons, and Configure & help at the foot below a line. The page beside it is New task, with Your agents above the composer."
 />
 
 **Work** stays highlighted while you are on a task, **Automations** while you
@@ -66,7 +66,7 @@ skills or Settings, so you can always tell where you are.
   dark={agentsGroupedDark}
   light={agentsGroupedLight}
   title="Agents"
-  alt="The AGENTS section of the sidebar open: Accounts receivable follow-up, the pinned agent, first, with its three latest tasks beneath it, one with the Needs you badge; Vendor onboarding checklist closed; Service request intake open with its three latest tasks and See all 5; Morning operations digest; and All agents at the end."
+  alt="The AGENTS section of the sidebar open: Accounts receivable follow-up, the pinned agent, first, with its three latest tasks beneath it, one with the Needs you badge; Vendor onboarding checklist closed; Service request intake open with its three latest tasks, an accent 2 more button and + New task; Morning operations digest closed; and All agents. Agent rows under AGENTS carry no pin mark. The start of RECENT follows."
 />
 
 <Aside type="note">
@@ -125,14 +125,14 @@ Click the **AGENTS** heading to fold the section or open it. It starts open if
 you have a pinned agent and folded if you have none, and it remembers how you
 left it in this browser.
 
-Under each agent are its latest three tasks, and **See all N** — which opens
-the Tasks list filtered to that agent (`/tasks?agent=…`). Click an agent's name
-to show or hide those tasks. The **+** at the end of the row starts a task with
-that agent. An agent with no tasks yet shows *No tasks yet*.
+Click an agent's name to show or hide what is under it: its latest three
+tasks, then **N more** when it has others — each click adds five more in
+place — and last, **+ New task**, which starts a task with that agent. An agent
+with no tasks yet shows only **+ New task**.
 
 Every agent row has a **…** menu:
 
-- **Start new task** — the same as the **+**.
+- **Start new task** — the same as **+ New task** under the agent.
 - **New task in split view** — a new task with this agent, beside the page you
   are on.
 - **Configure** — opens the agent's builder. Only shown if you may edit the
@@ -161,7 +161,7 @@ to a row, with a one-line purpose. Past ten agents a **Filter agents...** box
 appears above them.
 
 You can also reach the same screen from a pinned agent's row, from an agent's
-**+** in the sidebar, or from **Start a task** on the Agents page.
+**+ New task** in the sidebar, or from **Start a task** on the Agents page.
 
 When no agent is chosen, a short hint band beside the composer explains that
 sending as it is gets an answer, and that choosing an agent has the work done
@@ -246,7 +246,7 @@ computer, and no access to your systems.
 | Looking for | Where it is |
 |---|---|
 | A task you or a colleague started | **RECENT** in the sidebar, or **Work → Tasks** |
-| An agent's tasks | Under the agent in **AGENTS**, or **See all N** beneath them |
+| An agent's tasks | Under the agent in **AGENTS**, with **N more** for older ones; or the agent's **Tasks** button on the Agents page |
 | An automation | **Automations**, or **Work → Automations** |
 | A question waiting on you | **Inbox**, or the **Needs you** rows at the top of **RECENT** |
 | Every agent, or a new one | **All agents** at the end of the **AGENTS** list, or **Configure & help → Agents** |
@@ -273,13 +273,14 @@ agent; **New agent** opens the builder.
 ## On a phone
 
 On a phone the sidebar becomes a bar at the bottom of the screen: **Menu**,
-**Work**, **New task** in the middle, **Agents** and **Inbox**. **Menu** opens
+**Work**, **New task** in the middle, **Agents** and **Tasks**. **Menu** opens
 the full sidebar as a side panel — the same rows, with **AGENTS** and **RECENT**
 in it, the same **…** menus, and **Configure & help** last, below a line. This
 is where **RECENT** lives on a phone; there is no separate tasks panel. Rows
 are taller for a finger, the **…** menus are always visible and open as a
 sheet, and there is no density button. **Agents** in the bar opens the Agents
-page; **Inbox** shows your unread count.
+page and **Tasks** the Tasks list. **Inbox** is in **Menu**, and the bell in
+the header shows your unread count.
 
 <div class="phone-row">
   <ThemedImage
@@ -287,14 +288,14 @@ page; **Inbox** shows your unread count.
     dark={phoneBarDark}
     light={phoneBarLight}
     title="The bottom bar"
-    alt="New task on a phone: Your agents as two-per-row tiles above the composer, and the bottom bar — Menu, Work, New task in the middle, Agents and Inbox."
+    alt="New task on a phone: Your agents as two-per-row tiles above the composer, and the floating bottom bar of icons — Menu, Work, New task raised in the middle, Agents and Tasks."
   />
   <ThemedImage
     frame="phone"
     dark={phonePanelDark}
     light={phonePanelLight}
     title="Menu, with Recent open"
-    alt="The side panel opened from Menu: New task, Inbox, Automations and Work, the AGENTS section open with the pinned agent open and its latest tasks beneath it, the other agents and All agents, and the start of the RECENT list; Configure & help is at the foot of the panel, below the list."
+    alt="The side panel opened from Menu: New task, Inbox, Automations and Work, the AGENTS section open with the pinned agent open and its latest tasks beneath it, and + New task, the other agents folded and All agents, and the RECENT heading below."
   />
 </div>
 
