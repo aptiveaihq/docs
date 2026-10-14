@@ -6,7 +6,7 @@ AptiveAI's products.
 
 ## The company and its products
 
-AptiveAI is the company — legal entity Aptive AI LLC, `aptiveai.io`, GitHub org
+AptiveAI is the company — legal entity ClusterCode LLC (AptiveAI is its brand), `aptiveai.io`, GitHub org
 `aptiveaihq`. The names below were locked on 2026-09-06; the decision of record
 is `docs/business/products.md` in
 [`aptiveaihq/core`](https://github.com/aptiveaihq/core).
