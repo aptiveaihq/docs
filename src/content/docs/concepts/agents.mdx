@@ -605,21 +605,24 @@ connector is granted and again every time a task starts, so turning the switch
 off takes the connector away from those agents at their next task. Owners and
 admins, who may grant any connector, are not limited by it.
 
-### One task at a time per agent
+### Up to five tasks at a time per agent
 
-An agent works on **one task at a time**, for everyone who uses it. A task
-holds its agent while it is working or waiting on someone. While it does:
+An agent works on up to **five tasks at once**, counted across everyone who
+uses it. A task counts while the agent is working on it; a task waiting on
+someone's answer or approval does not, and neither does a
+[training session](#training-an-agent).
 
-- the composer says *… is already working on a task, and starts one at a time*,
-  with **Open that task** when you can see it — send your message without an
-  agent to get a plain answer instead;
-- sending anyway is refused — *… is already working on a task. Wait for it to
-  finish*;
-- an automation's run is skipped as **Agent busy**.
+A task started past that limit is not refused — it waits:
 
-Different agents work at the same time, and so can the same person with
-several agents. When one job needs to happen in parallel, give it to more than
-one agent.
+- the composer warns you first: *… is already working on 5 tasks. Send this
+  anyway: it waits, and starts as soon as one of them finishes.*
+- the task then reads *Waiting to start: … is already working on 5 tasks. This
+  one starts as soon as one of them finishes.*, and it starts by itself;
+- an automation that fires while the agent is at its limit is skipped as
+  **Agent busy**.
+
+Different agents work at the same time, so a large batch of work can also be
+split between several agents.
 
 ## Next
 

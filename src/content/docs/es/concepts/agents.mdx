@@ -654,22 +654,25 @@ que desactivar el interruptor les quita el conector a esos agentes en su
 siguiente tarea. Los propietarios y administradores, que pueden conceder
 cualquier conector, no están limitados por ella.
 
-### Una tarea a la vez por agente
+### Hasta cinco tareas a la vez por agente
 
-Un agente trabaja en **una tarea a la vez**, para todas las personas que lo
-usan. Una tarea ocupa a su agente mientras está trabajando o esperando a
-alguien. Mientras tanto:
+Un agente trabaja en hasta **cinco tareas a la vez**, contando a todas las
+personas que lo usan. Una tarea cuenta mientras el agente trabaja en ella; una
+tarea que espera la respuesta o la aprobación de alguien no cuenta, y tampoco
+una [sesión de entrenamiento](#entrenar-a-un-agente).
 
-- el cuadro de mensajes dice *… ya está trabajando en una tarea y solo hace una a la
-  vez*, con **Abrir esa tarea** cuando puedes verla; envía tu mensaje sin
-  agente para obtener una respuesta directa;
-- si lo envías de todos modos, se rechaza: *… ya está trabajando en una tarea.
-  Espera a que termine*;
-- la ejecución de una automatización se omite como **Agente ocupado**.
+Una tarea que se inicia por encima de ese límite no se rechaza — espera:
 
-Distintos agentes trabajan al mismo tiempo, y también puede hacerlo la misma
-persona con varios agentes. Cuando un trabajo tiene que hacerse en paralelo,
-dáselo a más de un agente.
+- el cuadro de mensajes te avisa antes: *… ya está trabajando en 5 tareas.
+  Envíala de todos modos: quedará en espera y empezará en cuanto termine una de
+  ellas.*
+- la tarea muestra entonces *En espera: … ya está trabajando en 5 tareas. Esta
+  empezará en cuanto termine una de ellas.*, y empieza sola;
+- una automatización que se activa mientras el agente está en su límite se
+  omite como **Agente ocupado**.
+
+Distintos agentes trabajan al mismo tiempo, así que un lote grande de trabajo
+también puede repartirse entre varios agentes.
 
 ## Siguiente
 
