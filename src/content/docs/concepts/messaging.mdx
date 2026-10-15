@@ -1,6 +1,6 @@
 ---
 title: AptiveAI Messaging
-description: Let your agents text and email people who do not use AptiveAI Agents — drivers, patients, customers. Turning it on, verifying your number for texts, what it costs, when it asks first, who may be messaged, and how people opt out.
+description: Let your agents text and email people who do not use AptiveAI Agents — drivers, customers, suppliers. Turning it on, verifying your number for texts, what it costs, when it asks first, who may be messaged, and how people opt out.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -13,7 +13,7 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 **AptiveAI Messaging** lets your agents send **text messages** and **emails**
 to people who do not use AptiveAI Agents: the drivers who missed a step, the
-patient whose appointment moved, the customer waiting on an answer. It is a
+customer whose order changed, the supplier waiting on an answer. It is a
 [connector](/concepts/connectors) that AptiveAI runs for you: texts go out from
 a toll-free number verified for your business, emails from an address of your
 own on AptiveAI's sending domain, and every message is paid from your
@@ -29,6 +29,13 @@ own to set up.
   its settings, turn it off or remove it, because every message is paid from
   the enterprise's wallet. A workspace owner cannot. Everyone else sees the
   card with *Ask your owner to turn this on*.
+</Aside>
+
+<Aside type="caution" title="Not for health information">
+  AptiveAI Messaging is not offered under a HIPAA Business Associate
+  Agreement. Do not use it to send protected health information or other
+  health details, in a text or in an email; the
+  [Terms of Service](https://aptiveai.io/terms) do not allow it.
 </Aside>
 
 ## Turning it on
@@ -134,7 +141,7 @@ every driver on this list" is one decision, not fifty.
 
 <Aside type="caution" title="Texts are not private.">
   A text message is not encrypted end to end. The agents are told to keep
-  personal and health details out of messages and to say only what the
+  personal details out of messages and to say only what the
   recipient needs to act — "Please call the office about today's change".
   Write your agents' instructions the same way.
 </Aside>
@@ -150,7 +157,7 @@ money.
 | An **Autonomous** [automation](/concepts/automations) | The agent **sends without asking**, and the transcript records each send |
 | An **Interactive** automation | It stops at each send and waits, like a watched task |
 | The **Try it** pane of the agent builder | **Nothing is ever sent or charged.** The agent is told what the send would have done — how many people, how many parts, about what it would cost |
-| A skill's trial or a training test | If you let that trial or test make this kind of change, its sends go ahead without a card of their own — you approved them when you approved the trial |
+| A skill's trial or a training test | **Nothing is ever sent or charged**, whatever changes you let the test make. The agent is told what the send would have done, as in the **Try it** pane |
 
 ## Who an agent may message
 
@@ -261,6 +268,24 @@ off, only AptiveAI can turn it back on, and it cannot be removed; contact your
 AptiveAI contact. Messages may only go to people who agreed to receive them,
 never to a purchased list, and carriers' rules apply (see the
 [Terms of Service](https://aptiveai.io/terms)).
+
+## Security
+
+What protects the people your agents message, and your enterprise:
+
+| Protection | What it does |
+|---|---|
+| **Owner control** | Only an owner of your enterprise turns it on, sets the monthly limit, adds to the opt-out list, turns it off or removes it. The connection belongs to the organization, not to a person |
+| **A person approves** | On a task someone is watching, every send asks, and **Approve all** never covers it. The **Try it** pane, a skill's trial and a training test never send. See [When it asks first](#when-it-asks-first) |
+| **Recipient guard** | An agent can only message a number or address that came into the task from a trusted source, and every message records where its recipient came from. See [Who an agent may message](#who-an-agent-may-message) |
+| **Limits** | At most 50 recipients per send, US numbers only for texts, and your monthly limit. A send your wallet cannot cover is refused before it goes out |
+| **Opt-outs** | A STOP reply, an unsubscribe, a bounce or a spam report blocks that number or address for every agent of your enterprise, and nobody can take it off the list. The unsubscribe page asks the recipient to confirm, so a mail scanner cannot unsubscribe anyone. A **HELP** reply gets the program's support contact |
+| **Sender identity** | Every text starts with your sender name. Email comes from AptiveAI's sending domain, `notify.aptiveai.io`, which is kept apart from AptiveAI's own account email and authenticated with SPF, DKIM and DMARC |
+| **Signed updates** | Delivery updates and STOP replies from the delivery service are accepted only when the service has signed them |
+| **Encryption in transit** | Messages travel encrypted between AptiveAI and the delivery service. A text is not encrypted once it reaches the mobile carrier, so keep messages to what the recipient needs to act on |
+| **A record of every message** | **Activity** keeps the recipient, where it came from, the message as sent, whether a person approved it or an automation sent it, its status and its charge. Passwords and codes sent to a task are hidden in the stored copy |
+| **Abuse monitoring** | AptiveAI watches complaint, opt-out and bounce rates, and turns AptiveAI Messaging off for an enterprise that abuses it |
+| **No health information** | AptiveAI Messaging is not offered under a HIPAA Business Associate Agreement and must not carry health information |
 
 ## Who may do what
 
