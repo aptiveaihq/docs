@@ -94,7 +94,7 @@ small agent inside it.
 
 - **Full screen.** The control at the end of the **Refine · Configure ·
   Versions** tabs gives the left pane the whole page; **Try it** folds into a
-  narrow strip on the right, and picking **Try it** or **Train** from the
+  narrow strip on the right, and picking **Try it** or **Train it** from the
   strip brings the split back. Try it has the same control the other way
   round. The choice is remembered in this browser. Refine keeps the page even
   when a computer opens — for example to read a file you attached; the
@@ -104,7 +104,7 @@ small agent inside it.
   it only uses the computer's browser while the computer is in view, so you
   can always see what it does there.
   There is no full-screen control on a phone, where the two panes are stacked,
-  or while a Train session is open.
+  or while a [Train it session](#training-an-agent) is open.
 - **Files.** Attach a file to a Refine message with the paperclip — a price
   list, a procedure, a screenshot — and the builder reads it: *"here is our
   refund procedure, build the agent from it"*. Pictures are shown to the
@@ -112,10 +112,10 @@ small agent inside it.
   uses, and Refine reads it there; if no computer is open, Refine starts one
   in the Try it card. The limits are those of a
   [task's files](/concepts/files). A file's content is treated as information,
-  never as instructions to the builder. While a Train session is open, Refine
+  never as instructions to the builder. While a [Train it session](#training-an-agent) is open, Refine
   reads pictures but not other files — it says *Finish or discard the training
   session to read files here.*
-- **Files in Try it and Train it.** Try it and Train it take files the same
+- **Files in Try it and Train it.** Try it and [Train it](#training-an-agent) take files the same
   way, with the paperclip or by dropping a file onto the conversation — and so
   does Refine. Try it reads a file the way the agent would in a real task:
   pictures are shown to it, and other files go on the computer, where it reads
@@ -124,6 +124,166 @@ small agent inside it.
   over. It clears the conversation only: the agent, its saved instructions,
   your unsaved edits, the computer and any text you were typing are untouched.
   It appears once there are messages, and waits while the builder is answering.
+
+### Training an agent
+
+**Train it** teaches an agent a job by showing it. Instead of describing the
+work, you do it once on the agent's own computer while the agent watches, and
+the agent writes up what it learned — changes to its instructions, skills and
+conversation starters — for you to review. **Nothing is saved until you
+approve it**, and then it is all saved at once, as a single new version.
+
+| | Try it | Refine | Train it |
+|---|---|---|---|
+| **For** | Checking how the agent works as it is | Telling the builder what to change | Showing the agent how the job is done in your systems |
+| **Who does the work** | The agent, as it would in a task | The builder changes the agent | You, on the computer, with the agent watching |
+| **What is saved** | Nothing — the conversation is not kept | An instruction change is saved at once, as a new version | Everything you approve, at once, as one new version |
+
+**Who can use it.** **Train it** is a tab beside **Try it** on a saved agent. It
+is there for anyone who may edit the agent and start tasks, a member on their
+own personal agent included. A training session is a task, so it needs the same
+[paid access](#paid-access) as starting one, and it is not available in a
+workspace that holds regulated data. An agent has one open session at a time:
+choosing **Train it** again reopens it, even after you reload the page. On a
+phone the tab is there too, with the panes stacked; the **Full screen** control
+is not.
+
+#### Running a session
+
+<Steps>
+
+1. **Choose Train it.** A computer starts — *Starting the computer…*, usually
+   20–40 s. The session takes over the page: the left pane folds to a narrow
+   strip, the computer is on show, and the session's conversation is under it.
+   If no computer is free you see *No computer is free right now* and **↻ Try
+   again**.
+
+2. **Sign in, if the site asks.** While a sign-in page is open the status says
+   *Waiting for sign-in*. Choose **Sign in with “‹name›”** to use one of the
+   agent's own [sign-ins](#sign-ins), or **Sign in with a new account…**, which
+   saves the new sign-in to the agent. You can also sign in by hand in the live
+   view. Nothing is recorded while a sign-in page is open.
+
+3. **Press ● Start and do the task yourself**, start to finish, on the computer.
+   Explain anything that is not obvious in the conversation — *"filter by 60+
+   days, that is the one finance cares about"*. The agent watches and may ask you
+   a question; the tab then reads **Answer**, and you answer in the conversation.
+
+4. **Press ■ Stop when you are done.** The agent writes up what it learned.
+
+5. **Review it and approve it.** See [The proposal](#the-proposal).
+
+</Steps>
+
+A bar over the computer always says what the session is doing — *Ready to
+record*, *Recording 01:42*, *Paused*, *Writing up what you showed me…* — and the
+**Train it** tab carries the same state: **Train it · Rec 01:42**, **Train it ·
+Writing up**, **Train it · Reviewing**. The **ⓘ** (*Show the details*) opens the
+four steps again, marked **Done** and **Now**, with the **Discard session**
+button. The bar shrinks to a pill after a few seconds, and while you record it
+can tuck up out of the way (*Hide the controls*); rest the pointer on its small
+tab to bring it back.
+
+**What is kept.** The agent keeps your steps, the addresses of the pages you
+visit and what you say in the conversation. *Passwords, cookies and page contents
+are not kept.*
+
+#### The controls
+
+| Control | What it does |
+|---|---|
+| **● Start** | Begins recording. Press it again after a pause to record more |
+| **❚❚ Pause** | Stops recording for now and keeps what was recorded. Recording also pauses by itself — *paused while you sign in* — when a sign-in page opens, and carries on when it is gone |
+| **● Resume** | Records again after a pause you made |
+| **■ Stop** | Ends the recording and asks the agent to write up what it learned. Offered while recording or paused |
+| **Discard session** | Ends the session and keeps nothing. Offered from the moment you press **Train it** until the session is saved, reviewing included. The computer is closed |
+
+If the agent does not come back with a proposal, the conversation says so:
+*Press Stop to ask again, Resume to keep showing it, or Discard.* And if a
+skill's test could not get past a sign-in, the agent can take the session back to
+*Ready to record* — *Training restarted: press Start to record again. What was
+recorded before is kept.* The tests are forgotten and run again.
+
+#### The proposal
+
+After **Stop**, the agent answers with one proposal, shown in the conversation
+under **Review**. It can hold:
+
+- **The workflow** — the job as the agent understood it, in steps.
+- **Instructions** — the change to the agent's instructions, as a
+  before-and-after: lines starting with **-** are removed, lines starting with
+  **+** are added.
+- **Skills** — each under **Skill “‹name›”**, or *(replaces the skill of that
+  name)*. A proposal holds at most five. If approving would replace a skill's
+  files, the card warns that approving deletes the ones it has now.
+- **Conversation starters** — the ones added and the ones removed.
+
+The card asks *Save what ‹agent› learned?* and you answer in one of three ways:
+
+- **Approve** — *Save all of it to the agent now.* The instructions, skills and
+  starters are written together, as one new version you can undo from the
+  agent's [Versions](#versions). The skills become the agent's own
+  [skills](#skills).
+- **Tell it what to change** — type a correction (*"call it Monthly AR
+  report"*, *"step 3 is the Billing menu"*). The agent revises and shows
+  *Proposal v2*, and so on until it is right. The tab reads **Reviewing**
+  meanwhile.
+- **Edit** — fix the proposal yourself before you approve it. The **Edit the
+  proposal** box has, for each skill, its **Name**, **When to use it**, **Steps**
+  and **Files**, and for each starter its **Label** and **Request**. A name, a
+  description or a starter you fix is saved as it is and keeps the skill's test.
+  Changing a skill's steps or files sends it back to the agent to test again
+  (**Save and test again**; the skill shows *Will be tested again*). The
+  workflow and the instruction change are not editable here: ask for them in the
+  conversation.
+
+A proposal you edited says so — *edited by you*.
+
+**Skill tests.** The agent does not propose a skill that has not passed a test,
+unless it is guidance with no steps to run or you skip the test. Before it tests
+one, it asks on a **Test** card: *Test “‹skill›” before it is proposed?*
+
+| Answer | What happens |
+|---|---|
+| **Yes, test it** | Runs the skill on the computer in a fresh context, the way a future task would; it can take a few minutes. A yes buys up to three attempts, and at most six tests of a skill run in a round |
+| **Skip the test** | Proposes it without a test, and the proposal says so |
+| **No** | Does not test it now. Tell the agent what to change, or leave the skill out |
+
+You can type a hint instead of choosing. While a test runs the bar says
+*Testing “‹skill›” · attempt 1 of 3*, and you can watch it in the
+[live view](/concepts/tasks#the-live-view). The agent proposes once every skill
+has passed, and the card shows each skill's result: **Tested ✓**, **Not tested**,
+or *skipped by you*.
+
+A test acts for real in your systems. When one is about to write — send an
+email, change a record — it stops first and asks *Let tests in this session ‹do
+that›?*, once for each kind of write, with **Approve** and **Decline**. **Approve
+all** given elsewhere in the session does not cover a test. Once you approve a
+kind of write, the session's later tests may do it too, and the conversation
+notes each one: *Done in a test, as you allowed for tests in this session.*
+
+#### Closing the session
+
+Choosing **Try it** while a session is open, or the computer's close button
+(*Close the computer*), asks **Stop training?**
+
+| Button | What happens |
+|---|---|
+| **Stop and review** | Stops recording and has the agent write up what it learned. Offered only while there is something to stop |
+| **Discard** | Ends the session and keeps nothing |
+| **Keep training** | Closes the box and carries on |
+
+After **Approve** the session ends, the builder goes back to **Try it** and the
+agent's configuration reloads. A line says *Saved. Try it now:* followed by one
+of the agent's conversation starters; **See the session** opens the session's
+task. A saved or discarded session takes no more messages.
+
+**Who is told.** When a session starts, the other owners of the workspace get a
+notification, *A training session started on ‹agent›*, and every stored sign-in
+typed is recorded in the audit log. The person training gets no *task finished*
+or *task failed* notice for the session; the only one is **A task is waiting on
+an answer**, when the proposal is ready and waiting for you. See
+[Inbox](/concepts/inbox#what-you-are-told-about).
 
 ## Configuring an agent
 
@@ -394,7 +554,7 @@ can carry a note saying why, and the person who asked is told either way.
 
 Agents update themselves only in tasks a person started, never in a task an
 automation started. You can also teach an agent in **Try it**, once it has been
-saved.
+saved, or show it a whole job with [Train it](#training-an-agent).
 
 ## Restrictions
 
