@@ -1,6 +1,6 @@
 ---
 title: AptiveAI Messaging
-description: Deja que tus agentes envíen mensajes de texto y correos a personas que no usan AptiveAI Agents — conductores, pacientes, clientes. Cómo activarlo, cómo verificar tu número para los mensajes de texto, cuánto cuesta, cuándo pregunta antes, a quién se puede escribir y cómo se da de baja la gente.
+description: Deja que tus agentes envíen mensajes de texto y correos a personas que no usan AptiveAI Agents — conductores, clientes, proveedores. Cómo activarlo, cómo verificar tu número para los mensajes de texto, cuánto cuesta, cuándo pregunta antes, a quién se puede escribir y cómo se da de baja la gente.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -13,7 +13,7 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 **AptiveAI Messaging** permite que tus agentes envíen **mensajes de texto** y
 **correos** a personas que no usan AptiveAI Agents: los conductores que se
-saltaron un paso, el paciente cuya cita cambió, el cliente que espera una
+saltaron un paso, el cliente cuyo pedido cambió, el proveedor que espera una
 respuesta. Es un [conector](/es/concepts/connectors) que AptiveAI opera por ti:
 los mensajes de texto salen de un número gratuito verificado para tu negocio,
 los correos de una dirección propia en el dominio de envío de AptiveAI, y cada
@@ -29,6 +29,14 @@ cuenta propia que configurar.
   cambiar su configuración, desactivarlo o quitarlo, porque cada mensaje se
   paga con la billetera de la empresa. Un propietario de un espacio de trabajo
   no puede. Los demás ven la tarjeta con *Pide a tu propietario que lo active*.
+</Aside>
+
+<Aside type="caution" title="No es para información de salud">
+  AptiveAI Messaging no se ofrece con un acuerdo de socio comercial (Business
+  Associate Agreement) según la HIPAA. No lo uses para enviar información de
+  salud protegida ni otros datos de salud, ni en un mensaje de texto ni en un
+  correo; los [Términos del servicio](https://aptiveai.io/terms) no lo
+  permiten.
 </Aside>
 
 ## Cómo activarlo
@@ -145,7 +153,7 @@ cincuenta.
 
 <Aside type="caution" title="Los mensajes de texto no son privados.">
   Un mensaje de texto no está cifrado de extremo a extremo. A los agentes se
-  les indica que dejen fuera de los mensajes los datos personales y de salud y
+  les indica que dejen fuera de los mensajes los datos personales y
   que digan solo lo que el destinatario necesita para actuar — «Por favor,
   llame a la oficina por el cambio de hoy». Escribe así también las
   instrucciones de tus agentes.
@@ -162,7 +170,7 @@ deshacer, y cuesta dinero.
 | Una [automatización](/es/concepts/automations) **Autónoma** | El agente **envía sin preguntar**, y la transcripción registra cada envío |
 | Una automatización **Interactiva** | Se detiene en cada envío y espera, como una tarea que alguien está viendo |
 | El panel **Pruébalo** del creador de agentes | **Nunca se envía ni se cobra nada.** Al agente se le dice qué habría hecho el envío: a cuántas personas, cuántas partes y cuánto costaría aproximadamente |
-| La prueba de una habilidad o un test de entrenamiento | Si permitiste que esa prueba o ese test hiciera este tipo de cambio, sus envíos se hacen sin una tarjeta propia: los aprobaste al aprobar la prueba |
+| La prueba de una habilidad o un test de entrenamiento | **Nunca se envía ni se cobra nada**, sean cuales sean los cambios que permitiste al test. Al agente se le dice qué habría hecho el envío, como en el panel **Pruébalo** |
 
 ## A quién puede escribir un agente
 
@@ -281,6 +289,24 @@ quitar; habla con tu contacto de AptiveAI. Los mensajes solo pueden ir a
 personas que aceptaron recibirlos, nunca a una lista comprada, y se aplican las
 normas de los operadores (consulta los
 [Términos del servicio](https://aptiveai.io/terms)).
+
+## Seguridad
+
+Lo que protege a las personas a las que escriben tus agentes, y a tu empresa:
+
+| Protección | Qué hace |
+|---|---|
+| **Control del propietario** | Solo un propietario de tu empresa lo activa, fija el límite mensual, agrega a la lista de bajas, lo desactiva o lo quita. La conexión pertenece a la organización, no a una persona |
+| **Una persona aprueba** | En una tarea que alguien está viendo, cada envío pregunta, y **Aprobar todo** nunca lo cubre. El panel **Pruébalo**, la prueba de una habilidad y un test de entrenamiento nunca envían. Consulta [Cuándo pregunta antes](#cuándo-pregunta-antes) |
+| **Control de destinatarios** | Un agente solo puede escribir a un número o una dirección que llegó a la tarea desde un lugar de confianza, y cada mensaje registra de dónde salió su destinatario. Consulta [A quién puede escribir un agente](#a-quién-puede-escribir-un-agente) |
+| **Límites** | Como máximo 50 destinatarios por envío, solo números de EE. UU. para los mensajes de texto, y tu límite mensual. Un envío que tu billetera no puede cubrir se rechaza antes de salir |
+| **Bajas** | Una respuesta STOP, una baja por correo, un rebote o un aviso de spam bloquea ese número o esa dirección para todos los agentes de tu empresa, y nadie puede sacarlo de la lista. La página para darse de baja pide al destinatario que confirme, así que un escáner de correo no puede dar de baja a nadie. Una respuesta **HELP** recibe el contacto de soporte del programa |
+| **Identidad del remitente** | Cada mensaje de texto empieza con tu nombre de remitente. El correo sale del dominio de envío de AptiveAI, `notify.aptiveai.io`, separado del correo de cuenta de AptiveAI y autenticado con SPF, DKIM y DMARC |
+| **Actualizaciones firmadas** | Las actualizaciones de entrega y las respuestas STOP del servicio de entrega solo se aceptan si el servicio las firmó |
+| **Cifrado en tránsito** | Los mensajes viajan cifrados entre AptiveAI y el servicio de entrega. Un mensaje de texto deja de estar cifrado cuando llega al operador móvil, así que limita los mensajes a lo que el destinatario necesita para actuar |
+| **Registro de cada mensaje** | **Actividad** guarda el destinatario, de dónde salió, el mensaje tal como se envió, si lo aprobó una persona o lo envió una automatización, su estado y su cargo. Las contraseñas y los códigos enviados a una tarea se ocultan en la copia guardada |
+| **Vigilancia del abuso** | AptiveAI vigila las tasas de quejas, bajas y rebotes, y desactiva AptiveAI Messaging a la empresa que abuse de él |
+| **Sin información de salud** | AptiveAI Messaging no se ofrece con un acuerdo de socio comercial según la HIPAA y no debe llevar información de salud |
 
 ## Quién puede hacer qué
 
