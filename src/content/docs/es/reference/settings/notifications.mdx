@@ -1,13 +1,13 @@
 ---
 title: Ajustes de notificaciones
-description: Elige qué notificaciones te llegan, y dónde — en la aplicación, por correo y como notificaciones de escritorio en este dispositivo.
+description: Elige qué notificaciones te llegan, y dónde — en la aplicación, por correo, por mensaje de texto y como notificaciones de escritorio en este dispositivo.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
 **Ajustes → Notificaciones** decide cuáles de las notificaciones de la
-[Bandeja de entrada](/es/concepts/inbox) te llegan, y dónde. Tiene dos tarjetas.
-Ambas son solo tuyas — las notificaciones de nadie más cambian.
+[Bandeja de entrada](/es/concepts/inbox) te llegan, y dónde. Tiene tres tarjetas.
+Todas son solo tuyas — las notificaciones de nadie más cambian.
 
 ## Alertas en segundo plano
 
@@ -23,15 +23,54 @@ Si tu navegador bloqueó las notificaciones de AptiveAI Agents, la tarjeta lo in
 explica cómo permitirlas. Los navegadores que no pueden mostrarlas — iOS entre
 ellos — ven una explicación en lugar del interruptor.
 
+## Mensajes de texto
+
+AptiveAI puede enviarte mensajes de texto sobre tus tareas y tu cuenta. Es
+**opcional** — nunca lo necesitas para usar AptiveAI — y está **desactivado
+hasta que lo aceptes**.
+
+1. Escribe tu **Número de celular** (solo números de celular de EE. UU.).
+2. Activa **Aceptar mensajes de texto**. El interruptor empieza desactivado y
+   dice: *Envíame mensajes de texto sobre mis tareas y mi cuenta de AptiveAI. La
+   frecuencia de los mensajes varía. Pueden aplicarse tarifas de mensajes y
+   datos. Responde STOP para cancelar, HELP para ayuda.* Debajo hay enlaces a
+   los Términos y a la Política de privacidad.
+3. Pulsa **Guardar**. La tarjeta muestra entonces *Los mensajes de texto están
+   activados para ‹tu número›* y la fecha en que aceptaste. **Cambiar número**
+   te pide aceptar de nuevo para el número nuevo; **Desactivar mensajes de
+   texto** los apaga, y puedes volver a aceptar cuando quieras.
+
+Los mensajes salen del único número gratuito (toll-free) de AptiveAI,
++1 844-571-9591, el mismo que usan los agentes de las empresas. Un aviso es
+corto, empieza con «AptiveAI:», enlaza a la consola y no incluye nombres de
+tareas. El primer mensaje que el número te envía alguna vez termina con
+« Reply STOP to opt out.».
+
+<Aside type="caution" title="Los mensajes de texto aún no están disponibles">
+  Los mensajes de texto comienzan cuando los operadores móviles aprueben el
+  número de AptiveAI. Hasta entonces puedes aceptar y elegir tus avisos, y la
+  tarjeta dice *Los mensajes de texto comienzan cuando los operadores aprueben el
+  número de AptiveAI.* No se te envía nada antes de eso.
+</Aside>
+
+**Responde STOP para detener todos los mensajes del número.** Eso abarca los
+avisos de AptiveAI y a los agentes de cualquier empresa que te escriban mediante
+AptiveAI Messaging. La tarjeta dice entonces que respondiste STOP en esa fecha y
+que los mensajes de texto están desactivados, y **no puedes volver a activarlos
+aquí**. Para empezar de nuevo, escribe a
+[dev@aptiveai.io](mailto:dev@aptiveai.io). Responde **HELP** a cualquier mensaje
+para recibir ese contacto.
+
 ## De qué te avisamos
 
-Una fila por cada tipo de notificación, cada una con dos ajustes, **Activado** o
+Una fila por cada tipo de notificación, cada una con tres ajustes, **Activado** o
 **Desactivado**:
 
 | Ajuste | Dónde te llega |
 |---|---|
 | **En la aplicación** | La campana, la página Bandeja de entrada y — si las activaste arriba — las notificaciones de escritorio |
 | **Correo** | La dirección de correo de tu cuenta |
+| **Texto** | Tu número de celular, desde el número de AptiveAI. Desactivado en todos los tipos al principio, y no se puede cambiar hasta que aceptes los mensajes de texto en la tarjeta de arriba — la lista dice *Los mensajes de texto requieren que aceptes arriba, en Mensajes de texto.* |
 
 Los tipos, y qué activa cada uno, aparecen en la página
 [Bandeja de entrada](/es/concepts/inbox#de-qué-te-avisamos). De forma
@@ -44,7 +83,8 @@ facturación de la cuenta.
 otra forma de avisarte. Su ajuste de correo sí puedes cambiarlo.
 
 Cada correo incluye un enlace para cancelar la suscripción que desactiva este
-mismo ajuste.
+mismo ajuste. Los avisos por texto no incluyen nombres de tareas ni de negocios;
+para dejar de recibirlos basta responder STOP.
 
 ### Guardar
 

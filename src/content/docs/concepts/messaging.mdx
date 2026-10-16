@@ -1,23 +1,26 @@
 ---
 title: AptiveAI Messaging
-description: Let your agents text and email people who do not use AptiveAI Agents — drivers, customers, suppliers. Turning it on, verifying your number for texts, what it costs, when it asks first, who may be messaged, and how people opt out.
+description: Let your agents text and email people who do not use AptiveAI Agents — drivers, customers, suppliers. Turning it on, how texts and email are sent, what it costs, when it asks first, who may be messaged, and how people opt out.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 <Aside type="caution" title="Launches December 1, 2026">
-  AptiveAI Messaging is not available yet. This page describes it as it will
-  work at launch, and the program's terms are at
-  [aptiveai.io/messaging](https://aptiveai.io/messaging).
+  AptiveAI Messaging is not available yet: texts are off until the mobile
+  carriers approve AptiveAI's number, and email from `notify.aptiveai.io` is not
+  switched on yet either. Until then the connector shows **Not available yet**
+  and cannot be turned on. This page describes it as it will work at launch, and
+  the program's terms are at [aptiveai.io/messaging](https://aptiveai.io/messaging).
 </Aside>
 
 **AptiveAI Messaging** lets your agents send **text messages** and **emails**
 to people who do not use AptiveAI Agents: the drivers who missed a step, the
 customer whose order changed, the supplier waiting on an answer. It is a
 [connector](/concepts/connectors) that AptiveAI runs for you: texts go out from
-a toll-free number verified for your business, emails from an address of your
-own on AptiveAI's sending domain, and every message is paid from your
-enterprise wallet.
+AptiveAI's own toll-free number, +1 844-571-9591, emails from an address of
+your own on AptiveAI's sending domain, and every message is paid from your
+enterprise wallet. There is no number to request and nothing to verify:
+AptiveAI registers the number with the carriers itself.
 
 It sits beside the connectors you sign in to yourself. If you already send
 texts through your own Twilio account, the Twilio SMS connector keeps working
@@ -50,48 +53,46 @@ own to set up.
    connection, owned by the organization rather than by you, so it keeps
    working if you leave.
 
-**Email works straight away.** Texts show **Pending verification** until your
-toll-free number is approved (below).
+Texts and email are each available only when AptiveAI has switched that channel
+on. Today **both are off**, and the card on the Connectors page reads **Not
+available yet**. When a channel is off, the connector's page says so and agents
+are not offered its send tool; a send is refused without a charge. Texts will
+start once the carriers approve AptiveAI's number (see
+[How texts are sent](#how-texts-are-sent)).
 
 The connection has its own page, **Connectors → AptiveAI Messaging**, with
 these sections:
 
 | Section | What is in it |
 |---|---|
-| **Status** | Whether email is ready and the address it sends from; where texts stand (**Not requested**, **Pending verification**, **Approved** with your number, or **Rejected** with the carriers' reason); what was spent this month |
+| **Status** | Whether email is ready and the address it sends from; whether texts are **Available** or **Not available yet**; what was spent this month |
 | **Email** | The **Sender name** — the From name on every email and the start of every text — and the **Reply-to address**, where replies go |
-| **Texts** | Verifying your business for texts, and its status |
+| **Texts** | Whether texts are available, and that they go out from AptiveAI's number starting "AptiveAI for" and your sender name. There is nothing to fill in |
 | **Spending** | An optional **Monthly limit** in dollars, and this month's spend against it |
 | **Activity** | Every message your agents sent |
 | **Opt-outs** | Who cannot be messaged, and why |
 | **Sharing** | Who may grant AptiveAI Messaging to their agents |
 | **Danger zone** | **Turn off** and **Remove** |
 
-## Verifying your business for texts
+## How texts are sent
 
-US carriers verify every business that texts from a toll-free number, and your
-business is the sender of record. So your enterprise gets its own number,
-verified under your own details. Under **Texts**, press **Verify your
-business** and fill in the form; AptiveAI submits it to the carriers for you.
+Every text your agents send goes out from **one AptiveAI toll-free number,
++1 844-571-9591**, which AptiveAI registers with the US carriers. AptiveAI's own
+notices to its users go out from the same number. You do not request a number,
+fill in a form or wait for a review of your business, and the number costs you
+nothing.
 
-The form asks for:
-
-- **Company** — the legal company name (exactly as registered with your tax
-  ID), website, business type, and the tax ID number, its type and the country
-  that issued it;
-- **Address** and a **Contact** — first and last name, support email and
-  support phone;
-- **Policies** — the public URLs of your privacy policy and your terms;
-- **How people agree to receive texts** — how they agree, a sentence or two on
-  where they give their number and what they are told, and a screenshot (a PNG
-  of at most 400 KB) of where they agree, such as a sign-up form;
-- **What the texts are for** — the use case, texts per month, and one to three
-  sample messages your agents would really send.
-
-Carrier review takes **days to weeks**. Email works in the meantime, and the
-enterprise's owners get a notification when the carriers decide. If they
-reject it, their reason is shown under **Status**; press **Correct and submit
-again**.
+- **Every text starts "AptiveAI for ‹your sender name›: "**, so the person
+  knows which business it is from. Set the name under **Email → Sender name**.
+- **The first text AptiveAI's number ever sends to a phone number ends " Reply
+  STOP to opt out."** That counts across all of AptiveAI, not per enterprise: if
+  the number has already texted that person for another business or for
+  AptiveAI itself, yours does not repeat it.
+- **STOP stops everything from the number.** A person who replies STOP to any
+  text gets no more texts from AptiveAI's number: not from your agents, not
+  from any other business's agents, and not AptiveAI's own notices. **HELP**
+  gets a reply naming AptiveAI and its support contact, dev@aptiveai.io. See
+  [Opt-outs](#opt-outs) for how this shows up on your list.
 
 ## Sharing it and granting it to an agent
 
@@ -118,10 +119,12 @@ every driver on this list" is one decision, not fifty.
 ### Texts
 
 - **US numbers only.** A number from another country is refused.
-- **Every text starts with your sender name** — "Acme Logistics: …" — so the
-  recipient knows who it is from, as carriers expect.
-- **The first text to each number ends with "Reply STOP to opt out."** That is
-  once per number for your whole enterprise, not once per agent.
+- **Every text starts "AptiveAI for ‹your sender name›: "** — "AptiveAI for
+  Acme Logistics: …" — so the recipient knows who it is from, as carriers
+  expect. The name is written in plain letters, with accents removed.
+- **The first text to each number ends with " Reply STOP to opt out."** That is
+  once per phone number across all of AptiveAI, not once per enterprise or per
+  agent.
 - **Curly quotes, long dashes, ellipses and non-breaking spaces are replaced**
   with their plain equivalents, so the message stays in the standard text
   alphabet.
@@ -185,9 +188,11 @@ list shows it.
 
 A send is also refused, before anything is charged, when:
 
-- a recipient is on your enterprise's opt-out list;
+- a recipient is on your enterprise's opt-out list, or replied STOP to
+  AptiveAI's number (to any business);
 - a number is not a US number;
-- AptiveAI Messaging is turned off, or texts are not approved yet;
+- AptiveAI Messaging is turned off, or the channel (texts or email) is not
+  available yet;
 - the send would pass your monthly limit;
 - your wallet cannot cover it.
 
@@ -200,7 +205,8 @@ Every message is paid from your **enterprise wallet** — never from the AI
 credit included with your plan or from promotional credit. Today a text costs
 about **1.8¢ per part** and email **$0.15 per 1,000 messages**; the turn-on
 dialog and the [pricing page](https://aptiveai.io/pricing) always show the
-current figures. The toll-free number itself costs you nothing.
+current figures. The toll-free number itself costs you nothing. The up-to-160-character
+part count includes the opening "AptiveAI for ‹your sender name›:".
 
 - **The charge is known before the message goes out**, so a send your wallet
   cannot cover is refused rather than run up as a debt. Add funds to your
@@ -220,21 +226,33 @@ AI usage.
 
 ## Opt-outs
 
-Your enterprise keeps one opt-out list. Nobody on it can be messaged by any of
-your agents.
+Two lists keep people from being messaged. Between them, nobody on either can
+be messaged by any of your agents.
+
+**Your enterprise's opt-out list** is the one on the **Opt-outs** section.
 
 | How someone gets on it | Shown as |
 |---|---|
-| They reply **STOP** to a text | **Replied STOP** |
+| They reply **STOP** to a text your agents sent them | **Replied STOP** |
+| They replied STOP to AptiveAI's number after a text from some other business or from AptiveAI itself, and your agents had texted them before | **Opted out elsewhere (a STOP to AptiveAI's number, or the carrier's list)** |
 | They use the unsubscribe link in an email and confirm | **Unsubscribed** |
 | An email to them bounces permanently | **Bounced** |
 | They mark an email as spam | **Marked as spam** |
 | An owner adds them | **Added by an owner** |
 
-An owner can add a number or address under **Opt-outs → Add an address**.
-Nobody can take an address off the list. The unsubscribe link opens a page that
-asks the recipient to confirm, so a mail scanner that follows links cannot
-unsubscribe anyone by accident.
+**AptiveAI's own STOP list** covers every business at once. A person who
+replies STOP to AptiveAI's number is on it for good, whichever business or
+AptiveAI notice they were answering, and no agent of any enterprise can text
+them. It is not something an owner edits. Your Opt-outs section shows such a
+person only if your agents had texted them; it does not list people you never
+messaged. A send to anyone on it is refused before the approval card, and
+before any charge.
+
+An owner can add a number or address to your own list under **Opt-outs → Add an
+address**. Nobody can take an address off a list. The unsubscribe link in an
+email opens a page that asks the recipient to confirm, so a mail scanner that
+follows links cannot unsubscribe anyone by accident. Email opt-outs apply to
+your enterprise only.
 
 ## Activity
 
@@ -256,11 +274,10 @@ it, with a link to the task. Filter it by channel, status or agent.
 
 ## Turning it off, and removing it
 
-- **Turn off** pauses it: every send is refused at once. The phone number, the
-  history and the opt-out list are kept, and an owner can turn it on again at
-  any time.
-- **Remove** also releases the phone number. Turning texts on again later
-  means verifying a new number, which takes days.
+- **Turn off** pauses it: every send is refused at once. The history and the
+  opt-out list are kept, and an owner can turn it on again at any time.
+- **Remove** turns it off for good. The messages sent and the opt-out list are
+  kept.
 
 AptiveAI may turn AptiveAI Messaging off for an enterprise when it sees abuse —
 for example many complaints, opt-outs or bounces. While AptiveAI has it turned
@@ -279,8 +296,8 @@ What protects the people your agents message, and your enterprise:
 | **A person approves** | On a task someone is watching, every send asks, and **Approve all** never covers it. The **Try it** pane, a skill's trial and a training test never send. See [When it asks first](#when-it-asks-first) |
 | **Recipient guard** | An agent can only message a number or address that came into the task from a trusted source, and every message records where its recipient came from. See [Who an agent may message](#who-an-agent-may-message) |
 | **Limits** | At most 50 recipients per send, US numbers only for texts, and your monthly limit. A send your wallet cannot cover is refused before it goes out |
-| **Opt-outs** | A STOP reply, an unsubscribe, a bounce or a spam report blocks that number or address for every agent of your enterprise, and nobody can take it off the list. The unsubscribe page asks the recipient to confirm, so a mail scanner cannot unsubscribe anyone. A **HELP** reply gets the program's support contact |
-| **Sender identity** | Every text starts with your sender name. Email comes from AptiveAI's sending domain, `notify.aptiveai.io`, which is kept apart from AptiveAI's own account email and authenticated with SPF, DKIM and DMARC |
+| **Opt-outs** | A STOP reply stops every text from AptiveAI's number to that person, for every business and for AptiveAI's own notices. An unsubscribe, a bounce or a spam report blocks that email address for every agent of your enterprise, and nobody can take an address off a list. The unsubscribe page asks the recipient to confirm, so a mail scanner cannot unsubscribe anyone. A **HELP** reply gets AptiveAI's support contact, dev@aptiveai.io |
+| **Sender identity** | Every text comes from AptiveAI's one toll-free number, registered with the US carriers by AptiveAI before texts start, +1 844-571-9591, and starts "AptiveAI for" and your sender name. Email comes from AptiveAI's sending domain, `notify.aptiveai.io`, which is kept apart from AptiveAI's own account email and authenticated with SPF, DKIM and DMARC |
 | **Signed updates** | Delivery updates and STOP replies from the delivery service are accepted only when the service has signed them |
 | **Encryption in transit** | Messages travel encrypted between AptiveAI and the delivery service. A text is not encrypted once it reaches the mobile carrier, so keep messages to what the recipient needs to act on |
 | **A record of every message** | **Activity** keeps the recipient, where it came from, the message as sent, whether a person approved it or an automation sent it, its status and its charge. Passwords and codes sent to a task are hidden in the stored copy |
@@ -291,7 +308,7 @@ What protects the people your agents message, and your enterprise:
 
 | Action | Who |
 |---|---|
-| Turn it on, change the sender name, reply-to address and monthly limit, verify texts, add to the opt-out list, see Activity, turn it off or remove it | An owner of the enterprise |
+| Turn it on, change the sender name, reply-to address and monthly limit, add to the opt-out list, see Activity, turn it off or remove it | An owner of the enterprise |
 | Share it | An owner of the enterprise |
 | Grant it to an agent | Anyone it is shared with, in an agent they may edit |
 | Have an agent send | Anyone whose agent it is granted to and who may use it |

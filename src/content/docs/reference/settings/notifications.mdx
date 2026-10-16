@@ -1,12 +1,12 @@
 ---
 title: Notification settings
-description: Choose which notifications reach you, and where — in the app, by email, and as desktop notifications on this device.
+description: Choose which notifications reach you, and where — in the app, by email, by text message, and as desktop notifications on this device.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 
 **Settings → Notifications** decides which of the [Inbox's](/concepts/inbox)
-notifications reach you, and where. It has two cards. Both are yours alone —
+notifications reach you, and where. It has three cards. All are yours alone —
 nobody else's notifications change.
 
 ## Background alerts
@@ -22,14 +22,49 @@ If your browser has blocked notifications for AptiveAI Agents, the card says so
 and how to allow them. Browsers that cannot show them — iOS among them — get an
 explanation instead of the switch.
 
+## Text messages
+
+AptiveAI can text you about your tasks and your account. It is **optional** —
+you never need it to use AptiveAI — and it is **off until you agree**.
+
+1. Enter your **Mobile number** (US mobile numbers only).
+2. Turn on **Agree to texts**. The switch starts off, and it reads: *Text me
+   about my AptiveAI tasks and account. Message frequency varies. Msg & data
+   rates may apply. Reply STOP to opt out, HELP for help.* Links to the Terms
+   and the Privacy Policy sit beneath it.
+3. Press **Save**. The card then shows *Texts are on for ‹your number›* and
+   the date you agreed. **Change number** asks you to agree again for the new
+   number; **Turn off texts** switches them off, and you can opt in again at any
+   time.
+
+Texts come from AptiveAI's one toll-free number, +1 844-571-9591, the same
+number that businesses' agents use. A notice is short, starts "AptiveAI:", links
+to the console and carries no task names. The first text the number ever sends
+you ends " Reply STOP to opt out."
+
+<Aside type="caution" title="Texts are not available yet">
+  Text messages start once the mobile carriers approve AptiveAI's number. Until
+  then you can opt in and choose your notices, and the card says *Texts start
+  once AptiveAI's number is approved by the carriers.* Nothing is texted to you
+  before that.
+</Aside>
+
+**Reply STOP to stop all texts from the number.** That covers AptiveAI's notices
+and every business's agents that text you through AptiveAI Messaging. The card
+then says you replied STOP on that date and that texts are off, and **you cannot
+turn them back on here**. To start again, write to
+[dev@aptiveai.io](mailto:dev@aptiveai.io). Reply **HELP** to any text to get
+that contact.
+
 ## What you are told about
 
-One row per kind of notification, each with two settings, **On** or **Off**:
+One row per kind of notification, each with three settings, **On** or **Off**:
 
 | Setting | Where it reaches you |
 |---|---|
 | **In the app** | The bell, the Inbox page and — when turned on above — desktop notifications |
 | **Email** | Your account's email address |
+| **Text** | Your mobile number, from AptiveAI's number. Off for every kind to begin with, and it cannot be changed until you have agreed to texts in the card above — the list says *Texts need your opt-in under Text messages above.* |
 
 The kinds, and what triggers each, are listed on the
 [Inbox](/concepts/inbox#what-you-are-told-about) page. Out of the box everything
@@ -41,6 +76,8 @@ and for the account's billing notices.
 other way to say so. Its email setting is yours to change.
 
 Every email carries an unsubscribe link that turns this same setting off.
+Text notices carry no task or business names; the unsubscribe for texts is
+replying STOP.
 
 ### Saving
 
