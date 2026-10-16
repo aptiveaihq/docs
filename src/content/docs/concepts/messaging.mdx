@@ -20,7 +20,7 @@ customer whose order changed, the supplier waiting on an answer. It is a
 AptiveAI's own toll-free number, +1 844-571-9591, emails from an address of
 your own on AptiveAI's sending domain, and every message is paid from your
 enterprise wallet. There is no number to request and nothing to verify:
-AptiveAI registered the number with the carriers itself.
+AptiveAI registers the number with the carriers itself.
 
 It sits beside the connectors you sign in to yourself. If you already send
 texts through your own Twilio account, the Twilio SMS connector keeps working
@@ -77,7 +77,7 @@ these sections:
 ## How texts are sent
 
 Every text your agents send goes out from **one AptiveAI toll-free number,
-+1 844-571-9591**, registered with the US carriers by AptiveAI. AptiveAI's own
++1 844-571-9591**, which AptiveAI registers with the US carriers. AptiveAI's own
 notices to its users go out from the same number. You do not request a number,
 fill in a form or wait for a review of your business, and the number costs you
 nothing.
@@ -297,7 +297,7 @@ What protects the people your agents message, and your enterprise:
 | **Recipient guard** | An agent can only message a number or address that came into the task from a trusted source, and every message records where its recipient came from. See [Who an agent may message](#who-an-agent-may-message) |
 | **Limits** | At most 50 recipients per send, US numbers only for texts, and your monthly limit. A send your wallet cannot cover is refused before it goes out |
 | **Opt-outs** | A STOP reply stops every text from AptiveAI's number to that person, for every business and for AptiveAI's own notices. An unsubscribe, a bounce or a spam report blocks that email address for every agent of your enterprise, and nobody can take an address off a list. The unsubscribe page asks the recipient to confirm, so a mail scanner cannot unsubscribe anyone. A **HELP** reply gets AptiveAI's support contact, dev@aptiveai.io |
-| **Sender identity** | Every text comes from AptiveAI's one registered toll-free number, +1 844-571-9591, and starts "AptiveAI for" and your sender name. Email comes from AptiveAI's sending domain, `notify.aptiveai.io`, which is kept apart from AptiveAI's own account email and authenticated with SPF, DKIM and DMARC |
+| **Sender identity** | Every text comes from AptiveAI's one toll-free number, registered with the US carriers by AptiveAI before texts start, +1 844-571-9591, and starts "AptiveAI for" and your sender name. Email comes from AptiveAI's sending domain, `notify.aptiveai.io`, which is kept apart from AptiveAI's own account email and authenticated with SPF, DKIM and DMARC |
 | **Signed updates** | Delivery updates and STOP replies from the delivery service are accepted only when the service has signed them |
 | **Encryption in transit** | Messages travel encrypted between AptiveAI and the delivery service. A text is not encrypted once it reaches the mobile carrier, so keep messages to what the recipient needs to act on |
 | **A record of every message** | **Activity** keeps the recipient, where it came from, the message as sent, whether a person approved it or an automation sent it, its status and its charge. Passwords and codes sent to a task are hidden in the stored copy |
