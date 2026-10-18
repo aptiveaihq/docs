@@ -83,13 +83,20 @@ be made from one that has none switched on.
 A browser workflow's tools are theirs alone: they do not appear on the
 **Skills** page or in the `/` menu, and an agent cannot change one from a task.
 
+A tool can also carry [site calls](/concepts/site-calls) — the site's own
+requests, sent from the agent's signed-in browser instead of clicking through
+the page. A call's address can start with one of the workflow's variables, such
+as `{site_url}`, so it works for every company's site.
+
 ### Generate with agent
 
 You do not have to write the steps by hand. **Generate with agent** opens the
 **Agent** tab: *Tell the agent which website to work with. It works in a
 browser with you and proposes the tools when you are ready.* Explore the site
 together, show it what to do with **Record** if you like, then ask it to
-propose the tools.
+propose the tools. The agent can also turn steps into
+[site calls](/concepts/site-calls), checking each one against what the site was
+seen sending.
 
 Nothing is saved until you approve. The agent's proposal arrives as a card
 listing each tool — new ones marked, existing ones left as they are — and

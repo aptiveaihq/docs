@@ -66,6 +66,7 @@ export const nav = [
       { label: 'Browser workflows', slug: 'concepts/browser-workflows', desc: 'Teach your agents a website with no API', es: { label: 'Flujos de navegador', desc: 'Enséñales a tus agentes un sitio web sin API' } },
       { label: 'AptiveAI Messaging', slug: 'concepts/messaging', desc: 'Agents that text and email people outside the product', es: { label: 'AptiveAI Messaging', desc: 'Agentes que envían textos y correos a personas fuera del producto' } },
       { label: 'Skills', slug: 'concepts/skills', desc: 'Reusable know-how an agent loads on demand', es: { label: 'Habilidades', desc: 'Conocimiento reutilizable que un agente carga cuando lo necesita' } },
+      { label: 'Site calls', slug: 'concepts/site-calls', desc: "Skills that send a site's own requests instead of clicking", es: { label: 'Llamadas al sitio', desc: 'Habilidades que envían las solicitudes del propio sitio en lugar de hacer clic' } },
       { label: 'Sharing', slug: 'concepts/sharing', desc: 'Who can use a task, automation, agent or skill', es: { label: 'Compartir', desc: 'Quién puede usar una tarea, una automatización, un agente o una habilidad' } },
       { label: 'Files', slug: 'concepts/files', desc: 'Attach, view and get back files; knowledge files', es: { label: 'Archivos', desc: 'Adjunta, ve y recupera archivos; archivos de conocimiento' } },
       { label: 'Inbox', slug: 'concepts/inbox', desc: 'Notifications and what arrives when', es: { label: 'Bandeja de entrada', desc: 'Notificaciones y qué llega cuándo' } },

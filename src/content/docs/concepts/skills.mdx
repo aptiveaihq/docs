@@ -1,6 +1,6 @@
 ---
 title: Skills
-description: A skill is an instruction you save once and reuse — added to a message with /, or opened by an agent on its own when its instructions call for one. Workspace skills, scope and sharing, and the skills built into every agent.
+description: A skill is an instruction you save once and reuse — added to a message with /, or opened by an agent on its own when its instructions call for one. Workspace skills, scope and sharing, an agent's own skills, opening a skill from the agent builder, and the skills built into every agent.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -66,8 +66,8 @@ in the `/` menu.
 |---|---|
 | **Details** | The **Name** (up to 120 characters); the **Description** (up to 500 — shown beside the name when someone types `/`, and what an agent reads to decide whether to open it); the **Scope**, **Organization-wide** or one named agent; and, only if you are in more than one workspace, the **Workspace** it belongs to — your main one unless you pick another |
 | **Instructions** | The text itself, up to 10,000 characters. `{word}` becomes a blank |
-| **Scripts** | Code the steps run on the agent's computer, the same way every time. **Add script** gives it a path such as `scripts/check.py` and its content; scripts sit in folders, and each can be edited, renamed or deleted. When an agent loads the skill, its scripts are placed on the computer |
-| **History** | Appears after the first save. Every save is a version: **See what changed** compares two, and **Restore** brings an earlier one back as a new version (the name stays) |
+| **Scripts** | Code the steps run on the agent's computer, the same way every time. **Add script** gives it a path such as `scripts/check.py` and its content; scripts sit in folders, and each can be edited, renamed or deleted. When an agent loads the skill, its scripts are placed on the computer. A file under `calls/`, such as `calls/close_ticket.json`, is a [site call](/concepts/site-calls): a request the agent sends from its signed-in browser instead of clicking through the page |
+| **History** | Appears after the first save. Every save is a version: **See what changed** compares two, and **Restore** brings an earlier one back as a new version (the name stays). **Lock this version** keeps one: a locked version shows **Locked** and cannot be deleted until it is unlocked. **Delete** removes an unlocked version older than the current one, permanently; you confirm by typing its name, such as *Version 3* |
 
 Someone who can use a skill but not change it sees the page read-only — *You can
 use this skill but not change it. Copy it to make your own.* — and gets **Copy to
@@ -104,8 +104,50 @@ agent.
 
 A skill saved this way belongs to that agent: every task of the agent can load
 it, those started by an automation included. It stays with that agent until it
-is shared — see [Sharing](#sharing). Because it is an ordinary skill, you can
-read it, edit it and see its versions like any other.
+is shared — see [Sharing](#sharing). The agent builder lists these skills under
+**This agent's skills**. Because it is an ordinary skill, you can read it, edit
+it and see its versions like any other, with a few differences:
+
+- **It is edited by whoever may edit the agent**, not by its author. Anyone else
+  sees it read-only.
+- **Its name cannot be changed, and it has no Scope**: it belongs to the agent.
+- **Saving it** writes one new version of the skill and one new version of the
+  agent, so the agent's [Versions](/concepts/agents#versions) record it too.
+- **Its History has no Delete.** You can see what changed, restore and lock its
+  versions, but not delete one: the agent's own versions record which version of
+  each skill they used, so none of them is ever removed.
+- **Switch off** stops every task from loading it until it is switched on again,
+  and **Delete** removes it from the agent; a task already running keeps what it
+  loaded.
+
+It looks the same wherever you open it: on its page under **Skills**, or from
+the agent builder.
+
+## Opening a skill from the agent builder
+
+In an agent's builder, **Read** on a skill — under **Skills** or **This agent's
+skills** in **Configure** — opens it in a side panel beside the builder. The
+panel shows exactly what the skill's own page shows: **Details**,
+**Instructions**, **Scripts** (its [site calls](/concepts/site-calls) included)
+and **History**, with the page's actions — **Save**, **Switch off**, **Share**,
+**Delete**, whichever you may use — at its foot. On a phone the panel fills the
+screen and reads like the skill's page on a phone.
+
+One skill is open at a time. Closing the panel, or opening another skill, with
+unsaved changes asks first.
+
+What you can change depends on the skill, and the panel follows the same rules
+as the skill's page:
+
+| Skill | Who can edit it there | Everyone else |
+|---|---|---|
+| **One of this agent's own skills** | Anyone who may edit the agent | Sees it read-only |
+| **A workspace skill granted to the agent** | Anyone who may edit that skill: the person who wrote it and people with **Can edit** | Sees it read-only, with the note *A workspace skill given to this agent. It is changed where it is kept, on the Skills page.* and **Open it on the Skills page** |
+
+A granted skill from a workspace you are not in is shown read-only, without its
+History. A read-only panel's History lists the versions and **See what
+changed**, without **Restore**, **Lock** or **Delete**. To work from a skill you
+cannot change, open it on the Skills page and use **Copy to mine**.
 
 ## Built-in skills
 
@@ -124,6 +166,10 @@ A built-in skill can bring **tools** with it, which a workspace skill cannot:
 `schedules` gives the agent a tool to manage automations, and `docs` a tool to
 read this site.
 
+One more built-in skill, `site-calls`, is used only while a
+[site call](/concepts/site-calls) is being made — in Train it, **Generate with
+agent** and the agent builder — and never in an ordinary task.
+
 <Aside type="note" title="Changing an automation from a task always asks first.">
   Every automation change the `schedules` skill makes stops on an approval card —
   *The agent wants to create an automation … Allow it?* — and the change is made
@@ -141,6 +187,9 @@ read this site.
 | Share a skill with people | The person who wrote it, and people with **Can edit** |
 | Share it with Everyone in the workspace | Owners and admins |
 | Copy a skill to your own | Everyone who can use it |
+| Edit, switch off or delete an agent's own skill | Anyone who may edit the agent |
+| Share an agent's own skill with the workspace | Anyone who may edit the agent and is an owner or admin of its workspace |
+| Delete a version | Anyone who may edit the skill — never a version of an agent's own skill, and never a locked or the current one |
 
 ## Next
 
@@ -148,4 +197,5 @@ read this site.
   <LinkCard title="Agents" href="/concepts/agents" description="Grant shared skills to an agent in its builder." />
   <LinkCard title="Tasks" href="/concepts/tasks" description="Where you type / to add a skill." />
   <LinkCard title="Automations" href="/concepts/automations" description="What the built-in schedules skill manages." />
+  <LinkCard title="Site calls" href="/concepts/site-calls" description="Skills that send a site's own requests instead of clicking through it." />
 </CardGrid>

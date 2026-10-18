@@ -1,0 +1,265 @@
+---
+title: Site calls
+description: A skill can carry the requests a website's own pages send, so the agent does a step with one call from its signed-in browser instead of many clicks. How site calls are made, an example, what keeps them safe, and their limits.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+When you click **Close** on a ticket in most web applications, the page sends a
+request to the site behind it, and the site closes the ticket. A **site call**
+is one of those requests, saved in a [skill](/concepts/skills) so the agent can
+send it itself. Instead of opening each ticket, finding the button, choosing a
+reason and waiting for the page, the agent closes three tickets with one call —
+from its own browser, where it is already signed in to the site.
+
+A skill that carries site calls still has its ordinary steps. Whenever a call
+cannot be used — the site refuses it, the site has changed, the workspace does
+not allow calls — the agent does that step on the page instead, the way it
+always has.
+
+<Aside type="note" title="Site calls need an updated computer.">
+  Site calls arrive with an update to the computers agents work on. A task on a
+  computer that does not have it yet does not use a skill's calls: the agent
+  does those steps on the page, and nothing else changes.
+</Aside>
+
+## What a site call is
+
+A site call is a file in a skill's **Scripts**, under `calls/` —
+`calls/close_ticket.json`, for example. It says which request to send, what the
+agent must fill in, and what the call may and may not change. A skill holds up
+to 20 calls.
+
+When a task uses one, the request goes out **from the agent's browser tab on
+that site**, as whoever is signed in there — the same request the site's page
+would have sent. The site has to be open in that tab; a call to any other site
+is not sent.
+
+Calls come in two kinds:
+
+| Kind | What it does | Asks first? |
+|---|---|---|
+| **Read** | Fetches data: a list of open tickets, one ticket's details, a report. A `GET` or `HEAD` request, or a `POST` the site uses only to search or list | No — reads run at once |
+| **Change** | Changes data: closes a ticket, updates a record. A `POST`, `PUT` or `PATCH` request | Yes — on an approval card, every time unless you approve all |
+
+## How site calls are made
+
+There are three ways, and each one ends with a person's approval or a person's
+own edit.
+
+**1. Train the agent.** In a [Train it](/concepts/agents#training-an-agent)
+session you do the job once on the agent's computer. While you work, the agent
+can see the requests the site's page sends — their addresses, field names and
+the shape of each answer, never the values in them. It writes a call for each
+step worth turning into one and checks every call against what the site was
+seen sending: a read is run once for real, a change is built and shown but not
+sent. The proposal then lists each call in plain words:
+
+- *“get_ticket” reads: Read one ticket: its status, assignee and notes. (GET /api/tickets/\{id\}) from desk.example.com*
+- *“close_ticket” changes data: PUT /api/tickets/\{id\}/status on desk.example.com*
+  — *never changes assignee, priority* — *read back with “get_ticket” afterwards*
+
+**Approve** saves the skill with its calls. A call the agent wrote can be saved
+only if it passed its check with exactly the content being saved, so a call you
+change on the proposal card goes back to the agent to check again. If you name a
+record that is safe to change, the agent can also try a change call on that one
+record while it checks it — on an approval card, and only after you approve it.
+
+**Generate with agent** on a [browser workflow](/concepts/browser-workflows)
+works the same way for a workflow's tools.
+
+**2. Ask the agent builder.** In **Create** or **Refine**, with the computer in
+**Try it** open and in view, use the site on that computer — or let the builder
+use it — and ask the builder to turn a step into a site call. It checks each
+call the same way and adds the skill to your draft, where the **Skills** section
+lists its calls. Saving the agent is the approval: the skill is saved as one of
+[the agent's own skills](/concepts/skills#skills-an-agent-learns). The builder
+never sends a change call, not even to test one.
+
+**3. Write one by hand.** Anyone who can edit a skill can add a call themselves:
+on the skill's page, in its panel in the agent builder, or in a browser workflow
+tool's Editor, choose **Add script** and give it a path such as
+`calls/close_ticket.json`. A hand-written call is checked for mistakes when you
+save, but not against the site, and the skill says so: *Written by hand, not
+checked against the site*.
+
+## An example
+
+A service desk at `desk.example.com` shows each ticket on its own page, and the
+page reads it with one request and closes it with another. A skill for closing
+resolved tickets could carry these two calls.
+
+`calls/get_ticket.json` — a read:
+
+```json
+{
+  "name": "get_ticket",
+  "description": "Read one ticket: its status, assignee and notes.",
+  "method": "GET",
+  "url": "https://desk.example.com/api/tickets/{id}",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "id": { "type": "string", "pattern": "^[0-9]+$" }
+    },
+    "required": ["id"]
+  },
+  "returns": "json"
+}
+```
+
+`calls/close_ticket.json` — a change:
+
+```json
+{
+  "name": "close_ticket",
+  "description": "Close one ticket with a reason and an optional note.",
+  "method": "PUT",
+  "url": "https://desk.example.com/api/tickets/{id}/status",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "id":     { "type": "string", "pattern": "^[0-9]+$" },
+      "reason": { "type": "string", "enum": ["Resolved", "Duplicate"] },
+      "note":   { "type": "string", "maxLength": 200 }
+    },
+    "required": ["id", "reason"]
+  },
+  "body": {
+    "kind": "json",
+    "template": { "status": "closed", "reason": "{reason}", "note": "{note}" }
+  },
+  "auth": { "borrow": ["x-csrf-token"] },
+  "target": { "param": "id", "label": "Ticket" },
+  "forbiddenFields": ["assignee", "priority"],
+  "verify": {
+    "call": "get_ticket",
+    "params": { "id": "{id}" },
+    "ignore": ["status", "closedAt", "updatedAt"]
+  }
+}
+```
+
+What each part means:
+
+| Field | What it says |
+|---|---|
+| `name` | The call's name. It is the file's name too: lower-case letters, digits and `_` |
+| `description` | What the call does, in a line. The agent reads it to choose the call |
+| `method` | `GET`, `HEAD`, `POST`, `PUT` or `PATCH`. `DELETE` cannot be saved — see [Limits](#limits) |
+| `url` | The address, with `{id}`-style blanks the agent fills in. In a browser workflow's tool it can start with one of the workflow's variables, such as `{site_url}` |
+| `inputSchema` | What the agent must supply, and the rules each value must meet: a pattern, a list of allowed values, a maximum length. A value that breaks a rule is not sent |
+| `body` | For a change, the fields sent, as `json` or as a `form`. An optional value the agent leaves out is left out of the request too |
+| `auth.borrow` | The sign-in headers the site's own page sends, such as `x-csrf-token`. Their values are borrowed from the page at the moment of the call — never written in the file |
+| `returns` | `json` (the default), `text`, or `file` — a file lands in the task's files |
+| `readOnly` | Only on a `POST` the site uses to search or list: `true` makes it a read. Every place that shows the call says *This POST is treated as a read, so it runs without a card* |
+| `target` | For a change: which input names the record, and what to call it on the approval card (*Ticket 4812*) |
+| `forbiddenFields` | Fields this call must never send or change. A call whose body names one cannot be saved |
+| `verify` | For a change: a read call in the same skill, run before and after each change to check what actually changed. `ignore` lists fields the change is meant to alter |
+
+A call the agent wrote also carries a record of the request it was matched with;
+you never write that part yourself.
+
+## What keeps them safe
+
+**Reads run without asking; changes always ask.** Each change call waits on one
+approval card for up to three records — *The agent wants to run “close_ticket”
+from “‹skill›” on desk.example.com for 3 records. Allow it?* — listing every
+record and the values it will set. **Approve** makes those changes once,
+**Approve all** also covers the task's later site-call changes, and **Decline**
+sends nothing. In a task started by an automation that runs on its own, the
+changes are made without a card, and the transcript says each one was done
+without asking — as for the agent's other actions.
+
+**The record must have been seen in the task.** A change is sent only for a
+record whose id came from an earlier answer in the same task — a site call's or
+a connector's — or from your own message. An id the agent made up, or copied
+wrong, is not sent.
+
+**Read before and after.** A change call with `verify` reads the record before
+and after each change. If anything changed beyond what the call is meant to
+change, the transcript says *changed more than expected* and the rest of the
+batch stops.
+
+**Protected fields.** The fields in `forbiddenFields` are never sent, and the
+read-back reports a change to one.
+
+**Paced.** Changes go one at a time, at least a second apart, and a task changes
+at most 100 records this way; past that, a new task continues the work. Reads
+take up to 10 items in one call.
+
+**A site that refuses stops.** If the site refuses a call, or answers with a
+challenge page, the agent sends no more calls to that site in the task and does
+the step on the page. If the agent has been signed out, it signs in again in
+the browser, or asks you to in the [live view](/concepts/tasks#the-live-view),
+and tries again.
+
+**A changed site falls back to the page.** When a site answers that the call no
+longer exists, nothing more is sent, the agent does the step on the page, and
+the transcript notes *‹call›: The call needs re-recording.* Record it again with
+Train it, the builder or **Generate with agent**.
+
+**A change is never sent twice on its own.** If the site fails while a change is
+being made, the agent is told it may or may not have been applied, and reads
+the record before trying again. The transcript says *May have changed Ticket
+4812 on desk.example.com*.
+
+**Tokens and cookies stay in the browser.** The sign-in values a call needs are
+borrowed from the page at the moment it is sent. They are never stored, never
+written into a skill, and never shown to the agent or in the transcript;
+anything the site sends back is cleaned of them before the agent reads it. The
+agent's own scripts on the computer cannot reach the signed-in browser.
+
+**What runs is what was saved.** A task runs the calls as they were saved when
+it loaded the skill. A save made while the task runs applies from the next task,
+and nothing on the computer can change what a call does.
+
+Every call leaves one line in the transcript:
+
+- *Read 42 items from desk.example.com (POST, 200)*
+- *Changed Ticket 4812 on desk.example.com (PUT, 200)*
+- *Did not change Ticket 4812 on desk.example.com: refused by the site (403)*
+
+## Skill tests
+
+When a skill with calls is tested — the test Train it runs before proposing a
+skill, or a skill trial in a task — its read calls run for real and its change
+calls are never sent. A change in a test is answered as a trial, with nothing
+sent to the site.
+
+## Limits
+
+- **No deletes yet.** A `DELETE` call cannot be saved. The agent deletes on the
+  page, asking first as it always does.
+- **A read that looks like an action is refused when saved.** A read whose
+  address contains an action word — close, update, save, delete, create, send
+  and the like — cannot be saved, even when it is harmless (`/post/{id}`).
+  The agent then does that step on the page. A `PUT` or `PATCH` is never a read.
+- **Off on regulated workspaces.** On a workspace that holds regulated data, no
+  task uses site calls, and they cannot be checked against the site there.
+- **An updated computer is needed.** Until a task's computer has the update, the
+  agent uses the page.
+- **Sign-in stays on the page.** Signing in, security checks and anything to do
+  with passwords are never site calls; the agent signs in on the page as before.
+- **Fixed limits.** Up to 20 calls per skill, 3 records per approval card and
+  100 changed records per task, paced one change per second. These cannot be
+  changed per site yet.
+- **Answers have a size limit.** An answer is read up to 256 KB; a call that
+  returns a file can bring one of up to 25 MB into the task's files.
+
+## Who can do what
+
+| Action | Who |
+|---|---|
+| Make calls with Train it or the agent builder | Anyone who may edit the agent |
+| Write or change a call by hand | Anyone who may edit the skill — for an agent's own skill, anyone who may edit the agent |
+| Use a skill's calls | Any task that loads the skill |
+| Approve a change | Whoever answers the task's approval card, as for any other approval |
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Skills" href="/concepts/skills" description="Where calls are kept, and how a skill is opened and edited." />
+  <LinkCard title="Agents" href="/concepts/agents#training-an-agent" description="Train it: show the agent the job and approve what it learned." />
+  <LinkCard title="Browser workflows" href="/concepts/browser-workflows" description="Tools for a website, which can carry site calls too." />
+</CardGrid>

@@ -1,6 +1,6 @@
 ---
 title: Habilidades
-description: Una habilidad es una instrucción que guardas una vez y reutilizas; se agrega a un mensaje con /, o un agente la abre por su cuenta cuando sus instrucciones lo piden. Habilidades del espacio de trabajo, alcance y uso compartido, y las habilidades integradas en todos los agentes.
+description: Una habilidad es una instrucción que guardas una vez y reutilizas; se agrega a un mensaje con /, o un agente la abre por su cuenta cuando sus instrucciones lo piden. Habilidades del espacio de trabajo, alcance y uso compartido, las habilidades propias de un agente, abrir una habilidad desde el constructor de agentes y las habilidades integradas en todos los agentes.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -70,8 +70,8 @@ encabezado:
 |---|---|
 | **Detalles** | El **Nombre** (hasta 120 caracteres); la **Descripción** (hasta 500 — se muestra junto al nombre cuando alguien escribe `/`, y es lo que lee un agente para decidir si la abre); el **Alcance**, **Toda la organización** o un agente concreto; y, solo si estás en más de un espacio de trabajo, el **Espacio de trabajo** al que pertenece — el principal, salvo que elijas otro |
 | **Instrucciones** | El texto en sí, hasta 10,000 caracteres. `{word}` se convierte en un espacio en blanco |
-| **Scripts** | Código que los pasos ejecutan en la computadora del agente, siempre igual. **Agregar script** le da una ruta como `scripts/check.py` y su contenido; los scripts se guardan en carpetas y cada uno se puede editar, renombrar o eliminar. Cuando un agente carga la habilidad, sus scripts se colocan en la computadora |
-| **Historial** | Aparece tras el primer guardado. Cada vez que guardas se crea una versión: **Ver qué cambió** compara dos, y **Restaurar** devuelve una anterior como una versión nueva (el nombre no cambia) |
+| **Scripts** | Código que los pasos ejecutan en la computadora del agente, siempre igual. **Agregar script** le da una ruta como `scripts/check.py` y su contenido; los scripts se guardan en carpetas y cada uno se puede editar, renombrar o eliminar. Cuando un agente carga la habilidad, sus scripts se colocan en la computadora. Un archivo dentro de `calls/`, como `calls/close_ticket.json`, es una [llamada al sitio](/es/concepts/site-calls): una solicitud que el agente envía desde su navegador con la sesión iniciada en lugar de hacer clic en la página |
+| **Historial** | Aparece tras el primer guardado. Cada vez que guardas se crea una versión: **Ver qué cambió** compara dos, y **Restaurar** devuelve una anterior como una versión nueva (el nombre no cambia). **Bloquear esta versión** la conserva: una versión bloqueada muestra **Bloqueada** y no se puede eliminar hasta que se desbloquea. **Eliminar** quita de forma permanente una versión desbloqueada anterior a la actual; confirmas escribiendo su nombre, como *Versión 3* |
 
 Quien puede usar una habilidad pero no cambiarla la ve en solo lectura —
 *Puedes usar esta habilidad, pero no cambiarla. Cópiala para tener la tuya.* — y
@@ -112,9 +112,55 @@ con el resto de la propuesta, como una versión nueva del agente.
 
 Una habilidad guardada así pertenece a ese agente: cualquier tarea del agente
 puede cargarla, también las que inicia una automatización. Se queda con ese
-agente hasta que se comparte; consulta [Compartir](#compartir). Como es una
-habilidad corriente, puedes leerla, editarla y ver sus versiones como cualquier
-otra.
+agente hasta que se comparte; consulta [Compartir](#compartir). El constructor
+de agentes muestra estas habilidades en **Habilidades de este agente**. Como es
+una habilidad corriente, puedes leerla, editarla y ver sus versiones como
+cualquier otra, con algunas diferencias:
+
+- **La edita quien puede editar el agente**, no quien la escribió. Los demás la
+  ven en solo lectura.
+- **Su nombre no se puede cambiar y no tiene Alcance**: pertenece al agente.
+- **Al guardarla** se escribe una versión nueva de la habilidad y una versión
+  nueva del agente, así que las [Versiones](/es/concepts/agents#versiones) del
+  agente también la registran.
+- **Su Historial no tiene Eliminar.** Puedes ver qué cambió, restaurar y
+  bloquear sus versiones, pero no eliminar ninguna: las versiones del propio
+  agente registran qué versión de cada habilidad usaron, así que ninguna se
+  quita nunca.
+- **Desactivar** hace que ninguna tarea la cargue hasta que se vuelva a
+  activar, y **Eliminar** la quita del agente; una tarea que ya está en marcha
+  conserva lo que cargó.
+
+Se ve igual dondequiera que la abras: en su página dentro de **Habilidades** o
+desde el constructor de agentes.
+
+## Abrir una habilidad desde el constructor de agentes
+
+En el constructor de un agente, **Leer** en una habilidad —en **Habilidades** o
+en **Habilidades de este agente**, dentro de **Configurar**— la abre en un
+panel lateral junto al constructor. El panel muestra exactamente lo mismo que la
+página de la habilidad: **Detalles**, **Instrucciones**, **Scripts** (también
+sus [llamadas al sitio](/es/concepts/site-calls)) e **Historial**, con las
+acciones de la página —**Guardar**, **Desactivar**, **Compartir**,
+**Eliminar**, las que puedas usar— al pie. En un teléfono el panel ocupa la
+pantalla y se ve como la página de la habilidad en un teléfono.
+
+Solo hay una habilidad abierta a la vez. Cerrar el panel, o abrir otra
+habilidad, con cambios sin guardar pregunta antes.
+
+Lo que puedes cambiar depende de la habilidad, y el panel sigue las mismas
+reglas que la página de la habilidad:
+
+| Habilidad | Quién puede editarla ahí | Los demás |
+|---|---|---|
+| **Una de las habilidades propias de este agente** | Cualquiera que pueda editar el agente | La ven en solo lectura |
+| **Una habilidad del espacio de trabajo concedida al agente** | Quien pueda editar esa habilidad: la persona que la escribió y quienes tienen **Puede editar** | La ven en solo lectura, con la nota *Una habilidad del espacio de trabajo que se dio a este agente. Se cambia donde se guarda, en la página Habilidades.* y **Abrirla en la página Habilidades** |
+
+Una habilidad concedida de un espacio de trabajo en el que no estás se muestra
+en solo lectura, sin su Historial. El Historial de un panel en solo lectura
+muestra las versiones y **Ver qué cambió**, sin **Restaurar**, **Bloquear** ni
+**Eliminar**. Para trabajar a partir de una habilidad que no puedes cambiar,
+ábrela en la página Habilidades y usa **Copiar a las mías**.
 
 ## Habilidades integradas
 
@@ -134,6 +180,10 @@ habilidad del espacio de trabajo no puede: `schedules` le da al agente una
 herramienta para gestionar automatizaciones, y `docs`, una herramienta para leer
 este sitio.
 
+Hay una habilidad integrada más, `site-calls`, que solo se usa mientras se crea
+una [llamada al sitio](/es/concepts/site-calls) —en Entrénalo, **Generar con el
+agente** y el constructor de agentes— y nunca en una tarea corriente.
+
 <Aside type="note" title="Cambiar una automatización desde una tarea siempre pregunta antes.">
   Cada cambio de automatización que hace la habilidad `schedules` se detiene en
   una tarjeta de aprobación —*El agente quiere crear una automatización …
@@ -152,6 +202,9 @@ este sitio.
 | Compartir una habilidad con personas | La persona que la escribió y quienes tienen **Puede editar** |
 | Compartirla con Todos en el espacio de trabajo | Propietarios y administradores |
 | Copiar una habilidad como propia | Todos los que pueden usarla |
+| Editar, desactivar o eliminar una habilidad propia de un agente | Cualquiera que pueda editar el agente |
+| Compartir con el espacio de trabajo una habilidad propia de un agente | Cualquiera que pueda editar el agente y sea propietario o administrador de su espacio de trabajo |
+| Eliminar una versión | Cualquiera que pueda editar la habilidad; nunca una versión de una habilidad propia de un agente, ni una bloqueada o la actual |
 
 ## Siguiente
 
@@ -159,4 +212,5 @@ este sitio.
   <LinkCard title="Agentes" href="/es/concepts/agents" description="Concede habilidades compartidas a un agente en su constructor." />
   <LinkCard title="Tareas" href="/es/concepts/tasks" description="Dónde escribes / para agregar una habilidad." />
   <LinkCard title="Automatizaciones" href="/es/concepts/automations" description="Lo que gestiona la habilidad integrada schedules." />
+  <LinkCard title="Llamadas al sitio" href="/es/concepts/site-calls" description="Habilidades que envían las solicitudes del propio sitio en lugar de hacer clic en él." />
 </CardGrid>

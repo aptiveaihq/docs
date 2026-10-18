@@ -88,13 +88,21 @@ Las herramientas de un flujo de navegador son solo suyas: no aparecen en la
 página **Habilidades** ni en el menú `/`, y un agente no puede cambiar una desde
 una tarea.
 
+Una herramienta también puede llevar [llamadas al sitio](/es/concepts/site-calls):
+las solicitudes del propio sitio, enviadas desde el navegador del agente con la
+sesión iniciada en lugar de hacer clic en la página. La dirección de una llamada
+puede empezar con una de las variables del flujo, como `{site_url}`, para que
+funcione con el sitio de cada empresa.
+
 ### Generar con el agente
 
 No hace falta escribir los pasos a mano. **Generar con el agente** abre la
 pestaña **Agente**: *Dile al agente con qué sitio web trabajar. Trabaja contigo
 en un navegador y propone las herramientas cuando estés listo.* Exploren el
 sitio juntos, muéstrale qué hacer con **Grabar** si quieres, y pídele que
-proponga las herramientas.
+proponga las herramientas. El agente también puede convertir pasos en
+[llamadas al sitio](/es/concepts/site-calls), comprobando cada una contra lo que
+se vio enviar al sitio.
 
 No se guarda nada hasta que apruebes. La propuesta del agente llega como una
 tarjeta con cada herramienta — las nuevas marcadas, las existentes tal como

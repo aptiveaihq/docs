@@ -1,0 +1,283 @@
+---
+title: Llamadas al sitio
+description: Una habilidad puede llevar las solicitudes que envían las propias páginas de un sitio web, para que el agente haga un paso con una sola llamada desde su navegador con la sesión iniciada, en lugar de muchos clics. Cómo se crean, un ejemplo, qué las hace seguras y sus límites.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Cuando haces clic en **Cerrar** en un ticket en la mayoría de las aplicaciones
+web, la página envía una solicitud al sitio que está detrás, y el sitio cierra
+el ticket. Una **llamada al sitio** es una de esas solicitudes, guardada en una
+[habilidad](/es/concepts/skills) para que el agente pueda enviarla por su
+cuenta. En lugar de abrir cada ticket, buscar el botón, elegir un motivo y
+esperar a la página, el agente cierra tres tickets con una sola llamada, desde
+su propio navegador, donde ya tiene la sesión iniciada en el sitio.
+
+Una habilidad con llamadas al sitio sigue teniendo sus pasos de siempre. Cada
+vez que una llamada no se puede usar —el sitio la rechaza, el sitio cambió, el
+espacio de trabajo no permite llamadas— el agente hace ese paso en la página,
+como lo ha hecho siempre.
+
+<Aside type="note" title="Las llamadas al sitio necesitan una computadora actualizada.">
+  Las llamadas al sitio llegan con una actualización de las computadoras en las
+  que trabajan los agentes. Una tarea en una computadora que todavía no la
+  tiene no usa las llamadas de una habilidad: el agente hace esos pasos en la
+  página, y nada más cambia.
+</Aside>
+
+## Qué es una llamada al sitio
+
+Una llamada al sitio es un archivo en los **Scripts** de una habilidad, dentro
+de `calls/`; por ejemplo, `calls/close_ticket.json`. Dice qué solicitud enviar,
+qué debe completar el agente y qué puede cambiar la llamada y qué no. Una
+habilidad tiene hasta 20 llamadas.
+
+Cuando una tarea usa una, la solicitud sale **desde la pestaña del navegador
+del agente en ese sitio**, en nombre de quien tenga la sesión iniciada ahí: la
+misma solicitud que habría enviado la página del sitio. El sitio tiene que
+estar abierto en esa pestaña; una llamada a cualquier otro sitio no se envía.
+
+Hay dos tipos de llamadas:
+
+| Tipo | Qué hace | ¿Pregunta antes? |
+|---|---|---|
+| **Lectura** | Trae datos: una lista de tickets abiertos, los detalles de un ticket, un informe. Una solicitud `GET` o `HEAD`, o un `POST` que el sitio usa solo para buscar o listar | No: las lecturas se ejecutan de inmediato |
+| **Cambio** | Cambia datos: cierra un ticket, actualiza un registro. Una solicitud `POST`, `PUT` o `PATCH` | Sí: en una tarjeta de aprobación, cada vez, salvo que apruebes todo |
+
+## Cómo se crean las llamadas al sitio
+
+Hay tres maneras, y cada una termina con la aprobación de una persona o con su
+propia edición.
+
+**1. Entrena al agente.** En una sesión de
+[Entrénalo](/es/concepts/agents#entrenar-a-un-agente) haces el trabajo una vez
+en la computadora del agente. Mientras trabajas, el agente puede ver las
+solicitudes que envía la página del sitio: sus direcciones, los nombres de sus
+campos y la forma de cada respuesta, nunca los valores que contienen. Escribe
+una llamada para cada paso que valga la pena convertir y comprueba cada una
+contra lo que se vio enviar al sitio: una lectura se ejecuta una vez de verdad;
+un cambio se arma y se muestra, pero no se envía. Después, la propuesta
+describe cada llamada con palabras sencillas:
+
+- *«get_ticket» lee: Read one ticket: its status, assignee and notes. (GET /api/tickets/\{id\}) de desk.example.com*
+- *«close_ticket» cambia datos: PUT /api/tickets/\{id\}/status en desk.example.com*
+  — *nunca cambia assignee, priority* — *se vuelve a leer con «get_ticket» después*
+
+**Aprobar** guarda la habilidad con sus llamadas. Una llamada que escribió el
+agente solo se puede guardar si pasó su comprobación con exactamente el
+contenido que se guarda, así que una llamada que cambias en la tarjeta de la
+propuesta vuelve al agente para que la compruebe de nuevo. Si nombras un
+registro que se puede cambiar sin riesgo, el agente también puede probar una
+llamada de cambio en ese único registro mientras la comprueba: en una tarjeta
+de aprobación, y solo después de que lo apruebes.
+
+**Generar con el agente**, en un
+[flujo de navegador](/es/concepts/browser-workflows), funciona igual para las
+herramientas de un flujo.
+
+**2. Pídeselo al constructor de agentes.** En **Crear** o **Refinar**, con la
+computadora de **Pruébalo** abierta y a la vista, usa el sitio en esa
+computadora —o deja que lo use el asistente— y pídele que convierta un paso en
+una llamada al sitio. Comprueba cada llamada de la misma manera y agrega la
+habilidad a tu borrador, donde la sección **Habilidades** muestra sus llamadas.
+Guardar el agente es la aprobación: la habilidad se guarda como una de
+[las habilidades propias del agente](/es/concepts/skills#habilidades-que-aprende-un-agente).
+El constructor nunca envía una llamada de cambio, ni siquiera para probarla.
+
+**3. Escríbela a mano.** Cualquiera que pueda editar una habilidad puede
+agregar una llamada: en la página de la habilidad, en su panel del constructor
+de agentes o en el Editor de una herramienta de un flujo de navegador, elige
+**Agregar script** y dale una ruta como `calls/close_ticket.json`. Una llamada
+escrita a mano se revisa en busca de errores al guardar, pero no contra el
+sitio, y la habilidad lo indica: *Escrita a mano, sin comprobar contra el
+sitio*.
+
+## Un ejemplo
+
+Una mesa de servicio en `desk.example.com` muestra cada ticket en su propia
+página, y la página lo lee con una solicitud y lo cierra con otra. Una habilidad
+para cerrar tickets resueltos podría llevar estas dos llamadas.
+
+`calls/get_ticket.json`, una lectura:
+
+```json
+{
+  "name": "get_ticket",
+  "description": "Read one ticket: its status, assignee and notes.",
+  "method": "GET",
+  "url": "https://desk.example.com/api/tickets/{id}",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "id": { "type": "string", "pattern": "^[0-9]+$" }
+    },
+    "required": ["id"]
+  },
+  "returns": "json"
+}
+```
+
+`calls/close_ticket.json`, un cambio:
+
+```json
+{
+  "name": "close_ticket",
+  "description": "Close one ticket with a reason and an optional note.",
+  "method": "PUT",
+  "url": "https://desk.example.com/api/tickets/{id}/status",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "id":     { "type": "string", "pattern": "^[0-9]+$" },
+      "reason": { "type": "string", "enum": ["Resolved", "Duplicate"] },
+      "note":   { "type": "string", "maxLength": 200 }
+    },
+    "required": ["id", "reason"]
+  },
+  "body": {
+    "kind": "json",
+    "template": { "status": "closed", "reason": "{reason}", "note": "{note}" }
+  },
+  "auth": { "borrow": ["x-csrf-token"] },
+  "target": { "param": "id", "label": "Ticket" },
+  "forbiddenFields": ["assignee", "priority"],
+  "verify": {
+    "call": "get_ticket",
+    "params": { "id": "{id}" },
+    "ignore": ["status", "closedAt", "updatedAt"]
+  }
+}
+```
+
+Qué significa cada parte:
+
+| Campo | Qué dice |
+|---|---|
+| `name` | El nombre de la llamada. También es el nombre del archivo: letras minúsculas, dígitos y `_` |
+| `description` | Qué hace la llamada, en una línea. El agente la lee para elegir la llamada |
+| `method` | `GET`, `HEAD`, `POST`, `PUT` o `PATCH`. `DELETE` no se puede guardar; consulta [Límites](#límites) |
+| `url` | La dirección, con espacios en blanco del tipo `{id}` que completa el agente. En la herramienta de un flujo de navegador puede empezar con una de las variables del flujo, como `{site_url}` |
+| `inputSchema` | Lo que el agente debe proporcionar y las reglas que debe cumplir cada valor: un patrón, una lista de valores permitidos, una longitud máxima. Un valor que rompe una regla no se envía |
+| `body` | Para un cambio, los campos que se envían, como `json` o como formulario (`form`). Un valor opcional que el agente no da tampoco se incluye en la solicitud |
+| `auth.borrow` | Los encabezados de inicio de sesión que envía la propia página del sitio, como `x-csrf-token`. Sus valores se toman prestados de la página en el momento de la llamada; nunca se escriben en el archivo |
+| `returns` | `json` (el valor predeterminado), `text` o `file`; un archivo llega a los archivos de la tarea |
+| `readOnly` | Solo en un `POST` que el sitio usa para buscar o listar: `true` lo convierte en lectura. Cada lugar que muestra la llamada dice *Este POST se trata como una lectura, así que se ejecuta sin tarjeta* |
+| `target` | Para un cambio: qué dato identifica el registro y cómo llamarlo en la tarjeta de aprobación (*Ticket 4812*) |
+| `forbiddenFields` | Campos que esta llamada nunca debe enviar ni cambiar. Una llamada cuyo cuerpo nombra uno no se puede guardar |
+| `verify` | Para un cambio: una llamada de lectura de la misma habilidad, que se ejecuta antes y después de cada cambio para comprobar qué cambió de verdad. `ignore` enumera los campos que el cambio debe alterar |
+
+Una llamada que escribió el agente también lleva un registro de la solicitud con
+la que se comparó; esa parte nunca la escribes tú.
+
+## Qué las hace seguras
+
+**Las lecturas se ejecutan sin preguntar; los cambios siempre preguntan.** Cada
+llamada de cambio espera en una tarjeta de aprobación de hasta tres registros
+—*El agente quiere ejecutar «close_ticket» de «‹habilidad›» en desk.example.com
+para 3 registros. ¿Lo permites?*— que muestra cada registro y los valores que
+va a poner. **Aprobar** hace esos cambios una vez, **Aprobar todo** cubre
+también los cambios posteriores de llamadas al sitio en la tarea, y
+**Rechazar** no envía nada. En una tarea que inició una automatización que se
+ejecuta sola, los cambios se hacen sin tarjeta, y la transcripción indica que
+cada uno se hizo sin preguntar, como con las demás acciones del agente.
+
+**El registro debe haberse visto en la tarea.** Un cambio solo se envía para un
+registro cuyo identificador vino de una respuesta anterior en la misma tarea —de
+una llamada al sitio o de un conector— o de tu propio mensaje. Un identificador
+que el agente inventó, o que copió mal, no se envía.
+
+**Lectura antes y después.** Una llamada de cambio con `verify` lee el registro
+antes y después de cada cambio. Si cambió algo más de lo que la llamada debe
+cambiar, la transcripción dice *cambió más de lo esperado* y el resto del lote
+se detiene.
+
+**Campos protegidos.** Los campos de `forbiddenFields` nunca se envían, y la
+lectura posterior avisa si alguno cambió.
+
+**A su ritmo.** Los cambios van de uno en uno, con al menos un segundo entre
+ellos, y una tarea cambia como máximo 100 registros de esta manera; a partir de
+ahí, una tarea nueva continúa el trabajo. Las lecturas toman hasta 10 elementos
+en una llamada.
+
+**Un sitio que rechaza detiene las llamadas.** Si el sitio rechaza una llamada,
+o responde con una página de verificación, el agente no envía más llamadas a
+ese sitio en la tarea y hace el paso en la página. Si al agente se le cerró la
+sesión, vuelve a iniciarla en el navegador, o te pide que lo hagas en la
+[vista en vivo](/es/concepts/tasks#la-vista-en-vivo), y lo intenta de nuevo.
+
+**Un sitio que cambió vuelve a la página.** Cuando un sitio responde que la
+llamada ya no existe, no se envía nada más, el agente hace el paso en la página
+y la transcripción anota *‹llamada›: La llamada necesita volver a grabarse.*
+Grábala de nuevo con Entrénalo, el constructor o **Generar con el agente**.
+
+**Un cambio nunca se envía dos veces por su cuenta.** Si el sitio falla mientras
+se hace un cambio, al agente se le dice que puede haberse aplicado o no, y lee
+el registro antes de volver a intentarlo. La transcripción dice *Puede que se
+haya cambiado Ticket 4812 en desk.example.com*.
+
+**Los tokens y las cookies se quedan en el navegador.** Los valores de inicio de
+sesión que necesita una llamada se toman prestados de la página en el momento
+en que se envía. Nunca se guardan, nunca se escriben en una habilidad y nunca
+se muestran al agente ni en la transcripción; todo lo que el sitio devuelve se
+limpia de ellos antes de que el agente lo lea. Los scripts del propio agente en
+la computadora no pueden llegar al navegador con la sesión iniciada.
+
+**Se ejecuta lo que se guardó.** Una tarea ejecuta las llamadas tal como
+estaban guardadas cuando cargó la habilidad. Un guardado hecho mientras la
+tarea está en marcha se aplica desde la siguiente tarea, y nada en la
+computadora puede cambiar lo que hace una llamada.
+
+Cada llamada deja una línea en la transcripción:
+
+- *Se leyeron 42 elementos de desk.example.com (POST, 200)*
+- *Se cambió Ticket 4812 en desk.example.com (PUT, 200)*
+- *No se cambió Ticket 4812 en desk.example.com: rechazado por el sitio (403)*
+
+## Pruebas de habilidades
+
+Cuando se prueba una habilidad con llamadas —la prueba que hace Entrénalo antes
+de proponer una habilidad, o una prueba de una habilidad en una tarea— sus
+llamadas de lectura se ejecutan de verdad y sus llamadas de cambio nunca se
+envían. Un cambio en una prueba se responde como ensayo, sin enviar nada al
+sitio.
+
+## Límites
+
+- **Todavía no hay eliminaciones.** Una llamada `DELETE` no se puede guardar. El
+  agente elimina en la página, preguntando antes como siempre.
+- **Una lectura que parece una acción se rechaza al guardar.** Una lectura cuya
+  dirección contiene una palabra de acción —close, update, save, delete,
+  create, send y similares— no se puede guardar, aunque sea inofensiva
+  (`/post/{id}`). Entonces el agente hace ese paso en la página. Un `PUT` o un
+  `PATCH` nunca es una lectura.
+- **Desactivadas en espacios de trabajo regulados.** En un espacio de trabajo
+  que guarda datos regulados, ninguna tarea usa llamadas al sitio, y ahí no se
+  pueden comprobar contra el sitio.
+- **Hace falta una computadora actualizada.** Hasta que la computadora de una
+  tarea tenga la actualización, el agente usa la página.
+- **El inicio de sesión sigue en la página.** Iniciar sesión, las comprobaciones
+  de seguridad y todo lo que tenga que ver con contraseñas nunca son llamadas al
+  sitio; el agente inicia sesión en la página como antes.
+- **Límites fijos.** Hasta 20 llamadas por habilidad, 3 registros por tarjeta de
+  aprobación y 100 registros cambiados por tarea, a un cambio por segundo.
+  Todavía no se pueden ajustar por sitio.
+- **Las respuestas tienen un tamaño máximo.** Una respuesta se lee hasta 256 KB;
+  una llamada que devuelve un archivo puede traer uno de hasta 25 MB a los
+  archivos de la tarea.
+
+## Quién puede hacer qué
+
+| Acción | Quién |
+|---|---|
+| Crear llamadas con Entrénalo o con el constructor de agentes | Cualquiera que pueda editar el agente |
+| Escribir o cambiar una llamada a mano | Cualquiera que pueda editar la habilidad; en una habilidad propia de un agente, cualquiera que pueda editar el agente |
+| Usar las llamadas de una habilidad | Cualquier tarea que cargue la habilidad |
+| Aprobar un cambio | Quien responda la tarjeta de aprobación de la tarea, como con cualquier otra aprobación |
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Habilidades" href="/es/concepts/skills" description="Dónde se guardan las llamadas, y cómo se abre y se edita una habilidad." />
+  <LinkCard title="Agentes" href="/es/concepts/agents#entrenar-a-un-agente" description="Entrénalo: muéstrale el trabajo al agente y aprueba lo que aprendió." />
+  <LinkCard title="Flujos de navegador" href="/es/concepts/browser-workflows" description="Herramientas para un sitio web, que también pueden llevar llamadas al sitio." />
+</CardGrid>
