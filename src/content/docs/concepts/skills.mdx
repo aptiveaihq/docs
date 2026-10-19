@@ -154,24 +154,33 @@ cannot change, open it on the Skills page and use **Copy to mine**.
 Some skills ship with AptiveAI Agents and are offered to **every** agent,
 beside your workspace's own. They are not listed on the Skills page, and their
 text is never shown — the transcript records only that the skill was loaded.
-If one of your skills has the same name as a built-in skill, the built-in one
-is used.
+Their names all start with `aptiveai_`, so they do not take a name your own
+skills might use.
 
 | Skill | What it does |
 |---|---|
-| `schedules` | Create, change, pause, resume, run or delete an [automation](/concepts/automations), or list them — from a conversation |
-| `docs` | Answer a how-it-works question about AptiveAI Agents from these docs, with a link to the page it read |
+| `aptiveai_tasks` | Say where a task stands and give its link, or start a new task — see [What an agent can do with your tasks](/concepts/tasks#what-an-agent-can-do-with-your-tasks) |
+| `aptiveai_automations` | Create, change, pause, resume, run or delete an [automation](/concepts/automations), or list them — from a conversation |
+| `aptiveai_create_agent` | Turn the conversation into a new agent of yours, when you ask for one |
+| `aptiveai_build_skill` | Save what was done in the task as a skill, when you ask for one |
+| `aptiveai_docs` | Answer a how-it-works question about AptiveAI Agents from these docs, with a link to the page it read |
 
 A built-in skill can bring **tools** with it, which a workspace skill cannot:
-`schedules` gives the agent a tool to manage automations, and `docs` a tool to
-read this site.
+`aptiveai_tasks` gives the agent tools to look up and start tasks,
+`aptiveai_automations` a tool to manage automations, and `aptiveai_docs` a tool
+to read this site.
 
-One more built-in skill, `site-calls`, is used only while a
+The built-in skills used to have shorter names — `schedules`, `docs`,
+`create-agent`, `build-skill`, `site-calls` — and those still reach them for
+now. A skill of yours with exactly one of those names may be passed over for the
+built-in one; give it another name to be sure.
+
+One more built-in skill, `aptiveai_site_calls`, is used only while a
 [site call](/concepts/site-calls) is being made — in Train it, **Generate with
 agent** and the agent builder — and never in an ordinary task.
 
 <Aside type="note" title="Changing an automation from a task always asks first.">
-  Every automation change the `schedules` skill makes stops on an approval card —
+  Every automation change the `aptiveai_automations` skill makes stops on an approval card —
   *The agent wants to create an automation … Allow it?* — and the change is made
   as the person who started the task. The skill is never offered on a task an
   automation started, so an automation cannot rewrite automations on its own.
@@ -196,6 +205,6 @@ agent** and the agent builder — and never in an ordinary task.
 <CardGrid>
   <LinkCard title="Agents" href="/concepts/agents" description="Grant shared skills to an agent in its builder." />
   <LinkCard title="Tasks" href="/concepts/tasks" description="Where you type / to add a skill." />
-  <LinkCard title="Automations" href="/concepts/automations" description="What the built-in schedules skill manages." />
+  <LinkCard title="Automations" href="/concepts/automations" description="What the built-in aptiveai_automations skill manages." />
   <LinkCard title="Site calls" href="/concepts/site-calls" description="Skills that send a site's own requests instead of clicking through it." />
 </CardGrid>

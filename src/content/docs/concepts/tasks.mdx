@@ -1,6 +1,6 @@
 ---
 title: Tasks
-description: A task is one piece of work, from the message that starts it to the result — with a transcript, a composer to steer it, approvals and questions, a live view of the agent's computer, documents, sharing, and the Tasks list.
+description: A task is one piece of work, from the message that starts it to the result — with a transcript, a composer to steer it, approvals and questions, what an agent can do with your other tasks, a live view of the agent's computer, documents, sharing, and the Tasks list.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -140,15 +140,91 @@ data from an earlier step was incomplete, and it was stopped.* Reply to tell
 it to get the rest first, or to go ahead with what it has. A file the agent made
 from incomplete data carries a note too, so you check it before you share it.
 
+## What an agent can do with your tasks
+
+In a conversation — with an agent, or with no agent — you can ask where a task
+stands, have its link sent, start another task, or pass a message to one. Say
+task, session, chat or conversation: the agent takes them all to mean a task.
+
+### Where a task stands, and its link
+
+Ask *"what's the status of this task?"*, *"what is this task's id?"* or *"send
+me the link to the invoices task"*. The agent looks the task up — it does not
+answer from memory — and tells you its name, its status in plain words
+(*finished*, *waiting for a person to answer a question*, *waiting to start: its
+agent is busy with other tasks*), its agent, who started it, when it started and
+was last active, and its link. The step line reads *Checking this task's
+details* or *Looking up the task …*.
+
+- **This task, or another of your own.** The agent can look up the task you are
+  in, or another task you started, by its name or part of it. A task someone
+  else started is not one of yours, even when it is shared with you, and the
+  agent answers that no task of yours matches. If a name fits several of your
+  tasks, it asks which one you mean.
+- **"List my tasks"** answers carry each task's link too.
+- **On a task an automation started**, the agent can always describe that task.
+  When nobody started it, that task is the only one it can look up.
+
+The agent can also put the link in an email when you ask — *"email Dana the
+link to this task and say where it stands"* — through
+[AptiveAI Messaging](/concepts/messaging) or a connector that sends mail, with
+that send's own approval. It copies the link from the lookup; it never writes
+one itself.
+
+<Aside type="caution" title="A task's link is not public.">
+  The link opens the task only for people signed in to AptiveAI Agents who may
+  see it: the person who started it, the people it is shared with, and the
+  workspace owners (see [Sharing](#sharing-and-who-sees-a-task)). A customer or
+  anyone outside your business cannot open it. When you ask for a link to go to
+  someone like that, the agent tells you so and puts the facts — the status, the
+  result — in the message instead.
+</Aside>
+
+### Starting another task
+
+Ask for a separate piece of work — *"start a task with the Billing agent to
+chase the overdue invoices"* — and the agent prepares a new task: the agent to
+run it (this task's agent, another one, or none, for a plain conversation), its
+first message and, if it chooses, a name. Nothing starts until you agree: a card
+shows the agent and the first message and asks *Start this task?*, with
+**Approve**, **Approve all** and **Decline**, like any
+[approval](#questions-and-approvals). **Approve all** covers new tasks too, for
+the rest of this task. The step line reads *Starting a new task with …*, and
+once it starts the agent tells you which task it started, with its link.
+
+- **It is your task.** The new task is started as you, in this workspace, and
+  appears in [Recent tasks](/getting-started/finding-your-way#recent-tasks) and
+  the [Tasks list](#the-tasks-list) like one you started yourself.
+- **It starts fresh.** The new task does not see this conversation, so the agent
+  writes its first message to stand on its own: what to do, the facts it needs,
+  whom to tell. This task does not wait for it, and its answer does not come
+  back here. To check on it or pass it something later, ask the agent to look it
+  up or [send it a message](#tasks-can-message-each-other).
+- **The same rules as starting one yourself.** It is refused before any card if
+  you may not start tasks right now (see [Paid access](#paid-access)), may not
+  use that agent, or it is outside the hours the agent may act
+  ([Guardrails](/concepts/agents#guardrails)). The agent tells you why. If the
+  agent is already working on as many tasks as it can, the new task waits and
+  starts on its own when one of them finishes.
+- **At most five at a time.** One message of yours can lead to at most five new
+  tasks.
+- **Not from an automation.** A task an automation started cannot start tasks.
+
 ### Tasks can message each other
 
 An agent can look at your other tasks and send a message to one of them — "tell
 the invoices task to check March as well". Ask it by the other task's name; it
 shows a step line as it goes (*Looking at your tasks*, *Sending a message to …*,
-with *(reply expected)* when it wants an answer back).
+with *(reply expected)* when it wants an answer back). By default it looks at
+tasks that are running, waiting or paused, and those that finished in the last
+seven days; it can look further back when you ask.
 
 - **Only your own tasks.** An agent can message the tasks you started, never
-  someone else's.
+  someone else's — not even one shared with you with **Can edit**.
+- **The sender does not wait.** When it wants an answer, the other task's reply
+  comes back here on its own, as a new message. If the other task could not
+  answer — it failed, was stopped, or is waiting on a question from you — a line
+  says so instead.
 - **The receiving task treats it like a message you typed.** It carries on if it
   was running, and picks up again if it had finished. If it is waiting on a
   question or approval from you, the message waits behind the card; your answer
@@ -160,8 +236,11 @@ with *(reply expected)* when it wants an answer back).
 - **It asks when several tasks match.** If a name fits more than one task, the
   agent sends nothing and asks you which one you mean.
 - **It does not run away.** A back-and-forth between tasks stops after a few
-  exchanges, and the agent asks you before going on. It never needs an approval
-  card to send, but the receiving task's own approvals still apply.
+  exchanges, and the agent asks you before going on. One message of yours can
+  lead to at most five sends, of up to 4,000 characters each. It never needs an
+  approval card to send, but the receiving task's own approvals still apply.
+- **Only while you belong to its workspace.** A message to a task in a workspace
+  you have since left is not delivered.
 - **A task an automation started can receive** messages, but cannot send them.
 
 ## The live view

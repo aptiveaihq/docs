@@ -1,6 +1,6 @@
 ---
 title: Tareas
-description: Una tarea es un trabajo concreto, desde el mensaje que lo inicia hasta el resultado — con una transcripción, un cuadro de mensajes para guiarla, aprobaciones y preguntas, una vista en vivo de la computadora del agente, documentos, opciones para compartir y la lista de Tareas.
+description: Una tarea es un trabajo concreto, desde el mensaje que lo inicia hasta el resultado — con una transcripción, un cuadro de mensajes para guiarla, aprobaciones y preguntas, lo que un agente puede hacer con tus otras tareas, una vista en vivo de la computadora del agente, documentos, opciones para compartir y la lista de Tareas.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -147,16 +147,98 @@ indicarle que obtenga el resto primero, o que siga con lo que tiene. Un archivo
 que el agente creó con datos incompletos lleva también un aviso, para que lo
 revises antes de compartirlo.
 
+## Lo que un agente puede hacer con tus tareas
+
+En una conversación — con un agente o sin agente — puedes preguntar cómo va una
+tarea, pedir que se envíe su enlace, iniciar otra tarea o pasarle un mensaje a
+una. Di tarea, sesión, chat o conversación: el agente entiende que hablas de una
+tarea.
+
+### Cómo va una tarea, y su enlace
+
+Pregunta *«¿cómo va esta tarea?»*, *«¿cuál es el id de esta tarea?»* o
+*«mándame el enlace de la tarea de las facturas»*. El agente busca la tarea — no
+responde de memoria — y te dice su nombre, su estado en palabras sencillas
+(*terminada*, *esperando a que una persona responda una pregunta*, *esperando para
+empezar: su agente está ocupado con otras tareas*), su agente, quién la inició,
+cuándo empezó y cuándo tuvo actividad por última vez, y su enlace. La línea de
+paso dice *Revisando los datos de esta tarea* o *Buscando la tarea …*.
+
+- **Esta tarea, u otra tuya.** El agente puede buscar la tarea en la que estás, u
+  otra que tú iniciaste, por su nombre o parte de él. Una tarea que inició otra
+  persona no es tuya, aunque te la hayan compartido, y el agente responde que
+  ninguna tarea tuya coincide. Si un nombre corresponde a varias de tus tareas, te
+  pregunta a cuál te refieres.
+- **Las respuestas a «muéstrame mis tareas»** también traen el enlace de cada
+  tarea.
+- **En una tarea que inició una automatización**, el agente siempre puede
+  describir esa tarea. Si nadie la inició, es la única que puede buscar.
+
+El agente también puede poner el enlace en un correo cuando se lo pides —
+*«envíale a Dana el enlace de esta tarea y dile cómo va»* — a través de
+[AptiveAI Messaging](/es/concepts/messaging) o de un conector que envíe correo,
+con la aprobación propia de ese envío. Copia el enlace de la búsqueda; nunca lo
+escribe por su cuenta.
+
+<Aside type="caution" title="El enlace de una tarea no es público.">
+  El enlace abre la tarea solo para quienes han iniciado sesión en AptiveAI
+  Agents y pueden verla: la persona que la inició, las personas con quienes se
+  compartió y los propietarios del espacio de trabajo (consulta
+  [Compartir](#compartir-una-tarea-y-quién-la-ve)). Un cliente o cualquier persona
+  fuera de tu empresa no puede abrirlo. Cuando pides que el enlace le llegue a
+  alguien así, el agente te lo advierte y pone los datos — el estado, el
+  resultado — en el mensaje.
+</Aside>
+
+### Iniciar otra tarea
+
+Pide un trabajo aparte — *«inicia una tarea con el agente de Cobranza para
+reclamar las facturas vencidas»* — y el agente prepara una tarea nueva: el agente
+que la hará (el de esta tarea, otro, o ninguno, para una conversación sin agente),
+su primer mensaje y, si lo decide, un nombre. Nada empieza hasta que aceptas: una
+tarjeta muestra el agente y el primer mensaje y pregunta *¿Iniciar esta tarea?*,
+con **Aprobar**, **Aprobar todo** y **Rechazar**, como cualquier
+[aprobación](#preguntas-y-aprobaciones). **Aprobar todo** cubre también las
+tareas nuevas, durante el resto de esta tarea. La línea de paso dice *Iniciando
+una tarea nueva con …*, y cuando empieza el agente te dice qué tarea inició, con
+su enlace.
+
+- **Es tu tarea.** La tarea nueva se inicia en tu nombre, en este espacio de
+  trabajo, y aparece en [Tareas recientes](/es/getting-started/finding-your-way#tareas-recientes)
+  y en la [lista de Tareas](#la-lista-de-tareas) como una que iniciaste tú.
+- **Empieza de cero.** La tarea nueva no ve esta conversación, así que el agente
+  escribe su primer mensaje para que se entienda solo: qué hacer, los datos que
+  necesita, a quién avisar. Esta tarea no la espera, y su respuesta no vuelve
+  aquí. Para saber cómo va o pasarle algo después, pídele al agente que la busque
+  o que [le envíe un mensaje](#las-tareas-pueden-enviarse-mensajes-entre-sí).
+- **Las mismas reglas que si la iniciaras tú.** Se rechaza antes de cualquier
+  tarjeta si ahora no puedes iniciar tareas (consulta
+  [Acceso de pago](#acceso-de-pago)), si no puedes usar ese agente, o si es fuera
+  del horario en que el agente puede actuar
+  ([Límites de seguridad](/es/concepts/agents#límites-de-seguridad)). El agente
+  te dice por qué. Si el agente ya trabaja en todas las tareas que puede, la
+  tarea nueva espera y empieza sola cuando termine una de ellas.
+- **Como máximo cinco a la vez.** Un mensaje tuyo puede dar lugar a cinco tareas
+  nuevas como máximo.
+- **No desde una automatización.** Una tarea que inició una automatización no
+  puede iniciar tareas.
+
 ### Las tareas pueden enviarse mensajes entre sí
 
 Un agente puede revisar tus otras tareas y enviarle un mensaje a una de ellas —
 «dile a la tarea de las facturas que revise también marzo». Pídeselo por el
 nombre de la otra tarea; mientras lo hace muestra una línea de paso (*Revisando
 tus tareas*, *Enviando un mensaje a …*, con *(se espera respuesta)* cuando quiere
-una respuesta de vuelta).
+una respuesta de vuelta). De entrada revisa las tareas en ejecución, en espera o
+en pausa, y las que terminaron en los últimos siete días; si se lo pides, busca
+más atrás.
 
 - **Solo tus propias tareas.** Un agente puede escribirles a las tareas que tú
-  iniciaste, nunca a las de otra persona.
+  iniciaste, nunca a las de otra persona — ni siquiera a una que te compartieron
+  con **Puede editar**.
+- **Quien envía no espera.** Cuando quiere una respuesta, la de la otra tarea
+  vuelve aquí sola, como un mensaje nuevo. Si la otra tarea no pudo responder —
+  falló, se detuvo o espera una pregunta tuya — una línea lo dice.
 - **La tarea que lo recibe lo trata como un mensaje que tú escribiste.** Sigue si
   estaba en ejecución y se retoma si había terminado. Si espera una pregunta o una
   aprobación tuya, el mensaje espera detrás de la tarjeta; tu respuesta va
@@ -168,9 +250,12 @@ una respuesta de vuelta).
 - **Pregunta cuando varias coinciden.** Si un nombre corresponde a más de una
   tarea, el agente no envía nada y te pregunta a cuál te refieres.
 - **No se desboca.** Un intercambio de ida y vuelta entre tareas se detiene tras
-  unos pocos mensajes, y el agente te pregunta antes de seguir. Enviar no pide una
-  tarjeta de aprobación, pero las aprobaciones propias de la tarea que recibe
-  siguen aplicando.
+  unos pocos mensajes, y el agente te pregunta antes de seguir. Un mensaje tuyo
+  puede dar lugar a cinco envíos como máximo, de hasta 4.000 caracteres cada uno.
+  Enviar no pide una tarjeta de aprobación, pero las aprobaciones propias de la
+  tarea que recibe siguen aplicando.
+- **Solo mientras perteneces a su espacio de trabajo.** Un mensaje a una tarea de
+  un espacio de trabajo que ya dejaste no se entrega.
 - **Una tarea iniciada por una automatización puede recibir** mensajes, pero no
   enviarlos.
 
