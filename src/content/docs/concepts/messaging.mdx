@@ -5,21 +5,22 @@ description: Let your agents text and email people who do not use AptiveAI Agent
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-<Aside type="caution" title="Launches December 1, 2026">
-  AptiveAI Messaging is not available yet: texts are off until the mobile
-  carriers approve AptiveAI's number, and email from `notify.aptiveai.io` is not
-  switched on yet either. Until then the connector shows **Not available yet**
-  and cannot be turned on. This page describes it as it will work at launch, and
-  the program's terms are at [aptiveai.io/messaging](https://aptiveai.io/messaging).
+{/* TARGET NOTE: remove "expected mid-November 2026" (here and in es/) when texts go live. */}
+<Aside type="note" title="Texts start once the carriers approve AptiveAI's number">
+  Email works now. Texts switch on by themselves once the mobile carriers
+  approve AptiveAI's number, expected mid-November 2026; until then the connector says texts are **Not
+  available yet** and agents are not offered the text tool. The program's terms
+  are at [aptiveai.io/messaging](https://aptiveai.io/messaging).
 </Aside>
 
 **AptiveAI Messaging** lets your agents send **text messages** and **emails**
 to people who do not use AptiveAI Agents: the drivers who missed a step, the
 customer whose order changed, the supplier waiting on an answer. It is a
 [connector](/concepts/connectors) that AptiveAI runs for you: texts go out from
-AptiveAI's own toll-free number, +1 844-571-9591, emails from an address of
-your own on AptiveAI's sending domain, and every message is paid from your
-enterprise wallet. There is no number to request and nothing to verify:
+AptiveAI's own toll-free number, +1 844-571-9591, and emails from an address of
+your own on AptiveAI's sending domain. Email is included in your plan, up to 250
+emails a day per business; texts are paid from your enterprise wallet. There is
+no number to request and nothing to verify:
 AptiveAI registers the number with the carriers itself.
 
 It sits beside the connectors you sign in to yourself. If you already send
@@ -29,8 +30,8 @@ own to set up.
 
 <Aside type="note">
   Only an **owner of your enterprise** can turn AptiveAI Messaging on, change
-  its settings, turn it off or remove it, because every message is paid from
-  the enterprise's wallet. A workspace owner cannot. Everyone else sees the
+  its settings, turn it off or remove it, because texts are paid from the
+  enterprise's wallet. A workspace owner cannot. Everyone else sees the
   card with *Ask your owner to turn this on*.
 </Aside>
 
@@ -46,19 +47,19 @@ own to set up.
 1. Open **Connectors** from the sidebar and choose **AptiveAI Messaging** in
    the catalogue.
 2. Press **Turn on**. A dialog says what it does and what it costs: agents you
-   allow can text and email people outside AptiveAI Agents, each message is
-   paid from your enterprise wallet, a task someone is watching asks before it
-   sends, and an automation set to run on its own sends without asking.
+   allow can text and email people outside AptiveAI Agents, email is included
+   in your plan up to 250 a day, texts are paid from your enterprise wallet, a
+   task someone is watching asks before it sends unless someone pressed
+   **Approve all** in it, and an automation set to run on its own sends without
+   asking.
 3. Press **Turn on** again. Your enterprise now has one AptiveAI Messaging
    connection, owned by the organization rather than by you, so it keeps
    working if you leave.
 
-Texts and email are each available only when AptiveAI has switched that channel
-on. Today **both are off**, and the card on the Connectors page reads **Not
-available yet**. When a channel is off, the connector's page says so and agents
-are not offered its send tool; a send is refused without a charge. Texts will
-start once the carriers approve AptiveAI's number (see
-[How texts are sent](#how-texts-are-sent)).
+**Email works straight away.** Texts start by themselves once the carriers
+approve AptiveAI's number (see [How texts are sent](#how-texts-are-sent)): until
+then the connector's page says texts are **Not available yet**, agents are not
+offered the text tool, and a text send is refused without a charge.
 
 The connection has its own page, **Connectors → AptiveAI Messaging**, with
 these sections:
@@ -68,7 +69,7 @@ these sections:
 | **Status** | Whether email is ready and the address it sends from; whether texts are **Available** or **Not available yet**; what was spent this month |
 | **Email** | The **Sender name** — the From name on every email and the start of every text — and the **Reply-to address**, where replies go |
 | **Texts** | Whether texts are available, and that they go out from AptiveAI's number starting "AptiveAI for" and your sender name. There is nothing to fill in |
-| **Spending** | An optional **Monthly limit** in dollars, and this month's spend against it |
+| **Spending** | An optional **Monthly limit** in dollars for texts, and this month's spend against it. Email is included and shows no charge |
 | **Activity** | Every message your agents sent |
 | **Opt-outs** | Who cannot be messaged, and why |
 | **Sharing** | Who may grant AptiveAI Messaging to their agents |
@@ -141,6 +142,11 @@ every driver on this list" is one decision, not fifty.
 - The body is plain text in a simple layout, with no AptiveAI marketing.
 - Every email carries an **unsubscribe link** and a one-click unsubscribe
   header. No attachments.
+- **Included in your plan, up to 250 a day.** Each business may email at most
+  250 people a day (counted per recipient; the day resets at midnight UTC). A
+  send that would pass it is refused before anyone is asked, the agent is told
+  to try again tomorrow, and the enterprise's owners get a notification, at most
+  once a day.
 
 <Aside type="caution" title="Texts are not private.">
   A text message is not encrypted end to end. The agents are told to keep
@@ -151,14 +157,14 @@ every driver on this list" is one decision, not fifty.
 
 ## When it asks first
 
-Every send is treated as a final act — a text cannot be unsent, and it costs
-money.
+A message cannot be unsent, so a send is a write that asks first, like any
+other connector write.
 
 | Where the send happens | What happens |
 |---|---|
-| A task someone is watching | **Every send asks.** The card shows the recipients (all of them, folded past ten), the message exactly as it will arrive, the number of parts and the charge. **Approve all does not cover sends**: each one asks again |
+| A task someone is watching | **Each send asks**, until someone presses **Approve all** in that task. The card shows the recipients (all of them, folded past ten), the message exactly as it will arrive, the number of parts and the charge ("Included" for email). After **Approve all**, later sends in that task go out without a card |
 | An **Autonomous** [automation](/concepts/automations) | The agent **sends without asking**, and the transcript records each send |
-| An **Interactive** automation | It stops at each send and waits, like a watched task |
+| An **Interactive** automation | It stops at each send and waits, like a watched task, unless **Approve all** was pressed in that task |
 | The **Try it** pane of the agent builder | **Nothing is ever sent or charged.** The agent is told what the send would have done — how many people, how many parts, about what it would cost |
 | A skill's trial or a training test | **Nothing is ever sent or charged**, whatever changes you let the test make. The agent is told what the send would have done, as in the **Try it** pane |
 
@@ -180,7 +186,8 @@ list shows it.
 
 <Aside type="caution" title="A web page counts as a source.">
   Because page text is a source, a page an agent visits could plant a number.
-  What limits the damage is the 50-recipient cap per send, your monthly limit,
+  What limits the damage is the 50-recipient cap per send, the 250-a-day email
+  limit, your monthly limit for texts,
   the opt-out list, the sender name at the start of every text, and the record
   of where each recipient came from. Grant AptiveAI Messaging to an agent an
   Autonomous automation runs only when you are comfortable with that.
@@ -191,33 +198,38 @@ A send is also refused, before anything is charged, when:
 - a recipient is on your enterprise's opt-out list, or replied STOP to
   AptiveAI's number (to any business);
 - a number is not a US number;
-- AptiveAI Messaging is turned off, or the channel (texts or email) is not
-  available yet;
-- the send would pass your monthly limit;
-- your wallet cannot cover it.
+- AptiveAI Messaging is turned off, or texts are not available yet;
+- an email would pass the business's limit of 250 emails a day;
+- a text would pass your monthly limit, or your wallet cannot cover it.
+
+These checks run on every send, also after **Approve all**: it only skips the
+question.
 
 If any recipient in a batch is refused, nothing in that batch is sent. The
 agent is told which recipients failed and why, and may send again to the rest.
 
 ## What it costs
 
-Every message is paid from your **enterprise wallet** — never from the AI
-credit included with your plan or from promotional credit. Today a text costs
-about **1.8¢ per part** and email **$0.15 per 1,000 messages**; the turn-on
-dialog and the [pricing page](https://aptiveai.io/pricing) always show the
-current figures. The toll-free number itself costs you nothing. The up-to-160-character
-part count includes the opening "AptiveAI for ‹your sender name›:".
+**Email is included in your plan**, up to 250 emails a day per business: no
+charge, and no wallet needed. The approval card and Activity show it as
+**Included**.
 
-- **The charge is known before the message goes out**, so a send your wallet
+**Texts are paid from your enterprise wallet** — never from the AI credit
+included with your plan or from promotional credit. Today a text costs about
+**1.8¢ per part**; the turn-on dialog and the
+[pricing page](https://aptiveai.io/pricing) always show the current figures. The
+toll-free number itself costs you nothing. The up-to-160-character part count
+includes the opening "AptiveAI for ‹your sender name›:".
+
+- **A text's charge is known before it goes out**, so a send your wallet
   cannot cover is refused rather than run up as a debt. Add funds to your
   wallet to send again — having AI credit is not enough. See
   [Usage and credit](/administration/usage).
-- **A monthly limit** in the **Spending** section stops sends once this
-  month's messaging would pass it.
-- When a send is refused for the wallet or the limit, **the enterprise's
-  owners get a notification**, at most once a day.
-- If the carrier or the mail service refuses a message outright, that
-  recipient's share is refunded. A message that was accepted and then fails to
+- **A monthly limit** in the **Spending** section stops texts once this
+  month's texting would pass it.
+- When a send is refused for the wallet, the monthly limit or the daily email
+  limit, **the enterprise's owners get a notification**, at most once a day.
+- If the carrier refuses a text outright, that recipient's share is refunded. A message that was accepted and then fails to
   arrive is not refunded.
 
 Messaging spend shows up as its own line: on the task, beside AI usage, and on
@@ -293,11 +305,11 @@ What protects the people your agents message, and your enterprise:
 | Protection | What it does |
 |---|---|
 | **Owner control** | Only an owner of your enterprise turns it on, sets the monthly limit, adds to the opt-out list, turns it off or removes it. The connection belongs to the organization, not to a person |
-| **A person approves** | On a task someone is watching, every send asks, and **Approve all** never covers it. The **Try it** pane, a skill's trial and a training test never send. See [When it asks first](#when-it-asks-first) |
+| **A person approves** | On a task someone is watching, each send asks until someone presses **Approve all** in that task; the checks below still run on every send. The **Try it** pane, a skill's trial and a training test never send. See [When it asks first](#when-it-asks-first) |
 | **Recipient guard** | An agent can only message a number or address that came into the task from a trusted source, and every message records where its recipient came from. See [Who an agent may message](#who-an-agent-may-message) |
-| **Limits** | At most 50 recipients per send, US numbers only for texts, and your monthly limit. A send your wallet cannot cover is refused before it goes out |
+| **Limits** | At most 50 recipients per send, 250 emails a day per business, US numbers only for texts, and your monthly limit for texts. A text your wallet cannot cover is refused before it goes out |
 | **Opt-outs** | A STOP reply stops every text from AptiveAI's number to that person, for every business and for AptiveAI's own notices. An unsubscribe, a bounce or a spam report blocks that email address for every agent of your enterprise, and nobody can take an address off a list. The unsubscribe page asks the recipient to confirm, so a mail scanner cannot unsubscribe anyone. A **HELP** reply gets AptiveAI's support contact, dev@aptiveai.io |
-| **Sender identity** | Every text comes from AptiveAI's one toll-free number, registered with the US carriers by AptiveAI before texts start, +1 844-571-9591, and starts "AptiveAI for" and your sender name. Email comes from AptiveAI's sending domain, `notify.aptiveai.io`, which is kept apart from AptiveAI's own account email and authenticated with SPF, DKIM and DMARC |
+| **Sender identity** | Every text comes from AptiveAI's one toll-free number, registered with the US carriers by AptiveAI before texts start, +1 844-571-9591, and starts "AptiveAI for" and your sender name. Email comes from AptiveAI's sending domain, `notify.aptiveai.io`, sent through Amazon SES and kept apart from AptiveAI's own account email (sent through Azure Communication Services), authenticated with SPF, DKIM and DMARC |
 | **Signed updates** | Delivery updates and STOP replies from the delivery service are accepted only when the service has signed them |
 | **Encryption in transit** | Messages travel encrypted between AptiveAI and the delivery service. A text is not encrypted once it reaches the mobile carrier, so keep messages to what the recipient needs to act on |
 | **A record of every message** | **Activity** keeps the recipient, where it came from, the message as sent, whether a person approved it or an automation sent it, its status and its charge. Passwords and codes sent to a task are hidden in the stored copy |

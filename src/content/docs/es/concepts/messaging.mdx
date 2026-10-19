@@ -5,13 +5,13 @@ description: Deja que tus agentes envíen mensajes de texto y correos a personas
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-<Aside type="caution" title="Disponible el 1 de diciembre de 2026">
-  AptiveAI Messaging todavía no está disponible: los mensajes de texto están
-  desactivados hasta que los operadores móviles aprueben el número de AptiveAI,
-  y el correo desde `notify.aptiveai.io` tampoco está activado aún. Mientras
-  tanto el conector muestra **Aún no disponible** y no se puede activar. Esta
-  página lo describe tal como funcionará en el lanzamiento, y los términos del
-  programa están en [aptiveai.io/messaging](https://aptiveai.io/messaging).
+<Aside type="note" title="Los mensajes de texto empiezan cuando los operadores aprueben el número de AptiveAI">
+  El correo ya funciona. Los mensajes de texto se activan solos cuando los
+  operadores móviles aprueben el número de AptiveAI, previsto para mediados de
+  noviembre de 2026; mientras tanto el conector
+  indica que los mensajes de texto están **Aún no disponible** y a los agentes
+  no se les ofrece la herramienta de texto. Los términos del programa están en
+  [aptiveai.io/messaging](https://aptiveai.io/messaging).
 </Aside>
 
 **AptiveAI Messaging** permite que tus agentes envíen **mensajes de texto** y
@@ -19,8 +19,9 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 saltaron un paso, el cliente cuyo pedido cambió, el proveedor que espera una
 respuesta. Es un [conector](/es/concepts/connectors) que AptiveAI opera por ti:
 los mensajes de texto salen del número gratuito (toll-free) propio de AptiveAI,
-+1 844-571-9591, los correos de una dirección propia en el dominio de envío de
-AptiveAI, y cada mensaje se paga con la billetera de tu empresa. No hay que
++1 844-571-9591, y los correos de una dirección propia en el dominio de envío
+de AptiveAI. El correo está incluido en tu plan, hasta 250 correos al día por
+negocio; los mensajes de texto se pagan con la billetera de tu empresa. No hay que
 pedir ningún número ni verificar nada: AptiveAI registra el número ante los
 operadores por su cuenta.
 
@@ -31,8 +32,8 @@ cuenta propia que configurar.
 
 <Aside type="note">
   Solo un **propietario de tu empresa** puede activar AptiveAI Messaging,
-  cambiar su configuración, desactivarlo o quitarlo, porque cada mensaje se
-  paga con la billetera de la empresa. Un propietario de un espacio de trabajo
+  cambiar su configuración, desactivarlo o quitarlo, porque los mensajes de
+  texto se pagan con la billetera de la empresa. Un propietario de un espacio de trabajo
   no puede. Los demás ven la tarjeta con *Pide a tu propietario que lo active*.
 </Aside>
 
@@ -50,20 +51,21 @@ cuenta propia que configurar.
    en el catálogo.
 2. Pulsa **Activar**. Un diálogo explica qué hace y cuánto cuesta: los agentes
    que permitas pueden enviar mensajes de texto y correos a personas fuera de
-   AptiveAI Agents, cada mensaje se paga con la billetera de tu empresa, una
-   tarea que alguien está viendo pregunta antes de enviar y una automatización
-   configurada para ejecutarse sola envía sin preguntar.
+   AptiveAI Agents, el correo está incluido en tu plan hasta 250 al día, los
+   mensajes de texto se pagan con la billetera de tu empresa, una tarea que
+   alguien está viendo pregunta antes de enviar salvo que alguien haya pulsado
+   **Aprobar todo** en ella, y una automatización configurada para ejecutarse
+   sola envía sin preguntar.
 3. Pulsa **Activar** otra vez. Tu empresa tiene ahora una conexión de AptiveAI
    Messaging, que pertenece a la organización y no a ti, así que sigue
    funcionando si te vas.
 
-Los mensajes de texto y el correo solo están disponibles cuando AptiveAI ha
-activado ese canal. Hoy **ambos están desactivados**, y la tarjeta de la página
-Conectores dice **Aún no disponible**. Cuando un canal está desactivado, la
-página del conector lo indica y a los agentes no se les ofrece su herramienta de
-envío; cualquier envío se rechaza sin cobro. Los mensajes de texto empezarán
+**El correo funciona de inmediato.** Los mensajes de texto empiezan solos
 cuando los operadores aprueben el número de AptiveAI (consulta
-[Cómo se envían los mensajes de texto](#cómo-se-envían-los-mensajes-de-texto)).
+[Cómo se envían los mensajes de texto](#cómo-se-envían-los-mensajes-de-texto)):
+mientras tanto la página del conector indica que los mensajes de texto están
+**Aún no disponible**, a los agentes no se les ofrece la herramienta de texto, y
+un envío de texto se rechaza sin cobro.
 
 La conexión tiene su propia página, **Conectores → AptiveAI Messaging**, con
 estas secciones:
@@ -73,7 +75,7 @@ estas secciones:
 | **Estado** | Si el correo está listo y desde qué dirección envía; si los mensajes de texto están **Disponible** o **Aún no disponible**; lo gastado este mes |
 | **Correo** | El **Nombre del remitente** — el nombre en el campo De de cada correo y el inicio de cada mensaje de texto — y la **Dirección de respuesta**, adonde llegan las respuestas |
 | **Mensajes de texto** | Si los mensajes de texto están disponibles, y que salen del número de AptiveAI empezando por «AptiveAI for» y tu nombre de remitente. No hay nada que completar |
-| **Gasto** | Un **Límite mensual** opcional en dólares, y lo gastado este mes frente a él |
+| **Gasto** | Un **Límite mensual** opcional en dólares para los mensajes de texto, y lo gastado este mes frente a él. El correo está incluido y no muestra cargo |
 | **Actividad** | Cada mensaje que enviaron tus agentes |
 | **Bajas** | A quién no se le puede escribir, y por qué |
 | **Compartir** | Quién puede darles AptiveAI Messaging a sus agentes |
@@ -154,6 +156,12 @@ cincuenta.
 - El cuerpo es texto plano en un diseño sencillo, sin publicidad de AptiveAI.
 - Cada correo lleva un **enlace para darse de baja** y un encabezado de baja
   en un clic. Sin archivos adjuntos.
+- **Incluido en tu plan, hasta 250 al día.** Cada negocio puede enviar correo a
+  250 personas al día como máximo (se cuenta por destinatario; el día se
+  reinicia a medianoche UTC). Un envío que lo superaría se rechaza antes de
+  preguntar a nadie, al agente se le dice que lo intente mañana, y los
+  propietarios de la empresa reciben una notificación, como máximo una vez al
+  día.
 
 <Aside type="caution" title="Los mensajes de texto no son privados.">
   Un mensaje de texto no está cifrado de extremo a extremo. A los agentes se
@@ -165,14 +173,14 @@ cincuenta.
 
 ## Cuándo pregunta antes
 
-Cada envío se trata como un acto final: un mensaje de texto no se puede
-deshacer, y cuesta dinero.
+Un mensaje no se puede deshacer, así que un envío es una escritura que
+pregunta antes, como cualquier otra escritura de un conector.
 
 | Dónde ocurre el envío | Qué pasa |
 |---|---|
-| Una tarea que alguien está viendo | **Cada envío pregunta.** La tarjeta muestra los destinatarios (todos, plegados a partir de diez), el mensaje exactamente como llegará, el número de partes y el cargo. **Aprobar todo no cubre los envíos**: cada uno vuelve a preguntar |
+| Una tarea que alguien está viendo | **Cada envío pregunta**, hasta que alguien pulsa **Aprobar todo** en esa tarea. La tarjeta muestra los destinatarios (todos, plegados a partir de diez), el mensaje exactamente como llegará, el número de partes y el cargo («Incluido» para el correo). Después de **Aprobar todo**, los envíos siguientes de esa tarea salen sin tarjeta |
 | Una [automatización](/es/concepts/automations) **Autónoma** | El agente **envía sin preguntar**, y la transcripción registra cada envío |
-| Una automatización **Interactiva** | Se detiene en cada envío y espera, como una tarea que alguien está viendo |
+| Una automatización **Interactiva** | Se detiene en cada envío y espera, como una tarea que alguien está viendo, salvo que se haya pulsado **Aprobar todo** en esa tarea |
 | El panel **Pruébalo** del creador de agentes | **Nunca se envía ni se cobra nada.** Al agente se le dice qué habría hecho el envío: a cuántas personas, cuántas partes y cuánto costaría aproximadamente |
 | La prueba de una habilidad o un test de entrenamiento | **Nunca se envía ni se cobra nada**, sean cuales sean los cambios que permitiste al test. Al agente se le dice qué habría hecho el envío, como en el panel **Pruébalo** |
 
@@ -196,7 +204,8 @@ lista de Actividad lo muestra.
 <Aside type="caution" title="Una página web cuenta como fuente.">
   Como el texto de una página es una fuente, una página que visita un agente
   podría colar un número. Lo que limita el daño es el tope de 50 destinatarios
-  por envío, tu límite mensual, la lista de bajas, el nombre del remitente al
+  por envío, el límite de 250 correos al día, tu límite mensual para los
+  mensajes de texto, la lista de bajas, el nombre del remitente al
   inicio de cada mensaje de texto y el registro de dónde salió cada
   destinatario. Da AptiveAI Messaging a un agente que ejecuta una
   automatización Autónoma solo si te parece bien.
@@ -207,10 +216,14 @@ Un envío también se rechaza, antes de cobrar nada, cuando:
 - un destinatario está en la lista de bajas de tu empresa, o respondió STOP al
   número de AptiveAI (a cualquier negocio);
 - un número no es de EE. UU.;
-- AptiveAI Messaging está desactivado, o el canal (mensajes de texto o correo)
-  aún no está disponible;
-- el envío superaría tu límite mensual;
-- tu billetera no alcanza para pagarlo.
+- AptiveAI Messaging está desactivado, o los mensajes de texto aún no están
+  disponibles;
+- un correo superaría el límite del negocio de 250 correos al día;
+- un mensaje de texto superaría tu límite mensual, o tu billetera no alcanza
+  para pagarlo.
+
+Estas comprobaciones se hacen en cada envío, también después de **Aprobar
+todo**: solo se salta la pregunta.
 
 Si se rechaza cualquier destinatario de un lote, no se envía nada de ese lote.
 Al agente se le dice qué destinatarios fallaron y por qué, y puede volver a
@@ -218,25 +231,28 @@ enviar al resto.
 
 ## Cuánto cuesta
 
-Cada mensaje se paga con la **billetera de tu empresa** — nunca con el crédito
-de IA incluido en tu plan ni con crédito promocional. Hoy un mensaje de texto
-cuesta unos **1,8 ¢ por parte** y el correo **0,15 US$ por cada 1000
-mensajes**; el diálogo de activación y la
+**El correo está incluido en tu plan**, hasta 250 correos al día por negocio:
+sin cargo y sin necesidad de billetera. La tarjeta de aprobación y la Actividad
+lo muestran como **Incluido**.
+
+**Los mensajes de texto se pagan con la billetera de tu empresa** — nunca con el
+crédito de IA incluido en tu plan ni con crédito promocional. Hoy un mensaje de
+texto cuesta unos **1,8 ¢ por parte**; el diálogo de activación y la
 [página de precios](https://aptiveai.io/pricing) muestran siempre las cifras
 vigentes. El número gratuito en sí no te cuesta nada. Los 160 caracteres de una parte
 incluyen el comienzo «AptiveAI for ‹tu nombre de remitente›:».
 
-- **El cargo se conoce antes de que salga el mensaje**, así que un envío que
+- **El cargo de un mensaje de texto se conoce antes de que salga**, así que un envío que
   tu billetera no puede pagar se rechaza en lugar de generar una deuda. Añade
   fondos a tu billetera para volver a enviar: tener crédito de IA no basta.
   Consulta [Uso y crédito](/es/administration/usage).
-- **Un límite mensual** en la sección **Gasto** detiene los envíos cuando la
-  mensajería de este mes lo superaría.
-- Cuando se rechaza un envío por la billetera o por el límite, **los
-  propietarios de la empresa reciben una notificación**, como máximo una vez
-  al día.
-- Si el operador o el servicio de correo rechaza un mensaje de entrada, se
-  reembolsa la parte de ese destinatario. Un mensaje que se aceptó y luego no
+- **Un límite mensual** en la sección **Gasto** detiene los mensajes de texto
+  cuando los de este mes lo superarían.
+- Cuando se rechaza un envío por la billetera, por el límite mensual o por el
+  límite diario de correo, **los propietarios de la empresa reciben una
+  notificación**, como máximo una vez al día.
+- Si el operador rechaza un mensaje de texto de entrada, se reembolsa la parte
+  de ese destinatario. Un mensaje que se aceptó y luego no
   llega no se reembolsa.
 
 El gasto en mensajería aparece en su propia línea: en la tarea, junto al uso de
@@ -315,11 +331,11 @@ Lo que protege a las personas a las que escriben tus agentes, y a tu empresa:
 | Protección | Qué hace |
 |---|---|
 | **Control del propietario** | Solo un propietario de tu empresa lo activa, fija el límite mensual, agrega a la lista de bajas, lo desactiva o lo quita. La conexión pertenece a la organización, no a una persona |
-| **Una persona aprueba** | En una tarea que alguien está viendo, cada envío pregunta, y **Aprobar todo** nunca lo cubre. El panel **Pruébalo**, la prueba de una habilidad y un test de entrenamiento nunca envían. Consulta [Cuándo pregunta antes](#cuándo-pregunta-antes) |
+| **Una persona aprueba** | En una tarea que alguien está viendo, cada envío pregunta hasta que alguien pulsa **Aprobar todo** en esa tarea; las comprobaciones de abajo se hacen igual en cada envío. El panel **Pruébalo**, la prueba de una habilidad y un test de entrenamiento nunca envían. Consulta [Cuándo pregunta antes](#cuándo-pregunta-antes) |
 | **Control de destinatarios** | Un agente solo puede escribir a un número o una dirección que llegó a la tarea desde un lugar de confianza, y cada mensaje registra de dónde salió su destinatario. Consulta [A quién puede escribir un agente](#a-quién-puede-escribir-un-agente) |
-| **Límites** | Como máximo 50 destinatarios por envío, solo números de EE. UU. para los mensajes de texto, y tu límite mensual. Un envío que tu billetera no puede cubrir se rechaza antes de salir |
+| **Límites** | Como máximo 50 destinatarios por envío, 250 correos al día por negocio, solo números de EE. UU. para los mensajes de texto, y tu límite mensual para los mensajes de texto. Un mensaje de texto que tu billetera no puede cubrir se rechaza antes de salir |
 | **Bajas** | Una respuesta STOP detiene todos los mensajes del número de AptiveAI a esa persona, para todos los negocios y para los avisos propios de AptiveAI. Una baja por correo, un rebote o un aviso de spam bloquea esa dirección de correo para todos los agentes de tu empresa, y nadie puede sacar una dirección de una lista. La página para darse de baja pide al destinatario que confirme, así que un escáner de correo no puede dar de baja a nadie. Una respuesta **HELP** recibe el contacto de soporte de AptiveAI, dev@aptiveai.io |
-| **Identidad del remitente** | Cada mensaje de texto sale del único número gratuito de AptiveAI, +1 844-571-9591, que AptiveAI registra ante los operadores de EE. UU. antes de que empiecen los mensajes, y empieza con «AptiveAI for» y tu nombre de remitente. El correo sale del dominio de envío de AptiveAI, `notify.aptiveai.io`, separado del correo de cuenta de AptiveAI y autenticado con SPF, DKIM y DMARC |
+| **Identidad del remitente** | Cada mensaje de texto sale del único número gratuito de AptiveAI, +1 844-571-9591, que AptiveAI registra ante los operadores de EE. UU. antes de que empiecen los mensajes, y empieza con «AptiveAI for» y tu nombre de remitente. El correo sale del dominio de envío de AptiveAI, `notify.aptiveai.io`, a través de Amazon SES, separado del correo de cuenta de AptiveAI (que sale a través de Azure Communication Services), y autenticado con SPF, DKIM y DMARC |
 | **Actualizaciones firmadas** | Las actualizaciones de entrega y las respuestas STOP del servicio de entrega solo se aceptan si el servicio las firmó |
 | **Cifrado en tránsito** | Los mensajes viajan cifrados entre AptiveAI y el servicio de entrega. Un mensaje de texto deja de estar cifrado cuando llega al operador móvil, así que limita los mensajes a lo que el destinatario necesita para actuar |
 | **Registro de cada mensaje** | **Actividad** guarda el destinatario, de dónde salió, el mensaje tal como se envió, si lo aprobó una persona o lo envió una automatización, su estado y su cargo. Las contraseñas y los códigos enviados a una tarea se ocultan en la copia guardada |
