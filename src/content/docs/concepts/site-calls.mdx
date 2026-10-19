@@ -32,8 +32,9 @@ to 20 calls.
 
 When a task uses one, the request goes out **from the agent's browser tab on
 that site**, as whoever is signed in there — the same request the site's page
-would have sent. The site has to be open in that tab; a call to any other site
-is not sent.
+would have sent. The site has to be open in that tab. A call goes only to the
+site itself or to [an address the site's own page calls](#sites-whose-data-lives-on-another-address);
+a call to any other site is not sent.
 
 Calls come in two kinds:
 
@@ -150,6 +151,7 @@ What each part means:
 | `url` | The address, with `{id}`-style blanks the agent fills in. In a browser workflow's tool it can start with one of the workflow's variables, such as `{site_url}` |
 | `inputSchema` | What the agent must supply, and the rules each value must meet: a pattern, a list of allowed values, a maximum length. A value that breaks a rule is not sent |
 | `body` | For a change, the fields sent, as `json` or as a `form`. An optional value the agent leaves out is left out of the request too |
+| `page` | Only for a site whose data lives on another address: the address of the page the call runs from, such as `{site_url}`. See [Sites whose data lives on another address](#sites-whose-data-lives-on-another-address) |
 | `auth.borrow` | The sign-in headers the site's own page sends, such as `x-csrf-token`. Their values are borrowed from the page at the moment of the call — never written in the file |
 | `returns` | `json` (the default), `text`, or `file` — a file lands in the task's files |
 | `readOnly` | Only on a `POST` the site uses to search or list: `true` makes it a read. Every place that shows the call says *This POST is treated as a read, so it runs without a card* |
@@ -159,6 +161,62 @@ What each part means:
 
 A call the agent wrote also carries a record of the request it was matched with;
 you never write that part yourself.
+
+## Sites whose data lives on another address
+
+Many web applications sign you in at one address and fetch their data from
+another: the page you use is `app.example.com`, while its lists and records come
+from `api.example.com`. The page signs in once, keeps a sign-in token, and sends
+it with every request to the data address — usually as an `Authorization:
+Bearer …` header, often with a company or language header beside it.
+
+A call for such a site names the page it runs from with `page`:
+
+```json
+{
+  "name": "list_open_orders",
+  "description": "Every open order, newest first.",
+  "method": "GET",
+  "url": "{api_url}/orders?status=open",
+  "page": "{site_url}",
+  "auth": { "borrow": ["authorization", "x-tenant-id"] },
+  "returns": "json"
+}
+```
+
+What happens when the agent uses it:
+
+1. The person (or the agent, where it may) signs in on the page at `{site_url}`,
+   in the agent's browser. The page then calls its data address the way it
+   always does.
+2. The agent sends the call **from that page's tab**, to `{api_url}`. The
+   `Authorization` and `x-tenant-id` values are borrowed from the page's own
+   most recent request to that address — the token is never stored, never
+   written into the skill, and never shown to the agent.
+3. The site's own rules for which pages may call it (its CORS settings) apply as
+   for the page itself. If the site does not let its page make the call, the
+   agent is told so and does the step on the page.
+
+Three rules keep this safe:
+
+- **Only an address the page itself calls.** A call is sent to another address
+  only if the page in that tab has already called it during the computer's
+  session. The agent cannot point a signed-in page at an address of its own
+  choosing. Until the page has called it, the transcript says *the page has not
+  called that address from this tab*.
+- **A header must have been seen.** If the page has not yet sent a header a call
+  borrows, nothing is sent: *The page has not sent authorization to
+  api.example.com from this tab yet. Use the site's page once (or reload it),
+  then check again.*
+- **Everything else is unchanged.** Reads run at once, changes ask on a card,
+  the record must have been seen in the task, and every answer is cleaned of
+  sign-in values before the agent reads it.
+
+In a [browser workflow](/concepts/browser-workflows), declare both addresses as
+settings — `site_url` for the page and `api_url` for the data address — and the
+calls use them as `{site_url}` and `{api_url}`. Short headers that are not
+secrets, such as a tenant or language id, are sent as they are; a short
+sign-in token is refused, because it could not be kept out of the answer.
 
 ## What keeps them safe
 
@@ -179,7 +237,8 @@ wrong, is not sent.
 **Read before and after.** A change call with `verify` reads the record before
 and after each change. If anything changed beyond what the call is meant to
 change, the transcript says *changed more than expected* and the rest of the
-batch stops.
+batch stops. Fields every change touches on its own — `updatedAt`, `version`,
+`etag` and the like — are not counted.
 
 **Protected fields.** The fields in `forbiddenFields` are never sent, and the
 read-back reports a change to one.

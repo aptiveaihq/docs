@@ -35,7 +35,9 @@ habilidad tiene hasta 20 llamadas.
 Cuando una tarea usa una, la solicitud sale **desde la pestaña del navegador
 del agente en ese sitio**, en nombre de quien tenga la sesión iniciada ahí: la
 misma solicitud que habría enviado la página del sitio. El sitio tiene que
-estar abierto en esa pestaña; una llamada a cualquier otro sitio no se envía.
+estar abierto en esa pestaña. Una llamada va solo al propio sitio o a
+[una dirección a la que llama la propia página del sitio](#sitios-cuyos-datos-viven-en-otra-dirección); una llamada a
+cualquier otro sitio no se envía.
 
 Hay dos tipos de llamadas:
 
@@ -159,6 +161,7 @@ Qué significa cada parte:
 | `url` | La dirección, con espacios en blanco del tipo `{id}` que completa el agente. En la herramienta de un flujo de navegador puede empezar con una de las variables del flujo, como `{site_url}` |
 | `inputSchema` | Lo que el agente debe proporcionar y las reglas que debe cumplir cada valor: un patrón, una lista de valores permitidos, una longitud máxima. Un valor que rompe una regla no se envía |
 | `body` | Para un cambio, los campos que se envían, como `json` o como formulario (`form`). Un valor opcional que el agente no da tampoco se incluye en la solicitud |
+| `page` | Solo para un sitio cuyos datos viven en otra dirección: la dirección de la página desde la que se envía la llamada, como `{site_url}`. Consulta [Sitios cuyos datos viven en otra dirección](#sitios-cuyos-datos-viven-en-otra-dirección) |
 | `auth.borrow` | Los encabezados de inicio de sesión que envía la propia página del sitio, como `x-csrf-token`. Sus valores se toman prestados de la página en el momento de la llamada; nunca se escriben en el archivo |
 | `returns` | `json` (el valor predeterminado), `text` o `file`; un archivo llega a los archivos de la tarea |
 | `readOnly` | Solo en un `POST` que el sitio usa para buscar o listar: `true` lo convierte en lectura. Cada lugar que muestra la llamada dice *Este POST se trata como una lectura, así que se ejecuta sin tarjeta* |
@@ -168,6 +171,65 @@ Qué significa cada parte:
 
 Una llamada que escribió el agente también lleva un registro de la solicitud con
 la que se comparó; esa parte nunca la escribes tú.
+
+## Sitios cuyos datos viven en otra dirección
+
+Muchas aplicaciones web inician tu sesión en una dirección y traen sus datos de
+otra: la página que usas es `app.example.com`, mientras que sus listas y
+registros vienen de `api.example.com`. La página inicia sesión una vez, guarda
+un token de sesión y lo envía con cada solicitud a la dirección de los datos,
+normalmente como un encabezado `Authorization: Bearer …`, a menudo junto a un
+encabezado de empresa o de idioma.
+
+Una llamada para un sitio así indica con `page` la página desde la que se envía:
+
+```json
+{
+  "name": "list_open_orders",
+  "description": "Every open order, newest first.",
+  "method": "GET",
+  "url": "{api_url}/orders?status=open",
+  "page": "{site_url}",
+  "auth": { "borrow": ["authorization", "x-tenant-id"] },
+  "returns": "json"
+}
+```
+
+Qué pasa cuando el agente la usa:
+
+1. La persona (o el agente, donde puede hacerlo) inicia sesión en la página de
+   `{site_url}`, en el navegador del agente. La página llama entonces a su
+   dirección de datos como siempre.
+2. El agente envía la llamada **desde la pestaña de esa página**, a `{api_url}`.
+   Los valores de `Authorization` y `x-tenant-id` se toman prestados de la
+   solicitud más reciente de la propia página a esa dirección: el token nunca se
+   guarda, nunca se escribe en la habilidad y nunca se le muestra al agente.
+3. Las reglas del propio sitio sobre qué páginas pueden llamarlo (su
+   configuración CORS) se aplican igual que para la página. Si el sitio no deja
+   que su página haga la llamada, se le dice al agente y hace el paso en la
+   página.
+
+Tres reglas lo mantienen seguro:
+
+- **Solo una dirección a la que llama la propia página.** Una llamada se envía a
+  otra dirección solo si la página de esa pestaña ya la llamó durante la sesión
+  del ordenador. El agente no puede dirigir una página con sesión iniciada a una
+  dirección que elija él. Hasta que la página la haya llamado, la transcripción
+  dice *la página no ha llamado a esa dirección desde esta pestaña*.
+- **El encabezado tiene que haberse visto.** Si la página todavía no envió un
+  encabezado que la llamada toma prestado, no se envía nada: *The page has not
+  sent authorization to api.example.com from this tab yet. Use the site's page
+  once (or reload it), then check again.*
+- **Todo lo demás no cambia.** Las lecturas se hacen al momento, los cambios
+  piden permiso en una tarjeta, el registro tiene que haberse visto en la tarea
+  y cada respuesta se limpia de valores de sesión antes de que el agente la lea.
+
+En un [flujo de navegador](/es/concepts/browser-workflows), declara las dos
+direcciones como ajustes —`site_url` para la página y `api_url` para la
+dirección de los datos— y las llamadas las usan como `{site_url}` y
+`{api_url}`. Los encabezados cortos que no son secretos, como un id de empresa o
+de idioma, se envían tal cual; un token de sesión corto se rechaza, porque no se
+podría mantener fuera de la respuesta.
 
 ## Qué las hace seguras
 
@@ -189,7 +251,8 @@ que el agente inventó, o que copió mal, no se envía.
 **Lectura antes y después.** Una llamada de cambio con `verify` lee el registro
 antes y después de cada cambio. Si cambió algo más de lo que la llamada debe
 cambiar, la transcripción dice *cambió más de lo esperado* y el resto del lote
-se detiene.
+se detiene. Los campos que todo cambio toca por sí solo —`updatedAt`,
+`version`, `etag` y similares— no cuentan.
 
 **Campos protegidos.** Los campos de `forbiddenFields` nunca se envían, y la
 lectura posterior avisa si alguno cambió.
