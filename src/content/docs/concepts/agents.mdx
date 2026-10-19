@@ -384,7 +384,7 @@ and the session carries into their other tasks.
 | **Ask before anything irreversible** | Sending, deleting, purchasing or granting access stops and waits for your approval |
 | **Can analyse files** | Lets the agent read and analyse the files on its computer — see [Files the agent makes](/concepts/files#files-the-agent-makes) |
 | **Approval before analysing** | Asks before it reads the files on a task's computer |
-| **Only act during set hours** | Between **From** and **Until** only; outside that window the agent waits rather than starting |
+| **Only act during set hours** | Between **From** and **Until** only. Outside that window, new work for the agent (a new task, a message, an answer, or a task another task starts) is refused, with the time it opens again. Automations and work already running are not stopped |
 
 Guardrails are enforced by the task itself, whatever the instructions say —
 they are not a request to the model.
