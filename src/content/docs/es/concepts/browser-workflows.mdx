@@ -27,6 +27,38 @@ Un mismo flujo de navegador puede estar detrás de muchos conectores. Quien lo
 crea escribe los pasos; cada empresa que lo usa solo indica cuál es su
 dirección del sitio (u otro valor).
 
+## Organizar un flujo de navegador
+
+Un flujo de navegador funciona mejor cuando refleja cómo se usa el sitio:
+
+- **Un flujo de navegador por sitio.** Todo lo que un agente hace en un sitio
+  web —un inicio de sesión, un conjunto de ajustes de direcciones— va en un
+  solo flujo. Cada empresa que usa el sitio crea un conector a partir de él y
+  completa sus direcciones una vez. Dos flujos para el mismo sitio son dos
+  conjuntos de ajustes que mantener al día, y dos conectores que asignar.
+- **Dentro, una herramienta por área de trabajo.** Agrupa los trabajos como la
+  gente habla de ellos —**Facturas**, **Cargas**, **Clientes**— en lugar de una
+  herramienta por clic o una herramienta para todo. Un agente carga solo la
+  herramienta que necesita una tarea, así que una herramienta enfocada mantiene
+  sus instrucciones cortas y la elección clara.
+- **Unas pocas [llamadas al sitio](/es/concepts/site-calls) por herramienta.**
+  Cada herramienta lleva las llamadas de su área; para **Facturas**, por
+  ejemplo, `list_invoices`, `get_invoice` y `mark_invoice_paid`. Una
+  herramienta tiene hasta 20.
+- **Instrucciones que dicen cuándo usar cada llamada.** Las instrucciones de la
+  herramienta son lo que lee el agente. Nombra cada llamada, di para qué
+  pregunta o paso es y qué hacer si se rechaza: *Para encontrar las facturas de
+  un rango de fechas, llama a «list_invoices» con el rango; una respuesta larga
+  llega como archivo: cuéntala o súmala con un script que lea ese archivo. Para
+  marcar facturas como pagadas, llama a «mark_invoice_paid» una vez con todas
+  las facturas (hasta 3 por llamada). Si una llamada se rechaza o falla, haz el
+  paso en la página.*
+- **Las direcciones son variables, nunca texto dentro de una herramienta.** La
+  dirección del sitio, y cada dirección aparte de la que sus páginas traen
+  datos, es una variable de tipo **Dirección web**; todo lo demás que cambia de
+  una empresa a otra —un código de empresa, una región— es una variable de tipo
+  **Texto**.
+
 ## Crear un flujo de navegador
 
 Abre **Conectores**. En **Añadir un conector**, haz clic en el mosaico **Flujo
@@ -68,7 +100,24 @@ Todo lo que cambia de una empresa a otra va en una variable, no en una
 herramienta. Nómbrala entre llaves dentro de las instrucciones de una
 herramienta — `{site_url}` — y el valor propio de cada conector se completa
 cuando el agente carga la herramienta. Una herramienta escrita así funciona
-para todas las empresas sin copiarse.
+para todas las empresas sin copiarse. Una variable obligatoria sin valor impide
+que la herramienta se cargue, así que el agente nunca lee un espacio en blanco.
+
+Una variable es de uno de dos tipos:
+
+| Tipo | Para qué | Qué se comprueba |
+|---|---|---|
+| **Dirección web** | El sitio que abre el agente (`site_url`), y cada dirección aparte de la que sus páginas traen datos (`api_url`, `billing_url`) | El valor de un conector tiene que ser una dirección `http://` o `https://` |
+| **Texto** | Todo lo demás: un código de empresa, una región, un departamento | Nada más que **Obligatorio** |
+
+Una [llamada al sitio](/es/concepts/site-calls#direcciones-y-ajustes) puede
+empezar su dirección con una variable de tipo **Dirección web**:
+`{site_url}/api/tickets/{id}`. Ese valor tiene que ser entonces solo la
+dirección del sitio, como `https://portal.example.com`: sin ruta, consulta ni
+nombre de usuario. Si el sitio vive bajo una ruta, la ruta va en la llamada.
+Solo las variables de tipo **Dirección web** cuentan como direcciones del flujo
+cuando una llamada
+[toma prestados encabezados de inicio de sesión entre ellas](/es/concepts/site-calls#un-sitio-varias-direcciones-de-datos).
 
 ### Herramientas
 
@@ -97,8 +146,10 @@ una tarea.
 
 Una herramienta también puede llevar [llamadas al sitio](/es/concepts/site-calls):
 las solicitudes del propio sitio, enviadas desde el navegador del agente con la
-sesión iniciada en lugar de hacer clic en la página. La dirección de una llamada
-puede empezar con una de las variables del flujo, como `{site_url}`, para que
+sesión iniciada en lugar de hacer clic en la página. Son archivos dentro de
+`calls/` en los **Scripts** de la herramienta, y las instrucciones de la
+herramienta dicen cuándo usar cada uno. La dirección de una llamada puede
+empezar con una de las variables del flujo, como `{site_url}`, para que
 funcione con el sitio de cada empresa.
 
 ### Generar con el agente
@@ -108,8 +159,24 @@ pestaña **Agente**: *Dile al agente con qué sitio web trabajar. Trabaja contig
 en un navegador y propone las herramientas cuando estés listo.* Exploren el
 sitio juntos, muéstrale qué hacer con **Grabar** si quieres, y pídele que
 proponga las herramientas. El agente también puede convertir pasos en
-[llamadas al sitio](/es/concepts/site-calls), comprobando cada una contra lo que
-se vio enviar al sitio.
+[llamadas al sitio](/es/concepts/site-calls):
+
+- **Encuentra la solicitud.** Mientras usan el sitio juntos, ve las solicitudes
+  que envían las páginas del sitio —sus direcciones, los nombres de sus campos
+  y de sus encabezados y la forma de cada respuesta, nunca los valores— y solo
+  toma una que hizo la propia página. Para un cambio, lee las reglas del propio
+  formulario del sitio sin enviarlo.
+- **Comprueba la llamada contra el sitio** antes de proponerla: la página tiene
+  que haber hecho esa solicitud en la sesión, una lectura se ejecuta una vez de
+  verdad y un cambio se arma y se muestra, pero no se envía, salvo que nombres
+  un registro que se puede cambiar sin riesgo y apruebes ese único cambio de
+  prueba en una tarjeta.
+- **La comprobación es del contenido exacto.** Una llamada que cambia después,
+  en la tarjeta o por el agente, se vuelve a comprobar antes de poder
+  guardarse.
+
+Cómo funciona, y el archivo de una llamada campo por campo, está en
+[Llamadas al sitio](/es/concepts/site-calls#cómo-se-crean-las-llamadas-al-sitio).
 
 No se guarda nada hasta que apruebes. La propuesta del agente llega como una
 tarjeta con cada herramienta — las nuevas marcadas, las existentes tal como
@@ -122,10 +189,13 @@ las herramientas nuevas desde su siguiente tarea.
 - **Una sesión por flujo.** Si recargas la página, se vuelve a conectar a ella.
   Si la inició otra persona, puedes seguirla, pero esa persona trabaja en ella y
   la termina.
+- **Tiene su propio navegador.** La sesión trabaja en un navegador reservado
+  para este flujo, no en el que usan tus propias tareas.
 - **El inicio de sesión queda fuera del flujo.** Cuando el sitio pide iniciar
   sesión, el agente usa un inicio de sesión que ya tienes guardado
   ([Inicios de sesión personales](/es/reference/settings/sign-ins)); ninguna
-  contraseña se escribe en una herramienta.
+  contraseña se escribe en una herramienta. Consulta
+  [Iniciar sesión en el sitio](#iniciar-sesión-en-el-sitio).
 - **Nueva conversación** termina la sesión y la conserva como una tarea, que
   puedes volver a abrir desde **Historial de sesiones**. Las herramientas que
   aprobaste quedan guardadas; una propuesta que no aprobaste, no.
@@ -187,6 +257,41 @@ Si un flujo gana una variable obligatoria, todos los conectores creados a partir
 de él muestran un error que nombra el valor que falta hasta que su propietario
 lo completa, y mientras tanto las tareas no reciben ninguna de sus herramientas.
 
+**Lo que leen sus llamadas.** Una llamada que lee mucho —un mes de facturas,
+miles de filas— guarda su respuesta como archivo en los archivos de la tarea,
+en **Artefactos del agente**. El agente la cuenta y la suma con un script que
+lee todas las filas, y tú puedes abrirla y descargarla durante una hora desde
+que se obtuvo. Consulta [Respuestas largas](/es/concepts/site-calls#respuestas-largas).
+
+## Iniciar sesión en el sitio
+
+Un flujo de navegador nunca guarda una contraseña. Cuando una tarea llega a la
+página de inicio de sesión del sitio, el agente inicia sesión con un inicio de
+sesión ya guardado —uno de los
+[inicios de sesión personales](/es/reference/settings/sign-ins) de la persona
+que inició la tarea, o uno de los
+[inicios de sesión propios](/es/concepts/agents#inicios-de-sesión) del agente—
+y las instrucciones de la herramienta solo lo dicen: *Inicia sesión en
+`{site_url}` con el inicio de sesión guardado.*
+
+- **Un único inicio de sesión que coincide se usa sin preguntar**, la primera
+  vez en una tarea. Si podrían servir varios, o en un segundo intento en el
+  mismo sitio, el agente pregunta. En una automatización, un inicio de sesión
+  que falló no se vuelve a intentar, para no bloquear la cuenta.
+- **Enviarlo no necesita tarjeta de aprobación** cuando el agente acaba de
+  completar el nombre de usuario y la contraseña de ese inicio de sesión en un
+  mismo formulario de inicio de sesión. Un formulario que parece una firma o un
+  pago, un reintento después de un inicio de sesión fallido y un inicio de
+  sesión repartido en dos páginas (nombre de usuario, **Siguiente** y luego la
+  contraseña) siguen preguntando. El detalle está en
+  [Enviar el inicio de sesión](/es/reference/settings/sign-ins#enviar-el-inicio-de-sesión).
+- **Un código de un solo uso nunca se guarda.** Cuando el sitio pide uno, el
+  agente te lo pide.
+- **Las llamadas siguen a la página.** Una vez iniciada la sesión en la página,
+  las llamadas al sitio de la herramienta toman prestados los encabezados de
+  inicio de sesión que envía; consulta
+  [Sitios cuyos datos viven en otra dirección](/es/concepts/site-calls#sitios-cuyos-datos-viven-en-otra-dirección).
+
 ## Quién puede hacer qué
 
 | Acción | Quién |
@@ -227,6 +332,7 @@ pregunta dice cuántos conectores están creados a partir de él.
 
 <CardGrid>
   <LinkCard title="Conectores" href="/es/concepts/connectors" description="Todos los tipos de conector, la aprobación de escrituras y quién puede cambiar qué." />
+  <LinkCard title="Llamadas al sitio" href="/es/concepts/site-calls" description="Las solicitudes del propio sitio que llevan las herramientas de un flujo: cómo se crean, se comprueban y se mantienen seguras." />
   <LinkCard title="Habilidades" href="/es/concepts/skills" description="El mismo formulario que usan las herramientas de un flujo de navegador." />
   <LinkCard title="Inicios de sesión personales" href="/es/reference/settings/sign-ins" description="Dónde encuentra el agente tu acceso a un sitio." />
 </CardGrid>

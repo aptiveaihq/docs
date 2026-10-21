@@ -27,6 +27,34 @@ One browser workflow can sit behind many connectors. The person who builds it
 writes the steps; each company that uses it only says which site address (or
 other value) is theirs.
 
+## Organizing a browser workflow
+
+A browser workflow works best when it mirrors how people use the site:
+
+- **One browser workflow per site.** Everything an agent does on one website —
+  one sign-in, one set of address settings — belongs in one workflow. Each
+  company that uses the site makes one connector from it and fills in its
+  addresses once. Two workflows for the same site mean two sets of settings to
+  keep in step, and two connectors to grant.
+- **Inside it, one tool per area of work.** Group the jobs the way people talk
+  about them — **Invoices**, **Loads**, **Customers** — rather than one tool
+  per click or one tool for everything. An agent loads only the tool a task
+  needs, so a focused tool keeps its instructions short and the choice obvious.
+- **A handful of [site calls](/concepts/site-calls) per tool.** Each tool
+  carries the calls for its area — for **Invoices**, perhaps `list_invoices`,
+  `get_invoice` and `mark_invoice_paid`. A tool holds up to 20.
+- **Instructions that say when to use each call.** The tool's instructions are
+  what the agent reads. Name each call, say which question or step it is for,
+  and what to do when it is refused: *To find the invoices of a date range,
+  call “list_invoices” with the range; a long answer comes back as a file —
+  count or total it with a script that reads that file. To mark invoices paid,
+  call “mark_invoice_paid” once with every invoice (up to 3 per call). If a
+  call is refused or fails, do the step on the page.*
+- **Addresses are variables, never text in a tool.** The site's address, and
+  each separate address its pages fetch data from, is a **Web address**
+  variable; anything else that differs between companies — a company code, a
+  region — is a **Text** variable.
+
 ## Building a browser workflow
 
 Open **Connectors**. Under **Add a connector**, click the **Browser workflow**
@@ -63,7 +91,24 @@ saves it in one go; if the create is refused, nothing you entered is lost.
 Anything that differs from one company to the next belongs in a variable, not
 in a tool. Name it in braces inside a tool's instructions — `{site_url}` — and
 each connector's own value is filled in when the agent loads the tool. A tool
-written this way works for every company without being copied.
+written this way works for every company without being copied. A required
+variable with no value stops the tool from loading, so the agent never reads a
+blank.
+
+A variable has one of two kinds:
+
+| Kind | Use it for | What is checked |
+|---|---|---|
+| **Web address** | The site the agent opens (`site_url`), and each separate address its pages fetch data from (`api_url`, `billing_url`) | A connector's value must be an `http://` or `https://` address |
+| **Text** | Anything else: a company code, a region, a department | Nothing beyond **Required** |
+
+A [site call](/concepts/site-calls#addresses-and-settings) can start its
+address with a **Web address** variable — `{site_url}/api/tickets/{id}`. That
+value must then be the site's address alone, such as
+`https://portal.example.com`: no path, query or user name. When the site lives
+under a path, the path goes in the call. Only **Web address** variables count
+as the workflow's addresses when a call
+[borrows sign-in headers across them](/concepts/site-calls#one-site-several-data-addresses).
 
 ### Tools
 
@@ -90,8 +135,10 @@ A browser workflow's tools are theirs alone: they do not appear on the
 
 A tool can also carry [site calls](/concepts/site-calls) — the site's own
 requests, sent from the agent's signed-in browser instead of clicking through
-the page. A call's address can start with one of the workflow's variables, such
-as `{site_url}`, so it works for every company's site.
+the page. They are files under `calls/` in the tool's **Scripts**, and the
+tool's instructions say when to use each one. A call's address can start with
+one of the workflow's variables, such as `{site_url}`, so it works for every
+company's site.
 
 ### Generate with agent
 
@@ -100,8 +147,22 @@ You do not have to write the steps by hand. **Generate with agent** opens the
 browser with you and proposes the tools when you are ready.* Explore the site
 together, show it what to do with **Record** if you like, then ask it to
 propose the tools. The agent can also turn steps into
-[site calls](/concepts/site-calls), checking each one against what the site was
-seen sending.
+[site calls](/concepts/site-calls):
+
+- **It finds the request.** While you use the site together, it sees the
+  requests the site's pages send — their addresses, field names, header names
+  and the shape of each answer, never the values — and takes only one the
+  page itself made. For a change, it reads the rules of the site's own form
+  without submitting it.
+- **It checks the call against the site** before proposing it: the page must
+  have made that request in the session, a read runs once for real, and a
+  change is built and shown but not sent — unless you name a record that is
+  safe to change, and approve that one test change on a card.
+- **The check is of the exact content.** A call changed afterwards, on the
+  card or by the agent, is checked again before it can be saved.
+
+How that works, and the call file field by field, is in
+[Site calls](/concepts/site-calls#how-site-calls-are-made).
 
 Nothing is saved until you approve. The agent's proposal arrives as a card
 listing each tool — new ones marked, existing ones left as they are — and
@@ -113,10 +174,12 @@ tools from its next task.
   follows the same rules as one when an allowance is used up.
 - **One session per workflow.** A reload reattaches to it. If someone else
   started it you can follow along, but they work in it and end it.
+- **It has a browser of its own.** The session works in a browser kept for
+  this workflow, not in the one your own tasks use.
 - **Signing in stays out of the workflow.** When the site needs a login, the
   agent uses a sign-in already stored for you
   ([Personal sign-ins](/reference/settings/sign-ins)); no password is written
-  into a tool.
+  into a tool. See [Signing in to the site](#signing-in-to-the-site).
 - **New conversation** ends the session and keeps it as a task, which you can
   open again from **Session history**. Tools you approved stay saved; a
   proposal you did not approve does not.
@@ -174,6 +237,37 @@ If a workflow gains a required variable, every connector made from it shows an
 error naming the missing value until its owner fills it in, and tasks get none
 of its tools meanwhile.
 
+**What its calls read.** A call that reads a lot — a month of invoices,
+thousands of rows — keeps its answer as a file in the task's files, under
+**Agent's artifacts**. The agent counts and totals it with a script that reads
+every row, and you can open and download it for an hour after it was fetched.
+See [Long answers](/concepts/site-calls#long-answers).
+
+## Signing in to the site
+
+A browser workflow never holds a password. When a task reaches the site's
+sign-in page, the agent signs in with a sign-in already stored — one of the
+[personal sign-ins](/reference/settings/sign-ins) of the person who started the
+task, or one of the agent's [own sign-ins](/concepts/agents#sign-ins) — and the
+tool's instructions only say so: *Sign in to `{site_url}` with the stored
+sign-in.*
+
+- **One matching sign-in is used without asking**, the first time in a task.
+  With several that could match, or for a second attempt on the same site, the
+  agent asks. On an automation a failed sign-in is not tried again, so the
+  account is not locked.
+- **Sending it needs no approval card** when the agent has just filled both
+  the user name and the password of that sign-in into one sign-in form. A form
+  that looks like a signature or a payment, a retry after a failed sign-in,
+  and a sign-in split over two pages (user name, **Next**, then the password)
+  still ask. The detail is in
+  [Sending the sign-in](/reference/settings/sign-ins#sending-the-sign-in).
+- **A one-time code is never stored.** When the site asks for one, the agent
+  asks you.
+- **Calls follow the page.** Once the page is signed in, the tool's site calls
+  borrow the sign-in headers it sends; see
+  [Sites whose data lives on another address](/concepts/site-calls#sites-whose-data-lives-on-another-address).
+
 ## Who can do what
 
 | Action | Who |
@@ -212,6 +306,7 @@ many connectors are made from it.
 
 <CardGrid>
   <LinkCard title="Connectors" href="/concepts/connectors" description="Every kind of connector, approval of writes, and who may change what." />
+  <LinkCard title="Site calls" href="/concepts/site-calls" description="The site's own requests, carried by a workflow's tools: how they are made, checked and kept safe." />
   <LinkCard title="Skills" href="/concepts/skills" description="The same form a browser workflow's tools use." />
   <LinkCard title="Personal sign-ins" href="/reference/settings/sign-ins" description="Where the agent finds your login for a site." />
 </CardGrid>

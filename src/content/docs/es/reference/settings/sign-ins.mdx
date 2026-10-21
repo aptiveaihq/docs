@@ -58,12 +58,50 @@ detalle; en resumen:
 | **Lo que ve el agente** | El nombre del inicio de sesión, sus sitios y un id — nunca el nombre de usuario ni la contraseña |
 | **Dónde se puede escribir** | Solo en un campo de uno de sus sitios `https` exactos, y una contraseña solo en un cuadro de contraseña. AptiveAI Agents comprueba ambas cosas antes de escribir |
 | **Lo que se le dice al agente** | Que el campo se llenó — nunca el valor. El texto de la página que lo mostraría se le oculta al agente. Las capturas de pantalla no |
-| **Envío** | Llenar un inicio de sesión nunca envía el formulario por sí solo |
+| **Envío** | Llenar un inicio de sesión nunca envía el formulario por sí solo; consulta [Enviar el inicio de sesión](#enviar-el-inicio-de-sesión) |
 | **El navegador** | El navegador del agente no guarda contraseñas |
 | **Cambios** | Agregar, cambiar o eliminar un inicio de sesión queda registrado |
 
 Si ningún inicio de sesión guardado coincide con el sitio que tiene delante, o si
-podría servir más de uno, el agente te pregunta qué hacer.
+podría servir más de uno, el agente te pregunta qué hacer. Cuando coincide
+exactamente uno, el agente lo usa sin preguntar la primera vez que inicia sesión
+en ese sitio en una tarea, y la transcripción lo indica; un segundo intento en
+el mismo sitio pregunta antes. En una automatización, un inicio de sesión que no
+funcionó no se vuelve a intentar, para no bloquear la cuenta.
+
+## Enviar el inicio de sesión
+
+Llenar un inicio de sesión no lo envía: después, el agente hace clic en el botón
+de inicio de sesión del formulario o pulsa Intro. Cuando el agente
+[pregunta antes de cualquier acción irreversible](/es/concepts/agents#límites-de-seguridad),
+ese único paso **no necesita tarjeta de aprobación** si el agente acaba de
+llenar **tanto** el nombre de usuario **como** la contraseña de un inicio de
+sesión guardado en un mismo formulario de inicio de sesión de la página. La
+transcripción dice *Envió el inicio de sesión guardado que acababa de completar
+en esta página, sin preguntar — “‹botón›”.*
+
+El envío sigue esperando tu aprobación cuando:
+
+- **El formulario parece otra cosa que un inicio de sesión**: una firma, un
+  pago, una aprobación, una transferencia, una liberación. Un cuadro de firma
+  electrónica que pide tu contraseña conserva su tarjeta.
+- **Es un reintento.** Después de un inicio de sesión que no funcionó, volver a
+  enviarlo en la misma página de inicio de sesión pregunta.
+- **El inicio de sesión está repartido en dos páginas**: el nombre de usuario,
+  **Siguiente** y luego la contraseña en la página siguiente, como en las
+  páginas de inicio de sesión de Microsoft y Google. Ahí el clic final sigue
+  preguntando.
+- **El agente hizo otra cosa entre medias.** Cualquier cosa que no sea leer la
+  página, o escribir en otro lugar, entre llenar el inicio de sesión y enviarlo
+  hace que vuelva la tarjeta.
+- **Pulsa Intro en un formulario con otros botones**, como **Cancelar** o
+  **Enviar código**. Hacer clic en el botón de inicio de sesión del formulario
+  no se ve afectado.
+
+Nada más cambia: solo el llenado que hace el propio agente de un inicio de
+sesión guardado abre esta excepción, solo para el paso que lo envía, y
+**Aprobar todo** y las automatizaciones que se ejecutan solas funcionan como
+antes.
 
 ## Los tuyos y los del agente
 

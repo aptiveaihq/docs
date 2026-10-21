@@ -1,6 +1,6 @@
 ---
 title: Llamadas al sitio
-description: Una habilidad puede llevar las solicitudes que envían las propias páginas de un sitio web, para que el agente haga un paso con una sola llamada desde su navegador con la sesión iniciada, en lugar de muchos clics. Cómo se crean, un ejemplo, qué las hace seguras y sus límites.
+description: Una habilidad puede llevar las solicitudes que envían las propias páginas de un sitio web, para que el agente haga un paso con una sola llamada desde su navegador con la sesión iniciada, en lugar de muchos clics. Cómo se crean y se comprueban, el archivo de una llamada campo por campo, los sitios cuyos datos viven en otras direcciones, las respuestas largas que se guardan como archivo, qué las hace seguras, qué significa cada mensaje y sus límites.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -17,6 +17,12 @@ Una habilidad con llamadas al sitio sigue teniendo sus pasos de siempre. Cada
 vez que una llamada no se puede usar —el sitio la rechaza, el sitio cambió, el
 espacio de trabajo no permite llamadas— el agente hace ese paso en la página,
 como lo ha hecho siempre.
+
+Las llamadas al sitio suelen formar parte de un
+[flujo de navegador](/es/concepts/browser-workflows): un conector para un sitio
+web cuyas herramientas llevan, cada una, las llamadas de un área de trabajo.
+Cómo organizarlo está en
+[Organizar un flujo de navegador](/es/concepts/browser-workflows#organizar-un-flujo-de-navegador).
 
 <Aside type="note" title="Las llamadas al sitio necesitan una computadora actualizada.">
   Las llamadas al sitio llegan con una actualización de las computadoras en las
@@ -36,8 +42,8 @@ Cuando una tarea usa una, la solicitud sale **desde la pestaña del navegador
 del agente en ese sitio**, en nombre de quien tenga la sesión iniciada ahí: la
 misma solicitud que habría enviado la página del sitio. El sitio tiene que
 estar abierto en esa pestaña. Una llamada va solo al propio sitio o a
-[una dirección a la que llama la propia página del sitio](#sitios-cuyos-datos-viven-en-otra-dirección); una llamada a
-cualquier otro sitio no se envía.
+[las direcciones de datos que usa su propia página](#sitios-cuyos-datos-viven-en-otra-dirección);
+una llamada a cualquier otro sitio no se envía.
 
 Hay dos tipos de llamadas:
 
@@ -56,10 +62,10 @@ propia edición.
 en la computadora del agente. Mientras trabajas, el agente puede ver las
 solicitudes que envía la página del sitio: sus direcciones, los nombres de sus
 campos y la forma de cada respuesta, nunca los valores que contienen. Escribe
-una llamada para cada paso que valga la pena convertir y comprueba cada una
-contra lo que se vio enviar al sitio: una lectura se ejecuta una vez de verdad;
-un cambio se arma y se muestra, pero no se envía. Después, la propuesta
-describe cada llamada con palabras sencillas:
+una llamada para cada paso que valga la pena convertir y
+[comprueba](#cómo-se-comprueba-una-llamada) cada una contra lo que se vio
+enviar al sitio. Después, la propuesta describe cada llamada con palabras
+sencillas:
 
 - *«get_ticket» lee: Read one ticket: its status, assignee and notes. (GET /api/tickets/\{id\}) de desk.example.com*
 - *«close_ticket» cambia datos: PUT /api/tickets/\{id\}/status en desk.example.com*
@@ -68,14 +74,13 @@ describe cada llamada con palabras sencillas:
 **Aprobar** guarda la habilidad con sus llamadas. Una llamada que escribió el
 agente solo se puede guardar si pasó su comprobación con exactamente el
 contenido que se guarda, así que una llamada que cambias en la tarjeta de la
-propuesta vuelve al agente para que la compruebe de nuevo. Si nombras un
-registro que se puede cambiar sin riesgo, el agente también puede probar una
-llamada de cambio en ese único registro mientras la comprueba: en una tarjeta
-de aprobación, y solo después de que lo apruebes.
+propuesta vuelve al agente para que la compruebe de nuevo.
 
 **Generar con el agente**, en un
-[flujo de navegador](/es/concepts/browser-workflows), funciona igual para las
-herramientas de un flujo.
+[flujo de navegador](/es/concepts/browser-workflows#generar-con-el-agente),
+funciona igual para las herramientas de un flujo: usan el sitio juntos en la
+computadora de la sesión, el agente encuentra y comprueba las solicitudes, y
+la tarjeta de su propuesta guarda las herramientas con sus llamadas.
 
 **2. Pídeselo al constructor de agentes.** En **Crear** o **Refinar**, con la
 computadora de **Pruébalo** abierta y a la vista, usa el sitio en esa
@@ -93,6 +98,46 @@ de agentes o en el Editor de una herramienta de un flujo de navegador, elige
 escrita a mano se revisa en busca de errores al guardar, pero no contra el
 sitio, y la habilidad lo indica: *Escrita a mano, sin comprobar contra el
 sitio*.
+
+### Cómo encuentra el agente una solicitud
+
+1. Hace el paso una vez en el navegador, de la forma habitual, o te mira
+   hacerlo.
+2. Lee la lista de solicitudes que envió la página en esa pestaña: el método y
+   la dirección de cada una, los nombres de sus campos de consulta y de cuerpo,
+   los nombres de los encabezados que llevaba y la forma de su respuesta.
+   Nunca lee los valores.
+3. Solo toma una solicitud que hizo la propia página del sitio. Nunca adivina
+   una dirección, y nunca convierte en llamada una solicitud de inicio de
+   sesión, de seguridad, de tokens o de analítica.
+4. Para un cambio, lee las reglas del propio formulario del sitio —campos
+   obligatorios, longitudes, patrones, las opciones de una lista— **sin
+   enviarlo**, y las escribe en los datos de entrada de la llamada. Si no puede
+   ver una regla, te pregunta.
+
+### Cómo se comprueba una llamada
+
+Antes de que se pueda guardar una llamada que escribió el agente, el agente la
+comprueba contra el sitio, en la misma sesión:
+
+- **La página del sitio tiene que haber hecho esa solicitud** en esa sesión: el
+  mismo método, la misma dirección, los mismos campos de consulta y de cuerpo y
+  los mismos encabezados prestados. Una llamada que deja fuera un encabezado de
+  inicio de sesión que envió la página no pasa la comprobación, porque el sitio
+  la rechazaría.
+- **Una lectura se ejecuta una vez de verdad**, y su respuesta se le muestra al
+  agente.
+- **Un cambio se arma y se muestra, pero no se envía.** Si nombras un registro
+  que se puede cambiar sin riesgo, el agente también puede hacer ese único
+  cambio de verdad mientras la comprueba: en una tarjeta de aprobación, y solo
+  después de que lo apruebes. Nunca cambia un registro que no nombraste.
+- **La comprobación cubre el contenido exacto.** Si cambias algo después —la
+  regla de un dato, la descripción, incluso un espacio— hay que volver a
+  comprobar la llamada antes de poder guardarla.
+
+En un espacio de trabajo que guarda datos regulados, las llamadas no se
+ejecutan contra el sitio: solo se comprueban el archivo y su coincidencia con
+las solicitudes de la página.
 
 ## Un ejemplo
 
@@ -151,26 +196,56 @@ para cerrar tickets resueltos podría llevar estas dos llamadas.
 }
 ```
 
-Qué significa cada parte:
+### Cada campo
 
 | Campo | Qué dice |
 |---|---|
-| `name` | El nombre de la llamada. También es el nombre del archivo: letras minúsculas, dígitos y `_` |
-| `description` | Qué hace la llamada, en una línea. El agente la lee para elegir la llamada |
+| `name` | El nombre de la llamada: letras minúsculas, dígitos y `_`, empezando por una letra, hasta 40 caracteres. Tiene que ser también el nombre del archivo: `close_ticket` vive en `calls/close_ticket.json` |
+| `description` | Qué hace la llamada, en una línea de hasta 300 caracteres. El agente la lee para elegir la llamada |
 | `method` | `GET`, `HEAD`, `POST`, `PUT` o `PATCH`. `DELETE` no se puede guardar; consulta [Límites](#límites) |
-| `url` | La dirección, con espacios en blanco del tipo `{id}` que completa el agente. En la herramienta de un flujo de navegador puede empezar con una de las variables del flujo, como `{site_url}` |
-| `inputSchema` | Lo que el agente debe proporcionar y las reglas que debe cumplir cada valor: un patrón, una lista de valores permitidos, una longitud máxima. Un valor que rompe una regla no se envía |
-| `body` | Para un cambio, los campos que se envían, como `json` o como formulario (`form`). Un valor opcional que el agente no da tampoco se incluye en la solicitud |
+| `url` | La dirección, de hasta 2.000 caracteres. Empieza con una dirección fija del sitio (`https://desk.example.com/…`, o `http://` para un sitio que se sirve así) o con una de las variables de la habilidad seguida de una ruta (`{site_url}/api/…`; consulta [Direcciones y ajustes](#direcciones-y-ajustes)). Los espacios en blanco del tipo `{id}` de la ruta y de la consulta se completan con los datos de entrada. La dirección del sitio nunca puede venir de un dato de entrada, el nombre de un campo de consulta nunca puede ser un espacio en blanco, y no hay `#fragmento` |
+| `inputSchema` | Lo que el agente debe proporcionar: un objeto cuyas `properties` (hasta 50) son cada una `string`, `integer`, `number` o `boolean`, con `required` para las que hay que dar. Una propiedad puede llevar `description`, `enum` (una lista de valores permitidos), `pattern` (hasta 200 caracteres), `minLength` y `maxLength`, `minimum` y `maximum`, o `format` (`date` o `date-time`). `allOf` con pares `if` / `then` puede hacer que un dato sea obligatorio solo cuando otro tiene un valor dado. Un valor que rompe una regla no se envía |
+| `body` | Para un cambio, los campos que se envían, como `json` o como formulario (`form`), escritos como una plantilla (`template`) con espacios en blanco. Envía los campos que envió la página: todos los que siempre envió y ninguno que nunca envió. Un valor opcional que el agente no da tampoco se incluye en la solicitud |
 | `page` | Solo para un sitio cuyos datos viven en otra dirección: la dirección de la página desde la que se envía la llamada, como `{site_url}`. Consulta [Sitios cuyos datos viven en otra dirección](#sitios-cuyos-datos-viven-en-otra-dirección) |
-| `auth.borrow` | Los encabezados de inicio de sesión que envía la propia página del sitio, como `x-csrf-token`. Sus valores se toman prestados de la página en el momento de la llamada; nunca se escriben en el archivo |
+| `auth.borrow` | Los nombres de los encabezados de inicio de sesión que envía la propia página del sitio con esa solicitud, como `x-csrf-token`, `x-xsrf-token`, `authorization` o cualquier `x-…-token`. Sus valores se toman prestados de la página en el momento de la llamada; nunca se escriben en el archivo. No se pueden incluir `cookie`, `host` ni los encabezados que pone el propio navegador |
 | `returns` | `json` (el valor predeterminado), `text` o `file`; un archivo llega a los archivos de la tarea |
-| `readOnly` | Solo en un `POST` que el sitio usa para buscar o listar: `true` lo convierte en lectura. Cada lugar que muestra la llamada dice *Este POST se trata como una lectura, así que se ejecuta sin tarjeta* |
-| `target` | Para un cambio: qué dato identifica el registro y cómo llamarlo en la tarjeta de aprobación (*Ticket 4812*) |
-| `forbiddenFields` | Campos que esta llamada nunca debe enviar ni cambiar. Una llamada cuyo cuerpo nombra uno no se puede guardar |
-| `verify` | Para un cambio: una llamada de lectura de la misma habilidad, que se ejecuta antes y después de cada cambio para comprobar qué cambió de verdad. `ignore` enumera los campos que el cambio debe alterar |
+| `readOnly` | Solo en un `POST` que el sitio usa para buscar o listar: `true` lo convierte en lectura. Su dirección y su cuerpo no pueden nombrar una acción, y un dato de entrada en su ruta tiene que tener un `enum` o un `pattern`. Cada lugar que muestra la llamada dice *Este POST se trata como una lectura, así que se ejecuta sin tarjeta* |
+| `target` | Obligatorio en un cambio: qué dato de entrada identifica el registro (tiene que ser obligatorio) y cómo llamarlo en la tarjeta de aprobación (*Ticket 4812*) |
+| `forbiddenFields` | Campos que esta llamada nunca debe enviar, y que el sitio nunca debe cambiar de paso (`assignee`, `approvedBy`). Una llamada cuyo cuerpo nombra uno no se puede guardar. Un campo que el cambio *debe* alterar va en `verify.ignore` |
+| `verify` | Para un cambio: una llamada de lectura de la misma habilidad (nunca la propia llamada), con los datos que hay que darle, que se ejecuta antes y después de cada cambio para comprobar qué cambió de verdad. `ignore` enumera los campos que el cambio debe alterar o que el sitio actualiza por su cuenta |
 
 Una llamada que escribió el agente también lleva un registro de la solicitud con
-la que se comparó; esa parte nunca la escribes tú.
+la que se comparó (`observed`); esa parte nunca la escribes tú.
+
+## Direcciones y ajustes
+
+Una llamada de un [flujo de navegador](/es/concepts/browser-workflows) sirve
+para todas las empresas que usan el flujo, porque su dirección empieza con una
+de las variables del flujo y no con el sitio de una empresa:
+
+```json
+"url": "{site_url}/api/tickets/{id}"
+```
+
+Cada empresa completa su propio valor de `site_url` al crear su conector, y la
+llamada se arma con ese valor cuando se ejecuta la tarea. Se cumplen tres
+reglas:
+
+- **Una variable al principio de una dirección es solo la dirección del
+  sitio**: `https://desk.example.com`, con o sin `/` final. Un valor con ruta,
+  consulta o nombre de usuario (`https://desk.example.com/app`) se rechaza al
+  armar la llamada: *The variable “site_url” must be the site's address only
+  (like https://host), with no path, query or sign-in.* Si el sitio vive bajo
+  una ruta, pon la ruta en la llamada: `{site_url}/app/api/tickets/{id}`.
+- **Tiene que ir seguida de una ruta**, y tiene que ser una de las variables
+  del propio flujo. Dale a esa variable el tipo **Dirección web**, para que los
+  ajustes del conector rechacen todo lo que no sea una dirección `http://` o
+  `https://`.
+- **Otras variables pueden aparecer dentro de la dirección o del cuerpo**, como
+  una empresa o una región de tipo **Texto** (`{site_url}/api/{tenant}/orders`).
+  Solo las variables de tipo **Dirección web** cuentan como direcciones del
+  flujo cuando se [comparten encabezados de inicio de sesión entre ellas](#un-sitio-varias-direcciones-de-datos);
+  una variable de tipo **Texto** que contiene una dirección nunca cuenta.
 
 ## Sitios cuyos datos viven en otra dirección
 
@@ -197,9 +272,11 @@ Una llamada para un sitio así indica con `page` la página desde la que se env�
 
 Qué pasa cuando el agente la usa:
 
-1. La persona (o el agente, donde puede hacerlo) inicia sesión en la página de
-   `{site_url}`, en el navegador del agente. La página llama entonces a su
-   dirección de datos como siempre.
+1. Se inicia sesión en la página de `{site_url}`, en el navegador del agente:
+   lo hace el agente con un
+   [inicio de sesión guardado](/es/reference/settings/sign-ins#enviar-el-inicio-de-sesión),
+   o tú en la [vista en vivo](/es/concepts/tasks#la-vista-en-vivo). La página
+   llama entonces a su dirección de datos como siempre.
 2. El agente envía la llamada **desde la pestaña de esa página**, a `{api_url}`.
    Los valores de `Authorization` y `x-tenant-id` se toman prestados de la
    solicitud más reciente de la propia página a esa dirección: el token nunca se
@@ -209,27 +286,110 @@ Qué pasa cuando el agente la usa:
    que su página haga la llamada, se le dice al agente y hace el paso en la
    página.
 
-Tres reglas lo mantienen seguro:
+Las reglas que lo mantienen seguro:
 
-- **Solo una dirección a la que llama la propia página.** Una llamada se envía a
-  otra dirección solo si la página de esa pestaña ya la llamó durante la sesión
-  del ordenador. El agente no puede dirigir una página con sesión iniciada a una
-  dirección que elija él. Hasta que la página la haya llamado, la transcripción
-  dice *la página no ha llamado a esa dirección desde esta pestaña*.
-- **El encabezado tiene que haberse visto.** Si la página todavía no envió un
-  encabezado que la llamada toma prestado, no se envía nada: *The page has not
-  sent authorization to api.example.com from this tab yet. Use the site's page
-  once (or reload it), then check again.*
+- **Solo las direcciones que usa la propia página.** Una llamada va a otra
+  dirección solo si la página de esa pestaña ya la llamó durante la sesión de la
+  computadora, o si llamó a otra de las direcciones de datos del mismo flujo,
+  según la regla de [más abajo](#un-sitio-varias-direcciones-de-datos). El
+  agente no puede dirigir una página con sesión iniciada a una dirección que
+  elija él. Hasta entonces, la transcripción dice *la página no ha llamado a ese
+  host desde esta pestaña*.
+- **El encabezado tiene que haberse visto.** Un encabezado prestado viene de lo
+  que la página envió desde esa pestaña. Si la página todavía no lo envió, no se
+  envía nada: *The page has not sent authorization to api.example.com from this
+  tab yet. Use the site's page once (or reload it), then check again.*
 - **Todo lo demás no cambia.** Las lecturas se hacen al momento, los cambios
   piden permiso en una tarjeta, el registro tiene que haberse visto en la tarea
   y cada respuesta se limpia de valores de sesión antes de que el agente la lea.
 
-En un [flujo de navegador](/es/concepts/browser-workflows), declara las dos
-direcciones como ajustes —`site_url` para la página y `api_url` para la
-dirección de los datos— y las llamadas las usan como `{site_url}` y
-`{api_url}`. Los encabezados cortos que no son secretos, como un id de empresa o
-de idioma, se envían tal cual; un token de sesión corto se rechaza, porque no se
-podría mantener fuera de la respuesta.
+En un flujo de navegador, declara cada dirección como una variable de tipo
+**Dirección web** —`site_url` para la página y `api_url` para la dirección de
+los datos— y las llamadas las usan como `{site_url}` y `{api_url}`. Los
+encabezados cortos que no son secretos, como un id de empresa o de idioma, se
+envían tal cual; un token de sesión corto se rechaza, porque no se podría
+mantener fuera de la respuesta.
+
+### Un sitio, varias direcciones de datos
+
+Algunos sitios reparten sus datos entre varias direcciones, y la página envía su
+token de sesión solo a algunas: envía `Authorization` a `orders.example.com`,
+por ejemplo, mientras que la llamada que necesitas va a `billing.example.com`,
+a la que la página llega de otra manera. Entonces una llamada puede usar los
+encabezados de inicio de sesión que la página envió a **otra de las direcciones
+de datos del mismo flujo de navegador**, solo cuando se cumplen las tres cosas:
+
+- **Las dos direcciones son ajustes de ese flujo.** La dirección de la propia
+  llamada y la que presta son valores de variables de tipo **Dirección web** del
+  flujo (`{orders_url}`, `{billing_url}`). Una dirección que no es una de ellas
+  nunca presta ni toma prestado.
+- **Las dos están en el mismo sitio que la página**: el mismo dominio
+  registrable, como `example.com` para `app.example.com`,
+  `orders.example.com` y `billing.example.com`.
+- **La propia página llamó a la dirección que presta**, desde la misma pestaña.
+
+La dirección de la propia página (`{site_url}`) nunca presta: solo prestan las
+direcciones de datos. Un encabezado que la página envió a la dirección de la
+propia llamada siempre gana sobre uno prestado, y un valor prestado se limpia de
+la respuesta como cualquier otro.
+
+**Nunca se comparten:** los nombres de intranet (`tms` o `tms.corp`), las
+direcciones IP y los dominios de alojamiento compartido en los que la aplicación
+de cada cliente es un sitio aparte, por ejemplo una dirección que termina en
+`azurewebsites.net`, `herokuapp.com`, `github.io` o `cloudfront.net`. Ahí cada
+dirección necesita los encabezados que la página le envió a ella. Una
+computadora que todavía no tiene la última actualización tampoco comparte nada.
+
+## Varios registros en una llamada
+
+El agente puede darle a una llamada varios conjuntos de datos a la vez, sus
+**elementos**:
+
+- **Una lectura acepta hasta 10 elementos**: diez tickets leídos en una llamada.
+- **Un cambio acepta hasta 3 elementos**, y **una sola tarjeta de aprobación
+  los cubre**, con cada registro y los valores que va a poner. Más registros
+  necesitan otra llamada, y otra tarjeta.
+
+Los pasos de una habilidad deberían decirlo: *Llama a «close_ticket» una vez,
+con todos los tickets que hay que cerrar (hasta 3 por llamada). Si se rechaza o
+falla, haz el paso en la página.* No deberían pedir además tu aprobación en la
+conversación: la tarjeta es la aprobación, y preguntar dos veces solo te hace
+perder tiempo.
+
+## Respuestas largas
+
+Una lectura puede traer mucho más de lo que el agente debería arrastrar por la
+conversación: un mes de facturas, miles de filas. Una respuesta de más de unos
+20 KB se **guarda como archivo** en los archivos de la tarea, igual que
+[el resultado grande de un conector](/es/concepts/files#archivos-que-devuelve-un-conector):
+
+- **El agente recibe la ruta del archivo y una vista previa breve**, y lee el
+  archivo con un script en su computadora. Los conteos, los totales y los
+  filtros se calculan sobre todas las filas del archivo, nunca a partir de la
+  vista previa y nunca volviendo a teclearlas. Una lista de diez filas o más se
+  guarda además como archivo de datos para eso.
+- **Puedes abrirlo y descargarlo.** El archivo aparece en la pestaña **Documentos**
+  del panel lateral de la tarea, en **Artefactos del agente**, y se abre en el visor de archivos; ahí
+  una respuesta JSON larga en una sola línea se presenta ordenada para leerla,
+  mientras que la descarga es la respuesta tal como la envió el sitio.
+- **Sigue la regla de los conectores.** Se retira de la computadora del agente
+  unos minutos después de llegar, y se vuelve a colocar cuando uno de los
+  scripts del agente lo necesita. Se puede abrir y descargar durante una hora
+  desde que se obtuvo, porque los datos de un sitio se desactualizan; después,
+  el agente vuelve a llamar al sitio. Un registro que el agente leyó del archivo
+  cuenta como [visto en la tarea](#qué-las-hace-seguras) mientras el archivo se
+  conserva.
+- **Hasta 8 MB.** Una respuesta más larga no se lee: se le indica al agente que
+  pida menos (un filtro, una página más pequeña, un rango de fechas más corto).
+- **Nunca se corta por la mitad.** Si parte de una respuesta no le llegó al
+  agente, se le dice y no puede enviar nada que dependa de ella, como con un
+  conector; consulta
+  [Cuando los datos de un conector llegan incompletos](/es/concepts/tasks#cuando-los-datos-de-un-conector-llegan-incompletos).
+
+Una habilidad cuyas lecturas pueden ser largas debería decirlo en sus pasos:
+*Una respuesta larga llega como archivo: cuéntala, súmala o fíltrala con un
+script que lea ese archivo.* La línea de la transcripción sigue contando cada
+elemento: *Se leyeron 1.901 elementos de desk.example.com (GET, 200)*.
 
 ## Qué las hace seguras
 
@@ -245,8 +405,9 @@ cada uno se hizo sin preguntar, como con las demás acciones del agente.
 
 **El registro debe haberse visto en la tarea.** Un cambio solo se envía para un
 registro cuyo identificador vino de una respuesta anterior en la misma tarea —de
-una llamada al sitio o de un conector— o de tu propio mensaje. Un identificador
-que el agente inventó, o que copió mal, no se envía.
+una llamada al sitio o de un conector, incluida una respuesta larga guardada— o
+de tu propio mensaje. Un identificador que el agente inventó, o que copió mal,
+no se envía.
 
 **Lectura antes y después.** Una llamada de cambio con `verify` lee el registro
 antes y después de cada cambio. Si cambió algo más de lo que la llamada debe
@@ -259,8 +420,7 @@ lectura posterior avisa si alguno cambió.
 
 **A su ritmo.** Los cambios van de uno en uno, con al menos un segundo entre
 ellos, y una tarea cambia como máximo 100 registros de esta manera; a partir de
-ahí, una tarea nueva continúa el trabajo. Las lecturas toman hasta 10 elementos
-en una llamada.
+ahí, una tarea nueva continúa el trabajo.
 
 **Un sitio que rechaza detiene las llamadas.** Si el sitio rechaza una llamada,
 o responde con una página de verificación, el agente no envía más llamadas a
@@ -280,10 +440,13 @@ haya cambiado Ticket 4812 en desk.example.com*.
 
 **Los tokens y las cookies se quedan en el navegador.** Los valores de inicio de
 sesión que necesita una llamada se toman prestados de la página en el momento
-en que se envía. Nunca se guardan, nunca se escriben en una habilidad y nunca
-se muestran al agente ni en la transcripción; todo lo que el sitio devuelve se
-limpia de ellos antes de que el agente lo lea. Los scripts del propio agente en
-la computadora no pueden llegar al navegador con la sesión iniciada.
+en que se envía: encabezados de hasta 32 KB cada uno, así que también funcionan
+los tokens de sesión largos que usan algunos sitios. Nunca se guardan, nunca se
+escriben en una habilidad y nunca se muestran al agente ni en la transcripción;
+todo lo que el sitio devuelve se limpia de ellos antes de que el agente lo lea.
+Una respuesta que todavía lleva el token de la página, aunque sea codificado,
+no se entrega. Los scripts del propio agente en la computadora no pueden llegar
+al navegador con la sesión iniciada.
 
 **Se ejecuta lo que se guardó.** Una tarea ejecuta las llamadas tal como
 estaban guardadas cuando cargó la habilidad. Un guardado hecho mientras la
@@ -299,10 +462,34 @@ Cada llamada deja una línea en la transcripción:
 ## Pruebas de habilidades
 
 Cuando se prueba una habilidad con llamadas —la prueba que hace Entrénalo antes
-de proponer una habilidad, o una prueba de una habilidad en una tarea— sus
+de proponer una habilidad, o una prueba de habilidad en una tarea—, sus
 llamadas de lectura se ejecutan de verdad y sus llamadas de cambio nunca se
-envían. Un cambio en una prueba se responde como ensayo, sin enviar nada al
+envían. Un cambio en una prueba se responde como un ensayo, sin enviar nada al
 sitio.
+
+## Cuando una llamada no sale
+
+Una llamada que no se puede enviar, o cuya respuesta no se puede usar, termina
+en una línea como *No se pudo leer de api.example.com: la página no ha llamado a
+ese host desde esta pestaña*. Entonces el agente hace el paso en la página, o lo
+intenta de nuevo cuando la causa desaparece. Qué significa cada motivo:
+
+| La línea dice | Qué significa | Qué ayuda |
+|---|---|---|
+| *la página no ha llamado a ese host desde esta pestaña* | La llamada va a una dirección de datos que la página de esa pestaña todavía no usó en esta sesión | Usa la página del sitio una vez para que cargue sus datos, y el agente vuelve a llamar. Para un sitio con varias direcciones de datos, consulta [Un sitio, varias direcciones de datos](#un-sitio-varias-direcciones-de-datos) |
+| *la página aún no envió ‹encabezado› desde esta pestaña* | No se ha visto, en las solicitudes de la página a esa dirección, un encabezado de inicio de sesión que la llamada toma prestado | Usa la página una vez, o recárgala, después de iniciar sesión. Si la página nunca envía ese encabezado a esa dirección, el `auth.borrow` o la dirección de la llamada están mal |
+| *el encabezado ‹encabezado› es demasiado corto para ocultarlo* | El valor de inicio de sesión del propio sitio es demasiado corto para mantenerlo fuera de la respuesta sin riesgo, así que no se envió nada | El paso se hace en la página; no hay nada que corregir |
+| *sesión cerrada* / *redirigido después de enviarse* | El sitio respondió como si nadie tuviera la sesión iniciada | El agente vuelve a iniciar sesión, o te lo pide, y lo intenta una vez más |
+| *página equivocada abierta* | No hay ninguna pestaña en el sitio de la llamada, o hay más de una; al agente se le pide que cierre las demás y deje la que tiene la sesión de la cuenta correcta | Deja una sola pestaña en el sitio |
+| *el sitio no deja que su página llame a ese host de esta forma* | El navegador rechazó la solicitud según las propias reglas CORS del sitio | El paso se hace en la página; la llamada no puede funcionar tal como está escrita |
+| *la respuesta es demasiado grande* | La respuesta pasa de 8 MB (256 KB para un cambio, o en una computadora sin la última actualización) | Pide menos: un filtro, una página más pequeña, un rango de fechas más corto |
+| *rechazado por el sitio* | El sitio rechazó la llamada (403) o respondió con una página de verificación | No se envían más llamadas a ese sitio en esta tarea. Comprueba que la cuenta pueda hacerlo en la página |
+| *el sitio dijo que no* | El sitio respondió con otro error, a menudo porque no aceptó un valor; el agente lee el motivo del sitio | El agente corrige el valor, o hace el paso en la página |
+| *el sitio dijo que falló* | El sitio respondió, pero su respuesta dice que el cambio no funcionó | El agente lee por qué, y hace el paso en la página si no lo puede arreglar |
+| *error del sitio* | El sitio tuvo un error propio. Una lectura se intenta dos veces; un cambio puede haberse aplicado o no, y se vuelve a leer antes de cualquier otra cosa | Inténtalo más tarde |
+| *la llamada puede estar desactualizada* | El sitio respondió como si la llamada ya no existiera | Vuelve a grabar la llamada |
+| *un valor dado parece una acción, así que no se envió nada* | A una lectura se le dio un valor que parece una palabra de acción | No se envió nada; el agente vuelve a preguntar con un valor correcto o usa la página |
+| *no se pudo guardar el archivo* | No se pudo guardar en los archivos de la tarea una respuesta `file` o una respuesta larga | Los datos no le llegaron al agente; lo dice |
 
 ## Límites
 
@@ -320,27 +507,33 @@ sitio.
   tarea tenga la actualización, el agente usa la página.
 - **El inicio de sesión sigue en la página.** Iniciar sesión, las comprobaciones
   de seguridad y todo lo que tenga que ver con contraseñas nunca son llamadas al
-  sitio; el agente inicia sesión en la página como antes.
-- **Límites fijos.** Hasta 20 llamadas por habilidad, 3 registros por tarjeta de
-  aprobación y 100 registros cambiados por tarea, a un cambio por segundo.
-  Todavía no se pueden ajustar por sitio.
-- **Las respuestas tienen un tamaño máximo.** Una respuesta se lee hasta 256 KB;
-  una llamada que devuelve un archivo puede traer uno de hasta 25 MB a los
-  archivos de la tarea.
+  sitio; el agente inicia sesión en la página, con un
+  [inicio de sesión guardado](/es/reference/settings/sign-ins) o con tu ayuda.
+- **Límites fijos.** Hasta 20 llamadas por habilidad, 10 elementos por lectura,
+  3 registros por tarjeta de aprobación y 100 registros cambiados por tarea, a
+  un cambio por segundo. Todavía no se pueden ajustar por sitio.
+- **Las respuestas tienen un tamaño máximo.** La respuesta de una lectura puede
+  llegar a 8 MB, y una de más de unos 20 KB se
+  [guarda como archivo](#respuestas-largas). La respuesta de un cambio se lee
+  hasta 256 KB, igual que toda respuesta en una computadora que todavía no
+  tiene la última actualización. Una llamada que devuelve un archivo puede traer
+  uno de hasta 25 MB a los archivos de la tarea.
 
 ## Quién puede hacer qué
 
 | Acción | Quién |
 |---|---|
 | Crear llamadas con Entrénalo o con el constructor de agentes | Cualquiera que pueda editar el agente |
-| Escribir o cambiar una llamada a mano | Cualquiera que pueda editar la habilidad; en una habilidad propia de un agente, cualquiera que pueda editar el agente |
+| Crear llamadas con **Generar con el agente** | Quien pueda cambiar el flujo de navegador |
+| Escribir o cambiar una llamada a mano | Cualquiera que pueda editar la habilidad; en una habilidad propia de un agente, cualquiera que pueda editar el agente; en una herramienta de un flujo de navegador, quien pueda cambiar el flujo |
 | Usar las llamadas de una habilidad | Cualquier tarea que cargue la habilidad |
 | Aprobar un cambio | Quien responda la tarjeta de aprobación de la tarea, como con cualquier otra aprobación |
 
 ## Siguiente
 
 <CardGrid>
+  <LinkCard title="Flujos de navegador" href="/es/concepts/browser-workflows" description="Herramientas para un sitio web, que también pueden llevar llamadas al sitio, y cómo organizar uno." />
   <LinkCard title="Habilidades" href="/es/concepts/skills" description="Dónde se guardan las llamadas, y cómo se abre y se edita una habilidad." />
   <LinkCard title="Agentes" href="/es/concepts/agents#entrenar-a-un-agente" description="Entrénalo: muéstrale el trabajo al agente y aprueba lo que aprendió." />
-  <LinkCard title="Flujos de navegador" href="/es/concepts/browser-workflows" description="Herramientas para un sitio web, que también pueden llevar llamadas al sitio." />
+  <LinkCard title="Inicios de sesión personales" href="/es/reference/settings/sign-ins" description="Cómo inicia sesión el agente en un sitio antes de llamarlo." />
 </CardGrid>

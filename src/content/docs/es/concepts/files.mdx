@@ -22,7 +22,7 @@ cada tarea. Esos pertenecen al agente y no a una tarea concreta; consulta
 | Origen | Cómo llega | Tamaño máximo | Se guarda durante |
 |---|---|---|---|
 | **Lo adjuntas tú** | Desde el cuadro de mensajes, al enviar un mensaje | 25 MB | 2 días |
-| **Lo devuelve un conector** | Un archivo en la respuesta del conector, o una respuesta demasiado grande para entregársela entera al agente | 10 MB | 10 días |
+| **Lo devuelve un conector** | Un archivo en la respuesta del conector, o una respuesta demasiado grande para entregársela entera al agente, incluida la respuesta larga de una [llamada al sitio](/es/concepts/site-calls#respuestas-largas) | 10 MB | 1 hora |
 | **Lo crea el agente** | Se guarda como resultado de su trabajo en su computadora | 10 MB | 10 días |
 
 Cada espacio de trabajo puede guardar hasta 10 GB de archivos que todavía no
@@ -69,7 +69,9 @@ Una respuesta demasiado grande para entregársela entera al agente — unos 20 K
 o más — se guarda del mismo modo, como archivo `.json` (o `.csv` o `.txt` cuando
 la respuesta es texto plano), y el agente recibe en su lugar una vista previa y
 la ruta. Luego lee lo que necesita del archivo en su computadora, en lugar de
-arrastrar la respuesta completa por la conversación.
+arrastrar la respuesta completa por la conversación. La respuesta larga de una
+[llamada al sitio](/es/concepts/site-calls#respuestas-largas) se guarda del
+mismo modo y sigue todas las reglas de abajo.
 
 **Los datos de un conector nunca se cortan por la mitad.** Con qué puedes contar:
 
@@ -136,8 +138,9 @@ Un archivo de una tarea tiene dos copias.
 
 - **La copia almacenada** se guarda en el almacenamiento de archivos de
   AptiveAI durante el tiempo indicado en la [tabla de arriba](#de-dónde-vienen-los-archivos-de-una-tarea):
-  2 días para un archivo que adjuntaste, 10 días para uno que devolvió un
-  conector o que creó el agente. Esta es la copia que ves y descargas. Cuando
+  2 días para un archivo que adjuntaste, una hora para uno que devolvió un
+  conector o una llamada al sitio, 10 días para uno que creó el agente. Esta es
+  la copia que ves y descargas. Cuando
   vence, el archivo sigue en la lista pero indica **La descarga expiró**, y ya
   no se puede abrir.
 - **La copia en la computadora** es con la que trabaja el agente. Los archivos
@@ -157,7 +160,10 @@ Descarga tus resultados antes de que venzan si necesitas conservarlos.
   los archivos de la tarea, sea cual sea su origen. Cada uno muestra una vista
   previa o un icono de tipo, su nombre, *Haz clic para ver* o *Haz clic para
   descargar*, su tamaño, un botón de descarga, su ruta en la computadora y
-  cuándo llegó.
+  cuándo llegó. Se agrupan en **Subidos**, **Generados** y **Artefactos del
+  agente**: lo que trajeron los conectores y las llamadas al sitio, que se
+  elimina de la computadora del agente unos minutos después de llegar y cuyas
+  descargas expiran después de una hora.
 
 ## El visor
 

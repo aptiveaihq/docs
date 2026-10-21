@@ -53,12 +53,46 @@ The panel **How sign-ins are used** on the page spells it out; in short:
 | **What the agent sees** | The sign-in's name, its sites and an id — never the user name or the password |
 | **Where it can go** | Only into a field on one of its exact `https` sites, and a password only into a password box. AptiveAI Agents checks both before typing |
 | **What the agent is told** | That the field was filled — never the value. Text on the page that would show it is hidden from the agent. Screenshots are not |
-| **Submitting** | Filling a sign-in never submits the form by itself |
+| **Submitting** | Filling a sign-in never submits the form by itself — see [Sending the sign-in](#sending-the-sign-in) |
 | **The browser** | The agent's browser does not save passwords |
 | **Changes** | Adding, changing and deleting a sign-in is recorded |
 
 If no saved sign-in matches the site in front of it, or more than one could,
-the agent asks you what to do.
+the agent asks you what to do. When exactly one matches, the agent uses it
+without asking the first time it signs in to that site in a task, and the
+transcript says so; a second attempt on the same site asks first. On an
+automation, a sign-in that did not work is not tried again, so the account is
+not locked.
+
+## Sending the sign-in
+
+Filling a sign-in does not send it: the agent then clicks the form's sign-in
+button, or presses Enter. When the agent
+[asks before anything irreversible](/concepts/agents#guardrails), that one step
+needs **no approval card** if the agent has just filled **both** the user name
+and the password of one stored sign-in into one sign-in form on the page. The
+transcript says *Sent the stored sign-in it had just filled on this page,
+without asking — “‹button›”.*
+
+The send still waits for your approval when:
+
+- **The form looks like something other than a sign-in** — a signature, a
+  payment, an approval, a transfer, a release. An electronic-signature box
+  that asks for your password keeps its card.
+- **It is a retry.** After a sign-in that did not work, sending it again on the
+  same sign-in page asks.
+- **The sign-in is split over two pages** — the user name, **Next**, then the
+  password on the next page, as on Microsoft's and Google's sign-in pages. The
+  final click there still asks.
+- **The agent did something else in between.** Anything other than reading the
+  page, or typing somewhere else, between filling the sign-in and sending it
+  brings the card back.
+- **It presses Enter on a form with other buttons**, such as **Cancel** or
+  **Send code**. Clicking the form's sign-in button is not affected.
+
+Nothing else changes: only the agent's own fill of a stored sign-in opens this
+way, only for the one step that sends it, and **Approve all** and automations
+that run on their own work as before.
 
 ## Yours and the agent's
 

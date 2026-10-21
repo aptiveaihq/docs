@@ -20,7 +20,7 @@ the agent rather than to one task; see [Knowledge files](#knowledge-files).
 | Source | How it arrives | Largest file | Kept for |
 |---|---|---|---|
 | **You attach it** | From the composer, when you send a message | 25 MB | 2 days |
-| **A connector returns it** | A file in the connector's answer, or an answer too large to hand the agent whole | 10 MB | 10 days |
+| **A connector returns it** | A file in the connector's answer, or an answer too large to hand the agent whole — a [site call](/concepts/site-calls#long-answers)'s long answer included | 10 MB | 1 hour |
 | **The agent makes it** | Saved as output from its work on its computer | 10 MB | 10 days |
 
 Each workspace can hold up to 10 GB of files that have not yet expired. Past
@@ -65,7 +65,9 @@ An answer too large to hand the agent whole — roughly 20 KB or more — is kep
 the same way, as a `.json` file (or `.csv` or `.txt` when the answer is plain
 text), and the agent gets a preview and the path instead. It then reads what
 it needs from the file on its computer, rather than carrying the whole answer
-through the conversation.
+through the conversation. A long answer from a
+[site call](/concepts/site-calls#long-answers) is kept the same way, and
+follows every rule below.
 
 **A connector's data is never cut in the middle.** What you can rely on:
 
@@ -127,7 +129,8 @@ A task's file has two copies.
 
 - **The stored copy** is kept in AptiveAI's file storage for the time in the
   [table above](#where-a-tasks-files-come-from) — 2 days for a file you
-  attached, 10 days for one a connector returned or the agent made. This is the
+  attached, an hour for one a connector or a site call returned, 10 days for
+  one the agent made. This is the
   copy you view and download. After it expires, the file stays listed but reads
   **Download expired**, and it can no longer be opened.
 - **The copy on the computer** is what the agent works on. Files are copied
@@ -145,7 +148,10 @@ Download your results before they expire if you need to keep them.
 - **In the side panel.** The **Documents** tab lists **Files** — every file
   in the task, whatever its source. Each shows a preview or a type icon, its
   name, *Click to view* or *Click to download*, its size, a download button,
-  its path on the computer and when it arrived.
+  its path on the computer and when it arrived. They are grouped as
+  **Uploaded**, **Generated** and **Agent's artifacts** — what connectors and
+  site calls fetched, which is removed from the agent's computer a few minutes
+  after it arrives and whose downloads expire after an hour.
 
 ## The viewer
 
