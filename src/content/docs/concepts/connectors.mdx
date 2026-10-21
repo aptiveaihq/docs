@@ -26,15 +26,20 @@ yours; your team then decides which [agents](/concepts/agents) may use it.
 
 ## Adding a connector
 
-**Add a connector** groups what it offers by category, with a search box:
+**Add a connector** shows what it offers as one grid of tiles, with a search
+box. The box suggests the categories below; **Show** or **Hide** one to narrow
+the tiles:
 
 | Category | Connectors |
 |---|---|
 | **Email & calendar** | Outlook, Gmail, Google Calendar |
-| **Files & docs** | Google Drive, OneDrive |
-| **Messaging** | Microsoft Teams, Slack, Twilio SMS, Telegram |
-| **Work tracking** | Trello, DocuSign |
-| **Advanced** | **Custom MCP server**, **HTTP API**, **Browser workflow**, and any browser workflow your team or AptiveAI has made |
+| **Files & docs** | Google Drive, OneDrive, DocuSign |
+| **Messaging** | Microsoft Teams, Slack, Twilio SMS, Telegram, AptiveAI Messaging |
+| **Work tracking** | Trello |
+| **Advanced** | **Custom MCP server**, **HTTP API**, and the **Browser workflow** tile that starts a new one |
+
+Browser workflows your team built, or that AptiveAI published to your company,
+come first in the grid, ahead of every category.
 
 Clicking one opens a panel with what it does, the tools it brings and how it
 signs in. A hosted connector signs in with the provider itself — **Sign in with
@@ -176,7 +181,7 @@ The detail, including how a file you need later is brought back, is in
 A server error or one bad call does not mark a connector as needing
 reconnection — only a rejected sign-in or key does. A connector made from a
 [browser workflow](/concepts/browser-workflows) shows an error instead when its
-workflow was archived or is no longer available to your company.
+workflow was deleted or is no longer available to your company.
 
 When a task starts while a connector is broken, its tools are held back from
 that task and the transcript says how many granted tools are not available.
@@ -251,7 +256,7 @@ restores them.
 | Change its name, settings or sign-in, test it or disconnect it | Whoever can edit it: its owner and people it is shared with as editors |
 | Grant a connector to an agent | Owners and admins |
 | Turn **Available to personal agents** on or off | Owners and admins |
-| Build, change, publish or remove a [browser workflow](/concepts/browser-workflows#who-can-do-what) | See that page |
+| Build, change, publish or delete a [browser workflow](/concepts/browser-workflows#who-can-do-what) | See that page |
 
 Granting a connector is also one of the actions that needs
 [paid access](/concepts/agents#restrictions).

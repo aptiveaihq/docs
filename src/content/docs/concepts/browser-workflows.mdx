@@ -1,6 +1,6 @@
 ---
 title: Browser workflows
-description: Teach your agents a website once. A browser workflow is a connector made of tools the agent runs in its own browser — how to build one, how a company turns it into a connector, and who can see, change and remove it.
+description: Teach your agents a website once. A browser workflow is a connector made of tools the agent runs in its own browser — how to build one, how a company turns it into a connector, and who can see, change and delete it.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -29,28 +29,32 @@ other value) is theirs.
 
 ## Building a browser workflow
 
-Open **Connectors** and scroll **Add a connector** to **Advanced**. The first
-tile there, **Browser workflow** — *Teach your agents a website once. Each tool
-is a skill they run on their own computer.* — opens **New browser workflow**.
+Open **Connectors**. Under **Add a connector**, click the **Browser workflow**
+tile — *Teach your agents a website once. Each tool is a skill they run on their
+own computer.* It opens **New browser workflow**. The tile sits in the same grid
+as the other connectors, just before **Custom MCP server** and **HTTP API**;
+typing *browser* in the search box finds it at once. There is no menu or extra
+step before it: the tile is the way in.
 
 <Aside type="note">
-  Building needs permission to add your own connectors; without it the page
-  says so and points you to an owner or admin of your workspace. A workspace
-  that holds regulated data cannot build one.
+  Building needs permission to add your own connectors, which owners, admins
+  and members all have; without it the page says so and points you to an owner
+  or admin of your workspace. On a workspace that holds regulated data,
+  **Generate with agent** is not available: you write the tools yourself.
 </Aside>
 
 The page has the same shape as an agent's builder. The header carries the
 actions — **Create browser workflow** on a new page; **Discard**, **Save** and
-**Archive browser workflow** on a saved one — and a chip shows where it stands:
-**Unsaved**, **Draft** until its first tool is switched on, **Active**, or
-**Archived**. A new page keeps everything you add — details, icon, variables,
+**Delete browser workflow** on a saved one — and an **Unsaved** chip shows while
+anything on the page is not saved. A workflow has no draft or active state: it
+is there until someone deletes it. A new page keeps everything you add — details, icon, variables,
 tools and their scripts — until you press **Create browser workflow**, which
 saves it in one go; if the create is refused, nothing you entered is lost.
 
 | Section | What it holds |
 |---|---|
 | **Details** | The icon, **Name** and **Description**, as every company will see them |
-| **Variables** | Values each company fills in when it creates its connector — usually the site address. Give each a **Label**, a **Key**, a **Kind** (**Text** or **Web address**), and whether it is **Required** |
+| **Variables** | Values each company fills in when it creates its connector — usually the site address. Give each a **Label**, a **Key**, a **Kind** (**Text** or **Web address**), whether it is **Required**, and optionally an **Example** |
 | **Tools** | What your agents can do on the site, one tool per job |
 | **Connectors made from it** | The connectors created from this workflow that you can see. Open one to change it on the Connectors page |
 
@@ -76,9 +80,10 @@ written this way works for every company without being copied.
 
 A tool's row in the **Tools** list has **Switch off** and **Switch on**, and
 **Remove**. A tool that is off is offered to no task from its next one;
-removing a tool never disturbs a task that already loaded it. A browser
-workflow becomes **Active** once its first tool is on, and a connector cannot
-be made from one that has none switched on.
+removing a tool never disturbs a task that already loaded it. A connector can
+be made from a workflow only while at least one of its tools is switched on;
+until then only the people who can change it see its tile, and its panel says
+*No tools yet, so nothing can be connected from it. Edit it to add one.*
 
 A browser workflow's tools are theirs alone: they do not appear on the
 **Skills** page or in the `/` menu, and an agent cannot change one from a task.
@@ -112,8 +117,9 @@ tools from its next task.
   agent uses a sign-in already stored for you
   ([Personal sign-ins](/reference/settings/sign-ins)); no password is written
   into a tool.
-- **End session** keeps the conversation as a task. Tools you approved stay
-  saved; a proposal you did not approve does not.
+- **New conversation** ends the session and keeps it as a task, which you can
+  open again from **Session history**. Tools you approved stay saved; a
+  proposal you did not approve does not.
 
 ### The icon
 
@@ -124,7 +130,8 @@ needs.
 
 ## Using a browser workflow
 
-Once a workflow is active, anyone who can see it creates a connector from it:
+Once a workflow has a tool switched on, anyone who can see it creates a
+connector from it:
 open **Connectors**, click its tile in **Add a connector**, and fill in:
 
 - **Name** — optional; left blank, the connector takes the workflow's name.
@@ -159,7 +166,7 @@ On the connector's panel:
 |---|---|
 | **Settings** | The variables' values. Saving them is checked: a missing required value or a web address that is not `http://` or `https://` is refused |
 | **Tools** | Its tools, the ones its workflow offers |
-| **Test connection** | Checks that the workflow is still there, available to your company and active, with a tool on and every required value filled in. It does not open the site |
+| **Test connection** | Checks that the workflow is still there (not deleted) and available to your company, with a tool on and every required value filled in. It does not open the site |
 | **Edit browser workflow** | Opens the workflow — only for whoever may change it |
 | **Disconnect** | Deletes this connector and its settings. The workflow is not changed |
 
@@ -171,29 +178,35 @@ of its tools meanwhile.
 
 | Action | Who |
 |---|---|
-| See a workflow's tile and create a connector from it | Anyone in a company that built it or that AptiveAI published it to, while it is active |
+| See a workflow's tile and create a connector from it | Anyone in a company that built it or that AptiveAI published it to, while it has a tool switched on and is not deleted |
 | Change a browser workflow | The person who built it, or AptiveAI. Not another admin, and not the owner of the workspace; they see it read-only: *You can use this browser workflow, but you cannot change it.* |
-| Publish it to other companies | AptiveAI |
+| Delete or recover it | Whoever may change it |
+| Publish it to other companies, or remove a deleted one for good before its 30 days are up | AptiveAI |
 | Use and share a connector made from it | Its creator, and whoever it is shared with, as any connector |
 | Change its settings, test or disconnect it | Its creator, and others who can edit it |
 
-A workflow in **Draft** is visible only to the people who can change it.
+A workflow with no tool switched on is visible only to the people who can
+change it.
 
-## Removing, archiving and restoring
+## Deleting and recovering
 
-On the **Add a connector** tile, an editor has **Edit** and **Remove** beside
-**Connect**:
+Whoever may change a workflow deletes it with **Delete browser workflow** in the
+header of its page, or with **Delete** on its tile's panel in **Add a
+connector**, where **Edit** sits beside **Connect** too. The question says how
+many connectors are made from it.
 
-- **Remove** with no connector made from it **deletes** the workflow for good,
-  with its tools, scripts and history. This cannot be undone.
-- **Remove** while connectors use it **archives** it instead, and the question
-  says how many: they stop working until it is restored. **Restore browser
-  workflow** brings them back; **Delete permanently** appears in the page
-  header once none is left.
-
-An archived workflow ends any open session, shows an error on every connector
-made from it — *the browser workflow this connector was made from is no longer
-available here* — and offers its tools to no task.
+- **A deleted workflow stops working at once.** It leaves **Add a connector**,
+  nobody can make a connector from it, an open session on it ends, and every
+  connector made from it shows *No tools: the browser workflow this connector
+  was made from is no longer available here.* Its tools are offered to no task.
+- **It is kept for 30 days.** To find it, add **Deleted** in the search box of
+  **Add a connector** (**Only**, or **With live**); its tile is dimmed and says
+  when it is removed. It is read-only until someone who may change it presses
+  **Recover**, which brings it back with every connector made from it.
+- **After 30 days it is removed for good**, with its tools, their scripts and
+  history, its grants to agents and its publications. The connectors made from
+  it are not deleted — they belong to the people who made them — but they stop
+  working for good.
 
 ## Next
 
