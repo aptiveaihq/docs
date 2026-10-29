@@ -57,14 +57,16 @@ Hay dos tipos de llamadas:
 Hay tres maneras, y cada una termina con la aprobación de una persona o con su
 propia edición.
 
-**1. Entrena al agente.** En una sesión de
-[Entrénalo](/es/concepts/agents#entrenar-a-un-agente) haces el trabajo una vez
-en la computadora del agente. Mientras trabajas, el agente puede ver las
-solicitudes que envía la página del sitio: sus direcciones, los nombres de sus
-campos y la forma de cada respuesta, nunca los valores que contienen. Escribe
-una llamada para cada paso que valga la pena convertir y
+**1. Entrena al agente.** En una
+[sesión de entrenamiento](/es/concepts/training) haces el trabajo en la
+computadora del agente, tú mismo o dejando que el agente lo haga mientras
+miras. Mientras se usa el sitio, el agente puede ver las solicitudes que envía
+la página del sitio: sus direcciones, los nombres de sus campos y de sus
+encabezados y la forma de cada respuesta, nunca los valores que contienen.
+Escribe una llamada para cada paso que valga la pena convertir,
 [comprueba](#cómo-se-comprueba-una-llamada) cada una contra lo que se vio
-enviar al sitio. Después, la propuesta describe cada llamada con palabras
+enviar al sitio y guarda la habilidad en **Aprendido hasta ahora**. Cuando
+pulsas **Guardar · N**, la tarjeta describe cada llamada con palabras
 sencillas:
 
 - *«get_ticket» lee: Read one ticket: its status, assignee and notes. (GET /api/tickets/\{id\}) de desk.example.com*
@@ -73,8 +75,8 @@ sencillas:
 
 **Aprobar** guarda la habilidad con sus llamadas. Una llamada que escribió el
 agente solo se puede guardar si pasó su comprobación con exactamente el
-contenido que se guarda, así que una llamada que cambias en la tarjeta de la
-propuesta vuelve al agente para que la compruebe de nuevo.
+contenido que se guarda, así que una llamada que cambias en la tarjeta tiene
+que volver a comprobarla el agente antes de poder guardarse.
 
 **Generar con el agente**, en un
 [flujo de navegador](/es/concepts/browser-workflows#generar-con-el-agente),
@@ -431,7 +433,8 @@ sesión, vuelve a iniciarla en el navegador, o te pide que lo hagas en la
 **Un sitio que cambió vuelve a la página.** Cuando un sitio responde que la
 llamada ya no existe, no se envía nada más, el agente hace el paso en la página
 y la transcripción anota *‹llamada›: La llamada necesita volver a grabarse.*
-Grábala de nuevo con Entrénalo, el constructor o **Generar con el agente**.
+Grábala de nuevo con el entrenamiento, el constructor o **Generar con el
+agente**.
 
 **Un cambio nunca se envía dos veces por su cuenta.** Si el sitio falla mientras
 se hace un cambio, al agente se le dice que puede haberse aplicado o no, y lee
@@ -461,8 +464,9 @@ Cada llamada deja una línea en la transcripción:
 
 ## Pruebas de habilidades
 
-Cuando se prueba una habilidad con llamadas —la prueba que hace Entrénalo antes
-de proponer una habilidad, o una prueba de habilidad en una tarea—, sus
+Cuando se prueba una habilidad con llamadas —una prueba de habilidad en una
+[sesión de entrenamiento](/es/concepts/training#pruebas-de-habilidades), o una
+prueba de habilidad en una tarea—, sus
 llamadas de lectura se ejecutan de verdad y sus llamadas de cambio nunca se
 envían. Un cambio en una prueba se responde como un ensayo, sin enviar nada al
 sitio.
@@ -523,7 +527,7 @@ intenta de nuevo cuando la causa desaparece. Qué significa cada motivo:
 
 | Acción | Quién |
 |---|---|
-| Crear llamadas con Entrénalo o con el constructor de agentes | Cualquiera que pueda editar el agente |
+| Crear llamadas en el entrenamiento o con el constructor de agentes | Cualquiera que pueda editar el agente |
 | Crear llamadas con **Generar con el agente** | Quien pueda cambiar el flujo de navegador |
 | Escribir o cambiar una llamada a mano | Cualquiera que pueda editar la habilidad; en una habilidad propia de un agente, cualquiera que pueda editar el agente; en una herramienta de un flujo de navegador, quien pueda cambiar el flujo |
 | Usar las llamadas de una habilidad | Cualquier tarea que cargue la habilidad |
@@ -534,6 +538,6 @@ intenta de nuevo cuando la causa desaparece. Qué significa cada motivo:
 <CardGrid>
   <LinkCard title="Flujos de navegador" href="/es/concepts/browser-workflows" description="Herramientas para un sitio web, que también pueden llevar llamadas al sitio, y cómo organizar uno." />
   <LinkCard title="Habilidades" href="/es/concepts/skills" description="Dónde se guardan las llamadas, y cómo se abre y se edita una habilidad." />
-  <LinkCard title="Agentes" href="/es/concepts/agents#entrenar-a-un-agente" description="Entrénalo: muéstrale el trabajo al agente y aprueba lo que aprendió." />
+  <LinkCard title="Entrenamiento" href="/es/concepts/training" description="Enséñale el trabajo al agente y aprueba lo que aprendió." />
   <LinkCard title="Inicios de sesión personales" href="/es/reference/settings/sign-ins" description="Cómo inicia sesión el agente en un sitio antes de llamarlo." />
 </CardGrid>

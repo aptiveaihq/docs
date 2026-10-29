@@ -53,13 +53,14 @@ Calls come in two kinds:
 There are three ways, and each one ends with a person's approval or a person's
 own edit.
 
-**1. Train the agent.** In a [Train it](/concepts/agents#training-an-agent)
-session you do the job once on the agent's computer. While you work, the agent
-can see the requests the site's page sends — their addresses, field names and
-the shape of each answer, never the values in them. It writes a call for each
-step worth turning into one and [checks](#how-a-call-is-checked) every call
-against what the site was seen sending. The proposal then lists each call in
-plain words:
+**1. Train the agent.** In a [training session](/concepts/training) you do the
+job on the agent's computer — yourself, or by letting the agent do it while you
+watch. While the site is used, the agent can see the requests the site's page
+sends — their addresses, the names of their fields and headers and the shape of
+each answer, never the values in them. It writes a call for each step worth
+turning into one, [checks](#how-a-call-is-checked) every call against what the
+site was seen sending, and keeps the skill under **Learned so far**. When you
+press **Save · N**, the card lists each call in plain words:
 
 - *“get_ticket” reads: Read one ticket: its status, assignee and notes. (GET /api/tickets/\{id\}) from desk.example.com*
 - *“close_ticket” changes data: PUT /api/tickets/\{id\}/status on desk.example.com*
@@ -67,7 +68,8 @@ plain words:
 
 **Approve** saves the skill with its calls. A call the agent wrote can be saved
 only if it passed its check with exactly the content being saved, so a call you
-change on the proposal card goes back to the agent to check again.
+change on the card has to be checked by the agent again before it can be
+saved.
 
 **Generate with agent** on a [browser workflow](/concepts/browser-workflows#generate-with-agent)
 works the same way for a workflow's tools: you use the site together on the
@@ -403,7 +405,7 @@ and tries again.
 **A changed site falls back to the page.** When a site answers that the call no
 longer exists, nothing more is sent, the agent does the step on the page, and
 the transcript notes *‹call›: The call needs re-recording.* Record it again with
-Train it, the builder or **Generate with agent**.
+training, the builder or **Generate with agent**.
 
 **A change is never sent twice on its own.** If the site fails while a change is
 being made, the agent is told it may or may not have been applied, and reads
@@ -430,8 +432,9 @@ Every call leaves one line in the transcript:
 
 ## Skill tests
 
-When a skill with calls is tested — the test Train it runs before proposing a
-skill, or a skill trial in a task — its read calls run for real and its change
+When a skill with calls is tested — a skill test in a
+[training session](/concepts/training#skill-tests), or a skill trial in a task —
+its read calls run for real and its change
 calls are never sent. A change in a test is answered as a trial, with nothing
 sent to the site.
 
@@ -487,7 +490,7 @@ cause is gone. What each reason means:
 
 | Action | Who |
 |---|---|
-| Make calls with Train it or the agent builder | Anyone who may edit the agent |
+| Make calls in training or with the agent builder | Anyone who may edit the agent |
 | Make calls with **Generate with agent** | Whoever may change the browser workflow |
 | Write or change a call by hand | Anyone who may edit the skill — for an agent's own skill, anyone who may edit the agent; for a browser workflow's tool, whoever may change the workflow |
 | Use a skill's calls | Any task that loads the skill |
@@ -498,6 +501,6 @@ cause is gone. What each reason means:
 <CardGrid>
   <LinkCard title="Browser workflows" href="/concepts/browser-workflows" description="Tools for a website, which can carry site calls too — and how to organize one." />
   <LinkCard title="Skills" href="/concepts/skills" description="Where calls are kept, and how a skill is opened and edited." />
-  <LinkCard title="Agents" href="/concepts/agents#training-an-agent" description="Train it: show the agent the job and approve what it learned." />
+  <LinkCard title="Training" href="/concepts/training" description="Teach the agent the job and approve what it learned." />
   <LinkCard title="Personal sign-ins" href="/reference/settings/sign-ins" description="How the agent signs in to a site before it calls it." />
 </CardGrid>
