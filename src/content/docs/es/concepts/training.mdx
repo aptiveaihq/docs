@@ -1,0 +1,406 @@
+---
+title: Entrenamiento
+description: El entrenamiento es una sesión de trabajo con un agente en su propia computadora, en la que le enseñas un trabajo contándoselo, dándole archivos, mostrándoselo o mirándolo trabajar. Cómo empezar una sesión desde el agente o desde una tarea, Grabar y la lectura de lo grabado, qué puede cambiar el entrenamiento, Aprendido hasta ahora, guardar con una casilla por cambio, Pruébalo ahora, Deshacer, terminar una sesión y volver a ella, y quién puede entrenar.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+El **entrenamiento** es una sesión de trabajo con uno de tus agentes, en su
+propia [computadora](/es/concepts/tasks#la-vista-en-vivo), en la que le enseñas
+cómo se hace un trabajo en tu empresa, o mejoras cómo hace uno que ya tiene. Tú
+llevas la iniciativa, el agente te sigue y va anotando lo que aprende. Cuando
+quieras, revisas esa lista y guardas las partes que quieras, como una nueva
+versión del agente. **Nada del agente cambia hasta que lo apruebes.**
+
+Puedes enseñarle de cuatro maneras, y mezclarlas en una misma sesión:
+
+- **Cuéntaselo.** Explica el trabajo en la conversación, como se lo explicarías
+  a un compañero nuevo: *"las facturas de más de 60 días van a la responsable de
+  finanzas; el resto espera al viernes"*. Con hablar basta: el agente no
+  necesita una demostración.
+- **Dale archivos.** Adjunta una captura, un procedimiento, una lista de precios
+  o una exportación con el clip, o suéltalos sobre la conversación.
+- **Muéstraselo.** Pulsa **● Grabar** y haz el trabajo una vez tú mismo en la
+  computadora; el agente lee lo grabado.
+- **Déjalo trabajar mientras miras.** Pídele que haga los pasos él mismo en la
+  computadora y corrígelo sobre la marcha. Todo lo que escribe en un sistema se
+  detiene antes en una tarjeta de aprobación.
+
+El agente hace preguntas breves en la conversación cuando algo no está claro, y
+usa una tarjeta solo cuando hay que elegir de verdad.
+
+| | Pruébalo | Refinar | Entrenamiento |
+|---|---|---|---|
+| **Sirve para** | Comprobar cómo trabaja el agente tal como está | Decirle al asistente qué cambiar en la configuración del agente | Enseñarle un trabajo al agente, o mejorar uno, en su computadora |
+| **Quién hace el trabajo** | El agente, como lo haría en una tarea | El asistente cambia el agente | Tú y el agente juntos, en una conversación en su computadora |
+| **Qué se guarda** | Nada: la conversación no se conserva | Un cambio en las instrucciones, de inmediato, como una versión nueva; lo demás con **Guardar agente** | Solo los cambios que marques y apruebes, como una versión nueva que puedes deshacer |
+
+[Pruébalo y Refinar](/es/concepts/agents#crear-un-agente) se describen junto
+al constructor de agentes.
+
+## Empezar una sesión
+
+**Desde el agente.** Elige **Entrenar**:
+
+- en el encabezado de la página del agente, junto a **Compartir**, **Iniciar una
+  tarea** y **Clonar**;
+- en el menú **…** del agente, en la página Agentes o en la barra lateral.
+
+Se inicia una computadora —*Iniciando la computadora…*, suele tardar 20–40 s— y
+la página del agente pasa a ser la sesión: su conversación y el panel lateral
+con las pestañas **Computadora**, **Detalles**, **Documentos** y **Aprendido
+hasta ahora**. El constructor del agente vuelve cuando la sesión termina. Todas
+las entradas al entrenamiento llevan un birrete.
+
+**Desde una tarea.** Hay dos caminos de una tarea en la que estás trabajando al
+entrenamiento:
+
+- **El agente lo ofrece.** Cuando nota algo que vale la pena conservar —lo
+  corregiste, o le explicaste cómo se hace algo—, el agente puede preguntarlo en
+  una tarjeta **Entrenamiento**: *¿Enseñarle esto a ‹agente›?*, con lo que notó.
+- **Tú lo pides.** **Entrenar agente**, en el menú **…** de la página de la
+  tarea, le pide al agente que haga esa oferta. Su descripción dice *Enséñale a
+  ‹agente› lo que pasó en esta tarea. El agente te pregunta antes.* Espera
+  mientras la tarea tenga una pregunta para ti.
+
+**Sí, abrir el entrenamiento** abre una sesión que empieza con lo que pasó en
+la tarea; su primera línea dice *De tu tarea “‹tarea›”: …*. **Ahora no** sigue
+con la tarea y no abre nada. En una computadora de escritorio la sesión se abre
+**junto a la tarea**, en una ventana propia, y la tarea sigue siendo la página;
+en un teléfono la página pasa a la sesión, con **← Volver a ‹tarea›** en su
+encabezado. Las dos conversaciones siguen activas. La tarea que abrió la sesión
+la muestra donde dijiste que sí, como una tarjeta con el birrete y su estado —
+*Entrenamiento · Trabajando*, *Te necesita*, *Abierto*, *Guardado* o
+*Terminado*—, y la tarjeta para guardar de la sesión se queda en la sesión. Un
+**Aprobar todo** que diste en la tarea nunca pasa a la sesión de entrenamiento.
+Si ya tienes una sesión abierta con ese agente, lo que notó la tarea se añade a
+ella en lugar de abrir otra, y la tarea anota *Se añadió a tu entrenamiento
+abierto de ‹agente›.*
+
+El entrenamiento nunca se ofrece en una tarea que inició una
+[automatización](/es/concepts/automations), en una sesión de grabación ni dentro
+de otra sesión de entrenamiento.
+
+## La computadora de la sesión
+
+La sesión trabaja en una computadora como la de una tarea, con una píldora de
+estado sobre la [vista en vivo](/es/concepts/tasks#la-vista-en-vivo) que dice
+siempre lo que está pasando: *Listo*, *Grabando 01:42*, *En pausa*, *Esperando
+el inicio de sesión*, *El agente tiene una pregunta*. El botón **ⓘ** (*Mostrar
+los detalles*) abre los tres pasos de una sesión, marcados **Hecho** y
+**Ahora**:
+
+1. **Inicia sesión, si el sitio lo pide**: *Con un inicio de sesión guardado o
+   uno nuevo. No se captura nada mientras hay una página de inicio de sesión
+   abierta.*
+2. **Enséñale**: *Cuéntale en el chat cómo funciona el trabajo, o pulsa Grabar
+   y hazlo una vez, luego Detener grabación. Te dirá lo que entendió. Repite
+   cuantas veces quieras.*
+3. **Guardar**: *Lo que aprende aparece en Aprendido hasta ahora. Pulsa Guardar
+   arriba para revisarlo y aprobarlo entero o en parte. Nada cambia hasta
+   entonces, y después puedes seguir enseñándole.*
+
+La píldora se reduce tras unos segundos y, mientras grabas, se esconde hacia
+arriba (*Ocultar los controles*); apoya el puntero en su pequeña pestaña para
+traerla de vuelta.
+
+**Iniciar sesión.** Mientras hay una página de inicio de sesión abierta, la
+píldora dice *Esperando el inicio de sesión*. **Iniciar sesión con “‹nombre›”**
+usa uno de los [inicios de sesión](/es/concepts/agents#inicios-de-sesión) del
+propio agente; **Iniciar sesión con tu “‹nombre›”** usa uno de tus
+[inicios de sesión personales](/es/reference/settings/sign-ins), como lo hacen
+tus propias tareas. Los tuyos solo se te ofrecen a ti, en una sesión que tú
+iniciaste, y solo se escriben en un turno que diriges tú; cualquier otra persona
+en la sesión ve solo los del agente. Cuando inicias sesión con uno tuyo, el
+navegador de la sesión sigue con tu sesión iniciada hasta que la sesión termina,
+y cualquiera que trabaje en la sesión actúa en ella. **Iniciar sesión con una cuenta nueva…**
+guarda un inicio de sesión nuevo en el agente y lo usa. También puedes iniciar
+sesión a mano en la vista en vivo.
+
+**Si no hay ninguna computadora libre**, la píldora dice *No hay ninguna
+computadora libre ahora*, con **↻ Reintentar** y **Descartar sesión**.
+
+La computadora de la sesión no cuenta para el número de computadoras que puedes
+tener a la vez, así que abrir el entrenamiento desde una tarea nunca pausa la
+tarea, y la sesión no es una de las tareas en las que el agente
+[trabaja a la vez](/es/concepts/agents#cuántas-tareas-hace-un-agente-a-la-vez).
+
+**Cada sesión tiene un navegador propio.** Empieza vacío —así que vuelves a
+iniciar sesión en cada sesión— y nunca lo usan tus tareas ni ninguna sesión
+posterior. Cuando terminas la sesión, su navegador se vacía, con sus inicios de
+sesión incluidos, si su computadora sigue en marcha en ese momento.
+
+## Mostrárselo: Grabar
+
+| Control | Qué hace |
+|---|---|
+| **● Grabar** | Empieza a grabar lo que se hace en el navegador de la computadora |
+| **❚❚ Pausar** | Deja de capturar por ahora: *no se captura nada mientras está en pausa* |
+| **● Reanudar** | Vuelve a grabar después de una pausa |
+| **■ Detener grabación** | Termina la grabación y se la entrega al agente |
+
+La primera vez que pulsas **● Grabar** en un navegador, un aviso dice *Esta
+computadora es real*: *Lo que hagas en esta computadora es real: guardar aquí
+cambia el registro. Usa uno que se pueda cambiar sin problema. Mientras trabajas
+aquí, el agente ve lo que la página envía al sitio, salvo las contraseñas, para
+copiarlo igual.*, con **● Grabar** y **Todavía no**. Grabar no es una práctica.
+
+**Qué conserva una grabación.** *La grabación guarda los pasos, las direcciones
+de las páginas y lo que la página envió al sitio, nunca contraseñas ni cookies.*
+Los tokens, las claves y otras credenciales de lo que envió la página también se
+ocultan. La grabación se pausa sola mientras hay una página de inicio de sesión
+abierta (*en pausa mientras inicias sesión*) y sigue cuando desaparece.
+
+**La lectura de lo grabado.** Cuando pulsas **■ Detener grabación**, la
+conversación anota *■ Grabación … detenida* con su duración, y el agente lee la
+grabación y te dice lo que entendió. Corrígelo en la conversación si leyó algo
+mal. Puedes grabar todas las veces que quieras en una sesión.
+
+El agente también puede empezar y detener una grabación él mismo cuando se lo
+pides.
+
+### Qué ve el agente de las solicitudes de un sitio
+
+Mientras tú o el agente usan un sitio, el agente puede leer la lista de
+solicitudes que envió la propia página del sitio: el método y la dirección de
+cada una, los **nombres** de sus campos de consulta y de cuerpo y de sus
+encabezados, y la forma de cada respuesta, no sus valores. Así escribe
+[llamadas al sitio](/es/concepts/site-calls).
+
+**Una grabación conserva los valores.** Cuando se graba un paso, la grabación
+guarda lo que la página envió con cada solicitud, valores incluidos —lo que se
+escribió en un campo, lo que llevaba un campo oculto—, pero nunca lo que
+respondió el sitio. Las contraseñas, los encabezados de inicio de sesión, los
+tokens, las claves y otras credenciales se ocultan. Así, cuando una llamada
+necesita un valor que la página nunca muestra, el agente lo lee de una
+grabación de ese paso; si no la hay, te pide que grabes el paso una vez.
+
+## Qué puede cambiar el entrenamiento
+
+| Cambio | Qué hace | Aprendido hasta ahora dice |
+|---|---|---|
+| **Una regla fija** | Una regla breve que se añade al final de las instrucciones del agente y vale para todas las tareas | → instrucciones |
+| **Un cambio en las instrucciones** | Un cambio más amplio en las instrucciones. Cuando lo que pides contradice lo que está escrito, el texto nuevo reemplaza al anterior | → instrucciones |
+| **Una habilidad nueva** | Cómo hacer un tipo de trabajo, como una de [las habilidades propias del agente](/es/concepts/skills#habilidades-que-aprende-un-agente): sus pasos, y los scripts y las [llamadas al sitio](/es/concepts/site-calls) que usan | → habilidad nueva |
+| **Un cambio en una de sus habilidades** | Mejora una habilidad que el agente ya tiene, con el mismo nombre | → su habilidad “‹nombre›” |
+| **Frases de inicio** | Añade o quita una [frase de inicio](/es/concepts/agents#frases-de-inicio) | → inicios de conversación |
+| **Conocimiento** | Añade un documento nuevo de [conocimiento](/es/concepts/agents#conocimiento), añade entradas al final de un archivo existente o cambia un fragmento de uno | → conocimiento |
+
+El **conocimiento** es para los datos de consulta que usa el trabajo: listas,
+precios, códigos, direcciones, políticas. Un documento nuevo se escribe a partir
+de lo que dijiste, pegaste o adjuntaste, nunca inventado, como un archivo `.md`,
+`.txt` o `.csv` de hasta 256 KB. Solo se puede añadir a un archivo de texto,
+Markdown o CSV, o cambiarlo; nunca a un PDF, un archivo de Word, un libro de
+Excel ni una imagen. En una sesión de entrenamiento el agente nunca escribe en
+su conocimiento directamente: todo espera tu aprobación, como cualquier otro
+cambio.
+
+**Lo que el entrenamiento no cambia.** Los conectores del agente, sus límites de
+seguridad, su modelo, su nombre y con quién se comparte no se cambian en el
+entrenamiento. Cuando el agente cree que alguno debería cambiar, apunta la idea
+en **Ideas, no se guardan** —*conviene que lo hagas tú*— y tú haces el cambio
+en la pestaña [Configurar](/es/concepts/agents#configurar-un-agente) del agente
+si estás de acuerdo. Un [inicio de sesión](/es/concepts/agents#inicios-de-sesión)
+que añades al iniciar sesión se guarda en el agente de inmediato, como en
+cualquier otro sitio.
+
+Un conjunto de cambios tiene como máximo 20 cambios, de ellos hasta cinco
+habilidades y cinco documentos nuevos de conocimiento.
+
+### Pruebas de habilidades
+
+El agente puede probar una habilidad que redactó antes de que la guardes: la
+ejecuta en la computadora en un contexto nuevo, como lo haría una tarea futura,
+y la píldora dice *Probando «‹habilidad›» · prueba 1 de 12* —*Míralo en la
+vista en vivo*—. Una sesión hace como máximo 12 pruebas en total.
+
+Una prueba actúa de verdad en tus sistemas, con una excepción: una
+[llamada al sitio](/es/concepts/site-calls#pruebas-de-habilidades) que cambia
+datos nunca se envía en una prueba. Cuando una prueba está a punto de escribir
+—enviar un correo, cambiar un registro— se detiene antes y pregunta
+*¿Permites que las pruebas de esta sesión puedan ‹hacerlo›?*, con **Aprobar** y
+**Rechazar**. **Aprobar todo**, dado en otro momento de la sesión, no cubre una
+prueba. Una vez que apruebas un tipo de escritura, las pruebas posteriores de la
+sesión también pueden hacerla, y la conversación anota cada una: *Hecho en una
+prueba, como permitiste para las pruebas de esta sesión.*
+
+## Aprendido hasta ahora
+
+Todo lo que aprende el agente aparece en la pestaña **Aprendido hasta ahora**
+del panel lateral, una lección por línea, en palabras sencillas, con adónde va:
+*Adjuntar siempre el PDF → instrucciones*, *Cerrar los eventos inspeccionados →
+habilidad nueva*. El chip **Aprendido hasta ahora · N**, sobre el cuadro de
+mensajes, la abre. Las ideas que el agente no puede cambiar por sí mismo
+aparecen aparte, como *Ideas, no se guardan*.
+
+La lista es de solo lectura. Para cambiarla, dilo en la conversación —*"quita la
+tercera"*, *"el corte es a 60 días, no a 30"*— y el agente la actualiza. Sin
+nada aprendido aún, la pestaña dice *Todavía no hay nada nuevo que guardar.*
+
+## Guardar lo que aprendió
+
+<Steps>
+
+1. **Pulsa Guardar · N**, arriba en la sesión: *Revisa lo que aprendió y
+   guárdalo*. N cuenta los cambios que se pueden guardar; las ideas nunca
+   cuentan. También puedes pedirle al agente, con tus palabras, que te muestre lo
+   que aprendió. El botón dice **Preparando…** mientras el agente trabaja.
+
+2. **Antes, el agente repasa toda la sesión.** Antes de mostrarte nada, vuelve
+   sobre todo lo que dijiste, adjuntaste y mostraste, y todo lo que hizo él,
+   añade lo que aprendió y aún no había anotado, y corrige lo que la conversación
+   posterior cambió.
+
+3. **Lee la tarjeta.** Empieza con *N cambios que aprendió ‹agente›* y muestra
+   cada cambio completo: la regla, el cambio en las instrucciones como un antes y
+   un después (las líneas que empiezan con **-** se eliminan; las que empiezan con
+   **+** se añaden), los pasos y archivos de cada habilidad, las frases de inicio
+   y, para el conocimiento, *Añade el documento “…”*, *Añade N entradas a “…”* o
+   *Actualiza “…”* con el texto. En **Cambios** hay **una casilla por cambio**,
+   todas marcadas.
+
+4. **Desmarca lo que no quieras y responde.**
+
+</Steps>
+
+| Respuesta | Qué ocurre |
+|---|---|
+| **Aprobar** | *Guardar ahora en el agente los cambios marcados. El entrenamiento sigue.* Los cambios marcados se guardan juntos, como una nueva versión del agente. **Los cambios que desmarcaste se descartan** de la sesión y no se vuelven a proponer |
+| **Seguir entrenando** | *Dejar esto a un lado y seguir enseñando. No se guarda nada.* Todos los cambios siguen en Aprendido hasta ahora |
+| **Dile qué cambiar** | Escribe una corrección en lugar de elegir. El agente corrige los cambios y muestra una tarjeta nueva |
+
+**Editar**, en la tarjeta, te deja corregir el **Nombre**, **Cuándo usarla**, los
+**Pasos** o los **Archivos** de una habilidad, o la **Etiqueta** y la
+**Solicitud** de una frase de inicio, antes de aprobar. No se guarda nada en el
+agente hasta que apruebas.
+
+Al guardar, Aprobar vuelve a comprobar cada cambio: un cambio sobre algo que se
+editó desde que el agente lo preparó —a mano en Configurar, o un archivo de
+conocimiento que alguien volvió a subir— se rechaza con su nombre, y tú lo
+desmarcas o le pides al agente que lo prepare de nuevo. Si el agente tiene
+[automatizaciones](/es/concepts/automations), la tarjeta dice que usan los
+cambios desde su próxima ejecución.
+
+**El entrenamiento sigue después de Aprobar.** La conversación anota *Guardado
+como versión N.* y cuántos cambios desmarcados se descartaron. Puedes seguir
+enseñándole y guardar de nuevo tantas veces como quieras; cada guardado es una
+versión propia.
+
+## Pruébalo ahora
+
+Después de guardar, arriba en la pestaña **Aprendido hasta ahora** aparece
+**Pruébalo ahora**: *Inicia una tarea nueva que usa solo lo guardado y trae aquí
+el resultado. Pide permiso antes de actuar, como cualquier tarea nueva.*
+
+La prueba es una tarea normal del agente, vinculada a la sesión: usa la
+configuración guardada del agente y su propio modelo, no lo que sabe la
+conversación del entrenamiento, así que muestra lo que hará la próxima tarea
+real. Empieza con una frase de inicio —la última que guardó la sesión o, si no,
+la primera del agente— y la línea de guardado dice cuál (*Pruébalo con: …*). Sin
+ninguna frase de inicio, empieza con *Haz el trabajo para el que te entrenaron,
+de principio a fin.* En una computadora de escritorio se abre junto a la sesión;
+en un teléfono se abre como su propia página. Cuenta para tus computadoras como
+cualquier tarea que inicias, y te avisa como una.
+
+Cuando la prueba termina, trae el resultado a la conversación del entrenamiento,
+y el agente lo comenta contigo; y si la prueba se detuvo para preguntarte algo,
+si la configuración guardada debería haberlo cubierto. Una prueba que se
+ejecutó pero no tenía nada con qué trabajar lo dice —*Lo intentó, pero no
+encontró nada con qué trabajar, así que todavía no demuestra que los pasos
+funcionen.*— en lugar de pasar por un éxito. Si una habilidad se
+guardó sin probar, la pestaña dice *Aún sin probar: ‹habilidades›. Pruébalo una
+vez antes de programarlo.*
+
+<Aside type="caution" title="Pruébalo ahora es trabajo real.">
+  La prueba actúa en tus sistemas como cualquier tarea. Pregunta antes de cada
+  escritura, como una tarea nueva: un **Aprobar todo** que diste en la sesión de
+  entrenamiento no pasa a ella.
+</Aside>
+
+## Deshacer
+
+**Deshacer**, junto a **Pruébalo ahora**, revierte el último guardado de la
+sesión, mientras siga siendo el cambio más reciente del agente. Una
+confirmación, *¿Deshacer este entrenamiento?*, dice exactamente qué ocurrirá:
+
+- la versión a la que vuelve el agente, con sus instrucciones y frases de inicio
+  como estaban;
+- las habilidades que añadió el guardado, *se eliminan para siempre*, y las que
+  cambió, vuelven a como estaban;
+- los documentos de conocimiento que añadió, se quitan, y los archivos que
+  cambió, vuelven a como estaban, como una versión nueva;
+- lo que se conserva: una habilidad que alguien editó después (se queda salvo
+  que la marques), una habilidad con una versión bloqueada, un archivo de
+  conocimiento que volvió a cambiar.
+
+*Lo que las tareas o automatizaciones ya hicieron con lo que guardó este
+entrenamiento queda hecho.* Cuando el agente ya cambió después del guardado,
+Deshacer deja de ofrecerse ahí: *Usa sus Versiones para volver atrás*; consulta
+[Versiones](/es/concepts/agents#versiones).
+
+## Terminar una sesión
+
+**Terminar**, en el encabezado de la sesión (o el botón de cerrar de la
+computadora), siempre pregunta antes:
+
+| El cuadro | Sus botones |
+|---|---|
+| *¿Guardar primero lo que aprendió ‹agente›?*: hay algo aprendido sin guardar | **Revisar y guardar** (lo mismo que **Guardar · N**) · **Descartar** · **Seguir entrenando** |
+| *¿Terminar esta sesión de entrenamiento?*: no hay nada esperando a guardarse | **Terminar** · **Seguir entrenando** |
+| *Hay una grabación en curso* | **Detener la grabación primero** · **Terminar de todos modos** · **Seguir entrenando** |
+
+**Descartar** quita solo lo que no está guardado; lo que aprobaste y no
+deshiciste se queda en el agente. Si terminas una sesión con una grabación en
+curso, la grabación se borra antes de que el agente la vea. Terminar puede
+tardar hasta un minuto —*Terminando la sesión de entrenamiento…*— y la
+computadora se cierra.
+
+Una sesión también termina sola tras **una semana sin actividad**. Su
+conversación sigue legible como una tarea, y lo que guardaste se queda en el
+agente.
+
+## Salir y volver
+
+Una sesión sigue abierta cuando sales de la página. Cada persona tiene **una
+sola sesión abierta a la vez**, con cualquier agente:
+
+- **Entrenar**, **Configurar** del agente o un enlace a la sesión te devuelven a
+  ella, incluso después de recargar. Mientras tu sesión con un agente está
+  abierta, cualquier camino al constructor de ese agente lleva a la sesión.
+- Empezar a entrenar a otro agente con una sesión abierta se rechaza: *Ya estás
+  entrenando a ‹agente›. Termina esa sesión primero.*, con **Abrirlo**.
+- Un agente tiene una sola sesión abierta a la vez. Mientras un compañero lo
+  entrena, **Entrenar** dice *‹nombre› está entrenando a este agente desde las
+  ‹hora›.*
+
+**Historial de entrenamiento**, en el encabezado de la página del agente,
+muestra las sesiones del agente. La tuya abierta abre la sesión; una terminada,
+o la de un compañero, se abre en modo de solo lectura en su página de tarea.
+
+## Quién puede entrenar
+
+- **Quien puede editar el agente e iniciar tareas**: quien lo creó, las personas
+  con **Puede editar**, los propietarios y administradores de su espacio de
+  trabajo, incluido un miembro en su propio agente personal. Consulta
+  [Compartir](/es/concepts/sharing).
+- Una sesión es una tarea, así que necesita el mismo
+  [acceso de pago](/es/concepts/agents#acceso-de-pago) que iniciar una.
+- **No en un espacio de trabajo que contiene datos regulados**: *El
+  entrenamiento no está disponible en este espacio de trabajo: contiene datos
+  regulados.*
+- No en un agente eliminado.
+
+**Quién recibe avisos.** Cuando empieza una sesión, los demás propietarios del
+espacio de trabajo reciben una notificación, *Comenzó una sesión de
+entrenamiento con ‹agente›*, y cada inicio de sesión guardado que se escribe
+durante ella queda en el registro de auditoría. Consulta la
+[Bandeja de entrada](/es/concepts/inbox#de-qué-te-avisamos).
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Agentes" href="/es/concepts/agents" description="Configurar, Refinar, Pruébalo y Versiones." />
+  <LinkCard title="Habilidades" href="/es/concepts/skills#habilidades-que-aprende-un-agente" description="Las habilidades que el entrenamiento guarda en un agente." />
+  <LinkCard title="Llamadas al sitio" href="/es/concepts/site-calls" description="Habilidades que envían las solicitudes del propio sitio en lugar de hacer clic." />
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="La vista en vivo, las aprobaciones y Entrenar agente desde una tarea." />
+</CardGrid>

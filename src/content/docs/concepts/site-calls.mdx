@@ -1,6 +1,6 @@
 ---
 title: Site calls
-description: A skill can carry the requests a website's own pages send, so the agent does a step with one call from its signed-in browser instead of many clicks. How site calls are made and checked, the call file field by field, sites whose data lives on other addresses, long answers kept as files, what keeps calls safe, what each message means, and their limits.
+description: A skill can carry the requests a website's own pages send, so the agent does a step with one call from its signed-in browser instead of many clicks. How site calls are made and checked, the call file field by field, sites whose data lives on other addresses, long answers kept as files, credentials hidden, what keeps calls safe, what each message means, and their limits.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -53,21 +53,32 @@ Calls come in two kinds:
 There are three ways, and each one ends with a person's approval or a person's
 own edit.
 
-**1. Train the agent.** In a [Train it](/concepts/agents#training-an-agent)
-session you do the job once on the agent's computer. While you work, the agent
-can see the requests the site's page sends — their addresses, field names and
-the shape of each answer, never the values in them. It writes a call for each
-step worth turning into one and [checks](#how-a-call-is-checked) every call
-against what the site was seen sending. The proposal then lists each call in
+**1. Train the agent.** In a [training session](/concepts/training) you do the
+job on the agent's computer — yourself, or by letting the agent do it while you
+watch. While the site is used, the agent can see the requests the site's page
+sends — their addresses, the names of their fields and headers and the shape of
+each answer, not the values in them; the values are in a
+[recording](/concepts/training#showing-it-record) of the step. It writes a call
+for each step worth turning into one, [checks](#how-a-call-is-checked) every
+call against what the site was seen sending, and keeps the skill under
+**Learned so far**. When you press **Save · N**, the card lists each call in
 plain words:
 
 - *“get_ticket” reads: Read one ticket: its status, assignee and notes. (GET /api/tickets/\{id\}) from desk.example.com*
 - *“close_ticket” changes data: PUT /api/tickets/\{id\}/status on desk.example.com*
   — *never changes assignee, priority* — *read back with “get_ticket” afterwards*
+  — *always sends status = closed*
+
+Each value a call always sends, whatever the agent fills in, is listed as an
+*always sends* line, so you see the fixed values before you approve (a long
+list is shortened to a few lines and how many more). A credential, or a value
+under a field named like a password, token or key, is named but never shown:
+*always sends token (a credential, hidden)*.
 
 **Approve** saves the skill with its calls. A call the agent wrote can be saved
 only if it passed its check with exactly the content being saved, so a call you
-change on the proposal card goes back to the agent to check again.
+change on the card has to be checked by the agent again before it can be
+saved.
 
 **Generate with agent** on a [browser workflow](/concepts/browser-workflows#generate-with-agent)
 works the same way for a workflow's tools: you use the site together on the
@@ -95,7 +106,10 @@ checked against the site*.
    it.
 2. It reads the list of requests the page sent in that tab: each one's method,
    address, the names of its query and body fields, the names of the headers
-   it carried, and the shape of its answer. It never reads the values.
+   it carried, and the shape of its answer — not the values. When a call needs
+   a value the page never shows, such as a hidden field's, it reads what the
+   page sent from a [recording](/concepts/training#showing-it-record) of the
+   step, with credentials hidden, or asks you to record the step once.
 3. It takes only a request the site's own page made. It never guesses an
    address, and never turns a sign-in, security, token or analytics request
    into a call.
@@ -113,7 +127,18 @@ site, in the same session:
   method, address, query fields, body fields and borrowed headers. A call that
   leaves out a sign-in header the page sent fails its check, because the site
   would refuse it.
-- **A read runs once for real**, and its answer is shown to the agent.
+- **A read runs once for real**, and its answer is shown to the agent. A
+  `POST` the site uses only to search or list runs for real in a check only
+  when the page itself sent exactly that request to the same address, the site
+  answered it with success, and its address (or a field such as `cmd`) names a
+  read — *get*, *list*, *search* and the like.
+- **When the check is not sure, it asks you.** If such a `POST` might change
+  something — its address is not exactly the page's, its fields differ, it
+  does not name a read, or a word in it may name an action — a card asks *Send
+  this once for real?*, showing exactly the request and why the check is not
+  sure. **Approve** sends exactly that request once; **Decline** sends nothing.
+  **Approve all**, an agent's approvals switched off and an automation never
+  answer it for you, and a skill test never sends it.
 - **A change is built and shown, but not sent.** If you name a record that is
   safe to change, the agent can also make that one change for real while it
   checks — on an approval card, and only after you approve it. It never
@@ -121,6 +146,16 @@ site, in the same session:
 - **The check covers the exact content.** Change anything afterwards — an
   input's rule, the description, even a space — and the call has to be checked
   again before it can be saved.
+- **No credential in a call.** A call with a password, token, key or
+  connection string written into it fails its check and is refused when it is
+  saved, whether the agent wrote it or you edited it. A call borrows its
+  sign-in from the page; it never carries one.
+
+**Exporting what was checked.** Ask the agent to export its checked calls: it
+writes each one, exactly as checked and with any credential hidden, as a file
+on the agent's computer, in `out/site-calls/` — useful when a call was checked
+early in a long session. To download one, ask the agent to add it to the
+task's files.
 
 On a workspace that holds regulated data, calls are not run against the site:
 only the file and its match with the page's requests are checked.
@@ -324,12 +359,12 @@ either.
 The agent can give one call several sets of inputs at once — its **items**:
 
 - **A read takes up to 10 items** — ten tickets read in one call.
-- **A change takes up to 3 items**, and **one approval card covers them**,
+- **A change takes up to 25 items**, and **one approval card covers them**,
   listing every record and the values it will set. More records take another
   call, and another card.
 
 A skill's steps should say so: *Call “close_ticket” once, with every ticket to
-close (up to 3 per call). If it is refused or fails, do the step on the page.*
+close (up to 25 per call). If it is refused or fails, do the step on the page.*
 They should not ask for your approval in the conversation as well — the card
 is the approval, and asking twice only slows you down.
 
@@ -361,6 +396,11 @@ about 20 KB is **kept as a file** in the task's files, the same way
   connector; see
   [When a connector's data comes back incomplete](/concepts/tasks#when-a-connectors-data-comes-back-incomplete).
 
+**A read of several items keeps every answer.** When the agent reads more
+than one item in one call, each item's answer is kept as a file too, however
+short, so a script can work over all of them. This needs an agent that can run
+scripts on its computer; otherwise the answers come back in the conversation.
+
 A skill whose reads can be long should say so in its steps: *A long answer
 comes back as a file: count, total or filter it with a script that reads that
 file.* The transcript line still counts every item: *Read 1,901 items from
@@ -369,7 +409,7 @@ desk.example.com (GET, 200)*.
 ## What keeps them safe
 
 **Reads run without asking; changes always ask.** Each change call waits on one
-approval card for up to three records — *The agent wants to run “close_ticket”
+approval card for up to 25 records — *The agent wants to run “close_ticket”
 from “‹skill›” on desk.example.com for 3 records. Allow it?* — listing every
 record and the values it will set. **Approve** makes those changes once,
 **Approve all** also covers the task's later site-call changes, and **Decline**
@@ -392,7 +432,7 @@ batch stops. Fields every change touches on its own — `updatedAt`, `version`,
 read-back reports a change to one.
 
 **Paced.** Changes go one at a time, at least a second apart, and a task changes
-at most 100 records this way; past that, a new task continues the work.
+at most 500 records this way; past that, a new task continues the work.
 
 **A site that refuses stops.** If the site refuses a call, or answers with a
 challenge page, the agent sends no more calls to that site in the task and does
@@ -403,7 +443,7 @@ and tries again.
 **A changed site falls back to the page.** When a site answers that the call no
 longer exists, nothing more is sent, the agent does the step on the page, and
 the transcript notes *‹call›: The call needs re-recording.* Record it again with
-Train it, the builder or **Generate with agent**.
+training, the builder or **Generate with agent**.
 
 **A change is never sent twice on its own.** If the site fails while a change is
 being made, the agent is told it may or may not have been applied, and reads
@@ -418,6 +458,17 @@ anything the site sends back is cleaned of them before the agent reads it. An
 answer that still carries the page's token, even encoded, is not passed on. The
 agent's own scripts on the computer cannot reach the signed-in browser.
 
+**Credentials with a recognisable shape are hidden.** Whatever its field is
+called, a value is shown as `[hidden:secret]` when it has the shape of a
+credential: a connection string with a password, a sign-in token, a private
+key, a web address with a password in it, or an API key in a well-known
+format. It is hidden in a recording, in a call's answer and on the cards. A
+password or token that looks like ordinary text may not be recognised, and is
+then not hidden. A file a call saves keeps the site's original values on the
+agent's computer; what the agent reads from it is hidden. A saved file with
+too many credentials to hide one by one is withheld from the agent whole, and
+the agent is told so.
+
 **What runs is what was saved.** A task runs the calls as they were saved when
 it loaded the skill. A save made while the task runs applies from the next task,
 and nothing on the computer can change what a call does.
@@ -430,8 +481,9 @@ Every call leaves one line in the transcript:
 
 ## Skill tests
 
-When a skill with calls is tested — the test Train it runs before proposing a
-skill, or a skill trial in a task — its read calls run for real and its change
+When a skill with calls is tested — a skill test in a
+[training session](/concepts/training#skill-tests), or a skill trial in a task —
+its read calls run for real and its change
 calls are never sent. A change in a test is answered as a trial, with nothing
 sent to the site.
 
@@ -474,8 +526,9 @@ cause is gone. What each reason means:
 - **Signing in stays on the page.** Signing in, security checks and anything to
   do with passwords are never site calls; the agent signs in on the page, with a
   [stored sign-in](/reference/settings/sign-ins) or with your help.
-- **Fixed limits.** Up to 20 calls per skill, 10 items per read, 3 records per
-  approval card and 100 changed records per task, paced one change per second.
+- **Fixed limits.** Up to 20 calls per skill, 10 items per read, 25 records
+  per approval card and 500 changed records per task, paced one change per
+  second.
   These cannot be changed per site yet.
 - **Answers have a size limit.** A read's answer can be up to 8 MB, and one
   over about 20 KB is [kept as a file](#long-answers). A change's answer is
@@ -487,17 +540,18 @@ cause is gone. What each reason means:
 
 | Action | Who |
 |---|---|
-| Make calls with Train it or the agent builder | Anyone who may edit the agent |
+| Make calls in training or with the agent builder | Anyone who may edit the agent |
 | Make calls with **Generate with agent** | Whoever may change the browser workflow |
 | Write or change a call by hand | Anyone who may edit the skill — for an agent's own skill, anyone who may edit the agent; for a browser workflow's tool, whoever may change the workflow |
 | Use a skill's calls | Any task that loads the skill |
 | Approve a change | Whoever answers the task's approval card, as for any other approval |
+| Answer *Send this once for real?* | Whoever answers the task's cards; **Approve all** never covers it |
 
 ## Next
 
 <CardGrid>
   <LinkCard title="Browser workflows" href="/concepts/browser-workflows" description="Tools for a website, which can carry site calls too — and how to organize one." />
   <LinkCard title="Skills" href="/concepts/skills" description="Where calls are kept, and how a skill is opened and edited." />
-  <LinkCard title="Agents" href="/concepts/agents#training-an-agent" description="Train it: show the agent the job and approve what it learned." />
+  <LinkCard title="Training" href="/concepts/training" description="Teach the agent the job and approve what it learned." />
   <LinkCard title="Personal sign-ins" href="/reference/settings/sign-ins" description="How the agent signs in to a site before it calls it." />
 </CardGrid>

@@ -48,7 +48,7 @@ A browser workflow works best when it mirrors how people use the site:
   and what to do when it is refused: *To find the invoices of a date range,
   call “list_invoices” with the range; a long answer comes back as a file —
   count or total it with a script that reads that file. To mark invoices paid,
-  call “mark_invoice_paid” once with every invoice (up to 3 per call). If a
+  call “mark_invoice_paid” once with every invoice (up to 25 per call). If a
   call is refused or fails, do the step on the page.*
 - **Addresses are variables, never text in a tool.** The site's address, and
   each separate address its pages fetch data from, is a **Web address**
@@ -151,13 +151,16 @@ propose the tools. The agent can also turn steps into
 
 - **It finds the request.** While you use the site together, it sees the
   requests the site's pages send — their addresses, field names, header names
-  and the shape of each answer, never the values — and takes only one the
-  page itself made. For a change, it reads the rules of the site's own form
-  without submitting it.
+  and the shape of each answer, not the values — and takes only one the
+  page itself made. A value the page never shows it reads from a recording of
+  the step, with credentials hidden. For a change, it reads the rules of the
+  site's own form without submitting it.
 - **It checks the call against the site** before proposing it: the page must
   have made that request in the session, a read runs once for real, and a
   change is built and shown but not sent — unless you name a record that is
-  safe to change, and approve that one test change on a card.
+  safe to change, and approve that one test change on a card. When the check
+  is not sure a search `POST` only reads, it asks *Send this once for real?*
+  first.
 - **The check is of the exact content.** A call changed afterwards, on the
   card or by the agent, is checked again before it can be saved.
 

@@ -1,0 +1,374 @@
+---
+title: Training
+description: Training is a working session with an agent on its own computer, where you teach it a job by telling it, giving it files, showing it or watching it work. Starting a session from the agent or from a task, Record and the read-back, what training can change, Learned so far, saving with one tick per change, Try it now, Undo, ending a session and coming back to it, and who can train.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**Training** is a working session with one of your agents, on its own
+[computer](/concepts/tasks#the-live-view), where you teach it how a job is done
+in your company — or improve how it does a job it already has. You lead, the
+agent follows, and it keeps a list of what it has learned as you go. When you
+are ready, you review that list and save the parts you want, as one new version
+of the agent. **Nothing about the agent changes until you approve it.**
+
+You can teach in any of four ways, and mix them in one session:
+
+- **Tell it.** Explain the job in the conversation, the way you would to a new
+  colleague — *"invoices over 60 days go to the finance lead, the rest wait
+  for Friday"*. Talking is enough: the agent does not need a demonstration.
+- **Give it files.** Attach a screenshot, a procedure, a price list or an
+  export with the paperclip, or drop it onto the conversation.
+- **Show it.** Press **● Record** and do the job once yourself on the
+  computer; the agent reads the recording back.
+- **Let it do the job while you watch.** Ask it to do the steps itself on the
+  computer and correct it as it goes. Anything that writes to a system still
+  stops on an approval card first.
+
+The agent asks short questions in the conversation when something is not
+clear, and uses a card only for a real choice.
+
+| | Try it | Refine | Training |
+|---|---|---|---|
+| **For** | Checking how the agent works as it is | Telling the builder what to change in the agent's setup | Teaching the agent a job, or improving one, on its computer |
+| **Who does the work** | The agent, as it would in a task | The builder changes the agent | You and the agent together, in a conversation on its computer |
+| **What is saved** | Nothing — the conversation is not kept | An instruction change at once, as a new version; anything else on **Save agent** | Only the changes you tick and approve, as one new version you can undo |
+
+[Try it and Refine](/concepts/agents#creating-an-agent) are described with the
+agent builder.
+
+## Starting a session
+
+**From the agent.** Choose **Train**:
+
+- in the agent's page header, beside **Share**, **Start a task** and
+  **Clone**;
+- in the agent's **…** menu on the Agents page or in the sidebar.
+
+A computer starts — *Starting the computer…*, usually 20–40 s — and the
+agent's page becomes the session: its conversation, and the side panel with the
+**Live view**, **Details**, **Documents** and **Learned so far** tabs. The
+agent's builder comes back when the session ends. Every training entry wears a
+graduation cap.
+
+**From a task.** Two ways lead from a task you are working on to training:
+
+- **The agent offers it.** When it notices something worth keeping — you
+  corrected it, or explained how something is done — the agent can ask on a
+  **Training** card: *Teach this to ‹agent›?*, with what it noticed.
+- **You ask for it.** **Train agent** in the task page's **…** menu asks the
+  agent to make that offer. Its tooltip says *Teach what happened in this task
+  to ‹agent›. The agent asks first.* It waits while the task has a question for
+  you.
+
+**Yes, open training** opens a session started with what happened in the task
+— its first line reads *From your task “‹task›”: …*. **Not now** carries on
+with the task and opens nothing. On a computer the session opens **beside the
+task**, in a window of its own, and the task stays the page; on a phone the page
+goes to the session, with **← Back to ‹task›** in its header. Both
+conversations stay live. The task that opened the session shows it where you
+said yes, as a card with the graduation cap and its state — *Training · Working*, *Needs you*,
+*Open*, *Saved* or *Ended* — and the session's Save card stays in the
+session. An **Approve all** you gave in the task never carries into the
+training session. If you already have a session open on that agent, what the
+task noticed is added to it rather than opening a second one, and the task
+notes *Added to your open training of ‹agent›.*
+
+Training is never offered on a task an [automation](/concepts/automations)
+started, on a recording session or inside another training session.
+
+## The session's computer
+
+The session works on a computer like a task's, with a status pill over the
+[live view](/concepts/tasks#the-live-view) that always says what is happening —
+*Ready*, *Recording 01:42*, *Paused*, *Waiting for sign-in*, *The agent has a
+question*. The **ⓘ** (*Show the details*) opens the three steps of a session,
+marked **Done** and **Now**:
+
+1. **Sign in, if the site asks** — *Use a stored sign-in or a new one. Nothing
+   is captured while a sign-in page is open.*
+2. **Teach it** — *Tell it in the chat how the job works, or press Record and
+   do it once, then Stop recording. It tells you what it picked up. Repeat as
+   often as you like.*
+3. **Save** — *What it learns is listed under Learned so far. Press Save at the
+   top to review it and approve all of it or some. Nothing changes until you
+   do, and you can keep teaching after.*
+
+The pill shrinks after a few seconds and, while you record, tucks up out of the
+way (*Hide the controls*); rest the pointer on its small tab to bring it back.
+
+**Signing in.** While a sign-in page is open the pill says *Waiting for
+sign-in*. **Sign in with “‹name›”** uses one of the agent's own
+[sign-ins](/concepts/agents#sign-ins); **Sign in with your “‹name›”** uses one
+of your own [personal sign-ins](/reference/settings/sign-ins), as your own tasks
+do. Your own sign-ins are offered only to you, in a session you started, and
+are typed only on a turn you drive; anyone else in the session sees the agent's
+only. Once you sign in with your own, the session's browser stays signed in as
+you until the session ends, and anyone working in the session acts in it. **Sign in with a new account…** saves a new sign-in to the agent and uses
+it. You can also sign in by hand in the live view.
+
+**If no computer is free**, the pill says *No computer is free right now*, with
+**↻ Try again** and **Discard session**.
+
+The session's computer is not counted against the number of computers you may
+hold at once, so opening training from a task never pauses the task, and the
+session is not one of the tasks the agent
+[works on at once](/concepts/agents#how-many-tasks-an-agent-works-on-at-once).
+
+**Each session has a browser of its own.** It starts empty — so you sign in
+again in every session — and it is never used by your tasks or by any later
+session. When you end the session, its browser is emptied, sign-ins and all,
+if its computer is still running then.
+
+## Showing it: Record
+
+| Control | What it does |
+|---|---|
+| **● Record** | Starts recording what is done in the computer's browser |
+| **❚❚ Pause** | Stops capturing for now — *nothing is captured while paused* |
+| **● Resume** | Records again after a pause |
+| **■ Stop recording** | Ends the recording and hands it to the agent |
+
+The first time you press **● Record** in a browser, a warning says *This
+computer is real*: *What you do on this computer is real: saving here changes
+the record. Use one that's safe to change. While you work here, the agent sees
+what the page sends to the site, except passwords, to copy it exactly.* — with
+**● Record** and **Not yet**. Recording is not a practice run.
+
+**What a recording keeps.** *The recording keeps the steps, the page addresses
+and what the page sent to the site, never passwords or cookies.* Tokens, keys
+and other credentials in what the page sent are hidden too. Recording pauses by
+itself while a sign-in page is open (*paused while you sign in*) and carries on
+when it is gone.
+
+**The read-back.** When you press **■ Stop recording**, the conversation notes
+*■ Stopped recording …* with its length, and the agent reads the recording and
+tells you what it picked up. Correct it in the conversation if it misread
+something. You can record as many times as you like in one session.
+
+The agent can also start and stop a recording itself when you ask it to.
+
+### What the agent sees of a site's requests
+
+While you or the agent use a site, the agent can read the list of requests the
+site's own page sent: each one's method and address, the **names** of its query
+and body fields and headers, and the shape of each answer — not their values.
+That is how it writes [site calls](/concepts/site-calls).
+
+**A recording keeps the values.** When a step is recorded, the recording keeps
+what the page sent with each request, values included — what was typed into a
+field, what a hidden field carried — but never what the site answered.
+Passwords, sign-in headers, tokens, keys and other credentials are hidden. So
+when a call needs a value the page never shows, the agent reads it from a
+recording of that step; with no recording, it asks you to record the step once.
+
+## What training can change
+
+| Change | What it does | Learned so far says |
+|---|---|---|
+| **A standing rule** | A short rule added to the end of the agent's instructions, true on every task | → instructions |
+| **An instruction edit** | A larger change to the instructions. When what you ask for contradicts what is written, the new text replaces the old | → instructions |
+| **A new skill** | How to do one kind of job, as one of [the agent's own skills](/concepts/skills#skills-an-agent-learns): its steps, and the scripts and [site calls](/concepts/site-calls) they use | → new skill |
+| **A change to one of its skills** | Improves a skill the agent already has, under the same name | → its skill “‹name›” |
+| **Conversation starters** | Adds or removes a [conversation starter](/concepts/agents#conversation-starters) | → starters |
+| **Knowledge** | Adds a new [knowledge](/concepts/agents#knowledge) document, adds entries to the end of an existing file, or changes a passage in one | → knowledge |
+
+**Knowledge** is for reference facts the job looks up — lists, prices, codes,
+addresses, policies. A new document is written from what you said, pasted or
+attached, never invented, as a `.md`, `.txt` or `.csv` file of up to 256 KB.
+Only a text, Markdown or CSV file can be added to or changed; a PDF, Word file,
+workbook or picture never is. In a training session the agent never writes to
+its knowledge directly: it all waits for your approval like every other change.
+
+**What training does not change.** The agent's connectors, guardrails, model,
+name and sharing are not changed in training. When the agent thinks one of them
+should change, it lists the idea under **Ideas, not saved** — *worth doing
+yourself* — and you make the change in the agent's
+[Configure](/concepts/agents#configuring-an-agent) tab if you agree. A
+[sign-in](/concepts/agents#sign-ins) you add while signing in is saved to the
+agent straight away, as it is anywhere else.
+
+One set of changes holds up to 20 changes, of which up to five skills and five
+new knowledge documents.
+
+### Skill tests
+
+The agent can test a skill it has drafted before you save it: it runs the skill
+on the computer in a fresh context, the way a future task would, and the pill
+says *Testing “‹skill›” · test 1 of 12* — *Watch it on the Live view*. A
+session runs up to 12 tests in all.
+
+A test acts for real in your systems, with one exception: a
+[site call](/concepts/site-calls#skill-tests) that changes data is never sent in
+a test. When a test is about to write — send an email, change a record — it
+stops first and asks *Let tests in this session ‹do that›?*, with **Approve**
+and **Decline**. **Approve all** given elsewhere in the session does not cover
+a test. Once you approve a kind of write, the session's later tests may do it
+too, and the conversation notes each one: *Done in a test, as you allowed for
+tests in this session.*
+
+## Learned so far
+
+Everything the agent learns is listed on the **Learned so far** tab of the side
+panel, one plain lesson per line with where it goes — *Always attach the PDF →
+instructions*, *Close inspected events → new skill*. The chip **Learned so far ·
+N** above the composer opens it. Ideas it cannot change itself are listed apart,
+as *Ideas, not saved*.
+
+The list is read-only. To change it, say so in the conversation — *"drop the
+third one"*, *"the cut-off is 60 days, not 30"* — and the agent updates it.
+With nothing learned yet the tab says *Nothing new to save yet.*
+
+## Saving what it learned
+
+<Steps>
+
+1. **Press Save · N** at the top of the session — *Review what it learned and
+   save it*. N counts the changes that can be saved; ideas never count. You can
+   also just ask the agent to show you what it learned, in any words. The
+   button reads **Preparing…** while the agent works.
+
+2. **The agent reviews the whole session first.** Before it shows you anything,
+   it goes back over everything you said, attached and showed, and everything it
+   did, adds what it learned and had not yet listed, and corrects what the later
+   conversation changed.
+
+3. **Read the card.** It opens with *N changes ‹agent› learned* and shows each
+   change in full: the rule, the instruction change as a before-and-after (lines
+   starting with **-** are removed, **+** added), each skill's steps and files,
+   the starters, and for knowledge *Adds the document “…”*, *Adds N entries to
+   “…”* or *Updates “…”* with the text. Under **Changes** there is **one
+   checkbox per change**, all ticked.
+
+4. **Untick what you do not want, and answer.**
+
+</Steps>
+
+| Answer | What happens |
+|---|---|
+| **Approve** | *Save the ticked changes to the agent now. Training goes on.* The ticked changes are saved together, as one new version of the agent. **The changes you unticked are discarded** from the session and are not proposed again |
+| **Keep training** | *Set this aside and go on teaching. Nothing is saved.* Every change stays on Learned so far |
+| **Tell it what to change** | Type a correction instead of choosing. The agent revises the changes and shows a new card |
+
+**Edit** on the card lets you fix a skill's **Name**, **When to use it**,
+**Steps** or **Files**, or a starter's **Label** and **Request**, before you
+approve. Nothing is saved to the agent until you approve.
+
+Approve checks each change again as it saves: a change to something that was
+edited since the agent staged it — by hand in Configure, or a knowledge file
+someone uploaded again — is refused by name, and you untick it or ask the agent
+to stage it again. If the agent has [automations](/concepts/automations), the
+card says they use the changes from their next run.
+
+**Training goes on after Approve.** The conversation notes *Saved as version
+N.*, and how many unticked changes were discarded. You can keep teaching and
+save again as often as you like; each save is its own version.
+
+## Try it now
+
+After a save, the top of the **Learned so far** tab offers **Try it now** —
+*Starts a new task that uses only what was saved, and reports back here. It
+asks before acting, like any new task.*
+
+The try is an ordinary task of the agent, linked to the session: it runs on the
+agent's saved setup and its own model, not on what the training conversation
+knows, so it shows what the next real task will do. It starts with a conversation
+starter — the one the session saved last, else the agent's first — and the
+saved line says which (*Try it with: …*). With no starter at all it starts with
+*Do the work you were trained to do, from start to finish.* On a computer it opens
+beside the session; on a phone it opens as its page. It counts against your
+computers like any task you start, and notifies you like one.
+
+When the try ends, it reports back into the training conversation, and the
+agent coaches on the result — and, if the try stopped to ask you something,
+whether the saved setup should have covered it. A try that ran but had
+nothing to work on says so — *It ran, but found nothing to work on, so this
+doesn't show the steps work yet.* — rather than passing for a success. If a
+skill went in untested,
+the tab says *Not tested yet: ‹skills›. Try it once before you schedule it.*
+
+<Aside type="caution" title="Try it now is real work.">
+  The try acts in your systems like any task. It asks before every write, as a
+  new task does: an **Approve all** you gave in the training session does not
+  carry over to it.
+</Aside>
+
+## Undo
+
+**Undo**, beside **Try it now**, takes back the session's latest save, while it
+is still the agent's newest change. A confirmation, *Undo this training?*, says
+exactly what will happen:
+
+- the version the agent goes back to, with its instructions and starters as
+  they were;
+- skills the save added, *deleted for good*, and skills it changed, put back;
+- knowledge documents it added, removed, and files it changed, put back as a
+  new version;
+- what is kept: a skill somebody edited since (kept unless you tick it), a
+  skill with a locked version, a knowledge file changed again since.
+
+*Anything tasks or automations already did with what this training saved stays
+done.* Once the agent has changed after the save, Undo is no longer offered
+there: *Use its Versions to go back* — see
+[Versions](/concepts/agents#versions).
+
+## Ending a session
+
+**End training** in the session's header (or the computer's close button)
+always asks first:
+
+| The dialog | Its buttons |
+|---|---|
+| *Save what ‹agent› learned first?* — something learned is not saved yet | **Review and save** (the same as **Save · N**) · **Discard** · **Keep training** |
+| *End this training session?* — nothing waits to be saved | **End training** · **Keep training** |
+| *A recording is running* | **Stop recording first** · **End anyway** · **Keep training** |
+
+**Discard** drops only what is not saved; anything you approved and did not
+undo stays on the agent. Ending a session with a recording running deletes the
+recording before the agent sees it. Ending can take up to a minute — *Ending the
+training session…* — and the computer is closed.
+
+A session also ends by itself after **a week without activity**. Its
+conversation stays readable as a task, and what you saved stays on the agent.
+
+## Leaving and coming back
+
+A session stays open when you leave the page. Each person has **one open
+session at a time**, across all agents:
+
+- **Train**, the agent's **Configure**, or a link to the session brings you
+  back to it, even after a reload. While your session on an agent is open,
+  every way into that agent's builder lands on the session.
+- Starting training on another agent while one is open is refused: *You're
+  already training ‹agent›. End that session first.*, with **Open it**.
+- An agent has one open session at a time. While a colleague trains it, **Train**
+  says *‹name› has been training this agent since ‹time›.*
+
+**Training history**, in the agent page's header, lists the agent's sessions.
+Your open one opens the session; an ended one, or a colleague's, opens
+read-only on its task page.
+
+## Who can train
+
+- **Anyone who may edit the agent and start tasks** — its creator, people
+  given **Can edit**, the owners and admins of its workspace — a member on their
+  own personal agent included. See [Sharing](/concepts/sharing).
+- A session is a task, so it needs the same
+  [paid access](/concepts/agents#paid-access) as starting one.
+- **Not in a workspace that holds regulated data**: *Training is not available
+  on this workspace: it holds regulated data.*
+- Not on a deleted agent.
+
+**Who is told.** When a session starts, the other owners of the workspace get a
+notification, *A training session started on ‹agent›*, and every stored sign-in
+typed during it is recorded in the audit log. See
+[Inbox](/concepts/inbox#what-you-are-told-about).
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Agents" href="/concepts/agents" description="Configure, Refine, Try it and Versions." />
+  <LinkCard title="Skills" href="/concepts/skills#skills-an-agent-learns" description="The skills training saves to an agent." />
+  <LinkCard title="Site calls" href="/concepts/site-calls" description="Skills that send a site's own requests instead of clicking." />
+  <LinkCard title="Tasks" href="/concepts/tasks" description="The live view, approvals, and Train agent from a task." />
+</CardGrid>

@@ -1,6 +1,6 @@
 ---
 title: Agentes
-description: Un agente es un trabajador de IA que configuras una vez —sus instrucciones, los sistemas a los que puede llegar, lo que sabe— y al que luego le das tareas. Cómo crearlo y configurarlo, agentes personales y compartidos, Refinar, versiones, fijarlos e iconos, eliminarlos y recuperarlos, cómo un agente se actualiza a sí mismo y las restricciones que aplican.
+description: Un agente es un trabajador de IA que configuras una vez —sus instrucciones, los sistemas a los que puede llegar, lo que sabe— y al que luego le das tareas. Cómo crearlo y configurarlo, agentes personales y compartidos, Refinar, entrenamiento, versiones, fijarlos e iconos, eliminarlos y recuperarlos, cómo un agente se actualiza a sí mismo y las restricciones que aplican.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -28,8 +28,8 @@ por agente: todos los agentes tienen una.
   sus últimas tareas, y termina en **Todos los agentes**; consulta
   [Los agentes en la barra lateral](/es/getting-started/finding-your-way#los-agentes-en-la-barra-lateral).
   Cada fila tiene un menú **…**: **Nueva tarea**, **Nueva tarea en vista
-  dividida**, **Configurar** (solo si puedes editar el agente), **Clonar**,
-  **Compartir…**, **Fijar** / **Dejar de fijar** y **Eliminar** (solo si puedes
+  dividida**, **Configurar** y **Entrenar** (solo si puedes editar el agente),
+  **Clonar**, **Compartir…**, **Fijar** / **Dejar de fijar** y **Eliminar** (solo si puedes
   eliminar el agente).
 - **Nueva tarea.** La primera página de AptiveAI Agents muestra **Tus agentes**.
   Elige uno y estarás *trabajando con* él: su icono, su propósito y sus
@@ -87,8 +87,9 @@ después; cualquier otro cambio espera a **Guardar agente**.
 
 ### El encabezado del constructor
 
-El encabezado de un agente guardado tiene **Compartir**, **Iniciar una tarea** y
-**Clonar**. **Iniciar una tarea** abre Nueva tarea con el agente elegido, una
+El encabezado de un agente guardado tiene **Compartir**, **Entrenar**,
+**Iniciar una tarea** y **Clonar**, e **Historial de entrenamiento**; consulta
+[Entrenamiento](/es/concepts/training). **Iniciar una tarea** abre Nueva tarea con el agente elegido, una
 vez guardados tus cambios: una tarea ejecuta el agente guardado, no lo que ves
 en pantalla. **Guardar agente** y **Descartar** aparecen mientras tengas cambios
 sin guardar. **Eliminar** está en el menú **⋯** al final del encabezado;
@@ -100,8 +101,8 @@ engranaje con un pequeño agente dentro.
 
 - **Pantalla completa.** El control al final de las pestañas **Refinar ·
   Configurar · Versiones** da todo el espacio a la parte izquierda; **Pruébalo**
-  se pliega en una franja estrecha a la derecha, y al elegir **Pruébalo** o
-  **Entrénalo** en la franja vuelve la vista dividida. Pruébalo tiene el mismo
+  se pliega en una franja estrecha a la derecha, y al elegir **Pruébalo** en la
+  franja vuelve la vista dividida. Pruébalo tiene el mismo
   control en sentido contrario. La elección se recuerda en este navegador.
   Refinar conserva la página aunque se abra una computadora —por ejemplo, para
   leer un archivo que adjuntaste—; la computadora sigue en la tarjeta plegada
@@ -110,8 +111,7 @@ engranaje con un pequeño agente dentro.
   computadora está plegada, Refinar sigue leyendo tus archivos en ella, pero
   solo usa su navegador cuando la computadora está a la vista, para que
   siempre veas lo que hace allí. No hay control de
-  pantalla completa en un teléfono, donde los dos paneles van apilados, ni
-  mientras hay una [sesión de Entrénalo](#entrenar-a-un-agente) abierta.
+  pantalla completa en un teléfono, donde los dos paneles van apilados.
 - **Archivos.** Adjunta un archivo a un mensaje de Refinar con el clip —una
   lista de precios, un procedimiento, una captura— y el asistente lo lee:
   *"este es nuestro procedimiento de reembolsos, crea el agente a partir de
@@ -120,13 +120,10 @@ engranaje con un pequeño agente dentro.
   lee allí; si no hay una computadora abierta, Refinar inicia una y aparece en
   la tarjeta de Pruébalo. Los límites son los de los
   [archivos de una tarea](/es/concepts/files). El contenido de un archivo se
-  trata como información, nunca como instrucciones para el asistente. Mientras
-  hay una [sesión de entrenamiento](#entrenar-a-un-agente) abierta, Refinar lee imágenes pero no otros
-  archivos: dice *Termina o descarta la sesión de entrenamiento para leer
-  archivos aquí.*
-- **Archivos en Pruébalo y Entrénalo.** Pruébalo y [Entrénalo](#entrenar-a-un-agente) aceptan archivos
-  de la misma forma, con el clip o soltando un archivo sobre la conversación, y
-  Refinar también. Pruébalo lee un archivo como lo haría el agente en una tarea
+  trata como información, nunca como instrucciones para el asistente.
+- **Archivos en Pruébalo.** Pruébalo acepta archivos de la misma forma, con el
+  clip o soltando un archivo sobre la conversación, y una
+  [sesión de entrenamiento](/es/concepts/training) también. Pruébalo lee un archivo como lo haría el agente en una tarea
   real: las imágenes se le muestran, y los demás archivos van a la computadora,
   donde solo los lee si el agente tiene activado **Puede analizar archivos**.
 - **Nueva conversación.** El botón de actualizar junto al clip empieza Refinar
@@ -136,177 +133,21 @@ engranaje con un pequeño agente dentro.
 
 ### Entrenar a un agente
 
-**Entrénalo** le enseña un trabajo a un agente mostrándoselo. En lugar de
-describir el trabajo, lo haces una vez en la computadora del propio agente
-mientras él te observa, y el agente redacta lo que aprendió —cambios en sus
-instrucciones, habilidades y frases de inicio— para que lo revises. **No se
-guarda nada hasta que lo apruebes**, y entonces se guarda todo de una vez, como
-una sola versión nueva.
+**Entrenar** abre una [sesión de entrenamiento](/es/concepts/training): una
+sesión de trabajo con el agente en su propia computadora, en la que le enseñas
+un trabajo —contándoselo, dándole archivos, grabándote mientras lo haces o
+mirándolo trabajar— y mejoras cómo lo hace. El agente anota lo que aprende en
+**Aprendido hasta ahora**, y **Guardar · N** lo pone en una tarjeta con una
+casilla por cambio. **Aprobar** guarda los cambios marcados como una versión
+nueva que puedes deshacer, y la sesión sigue. No se guarda nada antes.
 
-| | Pruébalo | Refinar | Entrénalo |
-|---|---|---|---|
-| **Sirve para** | Comprobar cómo trabaja el agente tal como está | Decirle al asistente qué cambiar | Mostrarle al agente cómo se hace el trabajo en tus sistemas |
-| **Quién hace el trabajo** | El agente, como lo haría en una tarea | El asistente cambia el agente | Tú, en la computadora, con el agente observando |
-| **Qué se guarda** | Nada: la conversación no se conserva | Un cambio en las instrucciones se guarda de inmediato, como una versión nueva | Todo lo que apruebes, de una vez, como una versión nueva |
-
-**Quién puede usarlo.** **Entrénalo** es una pestaña junto a **Pruébalo** en un
-agente guardado. La ve quien puede editar el agente e iniciar tareas, incluido
-un miembro en su propio agente personal. Una sesión de entrenamiento es una
-tarea, así que necesita el mismo [acceso de pago](#acceso-de-pago) que iniciar
-una, y no está disponible en un espacio de trabajo que contiene datos
-regulados. Un agente tiene una sola sesión abierta a la vez: si eliges
-**Entrénalo** de nuevo, se reabre, incluso después de recargar la página. En un
-teléfono la pestaña también está, con los paneles apilados; el control de
-**Pantalla completa** no.
-
-#### Cómo se desarrolla una sesión
-
-<Steps>
-
-1. **Elige Entrénalo.** Se inicia una computadora —*Iniciando la
-   computadora…*, suele tardar 20–40 s—. La sesión ocupa la página: el panel
-   izquierdo se pliega en una franja estrecha, la computadora queda a la vista y
-   la conversación de la sesión va debajo. Si no hay ninguna computadora libre,
-   verás *No hay ninguna computadora libre ahora* y **↻ Reintentar**.
-
-2. **Inicia sesión, si el sitio lo pide.** Mientras hay una página de inicio de
-   sesión abierta, el estado dice *Esperando el inicio de sesión*. Elige
-   **Iniciar sesión con “‹nombre›”** para usar uno de los
-   [inicios de sesión](#inicios-de-sesión) del propio agente, o **Iniciar sesión
-   con una cuenta nueva…**, que guarda el nuevo inicio de sesión en el agente.
-   También puedes iniciar sesión a mano en la vista en vivo. No se graba nada
-   mientras hay una página de inicio de sesión abierta.
-
-3. **Pulsa ● Iniciar y haz la tarea tú mismo**, de principio a fin, en la
-   computadora. Explica en la conversación lo que no sea obvio —*"filtra por 60
-   días o más, que es lo que le importa a finanzas"*—. El agente observa y puede
-   hacerte una pregunta; entonces la pestaña dice **Responder**, y respondes en
-   la conversación.
-
-4. **Pulsa ■ Detener cuando termines.** El agente redacta lo que aprendió.
-
-5. **Revísalo y apruébalo.** Consulta [La propuesta](#la-propuesta).
-
-</Steps>
-
-Una barra sobre la computadora dice siempre lo que está haciendo la sesión
-—*Listo para grabar*, *Grabando 01:42*, *En pausa*, *Redactando lo que me
-mostraste…*— y la pestaña **Entrénalo** lleva el mismo estado: **Entrénalo ·
-Grab. 01:42**, **Entrénalo · Redactando**, **Entrénalo · En revisión**. El
-botón **ⓘ** (*Mostrar los detalles*) vuelve a abrir los cuatro pasos, marcados
-**Hecho** y **Ahora**, junto con el botón **Descartar sesión**. La barra se
-reduce a una píldora tras unos segundos y, mientras grabas, puede esconderse
-hacia arriba (*Ocultar los controles*); apoya el puntero en su pequeña pestaña
-para traerla de vuelta.
-
-**Qué se conserva.** El agente conserva tus pasos, las direcciones de las
-páginas que visitas y lo que dices en la conversación. *No se guardan
-contraseñas, cookies ni el contenido de las páginas.*
-
-#### Los controles
-
-| Control | Qué hace |
-|---|---|
-| **● Iniciar** | Empieza a grabar. Púlsalo de nuevo después de una pausa para grabar más |
-| **❚❚ Pausar** | Deja de grabar por ahora y conserva lo grabado. La grabación también se pausa sola —*en pausa mientras inicias sesión*— cuando se abre una página de inicio de sesión, y sigue cuando desaparece |
-| **● Reanudar** | Vuelve a grabar después de una pausa que hiciste tú |
-| **■ Detener** | Termina la grabación y le pide al agente que redacte lo que aprendió. Aparece mientras grabas o en pausa |
-| **Descartar sesión** | Termina la sesión y no guarda nada. Está disponible desde que pulsas **Entrénalo** hasta que la sesión se guarda, también durante la revisión. La computadora se cierra |
-
-Si el agente no responde con una propuesta, la conversación lo dice: *Pulsa
-Detener para pedirla de nuevo, Reanudar para seguir mostrándoselo, o
-Descartar.* Y si la prueba de una habilidad no pudo pasar de un inicio de
-sesión, el agente puede devolver la sesión a *Listo para grabar*:
-*Entrenamiento reiniciado: pulsa Iniciar para grabar de nuevo. Lo grabado antes
-se conserva.* Las pruebas se olvidan y se vuelven a hacer.
-
-#### La propuesta
-
-Después de **Detener**, el agente responde con una propuesta, que aparece en la
-conversación bajo **Revisión**. Puede contener:
-
-- **El flujo de trabajo**: el trabajo tal como lo entendió el agente, en pasos.
-- **Instrucciones**: el cambio en las instrucciones del agente, como un antes y
-  un después: las líneas que empiezan con **-** se eliminan; las que empiezan
-  con **+** se añaden.
-- **Habilidades**: cada una bajo **Habilidad “‹nombre›”**, o *(reemplaza la
-  habilidad con ese nombre)*. Una propuesta contiene como máximo cinco. Si al
-  aprobar se reemplazan los archivos de una habilidad, la tarjeta avisa de que
-  aprobar elimina los que tiene ahora. Una habilidad que lleva
-  [llamadas al sitio](/es/concepts/site-calls) describe cada llamada con
-  palabras sencillas: qué lee, o qué cambia y en qué sitio.
-- **Frases de inicio**: las que se añaden y las que se eliminan.
-
-La tarjeta pregunta *¿Guardar lo que aprendió ‹agente›?* y respondes de una de
-tres maneras:
-
-- **Aprobar**: *Guardarlo todo en el agente ahora.* Las instrucciones,
-  habilidades y frases de inicio se escriben juntas, como una versión nueva que
-  puedes deshacer desde las [Versiones](#versiones) del agente. Las habilidades
-  pasan a ser [habilidades](#habilidades) propias del agente.
-- **Dile qué cambiar**: escribe una corrección (*"llámala Informe mensual de
-  cuentas por cobrar"*, *"el paso 3 es el menú Facturación"*). El agente
-  corrige y muestra la *Propuesta v2*, y así hasta que quede bien. Mientras
-  tanto la pestaña dice **En revisión**.
-- **Editar**: corrige tú mismo la propuesta antes de aprobarla. El cuadro
-  **Editar la propuesta** tiene, para cada habilidad, su **Nombre**, **Cuándo
-  usarla**, **Pasos** y **Archivos**, y para cada frase de inicio su **Etiqueta**
-  y su **Solicitud**. Un nombre, una descripción o una frase de inicio que
-  corrijas se guarda tal cual y la habilidad conserva su prueba. Si cambias los
-  pasos o los archivos de una habilidad, vuelve al agente para probarla de nuevo
-  (**Guardar y probar de nuevo**; la habilidad muestra *Se probará de nuevo*).
-  El flujo de trabajo y el cambio en las instrucciones no se editan aquí:
-  pídelos en la conversación.
-
-Una propuesta que editaste lo indica: *editada por ti*.
-
-**Pruebas de habilidades.** El agente no propone una habilidad que no haya
-pasado una prueba, salvo que sea solo orientación sin pasos que ejecutar o que
-tú omitas la prueba. Antes de probar una, pregunta en una tarjeta **Prueba**:
-*¿Probar «‹habilidad›» antes de proponerla?*
-
-| Respuesta | Qué ocurre |
-|---|---|
-| **Sí, pruébala** | Ejecuta la habilidad en la computadora en un contexto nuevo, como lo haría una tarea futura; puede tardar unos minutos. Un sí permite hasta tres intentos, y en una ronda se ejecutan como máximo seis pruebas de una habilidad |
-| **Omitir la prueba** | La propone sin probar, y la propuesta lo indica |
-| **No** | No la prueba ahora. Dile al agente qué cambiar, o deja la habilidad fuera |
-
-Puedes escribir una pista en lugar de elegir. Mientras corre una prueba, la
-barra dice *Probando «‹habilidad›» · intento 1 de 3*, y puedes mirarla en la
-[vista en vivo](/es/concepts/tasks#la-vista-en-vivo). El agente propone cuando
-todas las habilidades pasan, y la tarjeta muestra el resultado de cada una:
-**Probada ✓**, **Sin probar**, o *la omitiste tú*.
-
-Una prueba actúa de verdad en tus sistemas. Cuando está a punto de escribir
-—enviar un correo, cambiar un registro— se detiene antes y te lo pregunta, una
-vez por cada tipo de escritura, con **Aprobar** y **Rechazar**. Esa pregunta
-aparece en inglés. **Aprobar todo**, dado en otro momento de la sesión, no
-cubre una prueba. Una vez que apruebas un tipo de escritura, las pruebas
-posteriores de la sesión también pueden hacerla, y la conversación anota cada
-una: *Hecho en una prueba, como permitiste para las pruebas de esta sesión.*
-
-#### Cerrar la sesión
-
-Si eliges **Pruébalo** con una sesión abierta, o el botón de cerrar de la
-computadora (*Cerrar la computadora*), aparece **¿Dejar de entrenar?**
-
-| Botón | Qué ocurre |
-|---|---|
-| **Detener y revisar** | Deja de grabar y hace que el agente redacte lo que aprendió. Solo aparece si hay algo que detener |
-| **Descartar** | Termina la sesión y no guarda nada |
-| **Seguir entrenando** | Cierra el cuadro y continúa |
-
-Tras **Aprobar**, la sesión termina, el constructor vuelve a **Pruébalo** y la
-configuración del agente se recarga. Una línea dice *Guardado. Pruébalo ahora:*
-seguida de una de las frases de inicio del agente; **Ver la sesión** abre la
-tarea de la sesión. Una sesión guardada o descartada ya no recibe más mensajes.
-
-**Quién recibe avisos.** Cuando empieza una sesión, los demás propietarios del
-espacio de trabajo reciben una notificación, *Comenzó una sesión de
-entrenamiento con ‹agente›*, y cada inicio de sesión guardado que se escribe
-queda en el registro de auditoría. Quien entrena no recibe avisos de *tarea
-terminada* ni de *tarea fallida* por la sesión; el único es **Una tarea espera tu respuesta o tu aprobación**, cuando la propuesta está lista y te espera. Consulta la
-[Bandeja de entrada](/es/concepts/inbox#de-qué-te-avisamos).
+**Entrenar** está en el encabezado de la página del agente y en su menú **…**,
+en la página Agentes y en la barra lateral, para quien puede editar el agente e
+iniciar tareas. Una tarea también puede pasar al entrenamiento: el agente lo
+ofrece, o eliges **Entrenar agente** en el menú **…** de la página de la tarea.
+Mientras tu sesión está abierta, la página del agente muestra la sesión en
+lugar del constructor; **Terminar**, en su encabezado, la termina. Todo el
+detalle está en [Entrenamiento](/es/concepts/training).
 
 ## Configurar un agente
 
@@ -362,7 +203,7 @@ concedidas, y el resto solo por nombre. Además, todos los agentes tienen las
 [habilidades integradas](/es/concepts/skills#habilidades-integradas).
 
 **Habilidades de este agente** muestra las habilidades que guardó el propio
-agente, desde [Entrénalo](#entrenar-a-un-agente) o desde sus tareas. **Leer** en
+agente, desde el [entrenamiento](/es/concepts/training) o desde sus tareas. **Leer** en
 cualquier habilidad, concedida o propia del agente, la abre en un panel lateral
 con el mismo contenido que su página en **Habilidades**; consulta
 [Abrir una habilidad desde el constructor de agentes](/es/concepts/skills#abrir-una-habilidad-desde-el-constructor-de-agentes).
@@ -609,8 +450,8 @@ que la pidió se le avisa en cualquier caso.
 
 Los agentes se actualizan solo en tareas que inició una persona, nunca en una
 tarea que inició una automatización. También puedes enseñarle a un agente en
-**Pruébalo**, una vez que se ha guardado, o mostrarle un trabajo completo con
-[Entrénalo](#entrenar-a-un-agente).
+**Pruébalo**, una vez que se ha guardado, o enseñarle un trabajo completo en una
+[sesión de entrenamiento](/es/concepts/training).
 
 ## Restricciones
 
@@ -664,18 +505,20 @@ que desactivar el interruptor les quita el conector a esos agentes en su
 siguiente tarea. Los propietarios y administradores, que pueden conceder
 cualquier conector, no están limitados por ella.
 
-### Hasta cinco tareas a la vez por agente
+### Cuántas tareas hace un agente a la vez
 
-Un agente trabaja en hasta **cinco tareas a la vez**, contando a todas las
-personas que lo usan. Una tarea cuenta mientras el agente trabaja en ella; una
-tarea que espera la respuesta o la aprobación de alguien no cuenta, y tampoco
-una [sesión de entrenamiento](#entrenar-a-un-agente).
+Un agente trabaja en hasta **cinco tareas a la vez**, salvo que AptiveAI le
+haya fijado otro límite, de 1 a 20. Para cambiarlo, pídeselo al soporte de
+AptiveAI. El límite cuenta a todas las personas que usan el agente. Una tarea
+cuenta mientras el agente trabaja en ella; una tarea que espera la respuesta o
+la aprobación de alguien no cuenta, y tampoco una
+[sesión de entrenamiento](/es/concepts/training).
 
 Una tarea que se inicia por encima de ese límite no se rechaza — espera:
 
-- el cuadro de mensajes te avisa antes: *… ya está trabajando en 5 tareas.
-  Envíala de todos modos: quedará en espera y empezará en cuanto termine una de
-  ellas.*
+- el cuadro de mensajes te avisa antes, con el límite del agente: *… ya está
+  trabajando en 5 tareas. Envíala de todos modos: quedará en espera y empezará
+  en cuanto termine una de ellas.*
 - la tarea muestra entonces *En espera: … ya está trabajando en 5 tareas. Esta
   empezará en cuanto termine una de ellas.*, y empieza sola;
 - una automatización que se activa mientras el agente está en su límite se

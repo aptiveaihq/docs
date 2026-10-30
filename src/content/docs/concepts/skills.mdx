@@ -94,13 +94,15 @@ A skill can be granted to an agent in the builder when it is
 
 ## Skills an agent learns
 
-You can also have a skill written for you by showing the agent the job. In a
-[Train it](/concepts/agents#training-an-agent) session the agent proposes up to
-five skills along with its other changes; it tests each one on its computer
-first, and the proposal shows how each test went. You can edit a skill on the
-proposal card before you approve it. **Approve** saves the skills to the agent
-as its own, together with the rest of the proposal, as one new version of the
-agent.
+You can also have a skill written for you by teaching the agent the job. In a
+[training session](/concepts/training) the agent drafts skills from what you
+tell it, attach and show it — new ones, or improvements to skills it already
+has, with their scripts and [site calls](/concepts/site-calls) — and lists each
+one under **Learned so far**. It can test a skill on its computer before you
+save it. When you press **Save · N**, the card shows each skill in full, with a
+checkbox, and you can edit a skill on the card before you approve it.
+**Approve** saves the ticked skills to the agent as its own, together with the
+other ticked changes, as one new version of the agent.
 
 A skill saved this way belongs to that agent: every task of the agent can load
 it, those started by an automation included. It stays with that agent until it
@@ -170,9 +172,12 @@ A built-in skill can bring **tools** with it, which a workspace skill cannot:
 `aptiveai_automations` a tool to manage automations, and `aptiveai_docs` a tool
 to read this site.
 
-One more built-in skill, `aptiveai_site_calls`, is used only while a
-[site call](/concepts/site-calls) is being made — in Train it, **Generate with
-agent** and the agent builder — and never in an ordinary task.
+One more built-in skill, `aptiveai_site_calls`, is used while a
+[site call](/concepts/site-calls) is being made — in [training](/concepts/training),
+**Generate with agent** and the agent builder — and in a task a person is in, to
+find out why a site call failed and fix it. It is not offered to a task with no
+computer, to an automation's task nobody has written in, or on a workspace that
+holds regulated data.
 
 <Aside type="note" title="Changing an automation from a task always asks first.">
   Every automation change the `aptiveai_automations` skill makes stops on an approval card —

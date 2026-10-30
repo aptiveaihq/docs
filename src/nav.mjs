@@ -61,6 +61,7 @@ export const nav = [
     items: [
       { label: 'Tasks', slug: 'concepts/tasks', desc: 'One piece of work, start to finish', es: { label: 'Tareas', desc: 'Un trabajo, de principio a fin' } },
       { label: 'Agents', slug: 'concepts/agents', desc: 'Configured AI workers on their own computers', es: { label: 'Agentes', desc: 'Trabajadores de IA configurados, cada uno en su propia computadora' } },
+      { label: 'Training', slug: 'concepts/training', desc: 'Teach an agent a job by telling, showing or watching it work', es: { label: 'Entrenamiento', desc: 'Enséñale un trabajo a un agente contándoselo, mostrándoselo o mirándolo trabajar' } },
       { label: 'Automations', slug: 'concepts/automations', desc: 'Tasks that run on their own at the times you set', es: { label: 'Automatizaciones', desc: 'Tareas que se ejecutan solas a las horas que fijes' } },
       { label: 'Connectors', slug: 'concepts/connectors', desc: "Access to your company's systems", es: { label: 'Conectores', desc: 'Acceso a los sistemas de tu empresa' } },
       { label: 'Browser workflows', slug: 'concepts/browser-workflows', desc: 'Teach your agents a website with no API', es: { label: 'Flujos de navegador', desc: 'Enséñales a tus agentes un sitio web sin API' } },
