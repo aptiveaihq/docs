@@ -51,7 +51,7 @@ Un flujo de navegador funciona mejor cuando refleja cómo se usa el sitio:
   un rango de fechas, llama a «list_invoices» con el rango; una respuesta larga
   llega como archivo: cuéntala o súmala con un script que lea ese archivo. Para
   marcar facturas como pagadas, llama a «mark_invoice_paid» una vez con todas
-  las facturas (hasta 3 por llamada). Si una llamada se rechaza o falla, haz el
+  las facturas (hasta 25 por llamada). Si una llamada se rechaza o falla, haz el
   paso en la página.*
 - **Las direcciones son variables, nunca texto dentro de una herramienta.** La
   dirección del sitio, y cada dirección aparte de la que sus páginas traen
@@ -163,14 +163,16 @@ proponga las herramientas. El agente también puede convertir pasos en
 
 - **Encuentra la solicitud.** Mientras usan el sitio juntos, ve las solicitudes
   que envían las páginas del sitio —sus direcciones, los nombres de sus campos
-  y de sus encabezados y la forma de cada respuesta, nunca los valores— y solo
-  toma una que hizo la propia página. Para un cambio, lee las reglas del propio
-  formulario del sitio sin enviarlo.
+  y de sus encabezados y la forma de cada respuesta, no los valores— y solo
+  toma una que hizo la propia página. Un valor que la página nunca muestra lo
+  lee de una grabación del paso, con las credenciales ocultas. Para un cambio,
+  lee las reglas del propio formulario del sitio sin enviarlo.
 - **Comprueba la llamada contra el sitio** antes de proponerla: la página tiene
   que haber hecho esa solicitud en la sesión, una lectura se ejecuta una vez de
   verdad y un cambio se arma y se muestra, pero no se envía, salvo que nombres
   un registro que se puede cambiar sin riesgo y apruebes ese único cambio de
-  prueba en una tarjeta.
+  prueba en una tarjeta. Cuando la comprobación no está segura de que un `POST`
+  de búsqueda solo lee, antes pregunta *¿Enviarla una vez de verdad?*.
 - **La comprobación es del contenido exacto.** Una llamada que cambia después,
   en la tarjeta o por el agente, se vuelve a comprobar antes de poder
   guardarse.

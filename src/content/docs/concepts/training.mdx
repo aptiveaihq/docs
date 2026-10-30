@@ -66,8 +66,13 @@ graduation cap.
 with the task and opens nothing. On a computer the session opens **beside the
 task**, in a window of its own, and the task stays the page; on a phone the page
 goes to the session, with **← Back to ‹task›** in its header. Both
-conversations stay live. If you already have a session open on that agent, what
-the task noticed is added to it rather than opening a second one.
+conversations stay live. The task shows the session where you said yes, as a
+card with the graduation cap and its state — *Training · Working*, *Needs you*,
+*Open*, *Saved* or *Ended* — and the session's Save card stays in the
+session. An **Approve all** you gave in the task never carries into the
+training session. If you already have a session open on that agent, what the
+task noticed is added to it rather than opening a second one, and the task
+notes *Added to your open training of ‹agent›.*
 
 Training is never offered on a task an [automation](/concepts/automations)
 started, on a recording session or inside another training session.
@@ -86,24 +91,33 @@ marked **Done** and **Now**:
    do it once, then Stop recording. It tells you what it picked up. Repeat as
    often as you like.*
 3. **Save** — *What it learns is listed under Learned so far. Press Save at the
-   top to review it and approve all of it or some.*
+   top to review it and approve all of it or some. Nothing changes until you
+   do, and you can keep teaching after.*
 
 The pill shrinks after a few seconds and, while you record, tucks up out of the
 way (*Hide the controls*); rest the pointer on its small tab to bring it back.
 
 **Signing in.** While a sign-in page is open the pill says *Waiting for
 sign-in*. **Sign in with “‹name›”** uses one of the agent's own
-[sign-ins](/concepts/agents#sign-ins); **Sign in with a new account…** saves a
-new sign-in to the agent and uses it. You can also sign in by hand in the live
-view.
+[sign-ins](/concepts/agents#sign-ins); **Sign in with your “‹name›”** uses one
+of your own [personal sign-ins](/reference/settings/sign-ins), as your own tasks
+do. Your own sign-ins are offered only to you, in a session you started, and
+are typed only on a turn you drive; anyone else in the session sees the agent's
+only. **Sign in with a new account…** saves a new sign-in to the agent and uses
+it. You can also sign in by hand in the live view.
 
 **If no computer is free**, the pill says *No computer is free right now*, with
 **↻ Try again** and **Discard session**.
 
 The session's computer is not counted against the number of computers you may
-hold at once, so opening training from a task never pauses the task. It uses a
-browser of its own for training that agent, apart from the browser your own
-tasks use.
+hold at once, so opening training from a task never pauses the task, and the
+session is not one of the tasks the agent
+[works on at once](/concepts/agents#how-many-tasks-an-agent-works-on-at-once).
+
+**Each session has a browser of its own.** It starts empty — so you sign in
+again in every session — and it is never used by your tasks or by any later
+session. When you end the session, its browser is emptied, sign-ins and all,
+if its computer is still running then.
 
 ## Showing it: Record
 
@@ -116,13 +130,15 @@ tasks use.
 
 The first time you press **● Record** in a browser, a warning says *This
 computer is real*: *What you do on this computer is real: saving here changes
-the record. Use one that's safe to change.* — with **● Record** and **Not
-yet**. Recording is not a practice run.
+the record. Use one that's safe to change. While you work here, the agent sees
+what the page sends to the site, except passwords, to copy it exactly.* — with
+**● Record** and **Not yet**. Recording is not a practice run.
 
-**What a recording keeps.** *Passwords, cookies and page contents are not kept.
-Only the steps and page addresses are.* Recording pauses by itself while a
-sign-in page is open (*paused while you sign in*) and carries on when it is
-gone.
+**What a recording keeps.** *The recording keeps the steps, the page addresses
+and what the page sent to the site, never passwords or cookies.* Tokens, keys
+and other credentials in what the page sent are hidden too. Recording pauses by
+itself while a sign-in page is open (*paused while you sign in*) and carries on
+when it is gone.
 
 **The read-back.** When you press **■ Stop recording**, the conversation notes
 *■ Stopped recording …* with its length, and the agent reads the recording and
@@ -135,10 +151,15 @@ The agent can also start and stop a recording itself when you ask it to.
 
 While you or the agent use a site, the agent can read the list of requests the
 site's own page sent: each one's method and address, the **names** of its query
-and body fields and headers, and the shape of each answer. That is how it
-writes [site calls](/concepts/site-calls). **It never sees the values** — not
-what was typed into a field, not what a hidden field carried, not a header's
-value — so a value the page never shows is something it has to ask you about.
+and body fields and headers, and the shape of each answer — not their values.
+That is how it writes [site calls](/concepts/site-calls).
+
+**A recording keeps the values.** When a step is recorded, the recording keeps
+what the page sent with each request, values included — what was typed into a
+field, what a hidden field carried — but never what the site answered.
+Passwords, sign-in headers, tokens, keys and other credentials are hidden. So
+when a call needs a value the page never shows, the agent reads it from a
+recording of that step; with no recording, it asks you to record the step once.
 
 ## What training can change
 
@@ -259,7 +280,10 @@ computers like any task you start, and notifies you like one.
 
 When the try ends, it reports back into the training conversation, and the
 agent coaches on the result — and, if the try stopped to ask you something,
-whether the saved setup should have covered it. If a skill went in untested,
+whether the saved setup should have covered it. A try that ran but had
+nothing to work on says so — *It ran, but found nothing to work on, so this
+doesn't show the steps work yet.* — rather than passing for a success. If a
+skill went in untested,
 the tab says *Not tested yet: ‹skills›. Try it once before you schedule it.*
 
 <Aside type="caution" title="Try it now is real work.">

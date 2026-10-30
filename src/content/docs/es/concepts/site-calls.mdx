@@ -1,6 +1,6 @@
 ---
 title: Llamadas al sitio
-description: Una habilidad puede llevar las solicitudes que envían las propias páginas de un sitio web, para que el agente haga un paso con una sola llamada desde su navegador con la sesión iniciada, en lugar de muchos clics. Cómo se crean y se comprueban, el archivo de una llamada campo por campo, los sitios cuyos datos viven en otras direcciones, las respuestas largas que se guardan como archivo, qué las hace seguras, qué significa cada mensaje y sus límites.
+description: Una habilidad puede llevar las solicitudes que envían las propias páginas de un sitio web, para que el agente haga un paso con una sola llamada desde su navegador con la sesión iniciada, en lugar de muchos clics. Cómo se crean y se comprueban, el archivo de una llamada campo por campo, los sitios cuyos datos viven en otras direcciones, las respuestas largas que se guardan como archivo, las credenciales ocultas, qué las hace seguras, qué significa cada mensaje y sus límites.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -62,8 +62,9 @@ propia edición.
 computadora del agente, tú mismo o dejando que el agente lo haga mientras
 miras. Mientras se usa el sitio, el agente puede ver las solicitudes que envía
 la página del sitio: sus direcciones, los nombres de sus campos y de sus
-encabezados y la forma de cada respuesta, nunca los valores que contienen.
-Escribe una llamada para cada paso que valga la pena convertir,
+encabezados y la forma de cada respuesta, no los valores que contienen; los
+valores están en una [grabación](/es/concepts/training#mostrárselo-grabar) del
+paso. Escribe una llamada para cada paso que valga la pena convertir,
 [comprueba](#cómo-se-comprueba-una-llamada) cada una contra lo que se vio
 enviar al sitio y guarda la habilidad en **Aprendido hasta ahora**. Cuando
 pulsas **Guardar · N**, la tarjeta describe cada llamada con palabras
@@ -72,6 +73,12 @@ sencillas:
 - *«get_ticket» lee: Read one ticket: its status, assignee and notes. (GET /api/tickets/\{id\}) de desk.example.com*
 - *«close_ticket» cambia datos: PUT /api/tickets/\{id\}/status en desk.example.com*
   — *nunca cambia assignee, priority* — *se vuelve a leer con «get_ticket» después*
+  — *siempre envía status = closed*
+
+Cada valor que una llamada envía siempre, rellene lo que rellene el agente,
+aparece en una línea *siempre envía*, para que lo veas antes de aprobar. Una
+credencial, o un valor de un campo con nombre de contraseña, token o clave, se
+nombra pero nunca se muestra: *siempre envía token (una credencial, oculta)*.
 
 **Aprobar** guarda la habilidad con sus llamadas. Una llamada que escribió el
 agente solo se puede guardar si pasó su comprobación con exactamente el
@@ -107,8 +114,11 @@ sitio*.
    hacerlo.
 2. Lee la lista de solicitudes que envió la página en esa pestaña: el método y
    la dirección de cada una, los nombres de sus campos de consulta y de cuerpo,
-   los nombres de los encabezados que llevaba y la forma de su respuesta.
-   Nunca lee los valores.
+   los nombres de los encabezados que llevaba y la forma de su respuesta, no
+   los valores. Cuando una llamada necesita un valor que la página nunca
+   muestra, como el de un campo oculto, lee lo que envió la página en una
+   [grabación](/es/concepts/training#mostrárselo-grabar) del paso, con las
+   credenciales ocultas, o te pide que grabes el paso una vez.
 3. Solo toma una solicitud que hizo la propia página del sitio. Nunca adivina
    una dirección, y nunca convierte en llamada una solicitud de inicio de
    sesión, de seguridad, de tokens o de analítica.
@@ -128,7 +138,19 @@ comprueba contra el sitio, en la misma sesión:
   inicio de sesión que envió la página no pasa la comprobación, porque el sitio
   la rechazaría.
 - **Una lectura se ejecuta una vez de verdad**, y su respuesta se le muestra al
-  agente.
+  agente. Un `POST` que el sitio usa solo para buscar o listar se ejecuta de
+  verdad en una comprobación solo cuando la propia página envió exactamente esa
+  solicitud a la misma dirección, el sitio la respondió con éxito, y su
+  dirección (o un campo como `cmd`) nombra una lectura: *get*, *list*,
+  *search* y similares.
+- **Cuando la comprobación no está segura, te pregunta.** Si ese `POST` podría
+  cambiar algo —su dirección no es exactamente la de la página, sus campos son
+  otros, no nombra una lectura o una palabra suya puede nombrar una acción—,
+  una tarjeta pregunta *¿Enviarla una vez de verdad?*, con exactamente la
+  solicitud y el motivo de la duda. **Aprobar** envía exactamente esa solicitud
+  una vez; **Rechazar** no envía nada. Ni **Aprobar todo**, ni un agente con las
+  aprobaciones desactivadas, ni una automatización la responden por ti, y una
+  prueba de habilidad nunca la envía.
 - **Un cambio se arma y se muestra, pero no se envía.** Si nombras un registro
   que se puede cambiar sin riesgo, el agente también puede hacer ese único
   cambio de verdad mientras la comprueba: en una tarjeta de aprobación, y solo
@@ -136,6 +158,16 @@ comprueba contra el sitio, en la misma sesión:
 - **La comprobación cubre el contenido exacto.** Si cambias algo después —la
   regla de un dato, la descripción, incluso un espacio— hay que volver a
   comprobar la llamada antes de poder guardarla.
+- **Ninguna credencial en una llamada.** Una llamada que lleva escrita una
+  contraseña, un token, una clave o una cadena de conexión no pasa la
+  comprobación y se rechaza al guardarla, la haya escrito el agente o la hayas
+  editado tú. Una llamada toma prestado el inicio de sesión de la página; nunca
+  lleva uno.
+
+**Exportar lo comprobado.** Pídele al agente que exporte sus llamadas
+comprobadas: escribe cada una, tal como se comprobó y con cualquier credencial
+oculta, como un archivo en `out/site-calls/` dentro de los archivos de la
+tarea. Es útil cuando una llamada se comprobó al principio de una sesión larga.
 
 En un espacio de trabajo que guarda datos regulados, las llamadas no se
 ejecutan contra el sitio: solo se comprueban el archivo y su coincidencia con
@@ -348,12 +380,12 @@ El agente puede darle a una llamada varios conjuntos de datos a la vez, sus
 **elementos**:
 
 - **Una lectura acepta hasta 10 elementos**: diez tickets leídos en una llamada.
-- **Un cambio acepta hasta 3 elementos**, y **una sola tarjeta de aprobación
+- **Un cambio acepta hasta 25 elementos**, y **una sola tarjeta de aprobación
   los cubre**, con cada registro y los valores que va a poner. Más registros
   necesitan otra llamada, y otra tarjeta.
 
 Los pasos de una habilidad deberían decirlo: *Llama a «close_ticket» una vez,
-con todos los tickets que hay que cerrar (hasta 3 por llamada). Si se rechaza o
+con todos los tickets que hay que cerrar (hasta 25 por llamada). Si se rechaza o
 falla, haz el paso en la página.* No deberían pedir además tu aprobación en la
 conversación: la tarjeta es la aprobación, y preguntar dos veces solo te hace
 perder tiempo.
@@ -388,6 +420,12 @@ conversación: un mes de facturas, miles de filas. Una respuesta de más de unos
   conector; consulta
   [Cuando los datos de un conector llegan incompletos](/es/concepts/tasks#cuando-los-datos-de-un-conector-llegan-incompletos).
 
+**Una lectura de varios elementos conserva todas las respuestas.** Cuando el
+agente lee más de un elemento en una llamada, la respuesta de cada uno también
+se guarda como archivo, aunque sea corta, para que un script pueda trabajar
+sobre todas. Esto necesita un agente que pueda ejecutar scripts en su
+computadora; si no, las respuestas llegan en la conversación.
+
 Una habilidad cuyas lecturas pueden ser largas debería decirlo en sus pasos:
 *Una respuesta larga llega como archivo: cuéntala, súmala o fíltrala con un
 script que lea ese archivo.* La línea de la transcripción sigue contando cada
@@ -396,7 +434,7 @@ elemento: *Se leyeron 1.901 elementos de desk.example.com (GET, 200)*.
 ## Qué las hace seguras
 
 **Las lecturas se ejecutan sin preguntar; los cambios siempre preguntan.** Cada
-llamada de cambio espera en una tarjeta de aprobación de hasta tres registros
+llamada de cambio espera en una tarjeta de aprobación de hasta 25 registros
 —*El agente quiere ejecutar «close_ticket» de «‹habilidad›» en desk.example.com
 para 3 registros. ¿Lo permites?*— que muestra cada registro y los valores que
 va a poner. **Aprobar** hace esos cambios una vez, **Aprobar todo** cubre
@@ -421,7 +459,7 @@ se detiene. Los campos que todo cambio toca por sí solo —`updatedAt`,
 lectura posterior avisa si alguno cambió.
 
 **A su ritmo.** Los cambios van de uno en uno, con al menos un segundo entre
-ellos, y una tarea cambia como máximo 100 registros de esta manera; a partir de
+ellos, y una tarea cambia como máximo 500 registros de esta manera; a partir de
 ahí, una tarea nueva continúa el trabajo.
 
 **Un sitio que rechaza detiene las llamadas.** Si el sitio rechaza una llamada,
@@ -450,6 +488,14 @@ todo lo que el sitio devuelve se limpia de ellos antes de que el agente lo lea.
 Una respuesta que todavía lleva el token de la página, aunque sea codificado,
 no se entrega. Los scripts del propio agente en la computadora no pueden llegar
 al navegador con la sesión iniciada.
+
+**Las credenciales se ocultan dondequiera que aparezcan.** Una contraseña, un
+token, una clave de API, la contraseña de una cadena de conexión o una clave
+privada se reconocen por su forma, se llame como se llame su campo, y se
+muestran como `[hidden:secret]`: en una grabación, en la respuesta de una
+llamada, en un archivo que guarda una llamada y en las tarjetas. El agente
+trabaja con el resto. Un archivo guardado con demasiadas credenciales para
+ocultarlas una a una se le retiene entero al agente, y se le dice.
 
 **Se ejecuta lo que se guardó.** Una tarea ejecuta las llamadas tal como
 estaban guardadas cuando cargó la habilidad. Un guardado hecho mientras la
@@ -514,7 +560,7 @@ intenta de nuevo cuando la causa desaparece. Qué significa cada motivo:
   sitio; el agente inicia sesión en la página, con un
   [inicio de sesión guardado](/es/reference/settings/sign-ins) o con tu ayuda.
 - **Límites fijos.** Hasta 20 llamadas por habilidad, 10 elementos por lectura,
-  3 registros por tarjeta de aprobación y 100 registros cambiados por tarea, a
+  25 registros por tarjeta de aprobación y 500 registros cambiados por tarea, a
   un cambio por segundo. Todavía no se pueden ajustar por sitio.
 - **Las respuestas tienen un tamaño máximo.** La respuesta de una lectura puede
   llegar a 8 MB, y una de más de unos 20 KB se
@@ -532,6 +578,7 @@ intenta de nuevo cuando la causa desaparece. Qué significa cada motivo:
 | Escribir o cambiar una llamada a mano | Cualquiera que pueda editar la habilidad; en una habilidad propia de un agente, cualquiera que pueda editar el agente; en una herramienta de un flujo de navegador, quien pueda cambiar el flujo |
 | Usar las llamadas de una habilidad | Cualquier tarea que cargue la habilidad |
 | Aprobar un cambio | Quien responda la tarjeta de aprobación de la tarea, como con cualquier otra aprobación |
+| Responder *¿Enviarla una vez de verdad?* | Quien responda las tarjetas de la tarea; **Aprobar todo** nunca la cubre |
 
 ## Siguiente
 

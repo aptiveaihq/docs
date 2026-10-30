@@ -468,17 +468,19 @@ connector is granted and again every time a task starts, so turning the switch
 off takes the connector away from those agents at their next task. Owners and
 admins, who may grant any connector, are not limited by it.
 
-### Up to five tasks at a time per agent
+### How many tasks an agent works on at once
 
-An agent works on up to **five tasks at once**, counted across everyone who
-uses it. A task counts while the agent is working on it; a task waiting on
+An agent works on up to **five tasks at once** unless AptiveAI has set a
+different limit for it, from 1 to 20 — ask AptiveAI support. The limit is
+counted across everyone who uses the agent. A task counts while the agent is working on it; a task waiting on
 someone's answer or approval does not, and neither does a
 [training session](/concepts/training).
 
 A task started past that limit is not refused — it waits:
 
-- the composer warns you first: *… is already working on 5 tasks. Send this
-  anyway: it waits, and starts as soon as one of them finishes.*
+- the composer warns you first, naming the agent's limit: *… is already
+  working on 5 tasks. Send this anyway: it waits, and starts as soon as one of
+  them finishes.*
 - the task then reads *Waiting to start: … is already working on 5 tasks. This
   one starts as soon as one of them finishes.*, and it starts by itself;
 - an automation that fires while the agent is at its limit is skipped as

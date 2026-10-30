@@ -68,9 +68,14 @@ la tarea; su primera línea dice *De tu tarea “‹tarea›”: …*. **Ahora n
 con la tarea y no abre nada. En una computadora de escritorio la sesión se abre
 **junto a la tarea**, en una ventana propia, y la tarea sigue siendo la página;
 en un teléfono la página pasa a la sesión, con **← Volver a ‹tarea›** en su
-encabezado. Las dos conversaciones siguen activas. Si ya tienes una sesión
-abierta con ese agente, lo que notó la tarea se añade a ella en lugar de abrir
-otra.
+encabezado. Las dos conversaciones siguen activas. La tarea muestra la sesión
+donde dijiste que sí, como una tarjeta con el birrete y su estado —
+*Entrenamiento · Trabajando*, *Te necesita*, *Abierto*, *Guardado* o
+*Terminado*—, y la tarjeta para guardar de la sesión se queda en la sesión. Un
+**Aprobar todo** que diste en la tarea nunca pasa a la sesión de entrenamiento.
+Si ya tienes una sesión abierta con ese agente, lo que notó la tarea se añade a
+ella en lugar de abrir otra, y la tarea anota *Se añadió a tu entrenamiento
+abierto de ‹agente›.*
 
 El entrenamiento nunca se ofrece en una tarea que inició una
 [automatización](/es/concepts/automations), en una sesión de grabación ni dentro
@@ -92,7 +97,8 @@ los detalles*) abre los tres pasos de una sesión, marcados **Hecho** y
    y hazlo una vez, luego Detener grabación. Te dirá lo que entendió. Repite
    cuantas veces quieras.*
 3. **Guardar**: *Lo que aprende aparece en Aprendido hasta ahora. Pulsa Guardar
-   arriba para revisarlo y aprobarlo entero o en parte.*
+   arriba para revisarlo y aprobarlo entero o en parte. Nada cambia hasta
+   entonces, y después puedes seguir enseñándole.*
 
 La píldora se reduce tras unos segundos y, mientras grabas, se esconde hacia
 arriba (*Ocultar los controles*); apoya el puntero en su pequeña pestaña para
@@ -101,17 +107,26 @@ traerla de vuelta.
 **Iniciar sesión.** Mientras hay una página de inicio de sesión abierta, la
 píldora dice *Esperando el inicio de sesión*. **Iniciar sesión con “‹nombre›”**
 usa uno de los [inicios de sesión](/es/concepts/agents#inicios-de-sesión) del
-propio agente; **Iniciar sesión con una cuenta nueva…** guarda un inicio de
-sesión nuevo en el agente y lo usa. También puedes iniciar sesión a mano en la
-vista en vivo.
+propio agente; **Iniciar sesión con tu “‹nombre›”** usa uno de tus
+[inicios de sesión personales](/es/reference/settings/sign-ins), como lo hacen
+tus propias tareas. Los tuyos solo se te ofrecen a ti, en una sesión que tú
+iniciaste, y solo se escriben en un turno que diriges tú; cualquier otra persona
+en la sesión ve solo los del agente. **Iniciar sesión con una cuenta nueva…**
+guarda un inicio de sesión nuevo en el agente y lo usa. También puedes iniciar
+sesión a mano en la vista en vivo.
 
 **Si no hay ninguna computadora libre**, la píldora dice *No hay ninguna
 computadora libre ahora*, con **↻ Reintentar** y **Descartar sesión**.
 
 La computadora de la sesión no cuenta para el número de computadoras que puedes
 tener a la vez, así que abrir el entrenamiento desde una tarea nunca pausa la
-tarea. Usa un navegador propio para entrenar a ese agente, distinto del
-navegador que usan tus tareas.
+tarea, y la sesión no es una de las tareas en las que el agente
+[trabaja a la vez](/es/concepts/agents#cuántas-tareas-hace-un-agente-a-la-vez).
+
+**Cada sesión tiene un navegador propio.** Empieza vacío —así que vuelves a
+iniciar sesión en cada sesión— y nunca lo usan tus tareas ni ninguna sesión
+posterior. Cuando terminas la sesión, su navegador se vacía, con sus inicios de
+sesión incluidos, si su computadora sigue en marcha en ese momento.
 
 ## Mostrárselo: Grabar
 
@@ -122,15 +137,17 @@ navegador que usan tus tareas.
 | **● Reanudar** | Vuelve a grabar después de una pausa |
 | **■ Detener grabación** | Termina la grabación y se la entrega al agente |
 
-La primera vez que pulsas **● Grabar** en un navegador, un aviso dice *Este
-equipo es real*: *Lo que hagas en este equipo es real: guardar aquí cambia el
-registro. Usa uno que se pueda cambiar sin problema.*, con **● Grabar** y
-**Todavía no**. Grabar no es una práctica.
+La primera vez que pulsas **● Grabar** en un navegador, un aviso dice *Esta
+computadora es real*: *Lo que hagas en esta computadora es real: guardar aquí
+cambia el registro. Usa uno que se pueda cambiar sin problema. Mientras trabajas
+aquí, el agente ve lo que la página envía al sitio, salvo las contraseñas, para
+copiarlo igual.*, con **● Grabar** y **Todavía no**. Grabar no es una práctica.
 
-**Qué conserva una grabación.** *No se guardan contraseñas, cookies ni el
-contenido de las páginas. Solo los pasos y las direcciones de las páginas.* La
-grabación se pausa sola mientras hay una página de inicio de sesión abierta
-(*en pausa mientras inicias sesión*) y sigue cuando desaparece.
+**Qué conserva una grabación.** *La grabación guarda los pasos, las direcciones
+de las páginas y lo que la página envió al sitio, nunca contraseñas ni cookies.*
+Los tokens, las claves y otras credenciales de lo que envió la página también se
+ocultan. La grabación se pausa sola mientras hay una página de inicio de sesión
+abierta (*en pausa mientras inicias sesión*) y sigue cuando desaparece.
 
 **La lectura de lo grabado.** Cuando pulsas **■ Detener grabación**, la
 conversación anota *■ Grabación … detenida* con su duración, y el agente lee la
@@ -145,11 +162,16 @@ pides.
 Mientras tú o el agente usan un sitio, el agente puede leer la lista de
 solicitudes que envió la propia página del sitio: el método y la dirección de
 cada una, los **nombres** de sus campos de consulta y de cuerpo y de sus
-encabezados, y la forma de cada respuesta. Así escribe
-[llamadas al sitio](/es/concepts/site-calls). **Nunca ve los valores**: ni lo
-que se escribió en un campo, ni lo que llevaba un campo oculto, ni el valor de
-un encabezado. Por eso, un valor que la página nunca muestra es algo que tiene
-que preguntarte.
+encabezados, y la forma de cada respuesta, no sus valores. Así escribe
+[llamadas al sitio](/es/concepts/site-calls).
+
+**Una grabación conserva los valores.** Cuando se graba un paso, la grabación
+guarda lo que la página envió con cada solicitud, valores incluidos —lo que se
+escribió en un campo, lo que llevaba un campo oculto—, pero nunca lo que
+respondió el sitio. Las contraseñas, los encabezados de inicio de sesión, los
+tokens, las claves y otras credenciales se ocultan. Así, cuando una llamada
+necesita un valor que la página nunca muestra, el agente lo lee de una
+grabación de ese paso; si no la hay, te pide que grabes el paso una vez.
 
 ## Qué puede cambiar el entrenamiento
 
@@ -280,7 +302,10 @@ cualquier tarea que inicias, y te avisa como una.
 
 Cuando la prueba termina, trae el resultado a la conversación del entrenamiento,
 y el agente lo comenta contigo; y si la prueba se detuvo para preguntarte algo,
-si la configuración guardada debería haberlo cubierto. Si una habilidad se
+si la configuración guardada debería haberlo cubierto. Una prueba que se
+ejecutó pero no tenía nada con qué trabajar lo dice —*Lo intentó, pero no
+encontró nada con qué trabajar, así que todavía no demuestra que los pasos
+funcionen.*— en lugar de pasar por un éxito. Si una habilidad se
 guardó sin probar, la pestaña dice *Aún sin probar: ‹habilidades›. Pruébalo una
 vez antes de programarlo.*
 

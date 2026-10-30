@@ -505,18 +505,19 @@ que desactivar el interruptor les quita el conector a esos agentes en su
 siguiente tarea. Los propietarios y administradores, que pueden conceder
 cualquier conector, no están limitados por ella.
 
-### Hasta cinco tareas a la vez por agente
+### Cuántas tareas hace un agente a la vez
 
-Un agente trabaja en hasta **cinco tareas a la vez**, contando a todas las
-personas que lo usan. Una tarea cuenta mientras el agente trabaja en ella; una
+Un agente trabaja en hasta **cinco tareas a la vez**, salvo que AptiveAI le haya
+fijado otro límite, de 1 a 20: pídeselo al soporte de AptiveAI. El límite cuenta
+a todas las personas que usan el agente. Una tarea cuenta mientras el agente trabaja en ella; una
 tarea que espera la respuesta o la aprobación de alguien no cuenta, y tampoco
 una [sesión de entrenamiento](/es/concepts/training).
 
 Una tarea que se inicia por encima de ese límite no se rechaza — espera:
 
-- el cuadro de mensajes te avisa antes: *… ya está trabajando en 5 tareas.
-  Envíala de todos modos: quedará en espera y empezará en cuanto termine una de
-  ellas.*
+- el cuadro de mensajes te avisa antes, con el límite del agente: *… ya está
+  trabajando en 5 tareas. Envíala de todos modos: quedará en espera y empezará
+  en cuanto termine una de ellas.*
 - la tarea muestra entonces *En espera: … ya está trabajando en 5 tareas. Esta
   empezará en cuanto termine una de ellas.*, y empieza sola;
 - una automatización que se activa mientras el agente está en su límite se
