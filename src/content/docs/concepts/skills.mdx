@@ -172,9 +172,12 @@ A built-in skill can bring **tools** with it, which a workspace skill cannot:
 `aptiveai_automations` a tool to manage automations, and `aptiveai_docs` a tool
 to read this site.
 
-One more built-in skill, `aptiveai_site_calls`, is used only while a
+One more built-in skill, `aptiveai_site_calls`, is used while a
 [site call](/concepts/site-calls) is being made — in [training](/concepts/training),
-**Generate with agent** and the agent builder — and never in an ordinary task.
+**Generate with agent** and the agent builder — and in a task a person is in, to
+find out why a site call failed and fix it. It is not offered to a task with no
+computer, to an automation's task nobody has written in, or on a workspace that
+holds regulated data.
 
 <Aside type="note" title="Changing an automation from a task always asks first.">
   Every automation change the `aptiveai_automations` skill makes stops on an approval card —

@@ -76,7 +76,8 @@ sencillas:
   — *siempre envía status = closed*
 
 Cada valor que una llamada envía siempre, rellene lo que rellene el agente,
-aparece en una línea *siempre envía*, para que lo veas antes de aprobar. Una
+aparece en una línea *siempre envía*, para que veas los valores fijos antes de
+aprobar (una lista larga se acorta a unas pocas líneas y cuántos más hay). Una
 credencial, o un valor de un campo con nombre de contraseña, token o clave, se
 nombra pero nunca se muestra: *siempre envía token (una credencial, oculta)*.
 
@@ -166,8 +167,9 @@ comprueba contra el sitio, en la misma sesión:
 
 **Exportar lo comprobado.** Pídele al agente que exporte sus llamadas
 comprobadas: escribe cada una, tal como se comprobó y con cualquier credencial
-oculta, como un archivo en `out/site-calls/` dentro de los archivos de la
-tarea. Es útil cuando una llamada se comprobó al principio de una sesión larga.
+oculta, como un archivo en la computadora del agente, en `out/site-calls/`. Es
+útil cuando una llamada se comprobó al principio de una sesión larga. Para
+descargar una, pídele al agente que la añada a los archivos de la tarea.
 
 En un espacio de trabajo que guarda datos regulados, las llamadas no se
 ejecutan contra el sitio: solo se comprueban el archivo y su coincidencia con
@@ -435,7 +437,7 @@ elemento: *Se leyeron 1.901 elementos de desk.example.com (GET, 200)*.
 
 **Las lecturas se ejecutan sin preguntar; los cambios siempre preguntan.** Cada
 llamada de cambio espera en una tarjeta de aprobación de hasta 25 registros
-—*El agente quiere ejecutar «close_ticket» de «‹habilidad›» en desk.example.com
+—*El agente quiere ejecutar “close_ticket” de “‹habilidad›” en desk.example.com
 para 3 registros. ¿Lo permites?*— que muestra cada registro y los valores que
 va a poner. **Aprobar** hace esos cambios una vez, **Aprobar todo** cubre
 también los cambios posteriores de llamadas al sitio en la tarea, y
@@ -489,13 +491,17 @@ Una respuesta que todavía lleva el token de la página, aunque sea codificado,
 no se entrega. Los scripts del propio agente en la computadora no pueden llegar
 al navegador con la sesión iniciada.
 
-**Las credenciales se ocultan dondequiera que aparezcan.** Una contraseña, un
-token, una clave de API, la contraseña de una cadena de conexión o una clave
-privada se reconocen por su forma, se llame como se llame su campo, y se
-muestran como `[hidden:secret]`: en una grabación, en la respuesta de una
-llamada, en un archivo que guarda una llamada y en las tarjetas. El agente
-trabaja con el resto. Un archivo guardado con demasiadas credenciales para
-ocultarlas una a una se le retiene entero al agente, y se le dice.
+**Se ocultan las credenciales con una forma reconocible.** Se llame como se
+llame su campo, un valor se muestra como `[hidden:secret]` cuando tiene la
+forma de una credencial: una cadena de conexión con contraseña, un token de
+inicio de sesión, una clave privada, una dirección web con una contraseña o una
+clave de API en un formato conocido. Se oculta en una grabación, en la
+respuesta de una llamada y en las tarjetas. Una contraseña o un token que
+parece texto corriente puede no reconocerse, y entonces no se oculta. Un
+archivo que guarda una llamada conserva los valores originales del sitio en la
+computadora del agente; lo que el agente lee de él sí se oculta. Un archivo
+guardado con demasiadas credenciales para ocultarlas una a una se le retiene
+entero al agente, y se le dice.
 
 **Se ejecuta lo que se guardó.** Una tarea ejecuta las llamadas tal como
 estaban guardadas cuando cargó la habilidad. Un guardado hecho mientras la

@@ -70,7 +70,8 @@ plain words:
   — *always sends status = closed*
 
 Each value a call always sends, whatever the agent fills in, is listed as an
-*always sends* line, so you see it before you approve. A credential, or a value
+*always sends* line, so you see the fixed values before you approve (a long
+list is shortened to a few lines and how many more). A credential, or a value
 under a field named like a password, token or key, is named but never shown:
 *always sends token (a credential, hidden)*.
 
@@ -152,8 +153,9 @@ site, in the same session:
 
 **Exporting what was checked.** Ask the agent to export its checked calls: it
 writes each one, exactly as checked and with any credential hidden, as a file
-under `out/site-calls/` in the task's files — useful when a call was checked
-early in a long session.
+on the agent's computer, in `out/site-calls/` — useful when a call was checked
+early in a long session. To download one, ask the agent to add it to the
+task's files.
 
 On a workspace that holds regulated data, calls are not run against the site:
 only the file and its match with the page's requests are checked.
@@ -456,12 +458,16 @@ anything the site sends back is cleaned of them before the agent reads it. An
 answer that still carries the page's token, even encoded, is not passed on. The
 agent's own scripts on the computer cannot reach the signed-in browser.
 
-**Credentials are hidden wherever they turn up.** A password, a token, an API
-key, a connection string's password or a private key is recognised by its
-shape, whatever its field is called, and shown as `[hidden:secret]` — in a
-recording, in a call's answer, in a file a call saves, and on the cards. The
-agent works with the rest. A saved file with too many credentials to hide one
-by one is withheld from the agent whole, and the agent is told so.
+**Credentials with a recognisable shape are hidden.** Whatever its field is
+called, a value is shown as `[hidden:secret]` when it has the shape of a
+credential: a connection string with a password, a sign-in token, a private
+key, a web address with a password in it, or an API key in a well-known
+format. It is hidden in a recording, in a call's answer and on the cards. A
+password or token that looks like ordinary text may not be recognised, and is
+then not hidden. A file a call saves keeps the site's original values on the
+agent's computer; what the agent reads from it is hidden. A saved file with
+too many credentials to hide one by one is withheld from the agent whole, and
+the agent is told so.
 
 **What runs is what was saved.** A task runs the calls as they were saved when
 it loaded the skill. A save made while the task runs applies from the next task,

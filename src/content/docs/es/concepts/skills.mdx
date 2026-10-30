@@ -188,10 +188,13 @@ herramientas para buscar e iniciar tareas, `aptiveai_automations`, una
 herramienta para gestionar automatizaciones, y `aptiveai_docs`, una herramienta
 para leer este sitio.
 
-Hay una habilidad integrada más, `aptiveai_site_calls`, que solo se usa mientras se crea
+Hay una habilidad integrada más, `aptiveai_site_calls`, que se usa mientras se crea
 una [llamada al sitio](/es/concepts/site-calls) —en el
 [entrenamiento](/es/concepts/training), **Generar con el agente** y el
-constructor de agentes— y nunca en una tarea corriente.
+constructor de agentes— y en una tarea en la que participa una persona, para
+averiguar por qué falló una llamada al sitio y corregirla. No se ofrece a una
+tarea sin computadora, a una tarea de una automatización en la que nadie ha
+escrito ni en un espacio de trabajo que guarda datos regulados.
 
 <Aside type="note" title="Cambiar una automatización desde una tarea siempre pregunta antes.">
   Cada cambio de automatización que hace la habilidad `aptiveai_automations` se detiene en
