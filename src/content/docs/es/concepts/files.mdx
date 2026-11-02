@@ -1,6 +1,6 @@
 ---
 title: Archivos
-description: Cómo maneja AptiveAI Agents los archivos — adjuntarlos a una tarea, los archivos que devuelve un conector, los que un agente crea en su computadora, dónde se guarda cada uno y por cuánto tiempo, el visor que los abre, los archivos de conocimiento que consulta un agente y quién puede verlos.
+description: Cómo maneja AptiveAI Agents los archivos — adjuntarlos a una tarea, los archivos que devuelve un conector, los que un agente crea en su computadora, dónde se guarda cada uno y por cuánto tiempo, el visor que los abre, cómo presentar un archivo y compartirlo por enlace, los archivos de conocimiento que consulta un agente y quién puede verlos.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -9,7 +9,8 @@ Una [tarea](/es/concepts/tasks) puede llevar archivos: una factura que quieres
 que se revise, la exportación que devuelve un [conector](/es/concepts/connectors),
 el informe que el agente prepara para ti. Sea cual sea su origen, los archivos
 de una tarea se guardan juntos: aparecen en el panel lateral de la tarea, se
-abren en el mismo visor, se pueden descargar y se copian a la computadora del
+abren en el mismo visor, se pueden descargar, se pueden compartir
+[por enlace](#compartir-un-archivo-por-enlace) y se copian a la computadora del
 agente para que pueda trabajar con ellos.
 
 A un [agente](/es/concepts/agents) también se le pueden dar **archivos de
@@ -21,9 +22,9 @@ cada tarea. Esos pertenecen al agente y no a una tarea concreta; consulta
 
 | Origen | Cómo llega | Tamaño máximo | Se guarda durante |
 |---|---|---|---|
-| **Lo adjuntas tú** | Desde el cuadro de mensajes, al enviar un mensaje | 25 MB | 2 días |
-| **Lo devuelve un conector** | Un archivo en la respuesta del conector, o una respuesta demasiado grande para entregársela entera al agente, incluida la respuesta larga de una [llamada al sitio](/es/concepts/site-calls#respuestas-largas) | 10 MB | 1 hora |
-| **Lo crea el agente** | Se guarda como resultado de su trabajo en su computadora | 10 MB | 10 días |
+| **Lo adjuntas tú** | Desde el cuadro de mensajes, al enviar un mensaje | 50 MB | 2 días; 8 horas para un archivo de más de 10 MB |
+| **Lo devuelve un conector** | Un archivo en la respuesta del conector, o una respuesta demasiado grande para entregársela entera al agente, incluida la respuesta larga de una [llamada al sitio](/es/concepts/site-calls#respuestas-largas) | 50 MB | 1 hora |
+| **Lo crea el agente** | Se guarda como resultado de su trabajo en su computadora | 50 MB | 10 días |
 
 Cada espacio de trabajo puede guardar hasta 10 GB de archivos que todavía no
 han vencido. Si se supera, un archivo nuevo se rechaza con el mensaje *este
@@ -36,8 +37,9 @@ Adjunta archivos a cualquier mensaje — en **Nueva tarea** o en una tarea que y
 está en curso — con **Adjuntar un archivo**, o arrastrándolos a la página
 (*Suelta archivos para adjuntarlos*).
 
-- **Hasta 20 archivos por mensaje, de 25 MB cada uno.** Puedes adjuntar
-  cualquier tipo de archivo.
+- **Hasta 50 archivos por mensaje, de 50 MB cada uno.** Puedes adjuntar
+  cualquier tipo de archivo. Un archivo de más de 10 MB se guarda solo 8 horas
+  después de subirlo, y el cuadro de mensajes lo avisa antes de enviarlo.
 - **Puedes marcar las imágenes antes de enviarlas.** Abre la imagen y elige
   **Anotar**: dibuja a mano alzada, líneas, rectángulos y elipses, o agrega
   texto, en rojo, azul, verde o gris. **Guardar imagen anotada** reemplaza la
@@ -115,7 +117,10 @@ documentos comunes conservan su tipo real, así que un archivo PDF, Word, Excel,
 PowerPoint o CSV se abre como tal; una imagen que dibuje, el agente también la
 puede ver. También puede conservar a propósito cualquier otro archivo de la
 carpeta de archivos de la tarea, lo que aparece como *Guardando un archivo para
-ti*. Cada archivo conservado puede tener hasta 10 MB.
+ti*. Cada archivo conservado puede tener hasta 50 MB.
+
+El agente también puede [compartir por enlace uno de los archivos de la
+tarea](#cuando-el-agente-comparte-un-archivo) cuando se lo pides.
 
 Dos [límites de seguridad](/es/concepts/agents#límites-de-seguridad) de la configuración
 del agente controlan esto, y ambos están activados en un agente nuevo:
@@ -138,11 +143,13 @@ Un archivo de una tarea tiene dos copias.
 
 - **La copia almacenada** se guarda en el almacenamiento de archivos de
   AptiveAI durante el tiempo indicado en la [tabla de arriba](#de-dónde-vienen-los-archivos-de-una-tarea):
-  2 días para un archivo que adjuntaste, una hora para uno que devolvió un
-  conector o una llamada al sitio, 10 días para uno que creó el agente. Esta es
-  la copia que ves y descargas. Cuando
-  vence, el archivo sigue en la lista pero indica **La descarga expiró**, y ya
-  no se puede abrir.
+  2 días para un archivo que adjuntaste (8 horas si pesa más de 10 MB), una
+  hora para uno que devolvió un conector o una llamada al sitio, 10 días para
+  uno que creó el agente. Esta es la copia que ves, descargas y
+  [compartes](#compartir-un-archivo-por-enlace). Cada archivo de **Documentos**
+  indica cuándo se elimina —*El archivo caduca en 9 d*, *El archivo caduca en
+  5 h*—, y el cuadro para compartir también. Cuando vence, el archivo sigue en
+  la lista pero indica **La descarga expiró**, y ya no se puede abrir.
 - **La copia en la computadora** es con la que trabaja el agente. Los archivos
   se copian ahí cuando la tarea tiene una computadora. Una tarea nunca inicia
   una computadora solo para guardar un archivo: hasta que tenga una, sus
@@ -155,21 +162,36 @@ Descarga tus resultados antes de que venzan si necesitas conservarlos.
 
 - **En la transcripción.** Los archivos que adjuntaste aparecen debajo de tu
   mensaje; los que creó el agente, debajo de su respuesta. Haz clic en uno para
-  abrirlo.
+  abrirlo. Una página web que creó el agente también puede mostrarse en la
+  propia conversación, como una tarjeta debajo de su respuesta.
 - **En el panel lateral.** La pestaña **Documentos** muestra **Archivos**: todos
   los archivos de la tarea, sea cual sea su origen. Cada uno muestra una vista
   previa o un icono de tipo, su nombre, *Haz clic para ver* o *Haz clic para
-  descargar*, su tamaño, un botón de descarga, su ruta en la computadora y
-  cuándo llegó. Se agrupan en **Subidos**, **Generados** y **Artefactos del
+  descargar* con *El archivo caduca en …*, su tamaño, cuándo llegó y cuándo
+  expira su descarga. Al hacer clic en la fila se abre el archivo; el botón del
+  ojo lo muestra junto a la transcripción. Su menú **⋯** tiene **Descargar**,
+  **Compartir enlace…** y, mientras el archivo tiene un enlace activo, **Copiar
+  enlace para compartir** y **Desactivar enlace para compartir**; después, las
+  versiones anteriores del archivo y **Eliminar**, cuando corresponden. Un
+  archivo con un enlace activo lleva la etiqueta **Compartido · 71 h**: las
+  horas que le quedan a su enlace.
+
+  Los archivos se agrupan en **Subidos**, **Generados** y **Artefactos del
   agente**: lo que trajeron los conectores y las llamadas al sitio, que se
   elimina de la computadora del agente unos minutos después de llegar y cuyas
   descargas expiran después de una hora.
+- **En la página Archivos del agente.** Todos los archivos de las tareas de un
+  agente que puedes ver, de todas sus tareas; consulta
+  [El panel del agente y sus archivos](/es/concepts/agents#el-panel-del-agente-y-sus-archivos).
 
 ## El visor
 
 Al hacer clic en un archivo, se abre en el visor. **◀** y **▶** (o las teclas
 de flecha) pasan de un archivo a otro del mismo mensaje o lista, **Esc** lo
-cierra, y siempre hay un botón de descarga.
+cierra, y siempre hay un botón de descarga. En una tarea, la cabecera del visor
+también tiene **Compartir enlace…** ([Compartir un archivo por
+enlace](#compartir-un-archivo-por-enlace)) y **Presentar** ([Presentar un
+archivo](#presentar-un-archivo)).
 
 | Archivo | Se muestra como |
 |---|---|
@@ -180,10 +202,127 @@ cierra, y siempre hay un botón de descarga.
 | **PowerPoint** (`.pptx`) | Las diapositivas — *Vista previa — el diseño puede diferir de PowerPoint.* |
 | **Markdown** | Texto con formato |
 | **Texto y datos** — `.txt`, `.log`, JSON, XML, YAML | Una vista de texto de solo lectura, con resaltado para JSON, XML y YAML. Se muestran los primeros 500,000 caracteres |
+| **Páginas web** — `.html` | La página, en un entorno aislado: sus propios scripts se ejecutan, pero no puede llegar a internet, a tu cuenta ni a nada más de la tarea, y no puede descargar archivos |
 | **Cualquier otro** | Su nombre y tamaño, con **Descargar** |
 
 Cuando una parte de un archivo no se muestra, el visor lo indica; la descarga
 siempre es el archivo completo.
+
+### Presentar un archivo
+
+**Presentar**, en la cabecera del visor, muestra el archivo a pantalla
+completa, para una reunión o para compartir pantalla.
+
+- **Un archivo de PowerPoint** se convierte en una presentación, una
+  diapositiva a la vez sobre una pantalla oscura. Las flechas o la barra
+  espaciadora pasan de una diapositiva a otra (*Flechas o Espacio para avanzar,
+  Esc para salir*), y **Salir** o **Esc** la terminan.
+- **Cualquier otro archivo** llena la pantalla en el mismo visor: desplázalo,
+  amplíalo o úsalo como en el visor. **Esc** termina la presentación.
+
+La [página compartida](#lo-que-ve-quien-tiene-el-enlace) tiene el mismo botón
+**Presentar**, con **Salir de la presentación** para salir.
+
+## Compartir un archivo por enlace
+
+Puedes compartir **un archivo** de una tarea con alguien que no tiene cuenta en
+AptiveAI —un informe para un cliente, una presentación para una reunión— con un
+enlace privado. El enlace abre ese archivo y nada más, durante poco tiempo.
+
+### Quién puede compartir
+
+Cualquiera que pueda **trabajar en la tarea** puede compartir sus archivos:
+crear un enlace, volver a copiarlo y desactivarlo. Quien solo puede ver la
+tarea, en solo lectura, no puede. Se puede compartir cualquier archivo de la
+tarea, lo hayas adjuntado tú, lo haya devuelto un conector o lo haya creado el
+agente.
+
+### Crear un enlace
+
+Comparte desde cualquiera de estos lugares:
+
+- el menú **⋯** del archivo en la pestaña **Documentos** de la tarea →
+  **Compartir enlace…**;
+- **Compartir enlace…** en la cabecera del visor, con el archivo abierto;
+- el botón para compartir de una página web que el agente muestra en la
+  conversación;
+- el **⋯** del archivo en la [página Archivos](/es/concepts/agents#los-archivos-del-agente)
+  del agente o en su panel.
+
+El cuadro, **Compartir “‹nombre del archivo›”**, dice *Solo se comparte este
+archivo. Nada más de la tarea.* Elige durante cuánto tiempo funciona el enlace
+—**24 horas**, **48 horas** o **72 horas** (la opción predeterminada)—, lee
+**Antes de compartir** y selecciona **Crear enlace**:
+
+> Cualquiera que tenga este enlace, incluidas las personas a quienes se lo
+> reenvíen, puede ver este archivo hasta que venza. Los archivos que crean los
+> agentes pueden incluir nombres, cifras y otros datos del trabajo del que
+> provienen. Revisa el archivo antes y no compartas nada que no enviarías por
+> correo.
+
+El aviso aparece cada vez que se crea un enlace. Después, el cuadro muestra el
+enlace con **Copiar enlace**, cuándo vence, **Crear un enlace nuevo** y
+**Desactivar enlace**.
+
+- **Un enlace activo por archivo.** Crear un enlace nuevo desactiva el
+  anterior, así que también es la forma de reemplazar un enlace que llegó a la
+  persona equivocada.
+- **Un archivo compartido se nota.** En **Documentos** y en la página Archivos
+  del agente, el archivo lleva la etiqueta **Compartido · N h**, y su **⋯**
+  agrega **Copiar enlace para compartir** y **Desactivar enlace para
+  compartir**.
+- Si el cuadro dice *Este enlace está activo, pero su dirección no se puede
+  mostrar de nuevo*, selecciona **Crear un enlace nuevo** para obtener uno que
+  puedas copiar.
+
+### Lo que ve quien tiene el enlace
+
+El enlace abre una página **sin iniciar sesión**. Muestra solo ese archivo, en
+el mismo visor que la consola, con su nombre, el tiempo que le queda al enlace
+(*Vence en 71 h*) y **Presentar**. Nada más llega a ella: ni la tarea, ni su
+conversación, ni el agente, ni tu espacio de trabajo, ni sus otros archivos, ni
+quién lo compartió.
+
+- **Solo para ver.** La página no tiene botón de descarga. Una página web se
+  ejecuta en el mismo entorno aislado que en la consola.
+- **Una pequeña marca «Con la tecnología de AptiveAI Agents»** aparece en la
+  esquina y abre aptiveai.io.
+- **Los buscadores no la indexan.**
+
+### Cuándo deja de funcionar un enlace
+
+Un enlace deja de funcionar, y la página indica entonces *Este enlace ya no
+está disponible*, cuando:
+
+- se acaba su tiempo;
+- alguien lo desactiva — **Desactivar enlace para compartir** en el **⋯** del
+  archivo, o **Desactivar enlace** en el cuadro;
+- se crea un enlace nuevo para el mismo archivo;
+- el archivo se elimina, o llega al final del tiempo que se
+  [guarda](#dónde-se-guardan-los-archivos);
+- se elimina la tarea.
+
+**Un enlace nunca dura más que su archivo.** Si el archivo se elimina antes de
+que pasen las 24, 48 o 72 horas del enlace, el enlace deja de funcionar con él,
+y el cuadro lo indica: *El archivo se conserva hasta el ‹fecha›. Un enlace no
+puede durar más.* Así, el archivo de un conector (que se guarda una hora) o una
+subida grande (que se guarda 8 horas) solo se pueden compartir durante ese
+tiempo. Una página que alguien ya tiene abierta conserva lo que ya cargó, pero
+nada más.
+
+### Cuando el agente comparte un archivo
+
+Puedes pedirle al agente que comparta uno de los archivos de la tarea —*«comparte
+report.pdf conmigo como enlace»*—. Crea el mismo enlace que crearías tú, durante
+**24 horas** salvo que pidas 48 o 72, y la transcripción muestra *Compartió un
+archivo: report.pdf*. El enlace es tuyo: aparece en el archivo en
+**Documentos**, donde puedes copiarlo o desactivarlo.
+
+Con el conector [AptiveAI Messaging](/es/concepts/messaging), el agente también
+puede enviar el enlace por correo a alguien —*«comparte el informe y envía el
+enlace por correo a nuestro contador»*—. Enviar el correo pregunta antes, como
+cualquier envío de Messaging; consulta
+[Cuándo pregunta antes](/es/concepts/messaging#cuándo-pregunta-antes).
 
 ## Archivos de conocimiento
 
@@ -235,6 +374,10 @@ la inició. Los propietarios que abren una tarea con su enlace pueden leerla, en
 solo lectura. Los administradores no tienen acceso adicional. Un archivo que
 adjuntaste pero que todavía no enviaste solo lo ves tú. Cuando se elimina una
 tarea, nadie puede abrir sus archivos.
+
+La única excepción es un [enlace para compartir](#compartir-un-archivo-por-enlace):
+cualquiera que lo tenga puede ver ese único archivo, sin iniciar sesión, hasta
+que el enlace deje de funcionar.
 
 Los archivos de conocimiento de un agente aparecen en su creador. Solo las
 personas que pueden configurar el agente los agregan, describen o quitan, y el

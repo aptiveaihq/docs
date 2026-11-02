@@ -1,6 +1,6 @@
 ---
 title: Files
-description: How AptiveAI Agents handles files — attaching them to a task, files a connector returns, files an agent makes on its computer, where each is kept and for how long, the viewer that opens them, knowledge files an agent searches, and who can see them.
+description: How AptiveAI Agents handles files — attaching them to a task, files a connector returns, files an agent makes on its computer, where each is kept and for how long, the viewer that opens them, presenting a file and sharing one by link, knowledge files an agent searches, and who can see them.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -8,8 +8,9 @@ import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
 A [task](/concepts/tasks) can carry files: an invoice you want checked, the
 export a [connector](/concepts/connectors) hands back, the report the agent
 builds for you. Whatever their source, a task's files are kept together — listed
-in the task's side panel, opened in the same viewer, downloadable, and copied
-onto the agent's computer so it can work on them.
+in the task's side panel, opened in the same viewer, downloadable, shareable
+[by link](#sharing-a-file-by-link), and copied onto the agent's computer so it
+can work on them.
 
 An [agent](/concepts/agents) can also be given **knowledge files** — price
 lists, procedures, contracts — that it searches in every task. Those belong to
@@ -19,9 +20,9 @@ the agent rather than to one task; see [Knowledge files](#knowledge-files).
 
 | Source | How it arrives | Largest file | Kept for |
 |---|---|---|---|
-| **You attach it** | From the composer, when you send a message | 25 MB | 2 days |
-| **A connector returns it** | A file in the connector's answer, or an answer too large to hand the agent whole — a [site call](/concepts/site-calls#long-answers)'s long answer included | 10 MB | 1 hour |
-| **The agent makes it** | Saved as output from its work on its computer | 10 MB | 10 days |
+| **You attach it** | From the composer, when you send a message | 50 MB | 2 days — 8 hours for a file over 10 MB |
+| **A connector returns it** | A file in the connector's answer, or an answer too large to hand the agent whole — a [site call](/concepts/site-calls#long-answers)'s long answer included | 50 MB | 1 hour |
+| **The agent makes it** | Saved as output from its work on its computer | 50 MB | 10 days |
 
 Each workspace can hold up to 10 GB of files that have not yet expired. Past
 that, a new file is refused with *this workspace has used its file storage
@@ -33,7 +34,9 @@ Attach files to any message — on **New task** or in a task that is already
 under way — with **Attach a file**, or by dropping them on the page
 (*Drop files to attach*).
 
-- **Up to 20 files per message, 25 MB each.** Any type of file can be attached.
+- **Up to 50 files per message, 50 MB each.** Any type of file can be attached.
+  A file over 10 MB is kept for only 8 hours after upload, and the composer
+  says so before you send it.
 - **Pictures can be marked up before you send them.** Open the picture and
   choose **Annotate**: draw freehand, lines, rectangles and ellipses, or add
   text, in red, blue, green or gray. **Save annotated image** replaces the
@@ -106,7 +109,10 @@ conversation under the agent's reply, and in the side panel. Common documents
 keep their real type, so a PDF, Word, Excel, PowerPoint or CSV file opens as
 one; a picture it draws, the agent can look at too. It can also keep any other
 file from the task's files folder on purpose, shown as *Keeping a file for
-you*. Each kept file can be up to 10 MB.
+you*. Each kept file can be up to 50 MB.
+
+The agent can also [share one of the task's files by link](#when-the-agent-shares-a-file)
+when you ask it to.
 
 Two [guardrails](/concepts/agents#guardrails) in the agent's configuration
 control this, and both are on for a new agent:
@@ -129,10 +135,12 @@ A task's file has two copies.
 
 - **The stored copy** is kept in AptiveAI's file storage for the time in the
   [table above](#where-a-tasks-files-come-from) — 2 days for a file you
-  attached, an hour for one a connector or a site call returned, 10 days for
-  one the agent made. This is the
-  copy you view and download. After it expires, the file stays listed but reads
-  **Download expired**, and it can no longer be opened.
+  attached (8 hours for one over 10 MB), an hour for one a connector or a site
+  call returned, 10 days for one the agent made. This is the
+  copy you view, download and [share](#sharing-a-file-by-link). Each file in
+  **Documents** says when it goes — *File expires in 9 d*, *File expires in
+  5 h* — and so does the share dialog. After it expires, the file stays listed
+  but reads **Download expired**, and it can no longer be opened.
 - **The copy on the computer** is what the agent works on. Files are copied
   there when the task has a computer. A task never starts a computer just to
   hold a file: until it has one, its files wait, and they are copied when it
@@ -144,20 +152,33 @@ Download your results before they expire if you need to keep them.
 ## Seeing a task's files
 
 - **In the transcript.** Files you attached appear under your message; files
-  the agent made appear under its reply. Click one to open it.
+  the agent made appear under its reply. Click one to open it. A web page the
+  agent made can also show right in the conversation, as a card under its
+  reply.
 - **In the side panel.** The **Documents** tab lists **Files** — every file
   in the task, whatever its source. Each shows a preview or a type icon, its
-  name, *Click to view* or *Click to download*, its size, a download button,
-  its path on the computer and when it arrived. They are grouped as
-  **Uploaded**, **Generated** and **Agent's artifacts** — what connectors and
-  site calls fetched, which is removed from the agent's computer a few minutes
-  after it arrives and whose downloads expire after an hour.
+  name, *Click to view* or *Click to download* with *File expires in …*, its
+  size, when it arrived and when its download expires. Clicking the row opens
+  the file; the eye button previews it beside the transcript. Its **⋯** menu
+  has **Download**, **Share link…** and, while the file has a live link,
+  **Copy share link** and **Turn off share link** — then the file's earlier
+  versions and **Delete**, where they apply. A file with a live link carries a
+  **Shared · 71 h** chip: the hours its link has left.
+
+  Files are grouped as **Uploaded**, **Generated** and **Agent's artifacts** —
+  what connectors and site calls fetched, which is removed from the agent's
+  computer a few minutes after it arrives and whose downloads expire after an
+  hour.
+- **On the agent's Files page.** Every file of an agent's tasks you can see,
+  across tasks — see [The agent's dashboard and files](/concepts/agents#the-agents-dashboard-and-files).
 
 ## The viewer
 
 Clicking a file opens it in the viewer. **◀** and **▶** (or the arrow keys)
 move between the files of the same message or list, **Esc** closes it, and a
-download button is always there.
+download button is always there. In a task, the viewer's header also has
+**Share link…** ([Sharing a file by link](#sharing-a-file-by-link)) and
+**Present** ([Presenting a file](#presenting-a-file)).
 
 | File | Shown as |
 |---|---|
@@ -168,10 +189,113 @@ download button is always there.
 | **PowerPoint** (`.pptx`) | The slides — *Preview — layout may differ from PowerPoint.* |
 | **Markdown** | Formatted text |
 | **Text and data** — `.txt`, `.log`, JSON, XML, YAML | A read-only text view, with highlighting for JSON, XML and YAML. The first 500,000 characters are shown |
+| **Web pages** — `.html` | The page, in a sandbox: its own scripts run, but it cannot reach the internet, your account or anything else in the task, and it cannot download files |
 | **Anything else** | Its name and size, with **Download** |
 
 When part of a file is not shown, the viewer says so; the download is always
 the whole file.
+
+### Presenting a file
+
+**Present** in the viewer's header shows the file full screen, for a meeting
+or a screen share.
+
+- **A PowerPoint file** becomes a slideshow, one slide at a time on a dark
+  screen. The arrow keys or Space move between slides (*Arrow keys or Space to
+  move, Esc to exit*), and **Exit** or **Esc** ends it.
+- **Any other file** fills the screen in the same viewer: scroll it, zoom it
+  or use it as you would in the viewer. **Esc** ends it.
+
+The [shared page](#what-someone-with-the-link-sees) has the same **Present**
+button, with **Exit presentation** to leave.
+
+## Sharing a file by link
+
+You can share **one file** of a task with someone who has no AptiveAI account
+— a report for a client, a deck for a meeting — through a private link. The
+link opens that file and nothing else, for a short time.
+
+### Who can share
+
+Anyone who can **work in the task** can share its files: make a link, copy it
+again and turn it off. Someone who can only view the task — read-only — cannot.
+Any file of the task can be shared, whether you attached it, a connector
+returned it or the agent made it.
+
+### Making a link
+
+Share from any of these:
+
+- the file's **⋯** menu in the task's **Documents** tab → **Share link…**;
+- **Share link…** in the viewer's header, while the file is open;
+- the share button on a web page the agent shows in the conversation;
+- the file's **⋯** on the agent's [Files page](/concepts/agents#the-agents-files)
+  or dashboard.
+
+The dialog, **Share “‹file name›”**, says *Only this file is shared. Nothing
+else from the task.* Choose how long the link works — **24 hours**, **48
+hours** or **72 hours** (the default) — read **Before you share**, and select
+**Create link**:
+
+> Anyone who has this link, including people it gets forwarded to, can view
+> this file until it expires. Files made by agents can include names, numbers
+> and other details from the work they came from. Check the file first, and
+> don't share anything you wouldn't send by email.
+
+The note is shown every time a link is made. The dialog then shows the link
+with **Copy link**, when it expires, **Make a new link** and **Turn off link**.
+
+- **One live link per file.** Making a new link turns the old one off, so it is
+  also how you replace a link that went to the wrong person.
+- **A shared file shows it.** In **Documents** and on the agent's Files page, the
+  file carries a **Shared · N h** chip, and its **⋯** adds **Copy share link**
+  and **Turn off share link**.
+- If the dialog says *This link is on, but its address can't be shown again*,
+  select **Make a new link** to get one you can copy.
+
+### What someone with the link sees
+
+The link opens a page **without signing in**. It shows only that file, in the
+same viewer as the console, with its name, how long the link has left
+(*Expires in 71 h*) and **Present**. Nothing else reaches it: not the task, its
+conversation, the agent, your workspace, its other files, or who shared it.
+
+- **View only.** The page has no download button. A web page runs in the same
+  sandbox as in the console.
+- **A small "Powered by AptiveAI Agents" mark** sits in the corner and opens
+  aptiveai.io.
+- **It is not indexed** by search engines.
+
+### When a link stops
+
+A link stops working, and the page then reads *This link has expired*, when:
+
+- its time is up;
+- someone turns it off — **Turn off share link** in the file's **⋯**, or
+  **Turn off link** in the dialog;
+- a new link is made for the same file;
+- the file is deleted, or reaches the end of the time it is
+  [kept](#where-files-are-kept);
+- the task is deleted.
+
+**A link never outlasts its file.** If the file goes before the link's 24, 48
+or 72 hours are up, the link stops with it, and the dialog says so: *The file
+is kept until ‹date›. A link can't outlast it.* So a connector's file (kept an
+hour) or a large upload (kept 8 hours) can be shared only that long. A page
+someone already has open keeps what it has loaded, but nothing more.
+
+### When the agent shares a file
+
+You can ask the agent to share one of the task's files — *"share report.pdf
+with me as a link"*. It makes the same link you would, for **24 hours** unless
+you ask for 48 or 72, and the transcript shows *Shared a file: report.pdf*.
+The link is yours: it appears on the file in **Documents**, where you can copy
+it or turn it off.
+
+With the [AptiveAI Messaging](/concepts/messaging) connector, the agent can
+also email the link to someone — *"share the report and email the link to
+our accountant"*. Sending the email asks first, like every Messaging send —
+see [When it asks first](/concepts/messaging#when-it-asks-first).
 
 ## Knowledge files
 
@@ -218,6 +342,9 @@ the people it was shared with, and people who can see the automation that starte
 it. Owners who open a task by its link can read it, view-only. There is no admin
 override. A file you attached but have not sent yet is visible only to you.
 Once a task is deleted, nobody can open its files.
+
+The one exception is a [share link](#sharing-a-file-by-link): anyone who has
+it can view that one file, without signing in, until the link stops.
 
 An agent's knowledge files are listed in its builder. Only people who may
 configure the agent add, describe or remove them, and the agent only ever

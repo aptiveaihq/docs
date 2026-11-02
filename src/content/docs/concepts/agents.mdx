@@ -1,6 +1,6 @@
 ---
 title: Agents
-description: An agent is an AI worker you configure once — its instructions, the systems it may reach, what it knows — and then give tasks. Creating and configuring one, Refine, training, versions, personal and shared agents, pinning and icons, deleting and recovering, how an agent updates itself, and the restrictions that apply.
+description: An agent is an AI worker you configure once — its instructions, the systems it may reach, what it knows — and then give tasks. Creating and configuring one, Refine, training, versions, its dashboard and files, personal and shared agents, pinning and icons, deleting and recovering, how an agent updates itself, and the restrictions that apply.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -26,19 +26,22 @@ every agent gets one.
   **AGENTS** then lists your pinned agents first, with their latest tasks, and
   ends in **All agents** — see
   [Agents in the sidebar](/getting-started/finding-your-way#agents-in-the-sidebar).
-  Each row has a **…** menu: **Start new task**, **New task in split view**,
-  **Configure** and **Train** (only if you may edit the agent), **Clone**,
-  **Share…**, **Pin** / **Unpin** and **Delete** (only if you may delete the agent).
+  Each row has a **…** menu: **Dashboard**, **Start new task**, **New task in
+  split view**, **Configure** and **Train** (only if you may edit the agent),
+  **Clone**, **Share…**, **Pin** / **Unpin** and **Delete** (only if you may
+  delete the agent).
 - **New task.** The first page of AptiveAI Agents lists **Your agents**. Pick one
   and you are *working with* it: its icon, its purpose and its
   [conversation starters](#conversation-starters) fill the page, and the
   composer sends your message to it. The address is `/?agent=<id>`, so the page
-  can be bookmarked or shared.
+  can be bookmarked or shared. Hovering an agent shows a small button to its
+  [dashboard](#the-agents-dashboard-and-files) (always shown on a touch
+  screen); it does not start a task.
 - **The Agents page** (`/agents`). Every agent as a tile or in a table — with
   its **Last task** and **Next run**, and **Running** or **Waiting on you** when
   it has a task in that state — searchable. Each card links to the agent's
-  tasks as **Tasks (N)**, which opens the Tasks list filtered to that agent.
-  Clicking an agent, or its **Start a task** button, opens New task with that
+  tasks as **Tasks (N)**, which opens the Tasks list filtered to that agent,
+  and has a **Dashboard** button. Clicking an agent, or its **Start a task** button, opens New task with that
   agent chosen. Its **…** menu has the same items as in the sidebar. A
   **Deleted** filter chip (**Only** or **With live**) shows agents that were
   deleted; see [Deleting and recovering an agent](#deleting-and-recovering-an-agent).
@@ -46,6 +49,74 @@ every agent gets one.
 An agent is live from the moment it is created: anyone it is shared with can
 give it tasks, and it stays that way until it is deleted. To stop an agent's scheduled work without deleting it, pause
 its [automations](/concepts/automations) one by one.
+
+## The agent's dashboard and files
+
+An agent's **Dashboard** shows how it is doing and what it has produced. Open it
+from the **Dashboard** button on the agent's card on the Agents page, from
+**Dashboard** in the agent's **…** menu in the sidebar, or from the button that
+appears when you hover the agent on **New task**.
+
+<Aside type="note" title="Every number covers only the tasks you can see.">
+  The dashboard counts the agent's tasks that you yourself can see in your
+  Tasks list — yours, and the ones shared with you. Two people looking at the
+  same agent can see different numbers, and nobody's private task is counted
+  on anyone else's dashboard.
+</Aside>
+
+The header has the **time range** — **Last 24h**, **Last week**, **Last 30
+days** (the default), **Last 90 days**, **This month**, **Last month**, **This
+year**, **All time** or a **Custom range** with **From** and **To**; **‹** and
+**›** step to the previous or next period of the same length — then
+**Refresh** and **New task**, which opens New task with this agent chosen.
+Tasks are counted by when they started; deleted tasks are left out.
+
+| Tile | What it shows |
+|---|---|
+| **Tasks** | The agent's tasks started in the period |
+| **Goals met** | The share of the period's **graded** tasks that met their goal, as *N of M graded tasks*, with the change against the period just before. It reads **Not graded** when goals are not graded for your account |
+| **Time worked** | How long the agent actually worked on those tasks. Time spent waiting for a person, a question or an approval adds nothing |
+| **Files** | How many files those tasks still hold, with *N shared* when any of them has a live [share link](/concepts/files#sharing-a-file-by-link) |
+
+Below the tiles:
+
+- **Goals met, by day** — or by week, or by month, as the period grows: the
+  share of graded tasks that met their goal in each.
+- **Latest tasks** — the newest first, each with a dot for its outcome: **Goal
+  met**, **Partly met**, **Blocked**, **Not met** or **Not graded yet**.
+  **All tasks →** opens the Tasks list filtered to this agent.
+- **Latest files** — shared files first, then the newest. Click one to open it
+  in the viewer, where **Share link…** and **Present** are; its **⋯** has
+  **Share link…**, **Copy share link**, **Turn off share link** and **Open
+  task**. **All files →** opens the agent's Files page.
+
+### How goals met is judged
+
+Once a night, each task that finished is graded once, from what it was asked to
+do and the agent's final summary: it **met its goal**, **partly** met it, was
+**blocked**, or did **not** meet it. **Goals met** is the tasks that met their
+goal out of the tasks that were graded. A task not graded yet — one that
+finished today, or is still running — and every task of an account with grading
+off are not counted at all: *No task in this period has been graded yet. Tasks
+are graded overnight.* See also
+[What a goal met is](/administration/activity#what-a-goal-met-is).
+
+### The agent's files
+
+**All files →** opens the agent's **Files** page, at `/agents/<id>/files`:
+*Every file this agent made in your tasks. Open one to view it, or share a link
+to it.* It covers all time, not the dashboard's period, and lists only files
+that are still [kept](/concepts/files#where-files-are-kept) — shared ones first,
+then the newest.
+
+- **Each file is a tile** with a preview — the picture, the first lines of a
+  text file, a miniature of a web page, or the file's type icon — its name,
+  when it was made (*Made …*), *File expires in …*, and a **Shared · N h** chip
+  while it has a live link.
+- **Show** filters to **All files** or **Shared only**, and *Filter by file
+  name…* searches by name.
+- **Click a tile** to open the file in the viewer. Its **⋯** has **Share
+  link…**, **Copy share link**, **Turn off share link** and **Open task**.
 
 ## Creating an agent
 
