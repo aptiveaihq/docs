@@ -1,6 +1,6 @@
 ---
 title: Agentes
-description: Un agente es un trabajador de IA que configuras una vez —sus instrucciones, los sistemas a los que puede llegar, lo que sabe— y al que luego le das tareas. Cómo crearlo y configurarlo, agentes personales y compartidos, Refinar, versiones, fijarlos e iconos, eliminarlos y recuperarlos, cómo un agente se actualiza a sí mismo y las restricciones que aplican.
+description: Un agente es un trabajador de IA que configuras una vez —sus instrucciones, los sistemas a los que puede llegar, lo que sabe— y al que luego le das tareas. Cómo crearlo y configurarlo, agentes personales y compartidos, Refinar, versiones, su panel y sus archivos, fijarlos e iconos, eliminarlos y recuperarlos, cómo un agente se actualiza a sí mismo y las restricciones que aplican.
 ---
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -27,20 +27,24 @@ por agente: todos los agentes tienen una.
   **Nueva tarea**. **AGENTES** muestra después tus agentes fijados primero, con
   sus últimas tareas, y termina en **Todos los agentes**; consulta
   [Los agentes en la barra lateral](/es/getting-started/finding-your-way#los-agentes-en-la-barra-lateral).
-  Cada fila tiene un menú **…**: **Nueva tarea**, **Nueva tarea en vista
-  dividida**, **Configurar** (solo si puedes editar el agente), **Clonar**,
+  Cada fila tiene un menú **…**: **Panel**, **Nueva tarea**, **Nueva tarea en
+  vista dividida**, **Configurar** (solo si puedes editar el agente), **Clonar**,
   **Compartir…**, **Fijar** / **Dejar de fijar** y **Eliminar** (solo si puedes
   eliminar el agente).
 - **Nueva tarea.** La primera página de AptiveAI Agents muestra **Tus agentes**.
   Elige uno y estarás *trabajando con* él: su icono, su propósito y sus
   [frases de inicio](#frases-de-inicio) llenan la página, y el
   cuadro de mensajes le envía tu mensaje. La dirección es `/?agent=<id>`, así que puedes
-  guardar la página en favoritos o compartirla.
+  guardar la página en favoritos o compartirla. Al pasar el cursor sobre un
+  agente aparece un pequeño botón que lleva a su
+  [panel](#el-panel-del-agente-y-sus-archivos) (siempre visible en una pantalla
+  táctil); no inicia ninguna tarea.
 - **La página Agentes** (`/agents`). Todos los agentes como tarjetas o en una
   tabla —con su **Última tarea** y **Próxima ejecución**, y **En ejecución** o
   **Esperándote** cuando tiene una tarea en ese estado—, con búsqueda. Cada
   tarjeta enlaza con las tareas del agente como **Tareas (N)**, que abre la
-  lista de Tareas filtrada por ese agente. Al hacer clic en un agente, o en su
+  lista de Tareas filtrada por ese agente, y tiene un botón **Panel**. Al hacer
+  clic en un agente, o en su
   botón **Iniciar una tarea**, se abre Nueva tarea con ese agente elegido. Su
   menú **…** tiene las mismas opciones que en la barra lateral. Un filtro
   **Eliminados** (**Solo** o **Con activos**) muestra los agentes que se
@@ -50,6 +54,81 @@ Un agente está activo desde el momento en que se crea: las personas con quienes
 se comparte pueden darle tareas, y sigue así hasta que se elimina. Para
 detener el trabajo programado de un agente sin eliminarlo, pausa una por una
 sus [automatizaciones](/es/concepts/automations).
+
+## El panel del agente y sus archivos
+
+El **Panel** de un agente muestra cómo le va y lo que ha producido. Ábrelo desde
+el botón **Panel** de la tarjeta del agente en la página Agentes, desde
+**Panel** en el menú **…** del agente en la barra lateral, o desde el botón que
+aparece al pasar el cursor sobre el agente en **Nueva tarea**.
+
+<Aside type="note" title="Cada cifra cuenta solo las tareas que tú puedes ver.">
+  El panel cuenta las tareas del agente que tú mismo puedes ver en tu lista de
+  Tareas: las tuyas y las que se compartieron contigo. Dos personas que miran
+  el mismo agente pueden ver cifras distintas, y nunca se cuenta la tarea
+  privada de una persona en el panel de otra.
+</Aside>
+
+La cabecera tiene el **rango de tiempo** —**Últimas 24 h**, **Última semana**,
+**Últimos 30 días** (el predeterminado), **Últimos 90 días**, **Este mes**,
+**Mes pasado**, **Este año**, **Todo el periodo** o un **Rango personalizado**
+con **Desde** y **Hasta**; **‹** y **›** pasan al periodo anterior o al
+siguiente de la misma duración—, y después **Actualizar** y **Nueva tarea**,
+que abre Nueva tarea con este agente elegido. Las tareas se cuentan según
+cuándo empezaron; las eliminadas no se cuentan.
+
+| Mosaico | Qué muestra |
+|---|---|
+| **Tareas** | Las tareas del agente iniciadas en el periodo |
+| **Objetivos cumplidos** | La parte de las tareas **evaluadas** del periodo que cumplieron su objetivo, como *N de M tareas evaluadas*, con el cambio frente al periodo justo anterior. Indica **Sin evaluar** cuando los objetivos no se evalúan en tu cuenta |
+| **Tiempo trabajado** | Cuánto trabajó de verdad el agente en esas tareas. El tiempo que pasa esperando a una persona, una pregunta o una aprobación no suma |
+| **Archivos** | Cuántos archivos conservan todavía esas tareas, con *N compartidos* cuando alguno tiene un [enlace para compartir](/es/concepts/files#compartir-un-archivo-por-enlace) activo |
+
+Debajo de los mosaicos:
+
+- **Objetivos cumplidos, por día** —o por semana, o por mes, a medida que el
+  periodo crece—: la parte de las tareas evaluadas que cumplieron su objetivo
+  en cada uno.
+- **Últimas tareas**: las más recientes primero, cada una con un punto que
+  indica su resultado: **Objetivo cumplido**, **Cumplido en parte**,
+  **Bloqueada**, **No cumplido** o **Sin evaluar todavía**. **Todas las
+  tareas →** abre la lista de Tareas filtrada por este agente.
+- **Últimos archivos**: primero los compartidos, después los más recientes. Haz
+  clic en uno para abrirlo en el visor, donde están **Compartir enlace…** y
+  **Presentar**; su **⋯** tiene **Compartir enlace…**, **Copiar enlace para
+  compartir**, **Desactivar enlace para compartir** y **Abrir tarea**. **Todos
+  los archivos →** abre la página Archivos del agente.
+
+### Cómo se evalúan los objetivos cumplidos
+
+Una vez por noche, cada tarea que terminó se evalúa una sola vez, a partir de lo
+que se le pidió y del resumen final del agente: **cumplió su objetivo**, lo
+cumplió **en parte**, quedó **bloqueada** o **no** lo cumplió. **Objetivos
+cumplidos** son las tareas que cumplieron su objetivo entre las que se
+evaluaron. Una tarea que todavía no se evaluó —una que terminó hoy, o que
+sigue en curso— y todas las tareas de una cuenta con la evaluación desactivada
+no se cuentan: *Ninguna tarea de este periodo se ha evaluado todavía. Las
+tareas se evalúan por la noche.* Consulta también
+[Qué es un objetivo cumplido](/es/administration/activity#qué-es-un-objetivo-cumplido).
+
+### Los archivos del agente
+
+**Todos los archivos →** abre la página **Archivos** del agente, en
+`/agents/<id>/files`: *Todos los archivos que este agente creó en tus tareas.
+Abre uno para verlo o comparte un enlace a él.* Abarca todo el tiempo, no el
+periodo del panel, y muestra solo los archivos que todavía se
+[guardan](/es/concepts/files#dónde-se-guardan-los-archivos): primero los
+compartidos, después los más recientes.
+
+- **Cada archivo es una tarjeta** con una vista previa —la imagen, las primeras
+  líneas de un archivo de texto, una miniatura de una página web o el icono de
+  su tipo—, su nombre, cuándo se creó (*Creado …*), *El archivo caduca en …* y
+  la etiqueta **Compartido · N h** mientras tiene un enlace activo.
+- **Mostrar** filtra entre **Todos los archivos** y **Solo compartidos**, y
+  *Filtrar por nombre de archivo…* busca por nombre.
+- **Haz clic en una tarjeta** para abrir el archivo en el visor. Su **⋯** tiene
+  **Compartir enlace…**, **Copiar enlace para compartir**, **Desactivar enlace
+  para compartir** y **Abrir tarea**.
 
 ## Crear un agente
 
