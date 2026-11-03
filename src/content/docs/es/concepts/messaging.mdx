@@ -121,7 +121,7 @@ Un agente que tiene AptiveAI Messaging recibe tres herramientas:
 | Herramienta | Qué hace | Límites |
 |---|---|---|
 | **Enviar un mensaje de texto** | Envía un mensaje de texto a una lista de números de EE. UU. | De 1 a 50 números; de 1 a 1600 caracteres |
-| **Enviar un correo** | Envía un correo a una lista de direcciones | De 1 a 50 direcciones; asunto de hasta 200 caracteres; cuerpo en texto plano de hasta 20 000 caracteres |
+| **Enviar un correo** | Envía un correo a una lista de direcciones | De 1 a 50 direcciones; asunto de hasta 200 caracteres; cuerpo en texto plano de hasta 20 000 caracteres; hasta 10 archivos de la tarea adjuntos, 20 MB en total |
 | **Consultar el estado de un mensaje** | Comprueba si se entregaron los mensajes que envió esta tarea | Solo mensajes de la misma tarea |
 
 Enviar a una lista es una sola llamada, así que una aprobación cubre todo el
@@ -155,7 +155,10 @@ cincuenta.
   **Dirección de respuesta**, para que las respuestas te lleguen a ti.
 - El cuerpo es texto plano en un diseño sencillo, sin publicidad de AptiveAI.
 - Cada correo lleva un **enlace para darse de baja** y un encabezado de baja
-  en un clic. Sin archivos adjuntos.
+  en un clic.
+- **Se pueden adjuntar archivos de la tarea**: hasta 10 archivos, 20 MB en
+  total. La tarjeta de aprobación muestra el nombre de cada archivo antes de
+  enviar nada.
 - **Incluido en tu plan, hasta 250 al día.** Cada negocio puede enviar correo a
   250 personas al día como máximo (se cuenta por destinatario; el día se
   reinicia a medianoche UTC). Un envío que lo superaría se rechaza antes de
