@@ -111,7 +111,7 @@ An agent granted AptiveAI Messaging gets three tools:
 | Tool | What it does | Limits |
 |---|---|---|
 | **Send a text message** | Texts one message to a list of US phone numbers | 1 to 50 numbers; 1 to 1,600 characters |
-| **Send an email** | Emails one message to a list of addresses | 1 to 50 addresses; subject up to 200 characters; plain-text body up to 20,000 characters |
+| **Send an email** | Emails one message to a list of addresses | 1 to 50 addresses; subject up to 200 characters; plain-text body up to 20,000 characters; up to 10 files from the task attached, 20 MB in all |
 | **Check message status** | Looks up whether messages this task sent were delivered | Only messages from the same task |
 
 Sending to a list is one call, so one approval covers the whole batch — "text
@@ -141,7 +141,9 @@ every driver on this list" is one decision, not fifty.
   with your **Reply-to address**, so replies come to you.
 - The body is plain text in a simple layout, with no AptiveAI marketing.
 - Every email carries an **unsubscribe link** and a one-click unsubscribe
-  header. No attachments.
+  header.
+- **Files from the task can be attached**: up to 10 files, 20 MB in all.
+  The approval card lists each file by name before anything is sent.
 - **Included in your plan, up to 250 a day.** Each business may email at most
   250 people a day (counted per recipient; the day resets at midnight UTC). A
   send that would pass it is refused before anyone is asked, the agent is told
