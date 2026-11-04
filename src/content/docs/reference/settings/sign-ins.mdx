@@ -67,14 +67,13 @@ not locked.
 ## Sending the sign-in
 
 Filling a sign-in does not send it: the agent then clicks the form's sign-in
-button, or presses Enter. When the task
-is below **Never ask** (see [Approvals](/concepts/approvals)), that one step
+button, or presses Enter. At any [approval level](/concepts/approvals), that one step
 needs **no approval card** if the agent has just filled **both** the user name
 and the password of one stored sign-in into one sign-in form on the page. The
 transcript says *Sent the stored sign-in it had just filled on this page,
 without asking — “‹button›”.*
 
-The send still waits for your approval when:
+Unless the task is at **Never ask**, the send still waits for your approval when:
 
 - **The form looks like something other than a sign-in** — a signature, a
   payment, an approval, a transfer, a release. An electronic-signature box
