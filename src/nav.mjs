@@ -69,6 +69,7 @@ export const nav = [
       { label: 'Skills', slug: 'concepts/skills', desc: 'Reusable know-how an agent loads on demand', es: { label: 'Habilidades', desc: 'Conocimiento reutilizable que un agente carga cuando lo necesita' } },
       { label: 'Site calls', slug: 'concepts/site-calls', desc: "Skills that send a site's own requests instead of clicking", es: { label: 'Llamadas al sitio', desc: 'Habilidades que envían las solicitudes del propio sitio en lugar de hacer clic' } },
       { label: 'Sharing', slug: 'concepts/sharing', desc: 'Who can use a task, automation, agent or skill', es: { label: 'Compartir', desc: 'Quién puede usar una tarea, una automatización, un agente o una habilidad' } },
+      { label: 'Approvals', slug: 'concepts/approvals', desc: 'How much an agent may do before it asks you', es: { label: 'Aprobaciones', desc: 'Cuánto puede hacer un agente antes de preguntarte' } },
       { label: 'Files', slug: 'concepts/files', desc: 'Attach, view and get back files; knowledge files', es: { label: 'Archivos', desc: 'Adjunta, ve y recupera archivos; archivos de conocimiento' } },
       { label: 'Inbox', slug: 'concepts/inbox', desc: 'Notifications and what arrives when', es: { label: 'Bandeja de entrada', desc: 'Notificaciones y qué llega cuándo' } },
     ],

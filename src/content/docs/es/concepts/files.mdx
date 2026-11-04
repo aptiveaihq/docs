@@ -117,13 +117,16 @@ puede ver. También puede conservar a propósito cualquier otro archivo de la
 carpeta de archivos de la tarea, lo que aparece como *Guardando un archivo para
 ti*. Cada archivo conservado puede tener hasta 10 MB.
 
-Dos [límites de seguridad](/es/concepts/agents#límites-de-seguridad) de la configuración
-del agente controlan esto, y ambos están activados en un agente nuevo:
+El [límite de seguridad](/es/concepts/agents#límites-de-seguridad) **Puede
+analizar archivos** de la configuración del agente controla esto, y está activado
+en un agente nuevo. Si está desactivado, el agente no puede trabajar con
+archivos mediante código en absoluto.
 
-| Límite de seguridad | Efecto |
-|---|---|
-| **Puede analizar archivos** | Si está desactivado, el agente no puede trabajar con archivos mediante código en absoluto |
-| **Aprobación antes de analizar** | La primera vez en una tarea, el agente pregunta: *El agente quiere leer y analizar los archivos de la computadora de esta tarea. Si lo apruebas, podrá hacerlo durante el resto de esta tarea sin volver a preguntar.* |
+Si pregunta antes o no depende de un [nivel de aprobación](/es/concepts/approvals).
+En **Preguntar por todo**, la primera vez en una tarea el agente pregunta: *El
+agente quiere leer y analizar los archivos de la computadora de esta tarea. Si lo
+apruebas, podrá hacerlo durante el resto de esta tarea sin volver a preguntar.*
+Desde **Archivos sin preguntar**, no pregunta.
 
 Trabajar con archivos requiere la computadora del agente, así que una tarea sin
 agente no puede hacerlo.

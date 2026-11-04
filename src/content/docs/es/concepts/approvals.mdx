@@ -1,0 +1,139 @@
+---
+title: Aprobaciones
+description: Cuánto puede hacer un agente antes de detenerse a preguntarte. Los cuatro niveles de aprobación, qué es un acto final, dónde se define un nivel —en una tarea, en un agente o como tu valor predeterminado—, cuál se aplica, cómo se comportan las automatizaciones y Probar, y quién puede elegir No preguntar nunca.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Un **nivel de aprobación** dice cuánto puede hacer una tarea antes de detenerse
+a preguntar a una persona. Cuando tiene que preguntar, la tarea muestra una
+[tarjeta de aprobación](/es/concepts/tasks#preguntas-y-aprobaciones); en un nivel
+más alto pregunta menos, o no pregunta.
+
+## Los cuatro niveles
+
+Cada nivel cubre todo lo que cubre el anterior.
+
+| Nivel | Qué permite hacer sin preguntar |
+|---|---|
+| **Preguntar por todo** | Nada. Pregunta antes de leer tus archivos y antes de cada acción. Es el predeterminado |
+| **Archivos sin preguntar** | Lee y trabaja con archivos por su cuenta. Cada acción sigue preguntando |
+| **Aprobar todo menos actos finales** | Actúa por su cuenta, pero sigue preguntando antes de un acto final (más abajo) |
+| **No preguntar nunca** | Todo, incluidos los actos finales. Nunca se detiene a preguntar |
+
+**Aprobar todo** en una tarjeta de aprobación equivale a este nivel durante el
+resto de esa tarea: cubre lo mismo que **Aprobar todo menos actos finales**.
+
+### Actos finales
+
+Un acto final es el que no se puede deshacer o el que gasta o expone algo:
+
+- pagar o gastar dinero
+- enviar un mensaje
+- presentar un formulario
+- eliminar algo
+- dar acceso a alguien
+- publicar algo
+- pulsar un control que el agente no sabe nombrar
+
+**Aprobar todo menos actos finales** sigue preguntando antes de cada uno de
+ellos, siempre. Solo **No preguntar nunca** deja que sigan adelante.
+
+Cada acto que se hace sin preguntar, en cualquier nivel, escribe una línea
+**Hecho sin preguntar** en la tarea, diciendo qué se hizo. Nada ocurre en
+silencio.
+
+<Aside type="caution" title="No preguntar nunca significa exactamente eso.">
+  En **No preguntar nunca** un agente paga, envía, presenta y elimina sin
+  preguntar primero. Elígelo solo si confías en el agente para todo eso. Si lo
+  defines en un agente, se aplica a **todas las personas que lo usan**, y a sus
+  automatizaciones, no solo a ti.
+</Aside>
+
+## Dónde se define un nivel
+
+| Dónde | Cómo | Qué cubre |
+|---|---|---|
+| Una tarea | Abre la tarea y ve a **Detalles → Aprobaciones** | Esa tarea y las tareas que inicia |
+| Un agente | **Configurar → Límites de seguridad → Nivel de aprobación** | Cada tarea de ese agente |
+| Tu valor predeterminado | **Ajustes → Aprobaciones** | Cada tarea que inicies |
+
+El nivel de un agente se guarda en cuanto lo cambias, aparte del botón
+**Guardar** del agente. En un agente que aún no se ha guardado, podrás cambiarlo
+cuando se guarde.
+
+## Qué nivel se aplica
+
+1. **Un nivel elegido en la tarea decide.** Nada más lo anula, y una tarea que
+   ella inicia lo sigue, salvo que también se haya elegido un nivel en esa tarea.
+2. **Si no se eligió ninguno,** la tarea sigue el nivel de su agente o el de la
+   persona que la inició (sus **Ajustes → Aprobaciones**), **el que pregunte
+   menos**.
+3. **Una tarea que inició la tarea de otro agente** sigue a su propio agente si
+   no se eligió ningún nivel por encima.
+
+**Detalles → Aprobaciones**, en la tarea, dice cuál se aplica, por ejemplo
+*Sigue la configuración de Aprobaciones de este agente* o *Sigue tu
+configuración en Ajustes → Aprobaciones*.
+
+<Aside type="caution" title="Un agente en Preguntar por todo no obliga a preguntar.">
+  Como la tarea sigue el nivel que pregunte menos, una persona que haya puesto su
+  propio valor predeterminado en **Aprobar todo menos actos finales** o **No
+  preguntar nunca** puede pasar por encima de un agente configurado en
+  **Preguntar por todo**. Si eres propietario de un agente, no supongas que su
+  configuración hace que las tareas de todos pregunten. Un nivel elegido en una
+  tarea sigue decidiendo, y una tarea que quieras tratar con cuidado puede
+  configurarse en **Preguntar por todo** en la propia tarea.
+</Aside>
+
+## Automatizaciones
+
+Una [automatización](/es/concepts/automations) que **Se ejecuta sola** sigue
+haciéndolo en cualquier nivel: no hay nadie para responder, así que sus tareas
+no esperan una tarjeta. El valor predeterminado de una persona nunca se aplica a
+una tarea que inicia una automatización, pero sí el nivel de su agente. La
+configuración propia de la automatización, **Se ejecuta sola** o **Pregunta
+antes de actuar**, se describe en la página
+[Automatizaciones](/es/concepts/automations#aprobaciones).
+
+## Probar y las sesiones de creación
+
+**Probar** y las sesiones de creación del constructor de agentes nunca usan el
+valor predeterminado de una persona. Siguen el nivel del agente, pero nunca por
+encima de **Aprobar todo menos actos finales**, así que una prueba o una sesión
+de creación no puede pagar, enviar, presentar ni eliminar por su cuenta, ni
+siquiera con un agente en **No preguntar nunca**.
+
+## Quién puede cambiar el nivel de un agente
+
+- Quien pueda editar el agente puede elegir **Preguntar por todo**, **Archivos
+  sin preguntar** o **Aprobar todo menos actos finales**. También puede sacar a
+  un agente de **No preguntar nunca**.
+- **No preguntar nunca** en un agente solo puede elegirlo una **persona
+  propietaria de la empresa**, tras una advertencia y una confirmación. Cada
+  cambio queda registrado.
+
+Las instrucciones del propio agente y el chat del constructor no pueden
+cambiarlo.
+
+Una **copia** de un agente empieza en **Preguntar por todo**, sea cual sea el
+nivel del original.
+
+## Lo que no es un nivel de aprobación
+
+Otros ajustes de **Configurar → Límites de seguridad** son aparte, y un nivel
+de aprobación no los cambia:
+
+- **Puede analizar archivos** — si el agente puede trabajar con archivos
+  mediante código. Consulta [Archivos](/es/concepts/files#archivos-que-crea-el-agente).
+- **Actuar solo en un horario definido** — las horas en que se le puede dar
+  trabajo nuevo al agente. Consulta [Agentes](/es/concepts/agents#límites-de-seguridad).
+- **El agente puede añadir y actualizar conocimiento** — si el agente puede
+  guardar archivos en su conocimiento sin preguntar. Consulta
+  [Agentes](/es/concepts/agents#conocimiento).
+
+<CardGrid>
+  <LinkCard title="Tareas" href="/es/concepts/tasks#preguntas-y-aprobaciones" description="La tarjeta de aprobación y sus botones." />
+  <LinkCard title="Agentes" href="/es/concepts/agents#límites-de-seguridad" description="Dónde se define el nivel de un agente." />
+  <LinkCard title="Automatizaciones" href="/es/concepts/automations#aprobaciones" description="Se ejecuta sola y Pregunta antes de actuar." />
+</CardGrid>
