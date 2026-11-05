@@ -100,6 +100,9 @@ When the agent needs you, the task stops and a card takes the composer's place.
 | **Approve all** | Run this and stop asking for the rest of this task |
 | **Decline** | Skip this action and tell the agent why — there is a box for what to do instead |
 
+How much a task may do before it asks is its **approval level**, set in
+**Details → Approvals**. See [Approvals](/concepts/approvals).
+
 A task waiting on you shows as **Needs you**, and reaches you in the
 [Inbox](/concepts/inbox), where you can answer it without opening the task.
 
@@ -111,53 +114,6 @@ A task waiting on you shows as **Needs you**, and reaches you in the
   characters are not hidden. For accounts you use often, save a
   [personal sign-in](/reference/settings/sign-ins) instead.
 </Aside>
-
-### Approval levels
-
-How often a task stops to ask is its **approval level**. There are four, and each
-asks less than the one before it:
-
-| Level | What the task does |
-|---|---|
-| **Ask for everything** | Asks before reading your files and before every action. This is the default |
-| **Files without asking** | Reads and works with files on its own. Every action still asks |
-| **Approve all except final acts** | Acts on its own, but still asks before paying, sending, submitting, deleting, giving access or publishing |
-| **Never ask** | Never stops to ask, not even to pay, send, submit or delete. Each act is still written in the task |
-
-A level can be set in three places:
-
-| Where | Applies to | Who can change it |
-|---|---|---|
-| **On a task:** **Approvals** in the **Details** tab of the [side panel](#the-side-panel) | That task, and the tasks it starts unless they have their own | Anyone who can work in the task |
-| **On an agent:** **Configure → Guardrails** ([Approval level](/concepts/agents#guardrails)) | Every task of that agent, for everyone who uses it | Anyone who can edit the agent. Only an enterprise owner can choose **Never ask**; anyone who can edit can move an agent away from it |
-| **For yourself:** [**Settings → Approvals**](/reference/settings#approvals) | The tasks you start | You |
-
-A task decides which one to follow like this:
-
-1. **A level chosen on the task, or on the task that started it, wins.** Neither
-   the agent's level nor anyone's setting is looked at.
-2. **Otherwise it follows its agent or the person who started it, whichever asks
-   less.**
-
-The **Details** tab says where the task's level came from, such as *Follows this
-agent's Approvals setting* or *Set on this task*.
-
-<Aside type="caution" title="An agent's level is not a ceiling.">
-  Because a task follows whichever asks less, setting an agent to **Ask for
-  everything** does not make it ask someone whose own **Settings → Approvals** asks
-  less. And **Never ask** means payments, messages, form submissions and deletions
-  go ahead without anyone being asked, so each place warns you and asks you to
-  confirm before it takes effect.
-</Aside>
-
-- **A change reaches the task's next card.** A card already waiting keeps waiting
-  for your answer. Moving a task to a level that asks more also undoes any approval
-  you gave above that level.
-- **[Automations](/concepts/automations#approvals) do not use your Settings →
-  Approvals.** They follow their agent's level. An **Autonomous** automation keeps
-  running on its own at any level.
-- **Try it and building an agent** use the agent's level, never your setting, and
-  still ask before a final act when the agent is set to **Never ask**.
 
 ### When the agent reaches its step limit
 

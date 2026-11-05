@@ -72,15 +72,13 @@ funcionó no se vuelve a intentar, para no bloquear la cuenta.
 ## Enviar el inicio de sesión
 
 Llenar un inicio de sesión no lo envía: después, el agente hace clic en el botón
-de inicio de sesión del formulario o pulsa Intro. Cuando el agente
-[pregunta antes de cualquier acción irreversible](/es/concepts/agents#límites-de-seguridad),
-ese único paso **no necesita tarjeta de aprobación** si el agente acaba de
+de inicio de sesión del formulario o pulsa Intro. En cualquier [nivel de aprobación](/es/concepts/approvals), ese único paso **no necesita tarjeta de aprobación** si el agente acaba de
 llenar **tanto** el nombre de usuario **como** la contraseña de un inicio de
 sesión guardado en un mismo formulario de inicio de sesión de la página. La
 transcripción dice *Envió el inicio de sesión guardado que acababa de completar
 en esta página, sin preguntar — “‹botón›”.*
 
-El envío sigue esperando tu aprobación cuando:
+Salvo que la tarea esté en **No preguntar nunca**, el envío sigue esperando tu aprobación cuando:
 
 - **El formulario parece otra cosa que un inicio de sesión**: una firma, un
   pago, una aprobación, una transferencia, una liberación. Un cuadro de firma

@@ -1,0 +1,141 @@
+---
+title: Approvals
+description: How much an agent may do before it stops and asks you. The four approval levels, what a final act is, where a level is set — on a task, on an agent, as your own default — which one applies, how automations and Try it behave, and who can choose Never ask.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import YouTube from '../../../components/YouTube.astro';
+
+An **approval level** says how much a task may do before it stops and asks a
+person. When it has to ask, the task shows an
+[approval card](/concepts/tasks#questions-and-approvals); at a higher level it
+asks less, or not at all.
+
+<YouTube id="JKXuFeW273g" title="How to set approval levels in AptiveAI Agents" vertical />
+
+## The four levels
+
+Each level covers everything the one before it covers.
+
+| Level | What it lets happen without asking |
+|---|---|
+| **Ask for everything** | Nothing. It asks before reading your files and before every action. This is the default |
+| **Files without asking** | It reads and works with files on its own. Every action still asks |
+| **Approve all except final acts** | It acts on its own, but still asks before a final act (below) |
+| **Never ask** | Everything, final acts included. It never stops to ask |
+
+**Approve all** on an approval card is the same thing as this level for the
+rest of that task: it covers what **Approve all except final acts** covers.
+
+### Final acts
+
+A final act is one that cannot be taken back or that spends or exposes
+something:
+
+- paying or spending money
+- sending a message
+- submitting a form
+- deleting something
+- giving someone access
+- publishing something
+- pressing a control the agent cannot name
+
+**Approve all except final acts** still asks before each of these, every
+time. Only **Never ask** lets them go ahead.
+
+Every act done without asking, at any level, writes a **Done without asking**
+line in the task, saying what was done. Nothing happens silently.
+
+<Aside type="caution" title="Never ask means exactly that.">
+  At **Never ask** an agent pays, sends, submits and deletes without asking
+  first. Choose it only if you trust the agent with all of that. Set on an
+  agent, it applies to **everyone who uses that agent**, and to its
+  automations, not only to you.
+</Aside>
+
+## Where a level is set
+
+| Where | How | What it covers |
+|---|---|---|
+| One task | Open the task, then **Details → Approvals** | That task, and the tasks it starts |
+| An agent | **Configure → Guardrails → Approval level** | Every task of that agent |
+| Your own default | **Settings → Approvals** | Every task you start |
+
+Anyone who can work in a task can change its level. A change reaches the task's
+next card, while a card already waiting keeps waiting for your answer. Moving a
+task to a level that asks more also undoes any approval you gave above that level.
+
+A level on an agent is saved the moment you change it, apart from the agent's
+**Save**. On an agent that has not been saved yet, it can be changed once the
+agent is saved.
+
+## Which level applies
+
+1. **A level chosen on the task decides.** Nothing else overrides it, and a
+   task it starts follows it unless a level was chosen on that task too.
+2. **With nothing chosen,** the task follows its agent's level or the level of
+   the person who started it (their **Settings → Approvals**), **whichever asks
+   less**.
+3. **A task that another agent's task started** follows its own agent when no
+   level was chosen above it.
+
+The task's **Details → Approvals** says which of these applies, for example
+*Follows this agent's Approvals setting* or *Follows your setting in Settings →
+Approvals*.
+
+<Aside type="caution" title="An agent set to Ask for everything does not force it.">
+  Because the task follows whichever asks less, a person who has set their own
+  default to **Approve all except final acts** or **Never ask** can go past an
+  agent set to **Ask for everything**. If you own an agent, do not assume its
+  setting makes everyone's tasks ask. A level chosen on a task still decides,
+  and a task you want to be careful about can be set to **Ask for everything**
+  on the task itself.
+</Aside>
+
+## Automations
+
+An [automation](/concepts/automations) set to **Autonomous** keeps running on its
+own at any level: nobody is there to answer, so its tasks do not wait on a card.
+A person's own default never applies to a task an automation starts, but its
+agent's level does. An **Interactive** one stops wherever its agent's level asks. The
+automation's own setting, **Autonomous** or **Interactive**, is described on the
+[Automations](/concepts/automations#approvals) page. The assistant's draft calls
+them *Runs on its own* and *Asks before acting*.
+
+## Try it and building sessions
+
+**Try it** and the building sessions in the agent builder never use a person's
+default. They follow the agent's level, but never above **Approve all except
+final acts**, so a test or a building session cannot pay, send, submit or
+delete on its own even for an agent set to **Never ask**.
+
+## Who can change an agent's level
+
+- Anyone who can edit the agent can choose **Ask for everything**, **Files
+  without asking** or **Approve all except final acts**. They can also move an
+  agent away from **Never ask**.
+- **Never ask** on an agent can be chosen only by an **enterprise owner**,
+  after a warning and a confirmation. Each change is recorded.
+
+The agent's own instructions and the builder chat cannot change it.
+
+A **copy** of an agent starts at **Ask for everything**, whatever the original
+was set to.
+
+## What is not an approval level
+
+Three other settings in **Configure → Guardrails** are separate, and an
+approval level does not change them:
+
+- **Can analyse files** — whether the agent can work on files with code at
+  all. See [Files](/concepts/files#files-the-agent-makes).
+- **Only act during set hours** — the hours the agent may be given new work.
+  See [Agents](/concepts/agents#guardrails).
+- **Agent can add and update knowledge** — whether the agent may save files to
+  its own knowledge without asking. See [Agents](/concepts/agents#knowledge).
+
+<CardGrid>
+  <LinkCard title="Tasks" href="/concepts/tasks#questions-and-approvals" description="The approval card and its buttons." />
+  <LinkCard title="Agents" href="/concepts/agents#guardrails" description="Where an agent's level is set." />
+  <LinkCard title="Automations" href="/concepts/automations#approvals" description="Autonomous and Interactive." />
+</CardGrid>

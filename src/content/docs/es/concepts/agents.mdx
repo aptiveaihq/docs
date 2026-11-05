@@ -330,9 +330,16 @@ mantiene en sus otras tareas.
 
 | Límite de seguridad | Qué hace |
 |---|---|
-| **Nivel de aprobación** | Con qué frecuencia las tareas de este agente se detienen a preguntar, de **Preguntar por todo** a **No preguntar nunca**; consulta [Niveles de aprobación](/es/concepts/tasks#niveles-de-aprobación). Se guarda al cambiarlo, aparte del botón **Guardar** del agente. Solo una persona propietaria de la empresa puede elegir **No preguntar nunca** |
+| **Nivel de aprobación** | Cuánto puede hacer el agente antes de preguntar: **Preguntar por todo**, **Archivos sin preguntar**, **Aprobar todo menos actos finales** o **No preguntar nunca**. Consulta [Aprobaciones](/es/concepts/approvals) |
 | **Puede analizar archivos** | Permite que el agente lea y analice los archivos de su computadora; consulta [Archivos que crea el agente](/es/concepts/files#archivos-que-crea-el-agente) |
 | **Actuar solo en un horario definido** | Solo entre **Desde** y **Hasta**. Fuera de ese horario, el trabajo nuevo para el agente (una tarea nueva, un mensaje, una respuesta o una tarea que inicia otra tarea) se rechaza, indicando a qué hora vuelve a abrir. Las automatizaciones y el trabajo que ya está en marcha no se detienen |
+
+Un agente nuevo empieza en **Preguntar por todo**, y también una copia de uno.
+Quien pueda editar el agente puede cambiar su nivel de aprobación, salvo a **No
+preguntar nunca**, que requiere una persona propietaria de la empresa y se
+aplica a todas las personas que usan el agente. El valor predeterminado de una
+persona puede pasar por encima del nivel de un agente: consulta
+[Qué nivel se aplica](/es/concepts/approvals#qué-nivel-se-aplica).
 
 Los límites de seguridad los aplica la propia tarea, digan lo que digan las
 instrucciones: no son una petición al modelo.

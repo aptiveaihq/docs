@@ -114,13 +114,15 @@ you*. Each kept file can be up to 50 MB.
 The agent can also [share one of the task's files by link](#when-the-agent-shares-a-file)
 when you ask it to.
 
-Two [guardrails](/concepts/agents#guardrails) in the agent's configuration
-control this, and both are on for a new agent:
+The [guardrail](/concepts/agents#guardrails) **Can analyse files** in the
+agent's configuration controls this, and it is on for a new agent. Off, the
+agent cannot work on files with code at all.
 
-| Guardrail | Effect |
-|---|---|
-| **Can analyse files** | Off, the agent cannot work on files with code at all |
-| **[Approval level](/concepts/tasks#approval-levels)** | At **Ask for everything**, the first time in a task, the agent asks: *The agent wants to read and analyse the files on this task's computer. If you approve, it can do this for the rest of this task without asking again.* From **Files without asking** up, it does not ask |
+Whether it asks first is an [approval level](/concepts/approvals). At **Ask for
+everything**, the first time in a task the agent asks: *The agent wants to read
+and analyse the files on this task's computer. If you approve, it can do this
+for the rest of this task without asking again.* From **Files without asking**
+up, it does not ask.
 
 Working on files needs the agent's computer, so a task with no agent cannot do
 it.
