@@ -120,7 +120,7 @@ control this, and both are on for a new agent:
 | Guardrail | Effect |
 |---|---|
 | **Can analyse files** | Off, the agent cannot work on files with code at all |
-| **Approval before analysing** | The first time in a task, the agent asks: *The agent wants to read and analyse the files on this task's computer. If you approve, it can do this for the rest of this task without asking again.* |
+| **[Approval level](/concepts/tasks#approval-levels)** | At **Ask for everything**, the first time in a task, the agent asks: *The agent wants to read and analyse the files on this task's computer. If you approve, it can do this for the rest of this task without asking again.* From **Files without asking** up, it does not ask |
 
 Working on files needs the agent's computer, so a task with no agent cannot do
 it.
@@ -207,7 +207,7 @@ or a screen share.
   or use it as you would in the viewer. **Esc** ends it.
 
 The [shared page](#what-someone-with-the-link-sees) has the same **Present**
-button, with **Exit presentation** to leave.
+button on a computer, with **Exit presentation** to leave.
 
 ## Sharing a file by link
 
@@ -237,13 +237,18 @@ else from the task.* Choose how long the link works — **24 hours**, **48
 hours** or **72 hours** (the default) — read **Before you share**, and select
 **Create link**:
 
-> Anyone who has this link, including people it gets forwarded to, can view
-> this file until it expires. Files made by agents can include names, numbers
+> Anyone who has this link, including people it gets forwarded to, can view and
+> download this file until it expires. Files made by agents can include names, numbers
 > and other details from the work they came from. Check the file first, and
 > don't share anything you wouldn't send by email.
 
 The note is shown every time a link is made. The dialog then shows the link
 with **Copy link**, when it expires, **Make a new link** and **Turn off link**.
+
+**Immersive view**, a switch in the same dialog, is for a dashboard or a report
+that should look like a page of its own. It is set per link, and you can change
+it at any time: the link stays the same. See
+[What someone with the link sees](#what-someone-with-the-link-sees).
 
 - **One live link per file.** Making a new link turns the old one off, so it is
   also how you replace a link that went to the wrong person.
@@ -256,15 +261,32 @@ with **Copy link**, when it expires, **Make a new link** and **Turn off link**.
 ### What someone with the link sees
 
 The link opens a page **without signing in**. It shows only that file, in the
-same viewer as the console, with its name, how long the link has left
-(*Expires in 71 h*) and **Present**. Nothing else reaches it: not the task, its
+same viewer as the console. Nothing else reaches it: not the task, its
 conversation, the agent, your workspace, its other files, or who shared it.
 
-- **View only.** The page has no download button. A web page runs in the same
-  sandbox as in the console.
+- **The bar** at the bottom has the file's name, how long the link has left
+  (*Expires in 71 h*), **Search** when the file has text, **Download** and, on a
+  computer, **Present**. Whoever has the link can download the file.
+- **A web page** runs in the same sandbox as in the console.
 - **A small "Powered by AptiveAI Agents" mark** sits in the corner and opens
   aptiveai.io.
 - **It is not indexed** by search engines.
+
+#### Immersive view
+
+With **Immersive view** on, the page shows only the file, filling the screen,
+with the AptiveAI mark in the corner and, on a computer, a small round
+full-screen button. People who open the link do not see its name, when it
+expires, or the **Search**, **Download** and **Present** buttons.
+
+The link itself still works the same way: it expires, it can be turned off, and
+anyone who has it can reach the file.
+
+#### On a phone or tablet
+
+On an iPhone, iPad or Android device, there is no **Present** and no full-screen
+button, because a page cannot really go full screen there. The rest of the page
+is the same.
 
 ### When a link stops
 

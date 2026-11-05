@@ -128,7 +128,7 @@ del agente controlan esto, y ambos están activados en un agente nuevo:
 | Límite de seguridad | Efecto |
 |---|---|
 | **Puede analizar archivos** | Si está desactivado, el agente no puede trabajar con archivos mediante código en absoluto |
-| **Aprobación antes de analizar** | La primera vez en una tarea, el agente pregunta: *El agente quiere leer y analizar los archivos de la computadora de esta tarea. Si lo apruebas, podrá hacerlo durante el resto de esta tarea sin volver a preguntar.* |
+| **[Nivel de aprobación](/es/concepts/tasks#niveles-de-aprobación)** | Con **Preguntar por todo**, la primera vez en una tarea, el agente pregunta: *El agente quiere leer y analizar los archivos de la computadora de esta tarea. Si lo apruebas, podrá hacerlo durante el resto de esta tarea sin volver a preguntar.* A partir de **Archivos sin preguntar**, no pregunta |
 
 Trabajar con archivos requiere la computadora del agente, así que una tarea sin
 agente no puede hacerlo.
@@ -221,7 +221,7 @@ completa, para una reunión o para compartir pantalla.
   amplíalo o úsalo como en el visor. **Esc** termina la presentación.
 
 La [página compartida](#lo-que-ve-quien-tiene-el-enlace) tiene el mismo botón
-**Presentar**, con **Salir de la presentación** para salir.
+**Presentar** en una computadora, con **Salir de la presentación** para salir.
 
 ## Compartir un archivo por enlace
 
@@ -255,7 +255,7 @@ archivo. Nada más de la tarea.* Elige durante cuánto tiempo funciona el enlace
 **Antes de compartir** y selecciona **Crear enlace**:
 
 > Cualquiera que tenga este enlace, incluidas las personas a quienes se lo
-> reenvíen, puede ver este archivo hasta que venza. Los archivos que crean los
+> reenvíen, puede ver y descargar este archivo hasta que venza. Los archivos que crean los
 > agentes pueden incluir nombres, cifras y otros datos del trabajo del que
 > provienen. Revisa el archivo antes y no compartas nada que no enviarías por
 > correo.
@@ -263,6 +263,11 @@ archivo. Nada más de la tarea.* Elige durante cuánto tiempo funciona el enlace
 El aviso aparece cada vez que se crea un enlace. Después, el cuadro muestra el
 enlace con **Copiar enlace**, cuándo vence, **Crear un enlace nuevo** y
 **Desactivar enlace**.
+
+**Vista inmersiva**, un interruptor en el mismo cuadro, es para un panel o un
+informe que deba verse como una página propia. Se define por enlace y puedes
+cambiarla en cualquier momento: el enlace sigue siendo el mismo. Consulta
+[Lo que ve quien tiene el enlace](#lo-que-ve-quien-tiene-el-enlace).
 
 - **Un enlace activo por archivo.** Crear un enlace nuevo desactiva el
   anterior, así que también es la forma de reemplazar un enlace que llegó a la
@@ -278,16 +283,34 @@ enlace con **Copiar enlace**, cuándo vence, **Crear un enlace nuevo** y
 ### Lo que ve quien tiene el enlace
 
 El enlace abre una página **sin iniciar sesión**. Muestra solo ese archivo, en
-el mismo visor que la consola, con su nombre, el tiempo que le queda al enlace
-(*Vence en 71 h*) y **Presentar**. Nada más llega a ella: ni la tarea, ni su
+el mismo visor que la consola. Nada más llega a ella: ni la tarea, ni su
 conversación, ni el agente, ni tu espacio de trabajo, ni sus otros archivos, ni
 quién lo compartió.
 
-- **Solo para ver.** La página no tiene botón de descarga. Una página web se
-  ejecuta en el mismo entorno aislado que en la consola.
-- **Una pequeña marca «Con la tecnología de AptiveAI Agents»** aparece en la
+- **La barra** de abajo tiene el nombre del archivo, el tiempo que le queda al
+  enlace (*Vence en 71 h*), **Buscar** cuando el archivo tiene texto,
+  **Descargar** y, en una computadora, **Presentar**. Quien tenga el enlace
+  puede descargar el archivo.
+- **Una página web** se ejecuta en el mismo entorno aislado que en la consola.
+- **Una pequeña marca "Con la tecnología de AptiveAI Agents"** aparece en la
   esquina y abre aptiveai.io.
 - **Los buscadores no la indexan.**
+
+#### Vista inmersiva
+
+Con la **Vista inmersiva** activada, la página muestra solo el archivo, a
+pantalla completa, con la marca de AptiveAI en la esquina y, en una computadora,
+un pequeño botón redondo de pantalla completa. Quienes abran el enlace no verán
+su nombre, cuándo vence ni los botones **Buscar**, **Descargar** y **Presentar**.
+
+El enlace en sí funciona igual: vence, se puede desactivar y cualquiera que lo
+tenga puede llegar al archivo.
+
+#### En un teléfono o una tableta
+
+En un iPhone, un iPad o un dispositivo Android no hay **Presentar** ni botón de
+pantalla completa, porque ahí una página no puede ponerse realmente a pantalla
+completa. El resto de la página es igual.
 
 ### Cuándo deja de funcionar un enlace
 

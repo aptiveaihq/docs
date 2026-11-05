@@ -211,6 +211,10 @@ A save that breaks a limit is refused with the reason and what to change.
   your own risk. Choose **Interactive** when the work should wait for a person.
 </Aside>
 
+An automation does not use your own **Settings → Approvals**. An **Interactive**
+one follows its agent's [approval level](/concepts/tasks#approval-levels), so an
+agent set to **Approve all except final acts** only stops at a final act.
+
 An **Interactive** automation stops at the first action that needs an OK: it
 moves to **Needs your attention**, reads **Waiting for your OK**, and the
 waiting task reaches you in the [Inbox](/concepts/inbox). **Answer** opens the

@@ -118,6 +118,53 @@ tarea.
   [inicio de sesión personal](/es/reference/settings/sign-ins).
 </Aside>
 
+### Niveles de aprobación
+
+La frecuencia con la que una tarea se detiene a preguntar es su **nivel de
+aprobación**. Hay cuatro, y cada uno pregunta menos que el anterior:
+
+| Nivel | Qué hace la tarea |
+|---|---|
+| **Preguntar por todo** | Pregunta antes de leer tus archivos y antes de cada acción. Es el nivel predeterminado |
+| **Archivos sin preguntar** | Lee y trabaja con archivos por su cuenta. Cada acción sigue preguntando |
+| **Aprobar todo menos actos finales** | Actúa por su cuenta, pero sigue preguntando antes de pagar, enviar, presentar, eliminar, dar acceso o publicar |
+| **No preguntar nunca** | Nunca se detiene a preguntar, ni siquiera para pagar, enviar, presentar o eliminar. Cada acto sigue quedando escrito en la tarea |
+
+Un nivel se puede definir en tres lugares:
+
+| Dónde | A qué se aplica | Quién puede cambiarlo |
+|---|---|---|
+| **En una tarea:** **Aprobaciones** en la pestaña **Detalles** del [panel lateral](#el-panel-lateral) | Esa tarea y las tareas que inicia, salvo que tengan el suyo | Quien pueda trabajar en la tarea |
+| **En un agente:** **Configurar → Límites de seguridad** ([Nivel de aprobación](/es/concepts/agents#límites-de-seguridad)) | Cada tarea de ese agente, para todas las personas que lo usan | Quien pueda editar el agente. Solo una persona propietaria de la empresa puede elegir **No preguntar nunca**; quien pueda editar puede quitárselo a un agente |
+| **Para ti:** [**Ajustes → Aprobaciones**](/es/reference/settings#aprobaciones) | Las tareas que inicias | Tú |
+
+Una tarea decide cuál seguir así:
+
+1. **Gana un nivel elegido en la tarea o en la tarea que la inició.** No se mira
+   ni el nivel del agente ni la configuración de nadie.
+2. **Si no, sigue a su agente o a la persona que la inició, lo que pregunte
+   menos.**
+
+La pestaña **Detalles** dice de dónde viene el nivel de la tarea.
+
+<Aside type="caution" title="El nivel de un agente no es un tope.">
+  Como una tarea sigue lo que pregunte menos, poner un agente en **Preguntar por
+  todo** no hace que le pregunte a alguien cuyos **Ajustes → Aprobaciones** preguntan
+  menos. Y **No preguntar nunca** significa que los pagos, mensajes, envíos de
+  formularios y eliminaciones se hacen sin preguntarle a nadie, así que cada lugar
+  te avisa y te pide confirmar antes de aplicarlo.
+</Aside>
+
+- **Un cambio llega a la siguiente tarjeta de la tarea.** Una tarjeta que ya está
+  esperando sigue esperando tu respuesta. Pasar una tarea a un nivel que pregunta
+  más también deshace las aprobaciones que diste por encima de ese nivel.
+- **Las [automatizaciones](/es/concepts/automations#aprobaciones) no usan tus
+  Ajustes → Aprobaciones.** Siguen el nivel de su agente. Una automatización
+  **Autónoma** sigue funcionando por su cuenta en cualquier nivel.
+- **Pruébalo y crear un agente** usan el nivel del agente, nunca tu configuración, y
+  siguen preguntando antes de un acto final cuando el agente está en **No preguntar
+  nunca**.
+
 ### Cuando el agente llega a su límite de pasos
 
 Un agente da un número limitado de pasos con un mensaje sin consultarte. Si llega
