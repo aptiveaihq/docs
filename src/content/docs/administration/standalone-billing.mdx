@@ -1,0 +1,135 @@
+---
+title: Paying for a standalone agent
+description: How an enterprise pays for standalone agents — the wallet, a price per completed task or per record, record storage over 100 GB, an optional monthly base, adding a card and funds, automatic reload, the low-balance notice, unpaid charges, refunds, and where to read what was charged. Including an owner with no seats.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A [standalone agent](/concepts/standalone-agents) is paid from your
+enterprise's **wallet**, never from anyone's seat. Everyone who uses it works
+on the wallet, whether they hold a seat or not. This page is for the
+enterprise **owner**, who manages the wallet, the card and what is charged.
+
+AptiveAI agrees the price of each standalone agent with your company when the
+agent is set up, so you know before the first task what it will cost.
+
+## What is charged
+
+| Charge | When |
+|---|---|
+| **Each completed task** | Once, when a task completes. A task that does not complete, such as one stopped before it finished, is not charged |
+| **Each record saved with a result** | Once for each record the agent saves with the result the agreement names. This is for agents paid by what they produce rather than by task |
+| **Record storage** | The first 100 GB of an agent's record files is included. Each GB-month over that is $0.10, charged daily |
+| **Monthly base** | An optional fixed amount, charged to the wallet once each month (UTC) while the agent is standalone |
+
+For each agent, the first or second line applies, as agreed with you. An agent
+can instead be priced **By usage**, charged for what each task used. A setup
+fee, when there is one, is invoiced outside the app and is not in the wallet.
+
+Before a task starts, the wallet must be able to cover it. A task already
+working when the wallet runs short finishes; only a new task is refused. See
+[When a task does not start](/concepts/standalone-agents#when-a-task-does-not-start).
+
+## The wallet
+
+**Billing**, in the [admin area](/administration/overview), shows the wallet to
+the owner.
+
+| Part | What it does |
+|---|---|
+| **Balance** | What the wallet holds now |
+| **Add funds** | Charges the card on file and credits the wallet |
+| **Auto-recharge** | Tops the wallet up from the card when the balance drops below an amount you choose, by an amount you choose |
+| **Payment method** | The card on file. **Add card**, or **Update card** |
+
+<Steps>
+
+1. **Add a card.** On **Billing**, **Payment method** → **Add card**.
+
+2. **Add funds.** **Balance** → **Add funds**, then the amount.
+
+3. **Turn on auto-recharge.** Under **Auto-recharge**, set *Recharge when the
+   balance drops below, in dollars* and *Amount to add*, then **Save
+   auto-recharge**. It needs a card.
+
+</Steps>
+
+If a recharge payment fails, auto-recharge turns itself off and the owner is
+told. The same wallet, card and top-up are described, for seat-based
+enterprises, on [Billing and seats](/administration/billing#the-wallet).
+
+### An owner with no seats
+
+An enterprise can have standalone agents and no seats: nobody holds a seat and
+there is no subscription. This is normal, and it is called wallet-only here.
+Everyone in it works on standalone agents only.
+
+On **Billing**, such an owner sees **Payment method**, the wallet with **Add
+funds** and **Auto-recharge**, and **Standalone agents** (below). They do not
+see seats, invoices or the other seat-based cards, because there are none.
+
+Someone with no seat does not use the full AptiveAI Agents app: its pages take
+them to their standalone agent, or to **Your agents** when there are several.
+They can still open their account in the portal and manage the wallet.
+
+## The low-balance notice
+
+When the wallet is running low, the owners are told in the [Inbox](/concepts/inbox)
+of the standalone app and by email: *The wallet is running low. The wallet that
+pays for your standalone agents has ‹amount› left. When it can't cover a task,
+new tasks won't start. Add funds or turn on auto-reload.*
+
+It comes when the balance is below $25, or below fifty tasks at the highest
+per-task price among your agents when that is more. It is sent once for each
+time the wallet is refilled, and not at all when auto-recharge is on.
+
+## Unpaid charges
+
+If the wallet cannot cover a charge, it is paid down as far as it goes and the
+rest is **owed**. The wallet then collects what is owed first, from the next
+money that arrives, whether you add funds, a recharge goes through or a refund
+lands.
+
+While anything is owed, new tasks of a standalone agent do not start, and the
+person sees *Not started: the account has unpaid charges for work already done.*
+Add funds to clear it. **Unpaid charges** on the Standalone agents card shows
+the amount while there is one.
+
+## Refunds
+
+When a charge was a mistake, AptiveAI can refund it. A refund is credited to the
+wallet and appears in the transactions list as **Refund of a task charge**, and
+on the card as **Refunds**. If you think a task was charged wrongly, contact
+AptiveAI.
+
+## Where to read what was charged
+
+| Where | What it shows |
+|---|---|
+| **Billing → Standalone agents**, and the same card on **Activity → Overview** | This month so far (UTC): for each agent its **Pricing**, **Completed tasks**, **Work**, **Storage** and **Charged**, and the total **Charged this month**, with **Refunds**, **Monthly base** and **Unpaid charges** when there are any. Storage shows *‹used› GB of 100 GB included* |
+| **Usage → Transactions** | Every charge and credit, one row each. See [Transactions](/administration/transactions) |
+| **Activity** | Tasks and usage over time. See [Activity](/administration/activity) |
+
+On **Transactions**, a standalone agent's rows are named:
+
+| Row | Meaning |
+|---|---|
+| **Task charge** | One completed task, at the agent's price |
+| **Record charge** | One record saved with a result |
+| **Record storage** | The day's storage over the included 100 GB |
+| **Monthly base** | The agent's monthly base |
+| **Unpaid charges collected** | Money taken from the wallet to pay what was owed |
+| **Refund of a task charge** | A refund, credited back |
+
+<Aside type="note" title="The owner sees what was charged, not what it cost to run">
+  The pages above show what your wallet was charged. They do not show the
+  AI usage or compute behind a task, because the price you agreed does not
+  depend on it.
+</Aside>
+
+<CardGrid>
+  <LinkCard title="Standalone agents" href="/concepts/standalone-agents" description="The app your staff work in." />
+  <LinkCard title="Billing and seats" href="/administration/billing" description="Seats, the card and the wallet for a seat-based enterprise." />
+  <LinkCard title="Transactions" href="/administration/transactions" description="Every charge to your credit, and every credit added." />
+  <LinkCard title="The access log" href="/administration/access-log" description="Who opened which record, file or task." />
+</CardGrid>

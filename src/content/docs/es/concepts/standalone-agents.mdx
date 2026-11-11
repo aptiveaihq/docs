@@ -1,0 +1,194 @@
+---
+title: Agentes independientes
+description: Un agente entregado como una aplicación propia para tu personal, en su propia dirección. El tablero de tareas, iniciar una tarea, los registros con sus archivos e historial, la Bandeja de entrada, Configurar dentro de la aplicación, quién puede usarla, qué significa una tarea detenida en su límite y qué significa un inicio rechazado.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Un **agente independiente** es un [agente](/es/concepts/agents) entregado como una
+aplicación propia, para las personas que trabajan con él a diario. AptiveAI lo
+configura y acuerda su precio con tu empresa. Tu personal lo abre en su propia
+dirección y lo usa sin el resto de AptiveAI Agents.
+
+La dirección es `https://console.aptiveai.io/a/` seguida de la dirección del
+agente, por ejemplo `console.aptiveai.io/a/recepcion`. Tu propietario o AptiveAI
+te dice cuál es. Con la sesión iniciada, también puedes abrir
+`console.aptiveai.io/a` para ver todos los agentes independientes que puedes usar.
+
+El trabajo se paga con el **monedero** de tu empresa, no con el puesto de nadie —
+mira [Pagar un agente independiente](/es/administration/standalone-billing).
+
+## Quién puede usarlo
+
+| Quién | Qué puede hacer |
+|---|---|
+| Una persona con quien se comparte el agente | Abre la aplicación y trabaja en ella. Compartir es igual que con cualquier agente — mira [Compartir](/es/concepts/sharing) |
+| Una persona con **Solo agentes independientes (sin puesto)** | Usa solo los agentes independientes compartidos con ella. No necesita puesto ni suscripción: sus tareas se pagan con el monedero de la empresa al precio del agente |
+| Una persona con puesto | Usa el agente como cualquier otra persona con quien se comparte, y conserva todo lo que le da su puesto |
+| Un propietario de la empresa | Lee el [registro de accesos](/es/administration/access-log) y gestiona el monedero |
+
+Un propietario o administrador elige **Solo agentes independientes (sin puesto)**
+al invitar a alguien o al cambiar su puesto — mira [Usuarios y roles](/es/administration/users).
+
+<Aside type="note" title="Quién ve las tareas de un agente independiente">
+  Todas las personas que pueden actuar sobre un agente independiente ven todas
+  sus tareas, en toda tu empresa, pertenezcan o no al espacio de trabajo en el
+  que se iniciaron. Comparte el agente solo con quienes deban verlas.
+</Aside>
+
+Un agente independiente no aparece en la aplicación completa de AptiveAI Agents.
+Quien usa solo agentes independientes entra directamente a su aplicación, o a
+**Tus agentes** cuando tiene varios.
+
+## Moverse por la aplicación
+
+La barra lateral de la aplicación muestra:
+
+| Fila | Qué abre |
+|---|---|
+| El nombre del agente | Si puedes usar más de uno, un selector para pasar a los otros |
+| **Nueva tarea** | La página donde empieza el trabajo |
+| **Bandeja de entrada** | Avisos de este agente, con el número de los no leídos |
+| **Tablero de tareas** | Todas las tareas de este agente, en columnas |
+| **Automatizaciones** | Las [automatizaciones](/es/concepts/automations) del agente |
+| **Registros** | Una fila por cada tipo de registro que lleva el agente, con cuántos hay |
+| **Recientes** | Tus últimas tareas con este agente |
+| **Configurar y ayuda** | [Configurar y ayuda](#configurar-y-ayuda), con **Memoria** |
+
+En un teléfono los mismos lugares están en la barra inferior y en el menú.
+
+## Iniciar una tarea
+
+**Nueva tarea** muestra un cuadro que dice *Dile a ‹agente› lo que necesitas…*.
+Escribe, adjunta un archivo si hace falta y envía. El agente también puede
+ofrecer frases para empezar en las que puedes hacer clic.
+
+Debajo del cuadro, cuatro contadores muestran las tareas de este agente: **En
+espera**, **Trabajando**, **Te necesitan** y **Hechas hoy**. Cada uno abre esa
+columna del tablero. **Trabajando** se lee como *2 de 5*: el agente trabaja en
+un número limitado de tareas a la vez y las demás esperan.
+
+Una tarea aquí es igual que cualquier otra tarea. Cómo se ejecuta, cómo
+respondes a sus preguntas y cómo intervienes está en la página de
+[Tareas](/es/concepts/tasks), y lo que puede hacer antes de preguntar está en
+[Aprobaciones](/es/concepts/approvals).
+
+## El tablero de tareas
+
+**Tablero de tareas** muestra las tareas de este agente en cuatro columnas. No
+arrastras las tarjetas entre ellas; una tarea cambia sola de columna cuando
+cambia su estado.
+
+| Columna | Qué hay en ella |
+|---|---|
+| **En espera** | Tareas que no han empezado porque el agente ya trabaja en todas las que puede a la vez |
+| **Trabajando** | Tareas que el agente está haciendo ahora |
+| **Te necesitan** | Tareas que esperan tu respuesta o tu aprobación |
+| **Hechas** | Tareas que terminaron, sea cual sea el resultado |
+
+Cada columna muestra su número y sus primeras tareas; contrae, ensancha o
+restaura una columna desde su encabezado. Una tarjeta tiene **Abrir tarea** y
+**Ejecutar de nuevo** cuando corresponde. El tablero se actualiza solo cada pocos
+segundos. En un teléfono ves una columna a la vez, con puntos bajo el
+encabezado para pasar de una a otra.
+
+**Estado**, **Cuándo** y **Origen** filtran el tablero. **Origen** incluye
+**Mías**, que deja solo las tareas que iniciaste tú. El cuadro de búsqueda
+busca en los títulos de las tareas.
+
+Abre una tarea para ver su página, con el trabajo del agente, sus archivos y
+el cuadro donde envías mensajes. Es la misma página que en la aplicación
+completa — mira [Tareas](/es/concepts/tasks).
+
+### Una tarea que se detuvo en su límite
+
+Un agente puede tener un límite de cuánto puede llevar una tarea. Una tarea
+que lo pasa se detiene, y su página dice:
+
+> Se detuvo antes de terminar: esta tarea tardó más de lo que este agente
+> permite para una tarea. Envía un mensaje para que continúe, o empieza una
+> tarea nueva.
+
+No se pierde nada. **Envía un mensaje** en la misma tarea y el agente continúa
+desde donde se detuvo, o empieza una tarea nueva. A una tarea detenida en su
+límite no se le cobra el precio por tarea.
+
+## Registros
+
+Muchos agentes independientes llevan la cuenta de algo: pedidos, facturas,
+visitas, lo que sea de lo que trate el trabajo. Cada tipo es un **tipo de
+registro** y cada elemento es un **registro**. **Registros** está en la barra
+lateral solo cuando el agente tiene tipos de registro.
+
+**Registros** los lista. Busca dentro de un tipo, o **Buscar en todos los
+registros**. Un tipo con un campo de opciones, como un estado, ofrece un filtro
+para él. El agente agrega registros mientras trabaja. Para agregar o cambiar uno
+en bloque, pídeselo al agente en una tarea nueva.
+
+Abre un registro para ver:
+
+| Sección | Qué muestra |
+|---|---|
+| **Detalles** | Los valores del registro. Puedes cambiar un valor a la vez con **Editar** |
+| **Archivos** | Los archivos adjuntos al registro. **Quitar un archivo** saca uno del registro |
+| **Enlaza a** y **Enlazado desde** | Los registros a los que apunta este, y los registros que apuntan a este |
+| **Tareas** | Las tareas que empezaron en este registro o lo cambiaron, de la más reciente a la más antigua |
+
+**Nueva tarea sobre este registro** inicia una tarea que trata de este
+registro: el agente guarda en él y le adjunta archivos, salvo que indiques otra
+cosa. **Eliminar** borra el registro. Sus archivos se liberan, los demás
+registros dejan de enlazarlo y no se puede deshacer.
+
+Cada cambio de un registro se guarda con quién o qué tarea lo hizo y qué
+cambió, para que veas cómo llegó el registro a donde está.
+
+## Bandeja de entrada
+
+**Bandeja de entrada** es la [Bandeja de entrada](/es/concepts/inbox) limitada a
+este agente: las preguntas que esperan, el trabajo terminado y lo que salió mal.
+Tiene las mismas tarjetas y las mismas acciones.
+
+## Configurar y ayuda
+
+**Configurar y ayuda** es una página de mosaicos para esta aplicación. Contiene:
+
+| Mosaico | Para qué sirve |
+|---|---|
+| **Memoria** | Las notas que este agente guarda de tareas anteriores y lee al empezar una tarea. Una nota para todos la aprueba antes un propietario o administrador; una nota personal se guarda para una persona, solo en este agente |
+| **Registro de accesos** | Quién abrió registros, archivos y tareas. Solo lo ven quienes pueden leerlo — mira [El registro de accesos](/es/administration/access-log) |
+| **Inicios de sesión de conectores** | Solo aparece cuando el agente usa un conector en el que inicias sesión |
+| **Ajustes** | La apariencia de la aplicación, tus notificaciones y tus inicios de sesión |
+
+**Inicios de sesión de conectores** lista cada conector con tu inicio de
+sesión: **Sesión iniciada**, **Falta iniciar sesión** o **Caducado**, con
+**Iniciar sesión**, **Iniciar sesión de nuevo** o **Reconectar**. El agente
+inicia sesión en estos con tu propia cuenta, así que lo que hace allí lo hace
+como tú. Inicia sesión una vez; sigue funcionando hasta que el inicio de sesión
+caduque.
+
+**Ajustes** funciona como [Ajustes](/es/reference/settings). Algunos agentes
+mantienen un solo aspecto, claro u oscuro, para todos; entonces tu propia
+elección de claro u oscuro no se aplica en la aplicación.
+
+## Cuando una tarea no se inicia
+
+Si la tarea no puede iniciarse, ves uno de estos avisos, en el cuadro donde la iniciaste:
+
+| Qué ves | Qué significa | Quién puede resolverlo |
+|---|---|---|
+| *No se inició: la billetera de la empresa no tiene fondos suficientes para pagar esta tarea (‹precio›). Un propietario puede agregar fondos a la billetera.* | El monedero no cubre el precio de una tarea de este agente | Un propietario agrega fondos |
+| *No se inició: la billetera de la empresa no tiene fondos para pagar el trabajo de este agente. Un propietario puede agregar fondos a la billetera.* | El monedero está vacío | Un propietario agrega fondos |
+| *No se inició: la cuenta tiene cargos sin pagar por trabajo ya hecho. Un propietario puede agregar fondos a la billetera.* | Trabajo anterior se cobró cuando el monedero no alcanzaba. El trabajo nuevo espera hasta que el propietario lo pague | Un propietario agrega fondos |
+| *No se inició: todavía no tienes un puesto en esta cuenta. Pídele a un propietario que te asigne uno.* | No tienes **Solo agentes independientes (sin puesto)** ni un puesto | Un propietario te asigna un puesto, o te pone en **Solo agentes independientes (sin puesto)** |
+| *No se inició: tu cuenta es solo para agentes independientes. Abre uno de tus agentes independientes para iniciar una tarea.* | Intentaste iniciar una tarea en la aplicación completa | Abre tu agente independiente |
+
+Una tarea que ya estaba trabajando cuando el monedero se quedó corto termina.
+Solo se rechaza la siguiente. Cuando un propietario agrega fondos, inténtalo
+de nuevo.
+
+<CardGrid>
+  <LinkCard title="Pagar un agente independiente" href="/es/administration/standalone-billing" description="El monedero, lo que cuesta una tarea, reembolsos y cargos sin pagar." />
+  <LinkCard title="El registro de accesos" href="/es/administration/access-log" description="Quién abrió qué registro, archivo o tarea." />
+  <LinkCard title="Tareas" href="/es/concepts/tasks" description="Cómo se ejecuta una tarea y cómo la guías." />
+  <LinkCard title="Compartir" href="/es/concepts/sharing" description="Quién puede usar un agente." />
+</CardGrid>

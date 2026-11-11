@@ -1,0 +1,187 @@
+---
+title: Standalone agents
+description: One agent delivered as its own app for your staff, at its own address. The task board, starting a task, records and their files and history, the Inbox, Configure inside the app, who can use it, what a task stopped at its limit means, and what a refused start means.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+A **standalone agent** is one [agent](/concepts/agents) delivered as an app of
+its own, for the people who work with it every day. AptiveAI sets it up and
+agrees its price with your company. Your staff open it at its own address and
+use it without the rest of AptiveAI Agents.
+
+The address is `https://console.aptiveai.io/a/` followed by the agent's
+address, for example `console.aptiveai.io/a/front-desk`. Your owner or AptiveAI
+tells you the address. Signed in, you can also open `console.aptiveai.io/a` to
+see every standalone agent you can use.
+
+The work is paid from your enterprise's **wallet**, not from anyone's seat —
+see [Paying for a standalone agent](/administration/standalone-billing).
+
+## Who can use it
+
+| Who | What they can do |
+|---|---|
+| A person the agent is shared with | Opens the app and works in it. Sharing is the same as for any agent — see [Sharing](/concepts/sharing) |
+| A person set to **Standalone agents only (no seat)** | Uses only the standalone agents shared with them. No seat and no subscription is needed: their tasks are paid from the enterprise wallet at the agent's price |
+| A person who holds a seat | Uses the agent like anyone else it is shared with, and keeps everything their seat gives them |
+| An enterprise owner | Reads the [access log](/administration/access-log), and manages the wallet |
+
+An owner or admin chooses **Standalone agents only (no seat)** when they
+invite someone or change their seat — see [Users and roles](/administration/users).
+
+<Aside type="note" title="Who sees a standalone agent's tasks">
+  Everyone who can act on a standalone agent sees all of its tasks, across your
+  enterprise, whether or not they belong to the workspace the tasks were
+  started in. Share the agent only with the people who should see that.
+</Aside>
+
+A standalone agent is not listed in the full AptiveAI Agents app. Someone who
+uses only standalone agents is taken to their app, or to **Your agents** when
+they have several.
+
+## Moving around
+
+The sidebar of the app lists:
+
+| Row | What it opens |
+|---|---|
+| The agent's name | When you can use more than one agent, a switcher to the others |
+| **New task** | The page where work starts |
+| **Inbox** | Notices from this agent, with a count of the unread ones |
+| **Task board** | Every task of this agent, in columns |
+| **Automations** | The agent's [automations](/concepts/automations) |
+| **Records** | One row for each kind of record the agent keeps, with how many there are |
+| **Recent** | Your latest tasks with this agent |
+| **Configure & help** | [Configure and help](#configure-and-help), including **Memory** |
+
+On a phone the same places are in the bottom bar and the menu.
+
+## Starting a task
+
+**New task** shows a box that says *Tell ‹agent› what you need…*. Type, attach a
+file if you need to, and send. The agent may also offer conversation starters
+you can click.
+
+Under the box, four counts show this agent's tasks: **Waiting**, **Working**,
+**Needs you** and **Done today**. Each one opens that column on the board.
+**Working** reads like *2 of 5*: the agent works on a limited number of tasks
+at once, and the rest wait.
+
+A task here is the same as any other task. How it runs, how you answer its
+questions and how you step in are on the [Tasks](/concepts/tasks) page, and
+what it may do before it asks is on [Approvals](/concepts/approvals).
+
+## The task board
+
+**Task board** shows this agent's tasks in four columns. You do not drag cards
+between them; a task moves by itself as its state changes.
+
+| Column | What is in it |
+|---|---|
+| **Waiting** | Tasks that have not started because the agent is already working on as many as it can at once |
+| **Working** | Tasks the agent is doing now |
+| **Needs you** | Tasks waiting for your answer or your approval |
+| **Done** | Tasks that ended, whatever the outcome says |
+
+Each column shows its count and its first tasks; fold, widen or restore a
+column from its header. A card has **Open task**, and **Run again** when that
+applies. The board refreshes by itself every few seconds. On a phone you see
+one column at a time, with dots under the header to move between them.
+
+**Status**, **When** and **Source** filter the board. **Source** includes **By
+me**, which keeps only the tasks you started. The search box looks in task
+titles.
+
+Open a task to see its page, with the agent's work, its files and the box where
+you send messages. It is the same page as in the full app —
+see [Tasks](/concepts/tasks).
+
+### A task that stopped at its limit
+
+An agent can have a limit on how much one task may take. A task that passes it
+stops, and its page says:
+
+> Stopped before it finished: this task took longer than this agent allows for
+> one task. Send a message to have it carry on, or start a new task.
+
+Nothing is lost. **Send a message** in the same task and the agent carries on
+from where it stopped, or start a new task. A task that stopped at its limit is
+not charged the per-task price.
+
+## Records
+
+Many standalone agents keep track of something: orders, invoices, visits,
+whatever the work is about. Each kind is a **record type**, and each item is a
+**record**. **Records** is in the sidebar only when the agent has record types.
+
+**Records** lists them. Search one kind, or **Search every record** across all
+kinds. A kind with a choice field, such as a status, offers a filter for it.
+The agent adds records as it works. To add or change one in bulk, ask the agent
+in a new task.
+
+Open a record to see:
+
+| Section | What it shows |
+|---|---|
+| **Details** | The record's values. You can change one value at a time with **Edit** |
+| **Files** | The files attached to the record. **Remove a file** takes one off the record |
+| **Links to** and **Linked from** | The records this one points at, and the records that point at it |
+| **Tasks** | The tasks that started on this record or changed it, newest first |
+
+**New task about this record** starts a task that is about this record: the
+agent saves to it and attaches files to it unless you say otherwise.
+**Delete** removes the record. Its files are released and other records stop
+linking to it, and it cannot be undone.
+
+Every change to a record is kept with who or which task made it and what
+changed, so you can see how a record got to where it is.
+
+## Inbox
+
+**Inbox** is the [Inbox](/concepts/inbox) narrowed to this agent: the questions
+waiting for you, finished work and anything that went wrong. It has the same
+cards and the same actions.
+
+## Configure and help
+
+**Configure & help** is a page of tiles for this app. It holds:
+
+| Tile | What it is for |
+|---|---|
+| **Memory** | The notes this agent keeps from earlier tasks and reads when a task starts. A note for everyone is approved by an owner or admin first; a personal note is kept for one person, on this agent only |
+| **Access log** | Who opened records, files and tasks. Shown only to people who can read it — see [The access log](/administration/access-log) |
+| **Connector sign-ins** | Shown only when the agent uses a connector you sign in to |
+| **Settings** | The app's appearance, your notifications and your sign-ins |
+
+**Connector sign-ins** lists each connector with your sign-in: **Signed in**,
+**Needs sign-in** or **Expired**, with **Sign in**, **Sign in again** or
+**Reconnect**. The agent signs in to these with your own account, so what it
+does there it does as you. Sign in once; it keeps working until the sign-in
+lapses.
+
+**Settings** works like [Settings](/reference/settings). Some agents hold one
+look, light or dark, for everyone, and then your own light or dark choice does
+not apply in the app.
+
+## When a task does not start
+
+If the task cannot start, you see one of these, in the box where you started it:
+
+| What you see | What it means | Who can fix it |
+|---|---|---|
+| *Not started: the enterprise wallet does not have enough funds to pay for this task (‹price›). An owner can add funds to the wallet.* | The wallet cannot cover this agent's price for one task | An owner adds funds |
+| *Not started: the enterprise wallet has no funds to pay for this agent's work. An owner can add funds to the wallet.* | The wallet is empty | An owner adds funds |
+| *Not started: the account has unpaid charges for work already done. An owner can add funds to the wallet.* | Earlier work was charged when the wallet could not cover it. New work waits until the owner has paid that | An owner adds funds |
+| *Not started: you don't have a seat in this account yet. Ask an owner to give you one.* | You are not set to use standalone agents only, and you have no seat | An owner gives you a seat, or sets you to **Standalone agents only (no seat)** |
+| *Not started: your account is for standalone agents only. Open one of your standalone agents to start a task.* | You tried to start a task in the full app | Open your standalone agent instead |
+
+A task that was already working when the wallet ran short finishes. Only the
+next one is refused. Once an owner adds funds, try again.
+
+<CardGrid>
+  <LinkCard title="Paying for a standalone agent" href="/administration/standalone-billing" description="The wallet, what a task costs, refunds and unpaid charges." />
+  <LinkCard title="The access log" href="/administration/access-log" description="Who opened which record, file or task." />
+  <LinkCard title="Tasks" href="/concepts/tasks" description="How a task runs, and how you steer it." />
+  <LinkCard title="Sharing" href="/concepts/sharing" description="Who can use an agent." />
+</CardGrid>

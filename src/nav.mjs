@@ -72,6 +72,7 @@ export const nav = [
       { label: 'Approvals', slug: 'concepts/approvals', desc: 'How much an agent may do before it asks you', es: { label: 'Aprobaciones', desc: 'Cuánto puede hacer un agente antes de preguntarte' } },
       { label: 'Files', slug: 'concepts/files', desc: 'Attach, view, share and get back files; knowledge files', es: { label: 'Archivos', desc: 'Adjunta, ve, comparte y recupera archivos; archivos de conocimiento' } },
       { label: 'Inbox', slug: 'concepts/inbox', desc: 'Notifications and what arrives when', es: { label: 'Bandeja de entrada', desc: 'Notificaciones y qué llega cuándo' } },
+      { label: 'Standalone agents', slug: 'concepts/standalone-agents', desc: "One agent as its own app for your staff", es: { label: 'Agentes independientes', desc: 'Un agente como aplicación propia para tu personal' } },
     ],
   },
   {
@@ -108,6 +109,8 @@ export const nav = [
       { label: 'Billing and seats', slug: 'administration/billing', desc: 'Seats and tiers, the card, the wallet, invoices and cancelling', es: { label: 'Facturación y puestos', desc: 'Puestos y niveles, la tarjeta, el monedero, las facturas y la cancelación' } },
       { label: 'Usage and credit', slug: 'administration/usage', desc: 'Your allowance, what spends AI credit, and when agents cannot start', es: { label: 'Uso y crédito', desc: 'Tu asignación, qué consume crédito de IA y cuándo los agentes no pueden empezar' } },
       { label: 'Transactions', slug: 'administration/transactions', desc: 'Every charge to your AI credit, and every credit added', es: { label: 'Transacciones', desc: 'Cada cargo a tu crédito de IA y cada crédito añadido' } },
+      { label: 'Standalone billing', slug: 'administration/standalone-billing', desc: 'Pay for standalone agents from the wallet: prices, funds, refunds', es: { label: 'Pagar agentes independientes', desc: 'Paga los agentes independientes con el monedero: precios, fondos, reembolsos' } },
+      { label: 'Access log', slug: 'administration/access-log', desc: 'Who opened which record, file or task of a standalone agent', es: { label: 'Registro de accesos', desc: 'Quién abrió qué registro, archivo o tarea de un agente independiente' } },
       { label: 'Activity', slug: 'administration/activity', desc: 'AI usage, tasks, goals met and models over time', es: { label: 'Actividad', desc: 'Uso de IA, tareas, objetivos cumplidos y modelos a lo largo del tiempo' } },
       { label: 'Productivity', slug: 'administration/productivity', desc: 'Goals met, work time and the work agents handled', es: { label: 'Productividad', desc: 'Objetivos cumplidos, tiempo de trabajo y el trabajo de los agentes' } },
     ],
