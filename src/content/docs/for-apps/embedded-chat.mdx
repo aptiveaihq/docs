@@ -80,6 +80,7 @@ chat** shows the script tag for your account, ready to copy.
 | `onEvent` | Optional. Receives `{ type, … }` for `ready`, `signed-in`, `unavailable`, `session-expired`, `task` and `error` ([Troubleshooting](#troubleshooting)) |
 | `origin` | Optional. The address of AptiveAI Agents, such as `https://console.aptiveai.io`. By default it is read from the script's own address, so you only need it when you load the script some other way |
 | `locale` | Optional. `'en'` or `'es'`: opens the panel in English or Spanish, and it stays in that language as the person moves around it. Any other value makes `mount` throw. Without it, the person's own language setting applies |
+| `taskId` | Optional. A task's id (a UUID): the panel opens on that task instead of on a new one. Anything that is not a UUID makes `mount` throw. A task that does not exist, or is not the person's, shows as not available |
 
 | Handle | What it does |
 |---|---|
@@ -88,11 +89,27 @@ chat** shows the script tag for your account, ready to copy.
 | `unmount()` | Removes the panel |
 | `iframe` | The panel's `<iframe>` element, to size or style it |
 
-`mount` throws an `Error` at once when `enterpriseId` or `getToken` is missing
-or `locale` is not `'en'` or `'es'`; `mount` and `setActions` also throw for an
+`mount` throws an `Error` at once when `enterpriseId` or `getToken` is missing,
+`locale` is not `'en'` or `'es'`, or `taskId` is not a UUID; `mount` and `setActions` also throw for an
 action with a bad name, no description or no `run`. Size the element yourself: the panel fills
 it. A docked column about 400 pixels
 wide works well; the panel also works at phone width.
+
+### Reopening where the person was
+
+The panel tells you about each task with a `task` event, `{ type: 'task', id,
+status }`, when a task starts, when an existing task is opened, and whenever
+its status changes. Keep the last `id` — in your own session or storage, per
+person — and pass it as `taskId` on the next `mount`: the panel opens on that
+task rather than on a new one. The person can still start a new task from
+there.
+
+| `status` | Means |
+|---|---|
+| `running` | The agent is working |
+| `awaiting_input` | The agent is waiting on the person: a question or an approval |
+| `idle` | Open for another message |
+| `completed`, `partial`, `failed`, `skipped`, `expired`, `stopped` | The task ended |
 
 ### Naming the global
 
@@ -448,7 +465,7 @@ Every message is an object with a `type` and `v: 1`. A message with another
 | `aptiveai:signed-in` | — | The person is signed in. Send `aptiveai:context` and `aptiveai:actions` now |
 | `aptiveai:session-expired` | — | The panel's session ended. Send a new `aptiveai:session` |
 | `aptiveai:unavailable` | `reason` | The person cannot be signed in: `no_account`, `disabled`, `bad_token`, `account_unavailable` or `no_agents` ([Troubleshooting](#troubleshooting)) |
-| `aptiveai:task` | `id`, `status` | A task started (`running`) or its status changed, such as when it ended |
+| `aptiveai:task` | `id`, `status` | A task started or was opened, or its status changed ([the statuses](#reopening-where-the-person-was)) |
 | `aptiveai:action` | `id`, `name`, `arguments` | The agent asks you to perform one of your actions. Answer with `aptiveai:action-result` and the same `id` |
 | `aptiveai:error` | `code` | A message of yours was refused (`unsupported_version`, `invalid_message`, `context_too_large`, `too_many_actions`, `invalid_action`), or `network`: the panel could not reach AptiveAI Agents while signing in — send a new token |
 

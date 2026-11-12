@@ -82,6 +82,7 @@ para copiar.
 | `onEvent` | Opcional. Recibe `{ type, … }` para `ready`, `signed-in`, `unavailable`, `session-expired`, `task` y `error` ([Solución de problemas](#solución-de-problemas)) |
 | `origin` | Opcional. La dirección de AptiveAI Agents, como `https://console.aptiveai.io`. Por defecto se toma de la dirección del propio script, así que solo la necesitas si cargas el script de otra forma |
 | `locale` | Opcional. `'en'` o `'es'`: abre el panel en inglés o en español, y se mantiene en ese idioma mientras la persona se mueve por él. Cualquier otro valor hace que `mount` lance un error. Sin esta opción, se aplica el idioma que la persona eligió para sí |
+| `taskId` | Opcional. El id de una tarea (un UUID): el panel se abre en esa tarea en lugar de en una nueva. Cualquier valor que no sea un UUID hace que `mount` lance un error. Una tarea que no existe, o que no es de la persona, aparece como no disponible |
 
 | Objeto de control | Qué hace |
 |---|---|
@@ -91,11 +92,27 @@ para copiar.
 | `iframe` | El elemento `<iframe>` del panel, para darle tamaño o estilo |
 
 `mount` lanza un `Error` de inmediato cuando falta `enterpriseId` o `getToken`,
-o cuando `locale` no es `'en'` ni `'es'`; `mount` y `setActions` también lanzan
+cuando `locale` no es `'en'` ni `'es'`, o cuando `taskId` no es un UUID; `mount` y `setActions` también lanzan
 un error ante una acción con un nombre no válido, sin descripción o sin `run`. El tamaño lo decides tú: el
 panel llena el elemento. Una columna fija de unos
 400 píxeles de ancho funciona bien; el panel también funciona en el ancho de un
 teléfono.
+
+### Volver a donde estaba la persona
+
+El panel te avisa de cada tarea con un evento `task`, `{ type: 'task', id,
+status }`, cuando una tarea empieza, cuando se abre una tarea existente y cada
+vez que cambia su estado. Guarda el último `id` — en tu propia sesión o
+almacenamiento, por persona — y pásalo como `taskId` en el siguiente `mount`:
+el panel se abre en esa tarea en lugar de en una nueva. Desde ahí la persona
+puede iniciar una tarea nueva igualmente.
+
+| `status` | Significa |
+|---|---|
+| `running` | El agente está trabajando |
+| `awaiting_input` | El agente espera a la persona: una pregunta o una aprobación |
+| `idle` | Abierta para otro mensaje |
+| `completed`, `partial`, `failed`, `skipped`, `expired`, `stopped` | La tarea terminó |
 
 ### Elegir el nombre global
 
@@ -460,7 +477,7 @@ rechaza con `aptiveai:error` `unsupported_version`.
 | `aptiveai:signed-in` | — | La persona inició sesión. Envía ahora `aptiveai:context` y `aptiveai:actions` |
 | `aptiveai:session-expired` | — | La sesión del panel terminó. Envía un `aptiveai:session` nuevo |
 | `aptiveai:unavailable` | `reason` | No se puede iniciar la sesión de la persona: `no_account`, `disabled`, `bad_token`, `account_unavailable` o `no_agents` ([Solución de problemas](#solución-de-problemas)) |
-| `aptiveai:task` | `id`, `status` | Una tarea empezó (`running`) o cambió de estado, por ejemplo al terminar |
+| `aptiveai:task` | `id`, `status` | Una tarea empezó o se abrió, o cambió de estado ([los estados](#volver-a-donde-estaba-la-persona)) |
 | `aptiveai:action` | `id`, `name`, `arguments` | El agente te pide hacer una de tus acciones. Responde con `aptiveai:action-result` y el mismo `id` |
 | `aptiveai:error` | `code` | Se rechazó un mensaje tuyo (`unsupported_version`, `invalid_message`, `context_too_large`, `too_many_actions`, `invalid_action`), o `network`: el panel no logró comunicarse con AptiveAI Agents al iniciar la sesión; envía un token nuevo |
 
