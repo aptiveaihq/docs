@@ -81,6 +81,7 @@ para copiar.
 | `actions` | Opcional. Acciones de pantalla que el agente puede pedirle a tu página: cada una `{ name, description, label, parameters, run(args) }`. `label` y `parameters` (un JSON schema) son opcionales; `run` devuelve un resultado o lanza un error ([Acciones de pantalla](#acciones-de-pantalla)) |
 | `onEvent` | Opcional. Recibe `{ type, … }` para `ready`, `signed-in`, `unavailable`, `session-expired`, `task` y `error` ([Solución de problemas](#solución-de-problemas)) |
 | `origin` | Opcional. La dirección de AptiveAI Agents, como `https://console.aptiveai.io`. Por defecto se toma de la dirección del propio script, así que solo la necesitas si cargas el script de otra forma |
+| `locale` | Opcional. `'en'` o `'es'`: abre el panel en inglés o en español, y se mantiene en ese idioma mientras la persona se mueve por él. Cualquier otro valor hace que `mount` lance un error. Sin esta opción, se aplica el idioma que la persona eligió para sí |
 
 | Objeto de control | Qué hace |
 |---|---|
@@ -89,8 +90,9 @@ para copiar.
 | `unmount()` | Quita el panel |
 | `iframe` | El elemento `<iframe>` del panel, para darle tamaño o estilo |
 
-`mount` y `setActions` lanzan un `Error` de inmediato ante una acción con un
-nombre no válido, sin descripción o sin `run`. El tamaño lo decides tú: el
+`mount` lanza un `Error` de inmediato cuando falta `enterpriseId` o `getToken`,
+o cuando `locale` no es `'en'` ni `'es'`; `mount` y `setActions` también lanzan
+un error ante una acción con un nombre no válido, sin descripción o sin `run`. El tamaño lo decides tú: el
 panel llena el elemento. Una columna fija de unos
 400 píxeles de ancho funciona bien; el panel también funciona en el ancho de un
 teléfono.

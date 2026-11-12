@@ -79,6 +79,7 @@ chat** shows the script tag for your account, ready to copy.
 | `actions` | Optional. Screen actions the agent may ask your page to perform: `{ name, description, label, parameters, run(args) }` each. `label` and `parameters` (a JSON schema) are optional; `run` returns a result or throws ([Screen actions](#screen-actions)) |
 | `onEvent` | Optional. Receives `{ type, … }` for `ready`, `signed-in`, `unavailable`, `session-expired`, `task` and `error` ([Troubleshooting](#troubleshooting)) |
 | `origin` | Optional. The address of AptiveAI Agents, such as `https://console.aptiveai.io`. By default it is read from the script's own address, so you only need it when you load the script some other way |
+| `locale` | Optional. `'en'` or `'es'`: opens the panel in English or Spanish, and it stays in that language as the person moves around it. Any other value makes `mount` throw. Without it, the person's own language setting applies |
 
 | Handle | What it does |
 |---|---|
@@ -87,8 +88,9 @@ chat** shows the script tag for your account, ready to copy.
 | `unmount()` | Removes the panel |
 | `iframe` | The panel's `<iframe>` element, to size or style it |
 
-`mount` and `setActions` throw an `Error` at once for an action with a bad
-name, no description or no `run`. Size the element yourself: the panel fills
+`mount` throws an `Error` at once when `enterpriseId` or `getToken` is missing
+or `locale` is not `'en'` or `'es'`; `mount` and `setActions` also throw for an
+action with a bad name, no description or no `run`. Size the element yourself: the panel fills
 it. A docked column about 400 pixels
 wide works well; the panel also works at phone width.
 
