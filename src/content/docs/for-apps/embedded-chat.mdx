@@ -89,6 +89,17 @@ chat** shows the script tag for your account, ready to copy.
 | `unmount()` | Removes the panel |
 | `iframe` | The panel's `<iframe>` element, to size or style it |
 
+Events passed to `onEvent`:
+
+| `type` | Fields | Meaning |
+|---|---|---|
+| `ready` | — | The panel loaded and is asking for a token |
+| `signed-in` | — | The person is signed in |
+| `unavailable` | `reason` | The panel cannot sign the person in ([Troubleshooting](#troubleshooting)) |
+| `session-expired` | — | The panel's session ended; the script is already asking `getToken` for a new token |
+| `task` | `id`, `status` | A task started or was opened, or its status changed ([the statuses](#reopening-where-the-person-was)) |
+| `error` | `code` | A message was refused; or `token_failed`: `getToken` failed three times in a row; or `session_not_kept`: three sign-ins in a row ended within 30 seconds, so this browser is not keeping the panel's session. After either of the last two the script stops asking for tokens until the panel loads again ([Troubleshooting](#troubleshooting)) |
+
 `mount` throws an `Error` at once when `enterpriseId` or `getToken` is missing,
 `locale` is not `'en'` or `'es'`, or `taskId` is not a UUID; `mount` and `setActions` also throw for an
 action with a bad name, no description or no `run`. Size the element yourself: the panel fills
@@ -124,10 +135,11 @@ name, or you prefer another one, set `data-global` on the script tag:
 ```
 
 The name must be a plain JavaScript identifier (letters, digits, `_` and `$`,
-not starting with a digit). If it is not one, or your page already uses that
-name for something else, the API stays on `window.AptiveAI` and the browser's
-console shows a warning saying why. Loading the script twice under the same
-name keeps the first copy.
+not starting with a digit) that your page does not already use. If it is not,
+the script uses `window.AptiveAI` instead and the browser's console shows one
+warning saying why. The script never overwrites a global that is not its own:
+if `AptiveAI` is taken too, it installs nothing and logs one error naming the
+names it could not use. Loading the script twice keeps the first copy.
 
 Before the panel can sign anyone in, turn it on in AptiveAI Agents and add a
 token endpoint to your server — the next two sections.
@@ -269,6 +281,69 @@ it does not sign them in at console.aptiveai.io, it reaches only the panel's
 own pages, and it cannot change a password, two-factor settings or other
 sessions. **Open in AptiveAI** opens the full product in a new tab, where the
 person signs in the usual way.
+
+## Ending a person's session
+
+When a person signs out of your application, or you deactivate them, end their
+panel session too — otherwise it lives on for the rest of its 8 hours. Your
+**server** calls:
+
+```http
+POST https://console.aptiveai.io/api/embed/session/revoke
+Content-Type: application/json
+
+{ "token": "<a revoke token>" }
+```
+
+This is a server-to-server call: no cookie, no browser. The revoke token is
+signed exactly like the [sign-in token](#the-token) — HS256 with the signing
+secret, `iss` your enterprise id, `sub` the person's email, at most 60 seconds
+of life, a `jti` used once — with one difference: **`aud` is
+`aptiveai-embed-revoke`**. The two are not interchangeable: a sign-in token is
+refused here, and a revoke token never signs anyone in.
+
+| Answer | Meaning |
+|---|---|
+| `200 { "ok": true, "ended": <n> }` | Every panel session of that person opened through your enterprise has ended; `n` is how many. It is `0` when there were none, and also when the email has no account with you, so the answer never says who has one. The person's own AptiveAI Agents sessions are not touched |
+| `401 { "ok": false, "reason": "bad_token" }` | The token did not verify: wrong secret or audience, expired, over 60 seconds, or used before |
+| `401 { "ok": false, "reason": "disabled" }` | The embedded chat is switched off for your enterprise, so every session has already ended |
+| `429` | More than 60 calls a minute from your server; wait for `Retry-After` seconds |
+
+```js
+import { SignJWT } from 'jose';
+import { randomUUID } from 'node:crypto';
+
+export async function endEmbedSessions({ consoleUrl, enterpriseId, secret, email }) {
+  const now = Math.floor(Date.now() / 1000);
+  const token = await new SignJWT({})
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuer(enterpriseId)
+    .setAudience('aptiveai-embed-revoke')
+    .setSubject(email)
+    .setIssuedAt(now)
+    .setExpirationTime(now + 60)
+    .setJti(randomUUID())
+    .sign(new TextEncoder().encode(secret));
+  const res = await fetch(`${consoleUrl}/api/embed/session/revoke`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
+  });
+  return res.json(); // { ok: true, ended } or { ok: false, reason }
+}
+```
+
+Call it:
+
+- when the person signs out of your application;
+- when you deactivate or remove the person in your application.
+
+A panel that is still open when its session ends notices at its next request
+and asks your page for a new token through `getToken`. **After sign-out or
+deactivation your token endpoint must refuse that person**, so the panel stays
+signed out. On a shared computer, also take the panel off the page at sign-out
+(`unmount()`) and mount a new one for the next person, so nothing of the
+previous person's panel stays on screen.
 
 ## Page context
 
@@ -414,6 +489,7 @@ from your page is refused, it receives `{ type: 'error', code }`.
 | `unavailable`, reason `no_agents` | The person has no agent they may use | Share an agent with the person — see [Sharing](/concepts/sharing) |
 | `error`, code `network` | The panel could not reach AptiveAI Agents while signing in | The script asks `getToken` for a new token by itself; check the person's connection if it repeats |
 | `error`, code `token_failed` | `getToken` failed three times in a row — it threw, returned no token, or the panel could not reach AptiveAI Agents | Check your token endpoint and the person's connection; the script tries again when the panel reloads |
+| `error`, code `session_not_kept` | Three sign-ins in a row ended within 30 seconds: the browser is not keeping the panel's session, usually because it blocks the panel's cookie. Firefox and Safari have not been verified | Try the panel in Chrome or Edge, and check the browser's settings for blocked third-party cookies. The script stops asking for tokens until the panel loads again |
 | `error`, code `context_too_large` | The context is over 4 KB | Send less — a label and an id are enough |
 | `error`, code `too_many_actions` | More than 20 actions | Declare fewer |
 | `error`, code `invalid_action` | An action breaks a rule above: its name, description, `parameters` schema, a size, or two with one name | Fix the action; the whole list is refused until it is valid |

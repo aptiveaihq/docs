@@ -91,6 +91,17 @@ para copiar.
 | `unmount()` | Quita el panel |
 | `iframe` | El elemento `<iframe>` del panel, para darle tamaño o estilo |
 
+Eventos que recibe `onEvent`:
+
+| `type` | Campos | Significado |
+|---|---|---|
+| `ready` | — | El panel se cargó y pide un token |
+| `signed-in` | — | La persona inició sesión |
+| `unavailable` | `reason` | El panel no puede iniciar la sesión de la persona ([Solución de problemas](#solución-de-problemas)) |
+| `session-expired` | — | La sesión del panel terminó; el script ya le está pidiendo un token nuevo a `getToken` |
+| `task` | `id`, `status` | Una tarea empezó o se abrió, o cambió de estado ([los estados](#volver-a-donde-estaba-la-persona)) |
+| `error` | `code` | Se rechazó un mensaje; o `token_failed`: `getToken` falló tres veces seguidas; o `session_not_kept`: tres inicios de sesión seguidos terminaron antes de 30 segundos, así que este navegador no conserva la sesión del panel. Tras cualquiera de los dos últimos, el script deja de pedir tokens hasta que el panel vuelva a cargarse ([Solución de problemas](#solución-de-problemas)) |
+
 `mount` lanza un `Error` de inmediato cuando falta `enterpriseId` o `getToken`,
 cuando `locale` no es `'en'` ni `'es'`, o cuando `taskId` no es un UUID; `mount` y `setActions` también lanzan
 un error ante una acción con un nombre no válido, sin descripción o sin `run`. El tamaño lo decides tú: el
@@ -127,10 +138,12 @@ prefieres otro, agrega `data-global` a la etiqueta del script:
 ```
 
 El nombre debe ser un identificador simple de JavaScript (letras, dígitos, `_`
-y `$`, sin empezar por un dígito). Si no lo es, o tu página ya usa ese nombre
-para otra cosa, la API se queda en `window.AptiveAI` y la consola del
-navegador muestra una advertencia que explica por qué. Si el script se carga
-dos veces con el mismo nombre, se conserva la primera copia.
+y `$`, sin empezar por un dígito) que tu página no use ya. Si no lo es, el
+script usa `window.AptiveAI` en su lugar y la consola del navegador muestra una
+advertencia que explica por qué. El script nunca sobrescribe una variable
+global que no sea suya: si `AptiveAI` también está ocupada, no instala nada y
+registra un error con los nombres que no pudo usar. Si el script se carga dos
+veces, se conserva la primera copia.
 
 Antes de que el panel pueda iniciar la sesión de alguien, actívalo en AptiveAI
 Agents y agrega a tu servidor un endpoint de tokens: las dos secciones
@@ -276,6 +289,71 @@ su sesión en console.aptiveai.io, solo llega a las páginas del propio panel y
 no puede cambiar una contraseña, la verificación en dos pasos ni otras
 sesiones. **Abrir en AptiveAI** abre el producto completo en una pestaña nueva,
 donde la persona inicia sesión de la forma habitual.
+
+## Cerrar la sesión de una persona
+
+Cuando una persona cierra sesión en tu aplicación, o la desactivas, cierra
+también su sesión del panel; si no, sigue viva el resto de sus 8 horas. Tu
+**servidor** llama a:
+
+```http
+POST https://console.aptiveai.io/api/embed/session/revoke
+Content-Type: application/json
+
+{ "token": "<a revoke token>" }
+```
+
+Es una llamada de servidor a servidor: sin cookie y sin navegador. El token de
+revocación se firma igual que el [token de inicio de sesión](#el-token) —
+HS256 con el secreto de firma, `iss` el id de tu empresa, `sub` el correo de la
+persona, como máximo 60 segundos de vigencia, un `jti` de un solo uso — con una
+diferencia: **`aud` es `aptiveai-embed-revoke`**. Los dos no son
+intercambiables: aquí se rechaza un token de inicio de sesión, y un token de
+revocación nunca inicia la sesión de nadie.
+
+| Respuesta | Significado |
+|---|---|
+| `200 { "ok": true, "ended": <n> }` | Todas las sesiones del panel de esa persona abiertas a través de tu empresa terminaron; `n` es cuántas. Es `0` cuando no había ninguna, y también cuando el correo no tiene cuenta contigo, así que la respuesta nunca revela quién tiene una. Las sesiones propias de la persona en AptiveAI Agents no se tocan |
+| `401 { "ok": false, "reason": "bad_token" }` | El token no se verificó: secreto o audiencia equivocados, vencido, de más de 60 segundos o ya usado |
+| `401 { "ok": false, "reason": "disabled" }` | El chat integrado está desactivado para tu empresa, así que todas las sesiones ya terminaron |
+| `429` | Más de 60 llamadas por minuto desde tu servidor; espera los segundos de `Retry-After` |
+
+```js
+import { SignJWT } from 'jose';
+import { randomUUID } from 'node:crypto';
+
+export async function endEmbedSessions({ consoleUrl, enterpriseId, secret, email }) {
+  const now = Math.floor(Date.now() / 1000);
+  const token = await new SignJWT({})
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuer(enterpriseId)
+    .setAudience('aptiveai-embed-revoke')
+    .setSubject(email)
+    .setIssuedAt(now)
+    .setExpirationTime(now + 60)
+    .setJti(randomUUID())
+    .sign(new TextEncoder().encode(secret));
+  const res = await fetch(`${consoleUrl}/api/embed/session/revoke`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
+  });
+  return res.json(); // { ok: true, ended } or { ok: false, reason }
+}
+```
+
+Llámalo:
+
+- cuando la persona cierra sesión en tu aplicación;
+- cuando desactivas o quitas a la persona en tu aplicación.
+
+Un panel que sigue abierto cuando termina su sesión se da cuenta en su
+siguiente solicitud y le pide un token nuevo a tu página con `getToken`.
+**Después del cierre de sesión o la desactivación, tu endpoint de tokens debe
+rechazar a esa persona**, para que el panel siga sin sesión. En una computadora
+compartida, quita además el panel de la página al cerrar sesión (`unmount()`)
+y monta uno nuevo para la siguiente persona, para que no quede en pantalla nada
+del panel de la persona anterior.
 
 ## Contexto de la página
 
@@ -425,6 +503,7 @@ mensaje de tu página, recibe `{ type: 'error', code }`.
 | `unavailable`, motivo `no_agents` | La persona no tiene ningún agente que pueda usar | Comparte un agente con la persona — consulta [Compartir](/es/concepts/sharing) |
 | `error`, código `network` | El panel no pudo comunicarse con AptiveAI Agents al iniciar la sesión | El script le pide por sí solo un token nuevo a `getToken`; si se repite, revisa la conexión de la persona |
 | `error`, código `token_failed` | `getToken` falló tres veces seguidas: lanzó un error, no devolvió un token o el panel no logró comunicarse con AptiveAI Agents | Revisa tu endpoint de tokens y la conexión de la persona; el script vuelve a intentarlo cuando el panel se recarga |
+| `error`, código `session_not_kept` | Tres inicios de sesión seguidos terminaron antes de 30 segundos: el navegador no conserva la sesión del panel, normalmente porque bloquea su cookie. Firefox y Safari no se han verificado | Prueba el panel en Chrome o Edge y revisa si el navegador bloquea las cookies de terceros. El script deja de pedir tokens hasta que el panel vuelva a cargarse |
 | `error`, código `context_too_large` | El contexto pasa de 4 KB | Envía menos: una etiqueta y un id bastan |
 | `error`, código `too_many_actions` | Más de 20 acciones | Declara menos |
 | `error`, código `invalid_action` | Una acción incumple una regla de arriba: su nombre, su descripción, su schema `parameters`, un tamaño, o dos con el mismo nombre | Corrige la acción; toda la lista se rechaza hasta que sea válida |
