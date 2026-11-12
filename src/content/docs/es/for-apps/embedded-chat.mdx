@@ -95,6 +95,24 @@ panel llena el elemento. Una columna fija de unos
 400 píxeles de ancho funciona bien; el panel también funciona en el ancho de un
 teléfono.
 
+### Elegir el nombre global
+
+El script pone su API en `window.AptiveAI`. Si tu página ya usa ese nombre, o
+prefieres otro, agrega `data-global` a la etiqueta del script:
+
+```html
+<script src="https://console.aptiveai.io/embed/v1.js" data-global="NorthwindAssistant"></script>
+<script>
+  const panel = NorthwindAssistant.mount('#assistant', { /* the same options */ });
+</script>
+```
+
+El nombre debe ser un identificador simple de JavaScript (letras, dígitos, `_`
+y `$`, sin empezar por un dígito). Si no lo es, o tu página ya usa ese nombre
+para otra cosa, la API se queda en `window.AptiveAI` y la consola del
+navegador muestra una advertencia que explica por qué. Si el script se carga
+dos veces con el mismo nombre, se conserva la primera copia.
+
 Antes de que el panel pueda iniciar la sesión de alguien, actívalo en AptiveAI
 Agents y agrega a tu servidor un endpoint de tokens: las dos secciones
 siguientes.
@@ -365,10 +383,10 @@ La sesión del panel se guarda en una **cookie de terceros particionada**
 panel dentro de tu sitio, separada de cualquier otro sitio, y nunca se
 convierte en la sesión normal de la persona en AptiveAI Agents.
 
-<Aside type="caution" title="Safari todavía no se ha verificado">
-  El panel se ha verificado en navegadores basados en Chromium (Chrome, Edge) y
-  en Firefox. **No se ha verificado en Safari**, ni en macOS ni en iOS. Si tu
-  gente usa Safari, prueba el panel ahí, en un dispositivo real, antes de
+<Aside type="caution" title="Firefox y Safari todavía no se han verificado">
+  El panel se ha verificado en **Chrome y Edge** (Chromium). **No se ha
+  verificado en Firefox ni en Safari** (en macOS o iOS). Si tu gente usa
+  alguno de los dos, prueba el panel ahí, en un dispositivo real, antes de
   depender de él.
 </Aside>
 

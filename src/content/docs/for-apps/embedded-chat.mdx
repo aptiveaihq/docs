@@ -92,6 +92,24 @@ name, no description or no `run`. Size the element yourself: the panel fills
 it. A docked column about 400 pixels
 wide works well; the panel also works at phone width.
 
+### Naming the global
+
+The script puts its API on `window.AptiveAI`. If your page already uses that
+name, or you prefer another one, set `data-global` on the script tag:
+
+```html
+<script src="https://console.aptiveai.io/embed/v1.js" data-global="NorthwindAssistant"></script>
+<script>
+  const panel = NorthwindAssistant.mount('#assistant', { /* the same options */ });
+</script>
+```
+
+The name must be a plain JavaScript identifier (letters, digits, `_` and `$`,
+not starting with a digit). If it is not one, or your page already uses that
+name for something else, the API stays on `window.AptiveAI` and the browser's
+console shows a warning saying why. Loading the script twice under the same
+name keeps the first copy.
+
 Before the panel can sign anyone in, turn it on in AptiveAI Agents and add a
 token endpoint to your server — the next two sections.
 
@@ -355,11 +373,10 @@ The panel's session is kept in a **partitioned third-party cookie**
 inside your site, separate from any other site, and it never becomes the
 person's ordinary AptiveAI Agents session.
 
-<Aside type="caution" title="Safari has not been verified yet">
-  The panel has been verified in Chromium-based browsers (Chrome, Edge) and
-  Firefox. **It has not been verified in Safari**, on macOS or iOS. If your
-  people use Safari, test the panel there, on a real device, before you rely on
-  it.
+<Aside type="caution" title="Firefox and Safari have not been verified yet">
+  The panel has been verified in **Chrome and Edge** (Chromium). **It has not
+  been verified in Firefox or Safari** (on macOS or iOS). If your people use
+  either, test the panel there, on a real device, before you rely on it.
 </Aside>
 
 ## Troubleshooting
