@@ -1,0 +1,469 @@
+---
+title: Chat integrado
+description: Muestra AptiveAI Agents en un panel junto a las pantallas de tu aplicación. Agrega un script, inicia la sesión de tu gente desde tu servidor, dile al agente qué hay en pantalla y deja que abra registros para la persona. Configuración, inicio de sesión, contexto de la página, acciones de pantalla, tema, navegadores, solución de problemas y el protocolo de mensajes.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+El **chat integrado** pone AptiveAI Agents en un panel dentro de tu
+aplicación. La persona elige uno de sus agentes, inicia una tarea, la sigue,
+responde sus preguntas y aprueba sus pasos, y encuentra sus tareas anteriores,
+agrupadas por agente, todo sin salir de tu aplicación. Una tarea iniciada en el
+panel es una tarea normal: también aparece en AptiveAI Agents, a nombre de la
+misma persona.
+
+Tu aplicación hace tres cosas:
+
+1. **Inicia la sesión de la persona.** Tu servidor responde por la persona que
+   tiene la sesión iniciada en tu aplicación con un token firmado de corta
+   duración. La persona nunca ve una pantalla de inicio de sesión de AptiveAI.
+2. **Le dice al agente qué hay en pantalla** (opcional): la página, el registro
+   que la persona tiene abierto, para que "¿qué estoy viendo?" tenga respuesta.
+3. **Ofrece acciones de pantalla** (opcional), como abrir un registro, que el
+   agente puede pedirle a tu página mientras responde.
+
+El panel es una página de AptiveAI Agents mostrada en un `<iframe>` de tu
+página. No tiene vista en vivo de la computadora del agente: un paso que la
+necesita ofrece **Abrir en AptiveAI**, que abre el producto completo en una
+pestaña nueva.
+
+## Inicio rápido
+
+Agrega el script de AptiveAI a tu página y monta el panel en un elemento
+tuyo:
+
+```html
+<div id="assistant" style="height: 100%"></div>
+
+<script src="https://console.aptiveai.io/embed/v1.js"></script>
+<script>
+  const panel = AptiveAI.mount('#assistant', {
+    enterpriseId: 'YOUR-ENTERPRISE-ID',
+    // Your own server signs a token for the person signed in to your application.
+    getToken: async () => {
+      const res = await fetch('/aptiveai/token', { method: 'POST', credentials: 'same-origin' });
+      if (!res.ok) throw new Error('Could not get an AptiveAI token');
+      return (await res.json()).token;
+    },
+    context: {
+      page: { title: 'Customers', url: location.href },
+    },
+    actions: [
+      {
+        name: 'open_customer',
+        description: "Open a customer's record on the person's screen.",
+        parameters: {
+          type: 'object',
+          properties: { customerId: { type: 'string' } },
+          required: ['customerId'],
+        },
+        run: async ({ customerId }) => {
+          await router.navigate(`/customers/${encodeURIComponent(customerId)}`);
+          return 'Opened';
+        },
+      },
+    ],
+    onEvent: (event) => console.log('AptiveAI', event.type, event),
+  });
+</script>
+```
+
+`AptiveAI.mount(el, options)` crea el frame del panel dentro de `el` (un
+elemento, o un selector que lo indique) y devuelve un objeto de control.
+**Ajustes → Chat integrado** muestra la etiqueta del script de tu cuenta, lista
+para copiar.
+
+| Opción | Qué es |
+|---|---|
+| `enterpriseId` | El id de tu empresa, de **Ajustes → Chat integrado** |
+| `getToken` | Una función que devuelve un token (un string), o una promesa de uno, obtenido de **tu propio servidor** ([El inicio de sesión, paso a paso](#el-inicio-de-sesión-paso-a-paso)). Se llama cuando el panel está listo y otra vez cada vez que la sesión vence |
+| `context` | Opcional. Lo que la persona tiene abierto ([Contexto de la página](#contexto-de-la-página)) |
+| `actions` | Opcional. Acciones de pantalla que el agente puede pedirle a tu página: cada una `{ name, description, label, parameters, run(args) }`. `label` y `parameters` (un JSON schema) son opcionales; `run` devuelve un resultado o lanza un error ([Acciones de pantalla](#acciones-de-pantalla)) |
+| `onEvent` | Opcional. Recibe `{ type, … }` para `ready`, `signed-in`, `unavailable`, `session-expired`, `task` y `error` ([Solución de problemas](#solución-de-problemas)) |
+| `origin` | Opcional. La dirección de AptiveAI Agents, como `https://console.aptiveai.io`. Por defecto se toma de la dirección del propio script, así que solo la necesitas si cargas el script de otra forma |
+
+| Objeto de control | Qué hace |
+|---|---|
+| `setContext(context)` | Reemplaza el contexto de la página; llámalo cada vez que la persona abra otra página o registro |
+| `setActions(actions)` | Reemplaza la lista de acciones de pantalla; una lista vacía las retira |
+| `unmount()` | Quita el panel |
+| `iframe` | El elemento `<iframe>` del panel, para darle tamaño o estilo |
+
+`mount` y `setActions` lanzan un `Error` de inmediato ante una acción con un
+nombre no válido, sin descripción o sin `run`. El tamaño lo decides tú: el
+panel llena el elemento. Una columna fija de unos
+400 píxeles de ancho funciona bien; el panel también funciona en el ancho de un
+teléfono.
+
+Antes de que el panel pueda iniciar la sesión de alguien, actívalo en AptiveAI
+Agents y agrega a tu servidor un endpoint de tokens: las dos secciones
+siguientes.
+
+## Configurarlo en AptiveAI
+
+Un **propietario de tu empresa** configura el chat integrado en AptiveAI
+Agents, en **Ajustes → Chat integrado**.
+
+<Steps>
+
+1. En **Acceso**, escribe los orígenes de tu aplicación en **Orígenes
+   permitidos**: uno por línea, como `https://host` o `https://host:puerto`,
+   sin ruta. Como máximo 10. Solo las páginas de estos orígenes pueden mostrar
+   el panel; el navegador lo rechaza en cualquier otro lugar.
+
+2. En **Secreto de firma**, pulsa **Generar un secreto**. El secreto se muestra
+   **una sola vez**: cópialo en la configuración de tu servidor (un almacén de
+   secretos o una variable de entorno), nunca en tu página. Al lado se muestra
+   el **Id de la empresa**: tu servidor firma con él como emisor, y tu página
+   se lo pasa a `AptiveAI.mount`.
+
+3. Activa **Chat integrado activado** y pulsa **Guardar**. No se puede activar
+   sin al menos un origen y un secreto.
+
+4. Si quieres, elige los colores del panel en **Tema** ([Tema](#tema)).
+
+</Steps>
+
+**Generar un secreto nuevo** reemplaza el secreto al instante: el anterior deja
+de funcionar de inmediato, así que actualiza tu servidor al mismo tiempo.
+Desactivar el chat integrado detiene el panel en todos los sitios y cierra todas
+las sesiones del panel.
+
+### Quién puede usar el panel
+
+Cada persona que usa el panel necesita una **cuenta de AptiveAI en tu
+empresa**, creada por invitación — consulta [Usuarios y
+roles](/es/administration/users). El token responde por una persona que ya
+existe; nunca la crea. Quien no tiene cuenta ve *El asistente aún no está
+configurado para usted. Pida a su administrador que lo invite.*
+
+En el panel una persona ve **los agentes que ya puede usar** en AptiveAI
+Agents, según las [reglas de uso compartido](/es/concepts/sharing) de
+siempre. Los agentes independientes no se ofrecen. Quien no tiene ningún agente
+que usar ve *Aún no tiene agentes con los que trabajar. Pida a su administrador
+que comparta uno con usted.*
+
+## El inicio de sesión, paso a paso
+
+<Steps>
+
+1. Tu página monta el panel. El frame del panel se carga desde AptiveAI
+   Agents, que solo permite mostrarlo en tus orígenes permitidos.
+
+2. El panel avisa que está listo y el script llama a tu `getToken`.
+
+3. `getToken` le pide un token a **tu propio servidor**. Tu servidor comprueba
+   que la persona tiene la sesión iniciada en tu aplicación, firma un token
+   para el correo de esa persona con el secreto de firma y lo devuelve.
+
+4. El script le entrega el token al panel, que lo cambia en AptiveAI Agents
+   por una sesión propia. Si `getToken` lanza un error, no devuelve un token o
+   el panel no logra comunicarse con AptiveAI Agents, el script vuelve a
+   intentarlo al cabo de un momento; tras tres fallos seguidos se detiene y
+   `onEvent` recibe `{ type: 'error', code: 'token_failed' }`.
+
+5. El panel se abre con la sesión iniciada. Cuando esa sesión termina, el panel
+   vuelve a pedirlo y el script llama a `getToken` para obtener un token nuevo.
+
+</Steps>
+
+<Aside type="caution" title="El correo sale de tu sesión, nunca de la solicitud">
+  Tu endpoint de tokens debe tomar el correo de la persona de **la sesión
+  iniciada en tu propia aplicación**, nunca de un parámetro de la URL, del
+  cuerpo de la solicitud ni de un encabezado que envíe el navegador. Un
+  endpoint que firma cualquier correo que reciba permite que cualquiera inicie
+  sesión en AptiveAI Agents como cualquier persona de tu empresa.
+
+  El **secreto de firma nunca llega al navegador**: firma solo en tu servidor y
+  nunca registres un token en los logs.
+</Aside>
+
+### El token
+
+Un JSON Web Token firmado con **HS256**, con el secreto de firma como clave. El
+secreto se usa como texto plano, sus bytes UTF-8; no se decodifica de base64.
+
+| Claim | Valor |
+|---|---|
+| `iss` | El id de tu empresa |
+| `aud` | `aptiveai-embed` |
+| `sub` | El correo de la persona. Se compara, sin distinguir mayúsculas, con una cuenta de tu empresa |
+| `iat` | Cuándo se firmó, en segundos |
+| `exp` | Cuándo vence: **como máximo 60 segundos** después de `iat` |
+| `jti` | Un id único. Un token se usa **una sola vez**: el mismo `jti` se rechaza mientras el token siga vigente |
+
+Se toleran hasta 30 segundos de diferencia entre el reloj de tu servidor y el de
+AptiveAI. Un token tiene como máximo 4.096 caracteres. Firma un token nuevo cada
+vez que el panel lo pida; nunca lo guardes para reutilizarlo.
+
+### Un endpoint de tokens en Node
+
+Este ejemplo usa [`jose`](https://github.com/panva/jose) y una ruta al estilo de
+Express; `requireSignedIn` representa la forma en que tu aplicación comprueba
+su propia sesión.
+
+```js
+import { SignJWT } from 'jose';
+import { randomUUID } from 'node:crypto';
+
+const ENTERPRISE_ID = process.env.APTIVEAI_ENTERPRISE_ID;
+const SECRET = new TextEncoder().encode(process.env.APTIVEAI_EMBED_SECRET);
+
+app.post('/aptiveai/token', requireSignedIn, async (req, res) => {
+  // The person signed in to YOUR application — never an email from the request.
+  const email = req.user.email;
+
+  const now = Math.floor(Date.now() / 1000);
+  const token = await new SignJWT({})
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuer(ENTERPRISE_ID)
+    .setAudience('aptiveai-embed')
+    .setSubject(email)
+    .setIssuedAt(now)
+    .setExpirationTime(now + 60)
+    .setJti(randomUUID())
+    .sign(SECRET);
+
+  res.set('Cache-Control', 'no-store').json({ token });
+});
+```
+
+Sirve cualquier biblioteca de JWT, en cualquier lenguaje, siempre que produzca
+los claims de arriba con HS256.
+
+### La sesión del panel
+
+El token abre una sesión de **8 horas** que existe solo dentro del panel de tu
+aplicación. No es la sesión normal de la persona en AptiveAI Agents: no inicia
+su sesión en console.aptiveai.io, solo llega a las páginas del propio panel y
+no puede cambiar una contraseña, la verificación en dos pasos ni otras
+sesiones. **Abrir en AptiveAI** abre el producto completo en una pestaña nueva,
+donde la persona inicia sesión de la forma habitual.
+
+## Contexto de la página
+
+El contexto le dice al agente qué tiene abierto la persona en tu aplicación,
+para que una pregunta como "¿qué cambió en este pedido?" no necesite
+explicación. Pásalo a `AptiveAI.mount` y actualízalo con `setContext` cada vez
+que la persona se mueva:
+
+```js
+panel.setContext({
+  page: { title: 'Order 1042', url: location.href },
+  record: { type: 'order', id: '1042', label: 'Order 1042 — Jane Sample' },
+  note: 'Delivery was rescheduled this morning.',
+});
+```
+
+| Campo | Qué es |
+|---|---|
+| `page` | `{ title, url }`: la página donde está la persona |
+| `record` | `{ type, id, label }`: el registro que tiene abierto |
+| `note` | Cualquier texto breve que valga la pena saber |
+
+Todos los campos son opcionales; `setContext({})` o `setContext(null)` lo
+borra.
+
+- **El panel lo muestra.** Una línea sobre el cuadro de mensaje muestra la
+  etiqueta del registro (o el título de la página), y la persona puede quitarlo
+  de su próximo mensaje. Viaja con cada mensaje que la persona envía, y el
+  mensaje lo muestra en la transcripción de la tarea.
+- **Es una pista, no una instrucción.** Al agente se le dice que viene de la
+  aplicación que la persona tiene abierta, no de la persona, y lee los datos
+  reales con sus propios [conectores](/es/concepts/connectors).
+- **Que sea breve y sin secretos.** El contexto completo tiene como máximo 4 KB
+  de JSON; uno más grande se rechaza y el panel conserva el anterior.
+
+## Acciones de pantalla
+
+Una acción de pantalla permite que el agente cambie **lo que la persona ve** en
+tu aplicación mientras responde: abrir un registro, cambiar de pestaña, ir a
+una página. Las declaras con `actions`; el agente ve cada una como una
+herramienta que puede llamar, descrita por tu `description`.
+
+```js
+panel.setActions([
+  {
+    name: 'go_to',
+    description: 'Go to one of the main pages: "orders", "customers" or "schedule".',
+    parameters: {
+      type: 'object',
+      properties: { page: { type: 'string', enum: ['orders', 'customers', 'schedule'] } },
+      required: ['page'],
+    },
+    run: async ({ page }) => {
+      if (!['orders', 'customers', 'schedule'].includes(page)) throw new Error('Unknown page');
+      await router.navigate(`/${page}`);
+      return `Showing ${page}`;
+    },
+  },
+]);
+```
+
+<Aside type="caution" title="Una acción de pantalla cambia la pantalla, nunca los datos">
+  Las acciones de pantalla se ejecutan sin tarjeta de aprobación, así que solo
+  deben navegar o mostrar cosas. El trabajo real (escribir un registro, enviar
+  algo, cambiar un estado) pasa por un [conector](/es/concepts/connectors)
+  hacia tu aplicación, donde tiene permisos, aprobaciones y registro. Trata los
+  argumentos como entrada no confiable: valídalos en `run` y lanza un error para
+  todo lo que no reconozcas.
+</Aside>
+
+Cómo transcurre una llamada:
+
+1. El agente llama a una de tus acciones, y la transcripción de la tarea
+   muestra el paso.
+2. El script llama a tu `run(args)` con los argumentos.
+3. Lo que devuelve `run` — o aquello con que se resuelve — le dice al agente el
+   resultado, que también muestra la transcripción:
+
+   | `run` | Al agente se le dice |
+   |---|---|
+   | devuelve un string, o cualquier otra cosa | Se hizo, con el string como mensaje breve |
+   | devuelve `false` | No se hizo |
+   | devuelve `{ ok, message }` | Se hizo o no, según `ok`, con `message` |
+   | lanza un error | No se hizo, con la primera línea del mensaje de tu error |
+
+   Una acción que el agente nombra y que ya no ofreces se responde con *Unknown
+   action.* Cada pedido del agente se responde una sola vez: `run` nunca se
+   llama dos veces para el mismo pedido.
+
+Las acciones de pantalla son **de mejor esfuerzo**:
+
+- El agente espera **como máximo 10 segundos** una respuesta y luego sigue
+  como si la acción no se hubiera hecho.
+- Un tramo del trabajo del agente puede llamar **como máximo 5** acciones de
+  pantalla.
+- Si el panel está cerrado, o la persona salió de la página, la acción no se
+  hace y la tarea sigue.
+- Una tarea a la que la persona le envía un mensaje desde el producto completo,
+  fuera de tu aplicación, no tiene acciones de pantalla.
+
+| Límite | Valor |
+|---|---|
+| Acciones declaradas a la vez | 20 |
+| `name` | Letras minúsculas, dígitos y `_`, empezando por una letra, como máximo 40 caracteres, sin repetir |
+| `description` | Obligatoria, como máximo 300 caracteres |
+| `parameters` | Un JSON schema de `type: "object"` con `properties` (y `required` opcional), como máximo 2 KB |
+| El mensaje con que responde una acción | Como máximo 300 caracteres; lo que sobra se corta |
+
+## Tema
+
+Sin tema, el panel se ve como AptiveAI Agents. Para que combine con tu
+aplicación, abre **Ajustes → Chat integrado → Tema** y elige un **Tema base**,
+y luego los colores de **Página**, **Barra lateral y tarjetas** y **Acento**
+para **Claro** y **Oscuro**. **Claro y oscuro** decide si cada persona ve los
+colores que eligió para sí (**Según cada persona**) o un solo aspecto para
+todos (**Siempre este aspecto**). **Desde una captura** propone colores a partir
+de una imagen de tu aplicación. Los colores que se leen mal se marcan antes de
+que puedas guardar.
+
+## Navegadores y cookies
+
+La sesión del panel se guarda en una **cookie de terceros particionada**
+(`SameSite=None; Secure; Partitioned`): el navegador la conserva solo para el
+panel dentro de tu sitio, separada de cualquier otro sitio, y nunca se
+convierte en la sesión normal de la persona en AptiveAI Agents.
+
+<Aside type="caution" title="Safari todavía no se ha verificado">
+  El panel se ha verificado en navegadores basados en Chromium (Chrome, Edge) y
+  en Firefox. **No se ha verificado en Safari**, ni en macOS ni en iOS. Si tu
+  gente usa Safari, prueba el panel ahí, en un dispositivo real, antes de
+  depender de él.
+</Aside>
+
+## Solución de problemas
+
+Cuando el panel no puede iniciar la sesión de la persona, le muestra una frase
+y tu `onEvent` recibe `{ type: 'unavailable', reason }`. Cuando se rechaza un
+mensaje de tu página, recibe `{ type: 'error', code }`.
+
+| Síntoma | Causa | Solución |
+|---|---|---|
+| El área del panel queda en blanco y la consola del navegador informa que se negó a mostrar la página en un frame | El origen de tu página no está en **Orígenes permitidos**, o el chat integrado está desactivado | Agrega el origen exacto (esquema, host y puerto) en **Ajustes → Chat integrado** y actívalo |
+| `unavailable`, motivo `disabled` | El chat integrado está desactivado para la empresa | Un propietario activa **Chat integrado activado** |
+| `unavailable`, motivo `bad_token` | Se rechazó el token: secreto equivocado, `iss` o `aud` equivocados, vigencia de más de 60 segundos, vencido, reloj muy desfasado o un `jti` usado dos veces | Firma con el secreto actual y los claims de [El token](#el-token); firma un token nuevo en cada llamada a `getToken`; revisa el reloj de tu servidor |
+| `unavailable`, motivo `no_account` | Ninguna cuenta de tu empresa tiene el correo del token | Invita a la persona — consulta [Usuarios y roles](/es/administration/users) — o comprueba que tu servidor firma el correo que la persona tiene en AptiveAI |
+| `unavailable`, motivo `account_unavailable` | La empresa está pausada, cancelada o suspendida, o la cuenta de la persona está suspendida | La persona consulta a su administrador; un propietario revisa [Facturación y puestos](/es/administration/billing) |
+| `unavailable`, motivo `no_agents` | La persona no tiene ningún agente que pueda usar | Comparte un agente con la persona — consulta [Compartir](/es/concepts/sharing) |
+| `error`, código `network` | El panel no pudo comunicarse con AptiveAI Agents al iniciar la sesión | El script le pide por sí solo un token nuevo a `getToken`; si se repite, revisa la conexión de la persona |
+| `error`, código `token_failed` | `getToken` falló tres veces seguidas: lanzó un error, no devolvió un token o el panel no logró comunicarse con AptiveAI Agents | Revisa tu endpoint de tokens y la conexión de la persona; el script vuelve a intentarlo cuando el panel se recarga |
+| `error`, código `context_too_large` | El contexto pasa de 4 KB | Envía menos: una etiqueta y un id bastan |
+| `error`, código `too_many_actions` | Más de 20 acciones | Declara menos |
+| `error`, código `invalid_action` | Una acción incumple una regla de arriba: su nombre, su descripción, su schema `parameters`, un tamaño, o dos con el mismo nombre | Corrige la acción; toda la lista se rechaza hasta que sea válida |
+| `error`, código `invalid_message` | Un mensaje no tenía la forma esperada | Revisa lo que le pasas a `setContext` y `setActions` |
+| El agente dice que la pantalla no respondió | `run` no respondió en 10 segundos, el panel estaba cerrado o la persona salió de la página | Haz que `run` responda rápido; solo necesita iniciar la navegación |
+
+## Avanzado: el protocolo de mensajes
+
+El script es una capa delgada sobre un pequeño protocolo de `postMessage` entre
+tu página y el frame del panel. Si no puedes usar el script, puedes hablar el
+protocolo directamente.
+
+**El frame.** Créalo con el id de tu empresa. Agrega `&lang=es` o `&lang=en` a
+la dirección para elegir el idioma del panel:
+
+```html
+<iframe
+  src="https://console.aptiveai.io/embed?e=YOUR-ENTERPRISE-ID"
+  title="Assistant"
+  allow="clipboard-write"
+></iframe>
+```
+
+**Reglas de seguridad para tu página:**
+
+- Envía mensajes al frame con su origen exacto, `https://console.aptiveai.io`,
+  como destino; nunca `*`.
+- Acepta un mensaje solo cuando `event.origin` sea
+  `https://console.aptiveai.io` **y** `event.source` sea el `contentWindow`
+  del frame.
+- Ignora los mensajes cuyo `type` no empiece por `aptiveai:`.
+
+Cada mensaje es un objeto con un `type` y `v: 1`. Un mensaje con otro `v` se
+rechaza con `aptiveai:error` `unsupported_version`.
+
+### De tu página al frame
+
+| `type` | Campos | Significado |
+|---|---|---|
+| `aptiveai:session` | `token` | Inicia la sesión de la persona. Envíalo en respuesta a `aptiveai:ready` y a `aptiveai:session-expired`, cada vez con un token nuevo |
+| `aptiveai:context` | opcionales `page: { title, url }`, `record: { type, id, label }`, `note` | Lo que la persona tiene abierto. Envíalo cada vez que cambie; sin campos, borra el contexto |
+| `aptiveai:actions` | `actions: [{ name, description, label?, parameters? }]` | Las acciones de pantalla que ofreces. Enviarlo de nuevo reemplaza la lista; una lista vacía las retira. `label` (como máximo 80 caracteres) es tu propia redacción del paso en la transcripción |
+| `aptiveai:action-result` | `id`, `ok`, `message` opcional | Tu respuesta a un `aptiveai:action`: `ok: true` cuando se hizo, `ok: false` con un mensaje breve cuando no |
+
+### Del frame a tu página
+
+| `type` | Campos | Significado |
+|---|---|---|
+| `aptiveai:ready` | — | El frame está escuchando. Envía `aptiveai:session` |
+| `aptiveai:signed-in` | — | La persona inició sesión. Envía ahora `aptiveai:context` y `aptiveai:actions` |
+| `aptiveai:session-expired` | — | La sesión del panel terminó. Envía un `aptiveai:session` nuevo |
+| `aptiveai:unavailable` | `reason` | No se puede iniciar la sesión de la persona: `no_account`, `disabled`, `bad_token`, `account_unavailable` o `no_agents` ([Solución de problemas](#solución-de-problemas)) |
+| `aptiveai:task` | `id`, `status` | Una tarea empezó (`running`) o cambió de estado, por ejemplo al terminar |
+| `aptiveai:action` | `id`, `name`, `arguments` | El agente te pide hacer una de tus acciones. Responde con `aptiveai:action-result` y el mismo `id` |
+| `aptiveai:error` | `code` | Se rechazó un mensaje tuyo (`unsupported_version`, `invalid_message`, `context_too_large`, `too_many_actions`, `invalid_action`), o `network`: el panel no logró comunicarse con AptiveAI Agents al iniciar la sesión; envía un token nuevo |
+
+### Límites
+
+Un mensaje que pasa un límite se rechaza con `aptiveai:error` y no tiene efecto.
+
+| Límite | Valor |
+|---|---|
+| Un mensaje `aptiveai:context` completo | 4 KB de JSON |
+| Acciones en un `aptiveai:actions` | 20 |
+| `name` de una acción | `^[a-z][a-z0-9_]{0,39}$`, sin repetir en la lista |
+| `description` de una acción | De 1 a 300 caracteres |
+| `label` de una acción | 80 caracteres |
+| `parameters` de una acción | Un JSON schema de `type: "object"` con `properties`, como máximo 2 KB de JSON |
+| `message` de `aptiveai:action-result` | 300 caracteres (lo que sobra se corta) |
+| `id` de `aptiveai:action-result` | 100 caracteres |
+| `token` de `aptiveai:session` | 4.096 caracteres |
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="AptiveAI for Apps" href="/es/for-apps/overview" description="Las dos partes, quién las configura y cómo se pagan." />
+  <LinkCard title="API de Agentes" href="/es/for-apps/agents-api" description="Llama a un agente desde tu servidor, sin panel." />
+  <LinkCard title="Conectores" href="/es/concepts/connectors" description="Cómo el agente lee y escribe de verdad los datos de tu aplicación." />
+</CardGrid>

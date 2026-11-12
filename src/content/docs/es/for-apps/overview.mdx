@@ -1,0 +1,87 @@
+---
+title: AptiveAI for Apps
+description: Haz que AptiveAI sea la IA de una aplicación que no tiene — llama a tus agentes desde su servidor con una API compatible con OpenAI, o muestra AptiveAI Agents en un panel de chat junto a sus pantallas. Quién lo configura, cómo se paga y cuál necesitas.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**AptiveAI for Apps** convierte a AptiveAI en el proveedor de IA de una
+aplicación que no tiene IA propia: tu sistema de gestión, tu portal de
+clientes, una herramienta interna. En lugar de conectar esa aplicación a un
+proveedor de modelos, configuras un [agente](/es/concepts/agents) en AptiveAI
+Agents (sus instrucciones, su modelo, sus [conectores](/es/concepts/connectors))
+y dejas que la aplicación lo use. Cambiar un prompt o un modelo pasa a ser un
+cambio en AptiveAI, no una nueva versión de tu aplicación.
+
+Tiene dos partes, y puedes usar una o las dos:
+
+- **La [API de Agentes](/es/for-apps/agents-api)** — el servidor de tu
+  aplicación llama a un agente como llamaría a un modelo, con un endpoint de
+  chat completions compatible con OpenAI. Las herramientas de conectores del
+  agente se ejecutan del lado de AptiveAI; las herramientas que solo tiene tu
+  aplicación se le devuelven a ella.
+- **El [chat integrado](/es/for-apps/embedded-chat)** — un panel de AptiveAI
+  Agents dentro de las páginas de tu aplicación. Tu aplicación inicia la sesión
+  de su gente, puede decirle al agente qué tiene abierto la persona y puede
+  dejar que el agente cambie lo que la persona ve, por ejemplo abrir un
+  registro.
+
+Los ejemplos de estas páginas usan una aplicación anfitriona inventada,
+*Northwind Desk*, y una persona inventada, *Jane Sample*.
+
+## Cuál necesito
+
+| Quieres | Usa |
+|---|---|
+| Una función de IA dentro de la propia interfaz de tu aplicación: un resumen, un borrador, una sugerencia, un asistente que diseñas tú | **[API de Agentes](/es/for-apps/agents-api)** |
+| Que tu gente converse con tus agentes de AptiveAI sin salir de tu aplicación, y vea ahí sus tareas | **[Chat integrado](/es/for-apps/embedded-chat)** |
+| Una respuesta calculada en tu servidor, sin ninguna persona presente | **[API de Agentes](/es/for-apps/agents-api)** |
+| Un agente que trabaja en una [computadora](/es/concepts/agents) con navegador, pide aprobaciones o trabaja durante minutos | **[Chat integrado](/es/for-apps/embedded-chat)** — una tarea iniciada ahí es una tarea normal |
+| Que el agente abra un registro o cambie de vista en tu aplicación mientras responde | **[Chat integrado](/es/for-apps/embedded-chat)**, con acciones de pantalla |
+
+La API de Agentes responde dentro de una sola solicitud: no tiene computadora,
+ni tarjetas de aprobación, ni transcripción guardada. El chat integrado es
+AptiveAI Agents mismo, mostrado dentro de tu aplicación, así que todo lo que
+puede hacer una tarea lo puede hacer una tarea iniciada ahí.
+
+La conversión de voz a texto en tiempo real para tu aplicación está en vista
+previa y todavía no se documenta aquí.
+
+## Quién lo configura
+
+Las dos partes las configura un **propietario de tu empresa**, en **Ajustes**
+de AptiveAI Agents:
+
+| Sección | Para qué sirve |
+|---|---|
+| **Ajustes → Claves de API** | Las claves con las que el servidor de tu aplicación llama a la API de Agentes, cada una limitada a los agentes que elijas |
+| **Ajustes → Chat integrado** | Activar el panel, los orígenes que pueden mostrarlo, el secreto de firma con el que tu servidor inicia la sesión de las personas, y los colores del panel |
+
+Nadie más ve estas secciones. Las personas que usan el chat integrado necesitan
+una cuenta de AptiveAI en tu empresa, creada por invitación — consulta
+[Usuarios y roles](/es/administration/users).
+
+## Cómo se paga
+
+**La API de Agentes se paga con la billetera de tu empresa**, por uso: cada
+solicitud se cobra a su costo de uso por la tarifa de tu empresa, y **la
+respuesta dice cuánto se cobró**, en dólares. Nunca gasta la asignación del
+puesto de nadie ni crédito promocional, y una solicitud se rechaza antes de
+ejecutarse cuando la billetera está vacía o casi vacía. Las llamadas a la API
+aparecen en [Actividad](/es/administration/activity) como la actividad **API**.
+
+**Una tarea iniciada en el chat integrado es una tarea normal de la persona que
+la inició**: se paga como cualquier tarea suya — su asignación y luego la
+billetera, cuando el propietario lo permite — con los mismos límites y
+aprobaciones. Consulta [Uso y crédito](/es/administration/usage).
+
+Para agregar fondos a la billetera, consulta
+[Facturación y puestos](/es/administration/billing#el-monedero).
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="Chat integrado" href="/es/for-apps/embedded-chat" description="Muestra AptiveAI Agents en un panel de tu aplicación, con la sesión iniciada por tu servidor." />
+  <LinkCard title="API de Agentes" href="/es/for-apps/agents-api" description="Llama a un agente como a un modelo, desde el servidor de tu aplicación." />
+  <LinkCard title="Agentes" href="/es/concepts/agents" description="Instrucciones, modelo y conectores: lo que configuras antes de que una aplicación use un agente." />
+</CardGrid>
