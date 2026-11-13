@@ -82,12 +82,14 @@ para copiar.
 | `onEvent` | Opcional. Recibe `{ type, … }` para `ready`, `signed-in`, `unavailable`, `session-expired`, `task` y `error` ([Solución de problemas](#solución-de-problemas)) |
 | `origin` | Opcional. La dirección de AptiveAI Agents, como `https://console.aptiveai.io`. Por defecto se toma de la dirección del propio script, así que solo la necesitas si cargas el script de otra forma |
 | `locale` | Opcional. `'en'` o `'es'`: abre el panel en inglés o en español, y se mantiene en ese idioma mientras la persona se mueve por él. Cualquier otro valor hace que `mount` lance un error. Sin esta opción, se aplica el idioma que la persona eligió para sí |
+| `theme` | Opcional. `'light'` o `'dark'`: el modo de tu página, para que el panel coincida con él ([Tema](#tema)). Cualquier otro valor hace que `mount` lance un error. Sin esta opción, el panel sigue la configuración del sistema de quien lo visita |
 | `taskId` | Opcional. El id de una tarea (un UUID): el panel se abre en esa tarea en lugar de en una nueva. Cualquier valor que no sea un UUID hace que `mount` lance un error. Una tarea que no existe, o que no es de la persona, aparece como no disponible |
 
 | Objeto de control | Qué hace |
 |---|---|
 | `setContext(context)` | Reemplaza el contexto de la página; llámalo cada vez que la persona abra otra página o registro |
 | `setActions(actions)` | Reemplaza la lista de acciones de pantalla; una lista vacía las retira |
+| `setTheme(mode)` | Cambia el panel a `'light'` o `'dark'` cuando tu página cambia, en vivo y sin recargar: una tarea abierta sigue abierta. Cualquier otro valor lanza un error |
 | `unmount()` | Quita el panel |
 | `iframe` | El elemento `<iframe>` del panel, para darle tamaño o estilo |
 
@@ -103,7 +105,8 @@ Eventos que recibe `onEvent`:
 | `error` | `code` | Se rechazó un mensaje; o `token_failed`: `getToken` falló tres veces seguidas; o `session_not_kept`: tres inicios de sesión seguidos terminaron antes de 30 segundos, así que este navegador no conserva la sesión del panel. Tras cualquiera de los dos últimos, el script deja de pedir tokens hasta que el panel vuelva a cargarse ([Solución de problemas](#solución-de-problemas)) |
 
 `mount` lanza un `Error` de inmediato cuando falta `enterpriseId` o `getToken`,
-cuando `locale` no es `'en'` ni `'es'`, o cuando `taskId` no es un UUID; `mount` y `setActions` también lanzan
+cuando `locale` no es `'en'` ni `'es'`, cuando `theme` no es `'light'` ni
+`'dark'`, o cuando `taskId` no es un UUID; `mount` y `setActions` también lanzan
 un error ante una acción con un nombre no válido, sin descripción o sin `run`. El tamaño lo decides tú: el
 panel llena el elemento. Una columna fija de unos
 400 píxeles de ancho funciona bien; el panel también funciona en el ancho de un
@@ -723,6 +726,19 @@ todos (**Siempre este aspecto**). **Desde una captura** propone colores a partir
 de una imagen de tu aplicación. Los colores que se leen mal se marcan antes de
 que puedas guardar.
 
+**El modo de tu página elige cuál de los dos juegos de colores muestra el
+panel.** Pasa `theme: 'light'` o `'dark'` a `mount` y llama a `setTheme` cuando
+tu página cambie. Una empresa que eligió **Siempre este aspecto** conserva ese
+único aspecto, pase lo que pase tu página. Sin `theme`, el panel sigue la
+configuración del sistema de quien lo visita. Para seguir tú mismo al
+dispositivo:
+
+```js
+const dark = window.matchMedia('(prefers-color-scheme: dark)');
+const panel = AptiveAI.mount('#assistant', { /* … */ theme: dark.matches ? 'dark' : 'light' });
+dark.addEventListener('change', (e) => panel.setTheme(e.matches ? 'dark' : 'light'));
+```
+
 ## Navegadores y cookies
 
 La sesión del panel se guarda en una **cookie de terceros particionada**
@@ -767,7 +783,8 @@ tu página y el frame del panel. Si no puedes usar el script, puedes hablar el
 protocolo directamente.
 
 **El frame.** Créalo con el id de tu empresa. Agrega `&lang=es` o `&lang=en` a
-la dirección para elegir el idioma del panel:
+la dirección para elegir el idioma del panel, y `&theme=light` o `&theme=dark`
+para que empiece en el modo de tu página:
 
 ```html
 <iframe
@@ -797,6 +814,7 @@ rechaza con `aptiveai:error` `unsupported_version`.
 | `aptiveai:context` | opcionales `page: { title, url }`, `record: { type, id, label }`, `note` | Lo que la persona tiene abierto. Envíalo cada vez que cambie; sin campos, borra el contexto |
 | `aptiveai:actions` | `actions: [{ name, description, label?, parameters? }]` | Las acciones de pantalla que ofreces. Enviarlo de nuevo reemplaza la lista; una lista vacía las retira. `label` (como máximo 80 caracteres) es tu propia redacción del paso en la transcripción |
 | `aptiveai:action-result` | `id`, `ok`, `message` opcional | Tu respuesta a un `aptiveai:action`: `ok: true` cuando se hizo, `ok: false` con un mensaje breve cuando no |
+| `aptiveai:theme` | `theme`: `light` o `dark` | El modo de tu página. Envíalo después de `aptiveai:ready` (de nuevo tras cada `aptiveai:ready`) y cada vez que tu página cambie |
 
 ### Del frame a tu página
 

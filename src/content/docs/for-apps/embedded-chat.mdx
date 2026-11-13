@@ -80,12 +80,14 @@ chat** shows the script tag for your account, ready to copy.
 | `onEvent` | Optional. Receives `{ type, … }` for `ready`, `signed-in`, `unavailable`, `session-expired`, `task` and `error` ([Troubleshooting](#troubleshooting)) |
 | `origin` | Optional. The address of AptiveAI Agents, such as `https://console.aptiveai.io`. By default it is read from the script's own address, so you only need it when you load the script some other way |
 | `locale` | Optional. `'en'` or `'es'`: opens the panel in English or Spanish, and it stays in that language as the person moves around it. Any other value makes `mount` throw. Without it, the person's own language setting applies |
+| `theme` | Optional. `'light'` or `'dark'`: your page's mode, so the panel matches it ([Theming](#theming)). Any other value makes `mount` throw. Without it, the panel follows the visitor's system setting |
 | `taskId` | Optional. A task's id (a UUID): the panel opens on that task instead of on a new one. Anything that is not a UUID makes `mount` throw. A task that does not exist, or is not the person's, shows as not available |
 
 | Handle | What it does |
 |---|---|
 | `setContext(context)` | Replaces the page context — call it whenever the person opens another page or record |
 | `setActions(actions)` | Replaces the list of screen actions; an empty list withdraws them |
+| `setTheme(mode)` | Switches the panel to `'light'` or `'dark'` when your page switches, live, without reloading: an open task stays open. Any other value throws |
 | `unmount()` | Removes the panel |
 | `iframe` | The panel's `<iframe>` element, to size or style it |
 
@@ -101,7 +103,8 @@ Events passed to `onEvent`:
 | `error` | `code` | A message was refused; or `token_failed`: `getToken` failed three times in a row; or `session_not_kept`: three sign-ins in a row ended within 30 seconds, so this browser is not keeping the panel's session. After either of the last two the script stops asking for tokens until the panel loads again ([Troubleshooting](#troubleshooting)) |
 
 `mount` throws an `Error` at once when `enterpriseId` or `getToken` is missing,
-`locale` is not `'en'` or `'es'`, or `taskId` is not a UUID; `mount` and `setActions` also throw for an
+`locale` is not `'en'` or `'es'`, `theme` is not `'light'` or `'dark'`, or
+`taskId` is not a UUID; `mount` and `setActions` also throw for an
 action with a bad name, no description or no `run`. Size the element yourself: the panel fills
 it. A docked column about 400 pixels
 wide works well; the panel also works at phone width.
@@ -711,6 +714,18 @@ everyone (**Always this look**). **From a screenshot** proposes colours from an
 image of your application. Colours that are hard to read are flagged before you
 can save.
 
+**Your page's mode picks which of the two colour sets the panel shows.** Pass
+`theme: 'light'` or `'dark'` to `mount`, and call `setTheme` when your page
+switches. An enterprise that chose **Always this look** keeps that one look,
+whatever your page passes. Without `theme`, the panel follows the visitor's
+system setting. To follow the device yourself:
+
+```js
+const dark = window.matchMedia('(prefers-color-scheme: dark)');
+const panel = AptiveAI.mount('#assistant', { /* … */ theme: dark.matches ? 'dark' : 'light' });
+dark.addEventListener('change', (e) => panel.setTheme(e.matches ? 'dark' : 'light'));
+```
+
 ## Browser support and cookies
 
 The panel's session is kept in a **partitioned third-party cookie**
@@ -754,7 +769,8 @@ page and the panel's frame. If you cannot use the script, you can speak the
 protocol yourself.
 
 **The frame.** Create it with your enterprise id. Add `&lang=es` or `&lang=en`
-to the address to choose the panel's language:
+to the address to choose the panel's language, and `&theme=light` or
+`&theme=dark` to start it in your page's mode:
 
 ```html
 <iframe
@@ -783,6 +799,7 @@ Every message is an object with a `type` and `v: 1`. A message with another
 | `aptiveai:context` | optional `page: { title, url }`, `record: { type, id, label }`, `note` | What the person has open. Send it whenever it changes; with no fields it clears the context |
 | `aptiveai:actions` | `actions: [{ name, description, label?, parameters? }]` | The screen actions you offer. Sending it again replaces the list; an empty list withdraws them. `label` (at most 80 characters) is your own wording for the step in the transcript |
 | `aptiveai:action-result` | `id`, `ok`, optional `message` | Your answer to an `aptiveai:action`: `ok: true` when it was done, `ok: false` with a short message when it was not |
+| `aptiveai:theme` | `theme`: `light` or `dark` | Your page's mode. Send it after `aptiveai:ready` (again after every `aptiveai:ready`) and whenever your page switches |
 
 ### The frame to your page
 
