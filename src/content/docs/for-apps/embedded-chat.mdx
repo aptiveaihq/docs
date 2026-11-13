@@ -79,9 +79,10 @@ chat** shows the script tag for your account, ready to copy.
 | `actions` | Optional. Screen actions the agent may ask your page to perform: `{ name, description, label, parameters, run(args) }` each. `label` and `parameters` (a JSON schema) are optional; `run` returns a result or throws ([Screen actions](#screen-actions)) |
 | `onEvent` | Optional. Receives `{ type, … }` for `ready`, `signed-in`, `unavailable`, `session-expired`, `task` and `error` ([Troubleshooting](#troubleshooting)) |
 | `origin` | Optional. The address of AptiveAI Agents, such as `https://console.aptiveai.io`. By default it is read from the script's own address, so you only need it when you load the script some other way |
-| `locale` | Optional. `'en'` or `'es'`: opens the panel in English or Spanish, and it stays in that language as the person moves around it. Any other value makes `mount` throw. Without it, the person's own language setting applies |
+| `locale` | Optional. `'en'` or `'es'`: opens the panel in English or Spanish, and it stays in that language as the person moves around it. Any other value makes `mount` throw. Without it, the panel uses the language last set inside it, else the browser's language, else English. It is read when the panel opens; to change it, `unmount()` and mount again |
 | `theme` | Optional. `'light'` or `'dark'`: your page's mode, so the panel matches it ([Theming](#theming)). Any other value makes `mount` throw. Without it, the panel follows the visitor's system setting |
 | `taskId` | Optional. A task's id (a UUID): the panel opens on that task instead of on a new one. Anything that is not a UUID makes `mount` throw. A task that does not exist, or is not the person's, shows as not available |
+| `agentId` | Optional. The agent the panel talks to (its id, a UUID) — see [Which agent answers](#which-agent-answers). With `taskId` too, the task opens and this agent is the one **New task** starts with. Anything that is not a UUID makes `mount` throw |
 
 | Handle | What it does |
 |---|---|
@@ -97,17 +98,31 @@ Events passed to `onEvent`:
 |---|---|---|
 | `ready` | — | The panel loaded and is asking for a token |
 | `signed-in` | — | The person is signed in |
-| `unavailable` | `reason` | The panel cannot sign the person in ([Troubleshooting](#troubleshooting)) |
+| `unavailable` | `reason` | The panel cannot sign the person in, and shows one sentence saying why ([Troubleshooting](#troubleshooting)). The script asks for no further token until the panel loads again |
 | `session-expired` | — | The panel's session ended; the script is already asking `getToken` for a new token |
 | `task` | `id`, `status` | A task started or was opened, or its status changed ([the statuses](#reopening-where-the-person-was)) |
 | `error` | `code` | A message was refused; or `token_failed`: `getToken` failed three times in a row; or `session_not_kept`: three sign-ins in a row ended within 30 seconds, so this browser is not keeping the panel's session. After either of the last two the script stops asking for tokens until the panel loads again ([Troubleshooting](#troubleshooting)) |
 
 `mount` throws an `Error` at once when `enterpriseId` or `getToken` is missing,
 `locale` is not `'en'` or `'es'`, `theme` is not `'light'` or `'dark'`, or
-`taskId` is not a UUID; `mount` and `setActions` also throw for an
+`taskId` or `agentId` is not a UUID; `mount` and `setActions` also throw for an
 action with a bad name, no description or no `run`. Size the element yourself: the panel fills
 it. A docked column about 400 pixels
 wide works well; the panel also works at phone width.
+
+### Which agent answers
+
+Without `agentId`, the panel works as AptiveAI Agents does: the person picks one
+of the agents they can use, or types with none. With `agentId`, the panel opens
+on that agent, **New task** inside the panel keeps it, and no agent list is
+offered, so a person never starts a task without it. If the person cannot use
+that agent — it is not shared with them, it was deleted, or it is not a regular
+agent — the panel says it is not available and your page hears `unavailable`
+with reason `no_agents`.
+
+When your application has one assistant, pass its agent's id as `agentId`:
+everyone then talks to the same agent, and nobody has to choose. To use another
+agent, `unmount()` and mount again with its id.
 
 ### Reopening where the person was
 
@@ -174,7 +189,11 @@ under **Settings → Embedded chat**.
 
 **Generate a new secret** replaces the secret at once: the old one stops
 working immediately, so update your server at the same time. Switching the
-embedded chat off stops the panel on every site and ends every panel session.
+embedded chat off ends every panel session: an open panel's next request is
+refused, the panel asks your page for a token, and that is answered
+`unavailable` with `disabled`. A panel opened while it is off still loads on
+your allowed origins, but signs nobody in and says the assistant is switched
+off.
 
 ### Who can use the panel
 
@@ -185,8 +204,9 @@ never creates one. Someone without an account sees *The assistant is not set up
 for you yet. Ask your administrator to invite you.*
 
 In the panel a person sees **the agents they may already use** in AptiveAI
-Agents, by the usual [sharing rules](/concepts/sharing). Standalone agents are
-not offered. Someone with no agent to use sees *You have no agents to work with
+Agents, by the usual [sharing rules](/concepts/sharing), unless your page names
+one with `agentId` ([Which agent answers](#which-agent-answers)). Standalone
+agents are not offered. Someone with no agent to use sees *You have no agents to work with
 yet. Ask your administrator to share one with you.*
 
 ## Sign-in, step by step
@@ -747,12 +767,12 @@ from your page is refused, it receives `{ type: 'error', code }`.
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| The panel area stays blank, and the browser's console reports a refusal to frame the page | Your page's origin is not in **Allowed origins**, or the embedded chat is off | Add the exact origin (scheme, host and port) in **Settings → Embedded chat** and switch it on |
-| `unavailable`, reason `disabled` | The embedded chat is switched off for the enterprise | An owner switches **Embedded chat on** |
+| The panel area stays blank, and the browser's console reports a refusal to frame the page | Your page's origin is not in **Allowed origins**, no origin is listed, or the enterprise id is wrong | Add the exact origin (scheme, host and port) in **Settings → Embedded chat**, and check the id you pass |
+| `unavailable`, reason `disabled` | The embedded chat is switched off for the enterprise. The panel still loads and says so, and every token is refused | An owner switches **Embedded chat on**. Send no more tokens until your page loads again |
 | `unavailable`, reason `bad_token` | The token was refused: wrong secret, wrong `iss` or `aud`, lifetime over 60 seconds, expired, clock far off, or a `jti` used twice | Sign with the current secret and the claims in [The token](#the-token); sign a new token on every call to `getToken`; check your server's clock |
 | `unavailable`, reason `no_account` | No account in your enterprise has the token's email | Invite the person — see [Users and roles](/administration/users) — or check that your server signs the email they have in AptiveAI |
 | `unavailable`, reason `account_unavailable` | The enterprise is paused, cancelled or suspended, or the person's account is suspended | The person asks their administrator; an owner checks [Billing and seats](/administration/billing) |
-| `unavailable`, reason `no_agents` | The person has no agent they may use | Share an agent with the person — see [Sharing](/concepts/sharing) |
+| `unavailable`, reason `no_agents` | The person has no agent they may use, or, with `agentId`, cannot use that agent (not shared with them, deleted, or not a regular agent) | Share the agent with the person — see [Sharing](/concepts/sharing) — or check the `agentId` you pass |
 | `error`, code `network` | The panel could not reach AptiveAI Agents while signing in | The script asks `getToken` for a new token by itself; check the person's connection if it repeats |
 | `error`, code `token_failed` | `getToken` failed three times in a row — it threw, returned no token, or the panel could not reach AptiveAI Agents | Check your token endpoint and the person's connection; the script tries again when the panel reloads |
 | `error`, code `session_not_kept` | Three sign-ins in a row ended within 30 seconds: the browser is not keeping the panel's session, usually because it blocks the panel's cookie. Firefox and Safari have not been verified | Try the panel in Chrome or Edge, and check the browser's settings for blocked third-party cookies. The script stops asking for tokens until the panel loads again |
@@ -769,8 +789,9 @@ page and the panel's frame. If you cannot use the script, you can speak the
 protocol yourself.
 
 **The frame.** Create it with your enterprise id. Add `&lang=es` or `&lang=en`
-to the address to choose the panel's language, and `&theme=light` or
-`&theme=dark` to start it in your page's mode:
+to the address to choose the panel's language, `&theme=light` or `&theme=dark`
+to start it in your page's mode, and `&agent=<agent id>` to name the agent it
+talks to ([Which agent answers](#which-agent-answers)):
 
 ```html
 <iframe
@@ -779,6 +800,14 @@ to the address to choose the panel's language, and `&theme=light` or
   allow="clipboard-write"
 ></iframe>
 ```
+
+**Who may frame it.** Only your allowed origins. For an unknown enterprise, or
+one with no allowed origins, nobody may. An enterprise that switched the
+embedded chat off still lets its allowed origins frame the panel, so the panel
+can say it is off: the frame loads, posts `aptiveai:ready`, and answers your
+`aptiveai:session` with `aptiveai:unavailable` reason `disabled`. Stop sending
+tokens then, until your page loads again; sending one on every
+`aptiveai:ready` only asks your server for tokens that will be refused.
 
 **Safety rules for your page:**
 
@@ -808,7 +837,7 @@ Every message is an object with a `type` and `v: 1`. A message with another
 | `aptiveai:ready` | — | The frame is listening. Send `aptiveai:session` |
 | `aptiveai:signed-in` | — | The person is signed in. Send `aptiveai:context` and `aptiveai:actions` now |
 | `aptiveai:session-expired` | — | The panel's session ended. Send a new `aptiveai:session` |
-| `aptiveai:unavailable` | `reason` | The person cannot be signed in: `no_account`, `disabled`, `bad_token`, `account_unavailable` or `no_agents` ([Troubleshooting](#troubleshooting)) |
+| `aptiveai:unavailable` | `reason` | The person cannot be signed in: `no_account`, `disabled`, `bad_token`, `account_unavailable` or `no_agents` ([Troubleshooting](#troubleshooting)). Send no more tokens until your page loads again |
 | `aptiveai:task` | `id`, `status` | A task started or was opened, or its status changed ([the statuses](#reopening-where-the-person-was)) |
 | `aptiveai:action` | `id`, `name`, `arguments` | The agent asks you to perform one of your actions. Answer with `aptiveai:action-result` and the same `id` |
 | `aptiveai:error` | `code` | A message of yours was refused (`unsupported_version`, `invalid_message`, `context_too_large`, `too_many_actions`, `invalid_action`), or `network`: the panel could not reach AptiveAI Agents while signing in — send a new token |
