@@ -3,7 +3,7 @@ title: Chat integrado
 description: Muestra AptiveAI Agents en un panel junto a las pantallas de tu aplicación. Agrega un script, inicia la sesión de tu gente desde tu servidor, dile al agente qué hay en pantalla y deja que abra registros para la persona. Configuración, inicio de sesión, contexto de la página, acciones de pantalla, tema, navegadores, solución de problemas y el protocolo de mensajes.
 ---
 
-import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { Aside, Steps, CardGrid, LinkCard, Tabs, TabItem } from '@astrojs/starlight/components';
 
 El **chat integrado** pone AptiveAI Agents en un panel dentro de tu
 aplicación. La persona elige uno de sus agentes, inicia una tarea, la sigue,
@@ -43,7 +43,7 @@ tuyo:
     getToken: async () => {
       const res = await fetch('/aptiveai/token', { method: 'POST', credentials: 'same-origin' });
       if (!res.ok) throw new Error('Could not get an AptiveAI token');
-      return (await res.json()).token;
+      return res.text();
     },
     context: {
       page: { title: 'Customers', url: location.href },
@@ -246,40 +246,218 @@ Se toleran hasta 30 segundos de diferencia entre el reloj de tu servidor y el de
 AptiveAI. Un token tiene como máximo 4.096 caracteres. Firma un token nuevo cada
 vez que el panel lo pida; nunca lo guardes para reutilizarlo.
 
-### Un endpoint de tokens en Node
+### Un endpoint de tokens
 
-Este ejemplo usa [`jose`](https://github.com/panva/jose) y una ruta al estilo de
-Express; `requireSignedIn` representa la forma en que tu aplicación comprueba
-su propia sesión.
+Cada ejemplo de abajo es un endpoint completo y mínimo. Toma el correo de la
+sesión iniciada en tu propia aplicación, responde `401` cuando no la hay y
+devuelve el token como texto plano, que es lo que lee `getToken` en el
+[inicio rápido](#inicio-rápido). Cada uno lee el id de tu empresa y el secreto
+de las variables de entorno `APTIVEAI_ENTERPRISE_ID` y `APTIVEAI_EMBED_SECRET`.
+
+<Aside type="note" title="Usa el secreto tal como lo muestra Ajustes">
+  La clave es el propio texto del secreto, en bytes UTF-8. Parece base64, pero
+  **no lo decodifiques**: un secreto decodificado firma tokens que se rechazan
+  como `bad_token`. El secreto tiene 43 caracteres (344 bits), más que el mínimo
+  de 256 bits que algunas bibliotecas, como Microsoft.IdentityModel, exigen para
+  HS256. Si una biblioteca dice que la clave es demasiado corta, comprueba que
+  el secreto no se haya decodificado, recortado ni cortado. No se exige ningún
+  encabezado `typ`; `typ: "JWT"` se acepta.
+</Aside>
+
+<Tabs syncKey="lang">
+  <TabItem label="Node.js">
 
 ```js
+// npm install express jose
+import express from 'express';
 import { SignJWT } from 'jose';
 import { randomUUID } from 'node:crypto';
 
 const ENTERPRISE_ID = process.env.APTIVEAI_ENTERPRISE_ID;
+// La clave son los bytes UTF-8 del secreto: no lo decodifiques de base64.
 const SECRET = new TextEncoder().encode(process.env.APTIVEAI_EMBED_SECRET);
 
-app.post('/aptiveai/token', requireSignedIn, async (req, res) => {
-  // The person signed in to YOUR application — never an email from the request.
-  const email = req.user.email;
-
+export async function signEmbedToken(email, audience = 'aptiveai-embed') {
   const now = Math.floor(Date.now() / 1000);
-  const token = await new SignJWT({})
-    .setProtectedHeader({ alg: 'HS256' })
+  return new SignJWT({})
+    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
     .setIssuer(ENTERPRISE_ID)
-    .setAudience('aptiveai-embed')
+    .setAudience(audience)
     .setSubject(email)
     .setIssuedAt(now)
     .setExpirationTime(now + 60)
     .setJti(randomUUID())
     .sign(SECRET);
+}
 
-  res.set('Cache-Control', 'no-store').json({ token });
+const app = express();
+// app.use(yourSession); — El inicio de sesión de tu propia aplicación, que debe identificar a la persona.
+
+app.post('/aptiveai/token', async (req, res) => {
+  // La persona con sesión iniciada en TU aplicación; nunca un correo de la solicitud.
+  const email = req.user?.email;
+  if (!email) return res.sendStatus(401);
+  res.set('Cache-Control', 'no-store').type('text/plain').send(await signEmbedToken(email));
 });
+
+app.listen(3000);
 ```
 
-Sirve cualquier biblioteca de JWT, en cualquier lenguaje, siempre que produzca
-los claims de arriba con HS256.
+  </TabItem>
+  <TabItem label="Python">
+
+```python
+# pip install fastapi uvicorn PyJWT
+import os
+import time
+import uuid
+
+import jwt  # PyJWT
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import PlainTextResponse
+
+ENTERPRISE_ID = os.environ["APTIVEAI_ENTERPRISE_ID"]
+# La clave son los bytes UTF-8 del secreto: no lo decodifiques de base64.
+SECRET = os.environ["APTIVEAI_EMBED_SECRET"].encode("utf-8")
+
+
+def sign_embed_token(email: str, audience: str = "aptiveai-embed") -> str:
+    now = int(time.time())
+    claims = {
+        "iss": ENTERPRISE_ID,
+        "aud": audience,
+        "sub": email,
+        "iat": now,
+        "exp": now + 60,
+        "jti": str(uuid.uuid4()),
+    }
+    return jwt.encode(claims, SECRET, algorithm="HS256")
+
+
+app = FastAPI()
+
+
+def signed_in_email(request: Request) -> str:
+    # La persona con sesión iniciada en TU aplicación; nunca un correo de la solicitud.
+    # El inicio de sesión de tu propia aplicación, que debe identificar a la persona.
+    user = getattr(request.state, "user", None)
+    if user is None:
+        raise HTTPException(status_code=401)
+    return user.email
+
+
+@app.post("/aptiveai/token", response_class=PlainTextResponse)
+def aptiveai_token(email: str = Depends(signed_in_email)):
+    return PlainTextResponse(sign_embed_token(email), headers={"Cache-Control": "no-store"})
+```
+
+  </TabItem>
+  <TabItem label="Java">
+
+```java
+// Maven: com.auth0:java-jwt:4.4.0 (with Spring Boot's spring-boot-starter-web and spring-boot-starter-security)
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import java.security.Principal;
+import java.time.Instant;
+import java.util.UUID;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AptiveAiTokenController {
+  static final String ENTERPRISE_ID = System.getenv("APTIVEAI_ENTERPRISE_ID");
+  // La clave son los bytes UTF-8 del secreto: no lo decodifiques de base64.
+  static final Algorithm HS256 = Algorithm.HMAC256(System.getenv("APTIVEAI_EMBED_SECRET"));
+
+  static String signEmbedToken(String email, String audience) {
+    Instant now = Instant.now();
+    return JWT.create()
+        .withIssuer(ENTERPRISE_ID)
+        .withAudience(audience)
+        .withSubject(email)
+        .withIssuedAt(now)
+        .withExpiresAt(now.plusSeconds(60))
+        .withJWTId(UUID.randomUUID().toString())
+        .sign(HS256);
+  }
+
+  @PostMapping(value = "/aptiveai/token", produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<String> token(Principal principal) {
+    // La persona con sesión iniciada en TU aplicación; nunca un correo de la solicitud.
+    if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    String email = principal.getName(); // Si el nombre de tu principal no es el correo, busca aquí el correo.
+    return ResponseEntity.ok()
+        .cacheControl(CacheControl.noStore())
+        .body(signEmbedToken(email, "aptiveai-embed"));
+  }
+}
+```
+
+  </TabItem>
+  <TabItem label="C#">
+
+```csharp
+// dotnet add package System.IdentityModel.Tokens.Jwt
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
+var enterpriseId = Environment.GetEnvironmentVariable("APTIVEAI_ENTERPRISE_ID")!;
+// La clave son los bytes UTF-8 del secreto: no lo decodifiques de base64.
+var signingKey = new SymmetricSecurityKey(
+    Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("APTIVEAI_EMBED_SECRET")!));
+
+string SignEmbedToken(string email, string audience = "aptiveai-embed")
+{
+    var now = DateTime.UtcNow;
+    var handler = new JwtSecurityTokenHandler();
+    var token = handler.CreateJwtSecurityToken(new SecurityTokenDescriptor
+    {
+        Issuer = enterpriseId,
+        Audience = audience,
+        Subject = new ClaimsIdentity(new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        }),
+        IssuedAt = now,
+        NotBefore = now,
+        Expires = now.AddSeconds(60),
+        SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
+    });
+    return handler.WriteToken(token);
+}
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAuthentication(/* El inicio de sesión de tu propia aplicación (cookie, OpenID Connect, …). */);
+builder.Services.AddAuthorization();
+var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapPost("/aptiveai/token", (ClaimsPrincipal user, HttpResponse response) =>
+{
+    // La persona con sesión iniciada en TU aplicación; nunca un correo de la solicitud.
+    var email = user.FindFirstValue(ClaimTypes.Email);
+    if (email is null) return Results.Unauthorized();
+    response.Headers.CacheControl = "no-store";
+    return Results.Text(SignEmbedToken(email));
+});
+
+app.Run();
+```
+
+  </TabItem>
+</Tabs>
+
+También sirve cualquier otra biblioteca de JWT, en cualquier lenguaje, siempre
+que produzca los claims de arriba con HS256.
 
 ### La sesión del panel
 
@@ -318,29 +496,101 @@ revocación nunca inicia la sesión de nadie.
 | `401 { "ok": false, "reason": "disabled" }` | El chat integrado está desactivado para tu empresa, así que todas las sesiones ya terminaron |
 | `429` | Más de 60 llamadas por minuto desde tu servidor; espera los segundos de `Retry-After` |
 
-```js
-import { SignJWT } from 'jose';
-import { randomUUID } from 'node:crypto';
+Cada ejemplo reutiliza la función de firma del
+[endpoint de tokens](#un-endpoint-de-tokens), con la audiencia de revocación, y
+lee la dirección de AptiveAI Agents de `APTIVEAI_CONSOLE_URL`, que por defecto
+es `https://console.aptiveai.io`.
 
-export async function endEmbedSessions({ consoleUrl, enterpriseId, secret, email }) {
-  const now = Math.floor(Date.now() / 1000);
-  const token = await new SignJWT({})
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuer(enterpriseId)
-    .setAudience('aptiveai-embed-revoke')
-    .setSubject(email)
-    .setIssuedAt(now)
-    .setExpirationTime(now + 60)
-    .setJti(randomUUID())
-    .sign(new TextEncoder().encode(secret));
-  const res = await fetch(`${consoleUrl}/api/embed/session/revoke`, {
+<Tabs syncKey="lang">
+  <TabItem label="Node.js">
+
+```js
+// Usa signEmbedToken del endpoint de tokens de arriba.
+const CONSOLE_URL = process.env.APTIVEAI_CONSOLE_URL ?? 'https://console.aptiveai.io';
+
+export async function endEmbedSessions(email) {
+  const token = await signEmbedToken(email, 'aptiveai-embed-revoke');
+  const res = await fetch(`${CONSOLE_URL}/api/embed/session/revoke`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token }),
   });
-  return res.json(); // { ok: true, ended } or { ok: false, reason }
+  return res.json(); // { ok: true, ended } o { ok: false, reason }
 }
 ```
+
+  </TabItem>
+  <TabItem label="Python">
+
+```python
+# Usa sign_embed_token del endpoint de tokens de arriba.
+import json
+import urllib.request
+
+CONSOLE_URL = os.environ.get("APTIVEAI_CONSOLE_URL", "https://console.aptiveai.io")
+
+
+def end_embed_sessions(email: str) -> dict:
+    body = json.dumps({"token": sign_embed_token(email, "aptiveai-embed-revoke")}).encode("utf-8")
+    request = urllib.request.Request(
+        f"{CONSOLE_URL}/api/embed/session/revoke",
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    # Un 401 o un 429 lanza urllib.error.HTTPError.
+    with urllib.request.urlopen(request) as response:
+        return json.load(response)
+```
+
+  </TabItem>
+  <TabItem label="Java">
+
+```java
+// Usa signEmbedToken del endpoint de tokens de arriba.
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class AptiveAiSessions {
+  static final String CONSOLE_URL =
+      System.getenv().getOrDefault("APTIVEAI_CONSOLE_URL", "https://console.aptiveai.io");
+  // HTTP/1.1: algunos servidores cortan el upgrade a HTTP/2 que Java intenta por http.
+  static final HttpClient HTTP =
+      HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
+
+  public static String endEmbedSessions(String email) throws Exception {
+    String token = AptiveAiTokenController.signEmbedToken(email, "aptiveai-embed-revoke");
+    HttpRequest request = HttpRequest.newBuilder(URI.create(CONSOLE_URL + "/api/embed/session/revoke"))
+        .header("Content-Type", "application/json")
+        .POST(HttpRequest.BodyPublishers.ofString("{\"token\":\"" + token + "\"}"))
+        .build();
+    return HTTP.send(request, HttpResponse.BodyHandlers.ofString()).body(); // { ok: true, ended } o { ok: false, reason }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem label="C#">
+
+```csharp
+// Usa SignEmbedToken del endpoint de tokens de arriba.
+using System.Net.Http.Json;
+
+var consoleUrl = Environment.GetEnvironmentVariable("APTIVEAI_CONSOLE_URL") ?? "https://console.aptiveai.io";
+var http = new HttpClient();
+
+async Task<string> EndEmbedSessions(string email)
+{
+    var token = SignEmbedToken(email, "aptiveai-embed-revoke");
+    var res = await http.PostAsJsonAsync($"{consoleUrl}/api/embed/session/revoke", new { token });
+    return await res.Content.ReadAsStringAsync(); // { ok: true, ended } o { ok: false, reason }
+}
+```
+
+  </TabItem>
+</Tabs>
 
 Llámalo:
 
