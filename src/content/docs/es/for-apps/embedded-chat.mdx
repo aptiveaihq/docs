@@ -84,7 +84,8 @@ para copiar.
 | `locale` | Opcional. `'en'` o `'es'`: abre el panel en inglés o en español, y se mantiene en ese idioma mientras la persona se mueve por él. Cualquier otro valor hace que `mount` lance un error. Sin esta opción, el panel usa el idioma elegido por última vez dentro de él; si no, el del navegador; si no, inglés. Se lee al abrir el panel; para cambiarlo, llama a `unmount()` y vuelve a montarlo |
 | `theme` | Opcional. `'light'` o `'dark'`: el modo de tu página, para que el panel coincida con él ([Tema](#tema)). Cualquier otro valor hace que `mount` lance un error. Sin esta opción, el panel sigue la configuración del sistema de quien lo visita |
 | `taskId` | Opcional. El id de una tarea (un UUID): el panel se abre en esa tarea en lugar de en una nueva. Cualquier valor que no sea un UUID hace que `mount` lance un error. Una tarea que no existe, o que no es de la persona, aparece como no disponible |
-| `agentId` | Opcional. El agente con el que habla el panel (su id, un UUID) — consulta [Qué agente responde](#qué-agente-responde). Si también pasas `taskId`, se abre la tarea y este es el agente con el que empieza **Nueva tarea**. Cualquier valor que no sea un UUID hace que `mount` lance un error |
+| `agentId` | Opcional. El único agente con el que habla el panel (su id, un UUID); la persona no puede elegir — consulta [Qué agente responde](#qué-agente-responde). Si también pasas `taskId`, se abre la tarea y este es el agente con el que empieza **Nueva tarea**. Cualquier valor que no sea un UUID hace que `mount` lance un error |
+| `defaultAgentId` | Opcional. El agente en el que se abre el panel (su id, un UUID); la persona puede cambiarlo — consulta [Qué agente responde](#qué-agente-responde). No junto con `agentId`. Cualquier valor que no sea un UUID hace que `mount` lance un error |
 
 | Objeto de control | Qué hace |
 |---|---|
@@ -101,14 +102,16 @@ Eventos que recibe `onEvent`:
 | `ready` | — | El panel se cargó y pide un token |
 | `signed-in` | — | La persona inició sesión |
 | `unavailable` | `reason` | El panel no puede iniciar la sesión de la persona y muestra una frase que explica por qué ([Solución de problemas](#solución-de-problemas)). El script no pide más tokens hasta que el panel vuelva a cargarse |
-| `session-expired` | — | La sesión del panel terminó; el script ya le está pidiendo un token nuevo a `getToken` |
+| `session-expired` | — | La sesión del panel terminó; el script ya le está pidiendo un token nuevo a `getToken`: de inmediato tras una sesión que duró, o tras una pausa creciente (1 segundo, luego 2) cuando una terminó antes de 30 segundos de iniciarse |
 | `task` | `id`, `status` | Una tarea empezó o se abrió, o cambió de estado ([los estados](#volver-a-donde-estaba-la-persona)) |
 | `error` | `code` | Se rechazó un mensaje; o `token_failed`: `getToken` falló tres veces seguidas; o `session_not_kept`: tres inicios de sesión seguidos terminaron antes de 30 segundos, así que este navegador no conserva la sesión del panel. Tras cualquiera de los dos últimos, el script deja de pedir tokens hasta que el panel vuelva a cargarse ([Solución de problemas](#solución-de-problemas)) |
 
-`mount` lanza un `Error` de inmediato cuando falta `enterpriseId` o `getToken`,
-cuando `locale` no es `'en'` ni `'es'`, cuando `theme` no es `'light'` ni
-`'dark'`, o cuando `taskId` o `agentId` no es un UUID; `mount` y `setActions` también lanzan
-un error ante una acción con un nombre no válido, sin descripción o sin `run`. El tamaño lo decides tú: el
+`mount` lanza un `Error` de inmediato cuando falta el elemento, falta
+`enterpriseId`, `getToken` no es una función, `locale` no es `'en'` ni `'es'`,
+`theme` no es `'light'` ni `'dark'`, `taskId`, `agentId` o `defaultAgentId` no
+es un UUID, o se pasan a la vez `agentId` y `defaultAgentId`; `mount` y
+`setActions` también lanzan un error ante una acción con un nombre no válido,
+un nombre repetido, sin descripción o sin `run`. El tamaño lo decides tú: el
 panel llena el elemento. Una columna fija de unos
 400 píxeles de ancho funciona bien; el panel también funciona en el ancho de un
 teléfono.
@@ -123,9 +126,24 @@ no puede usar ese agente — no está compartido con ella, se eliminó o no es u
 agente normal —, el panel dice que no está disponible y tu página recibe
 `unavailable` con el motivo `no_agents`.
 
+Con `defaultAgentId`, el panel se abre en ese agente pero no obliga a la
+persona a usarlo: el agente aparece como una etiqueta sobre el cuadro de
+mensaje, su ✕ lo quita y muestra los demás agentes de la persona, y **Nueva
+tarea** vuelve a abrirse en el agente por defecto. Un agente por defecto que la
+persona no puede usar se ignora, y el panel muestra sus agentes como lo haría
+sin la opción.
+
+| Pasas | El panel se abre en | La persona puede cambiar de agente |
+|---|---|---|
+| `agentId` | Ese agente | No |
+| `defaultAgentId` | Ese agente | Sí, entre los agentes compartidos con ella |
+| Ninguno | La lista de sus agentes | Sí |
+
 Cuando tu aplicación tiene un solo asistente, pasa el id de su agente como
-`agentId`: así todos hablan con el mismo agente y nadie tiene que elegir. Para
-usar otro agente, llama a `unmount()` y vuelve a montarlo con su id.
+`agentId`: así todos hablan con el mismo agente y nadie tiene que elegir.
+Cuando tiene un asistente habitual y otros para trabajos concretos, pasa el
+habitual como `defaultAgentId`. Para usar otro agente, llama a `unmount()` y
+vuelve a montarlo con su id.
 
 ### Volver a donde estaba la persona
 
@@ -162,6 +180,75 @@ advertencia que explica por qué. El script nunca sobrescribe una variable
 global que no sea suya: si `AptiveAI` también está ocupada, no instala nada y
 registra un error con los nombres que no pudo usar. Si el script se carga dos
 veces, se conserva la primera copia.
+
+## Cómo se comunican tu página y el panel
+
+El panel es un `<iframe>` que AptiveAI sirve desde su propio origen,
+`https://console.aptiveai.io`. En el navegador, tu página y el panel son dos
+sitios distintos, así que ninguno puede meterse en el otro: se comunican **solo
+con `window.postMessage`**, en la versión 1 de un pequeño protocolo donde cada
+mensaje es un objeto `{ type, v: 1, … }`. El script — `AptiveAI.mount` — lo
+habla por ti; esta sección cuenta lo que hace en tu nombre. El protocolo
+completo está en [Avanzado: el protocolo de
+mensajes](#avanzado-el-protocolo-de-mensajes).
+
+### Quién envía qué, y cuándo
+
+1. **Tu página crea el frame** (lo hace el script, en `mount`). AptiveAI deja
+   que el navegador lo muestre solo en tus orígenes permitidos.
+2. **El frame se carga y envía `aptiveai:ready`.**
+3. **Tu página le pide un token a TU servidor** (`getToken`). Tu servidor
+   firma uno para la persona que tiene la sesión iniciada en tu aplicación,
+   válido como máximo 60 segundos y de un solo uso.
+4. **Tu página envía `aptiveai:session`** con ese token al frame.
+5. **AptiveAI verifica el token y abre una sesión** para esa persona, solo
+   dentro del frame.
+6. **El frame envía `aptiveai:signed-in`** — o `aptiveai:unavailable` con un
+   motivo, cuando no puede iniciar la sesión de la persona.
+7. **A partir de ahí**, tu página envía `aptiveai:context`, `aptiveai:actions`
+   y `aptiveai:theme` cada vez que cambian. El frame envía `aptiveai:task`
+   cuando las tareas empiezan y cambian, `aptiveai:action` cuando el agente
+   pide una de tus acciones de pantalla — a la que tu página responde con
+   `aptiveai:action-result`, con el mismo `id` —, `aptiveai:session-expired`
+   cuando la sesión termina (vuelta al paso 3) y `aptiveai:error` cuando
+   rechaza uno de tus mensajes.
+
+| Tu página → el panel | El panel → tu página |
+|---|---|
+| `aptiveai:session` — un token nuevo | `aptiveai:ready` — escuchando; envía un token |
+| `aptiveai:context` — lo que la persona tiene abierto | `aptiveai:signed-in` — la persona inició sesión |
+| `aptiveai:actions` — las acciones de pantalla que ofreces | `aptiveai:task` — una tarea empezó, se abrió o cambió de estado |
+| `aptiveai:theme` — el modo claro u oscuro de tu página | `aptiveai:action` — el agente pide una acción de pantalla |
+| `aptiveai:action-result` — tu respuesta a `aptiveai:action` | `aptiveai:session-expired` — envía un token nuevo |
+| | `aptiveai:unavailable` — no puede iniciar la sesión de esta persona, y por qué |
+| | `aptiveai:error` — se rechazó uno de tus mensajes |
+
+### Lo que nunca cruza el límite
+
+- **El secreto de firma se queda en tu servidor.** Por tu página solo pasa un
+  token firmado, válido 60 segundos y una sola vez.
+- **Tu página no puede leer el panel**: ni la conversación, ni las tareas, ni
+  su cookie de sesión. Solo recibe los mensajes de la tabla anterior.
+- **El panel no puede leer tu página**: ni su DOM, ni sus cookies, ni su
+  almacenamiento. El agente sabe solo lo que envías como contexto y lo que
+  responden tus acciones de pantalla.
+
+### Comprobación del origen, en los dos lados
+
+- El frame se carga **solo en tus orígenes permitidos** (**Ajustes → Chat
+  integrado**); el navegador se niega a mostrarlo en cualquier otro lugar.
+- El panel envía mensajes solo al origen de tu página y lee un mensaje solo
+  cuando viene de la página que lo incrustó, en uno de tus orígenes
+  permitidos.
+- Tu página envía mensajes al frame con su origen exacto como destino — nunca
+  `*` — y acepta un mensaje solo cuando `event.origin` es el origen de la
+  consola y `event.source` es el `contentWindow` del frame.
+
+El script hace todo esto por ti: crea el frame, responde a cada
+`aptiveai:ready` y `aptiveai:session-expired` con un token de `getToken`,
+envía tu contexto, tus acciones y tu tema, ejecuta el `run` de tus acciones y
+aplica las comprobaciones de origen. Nunca pone un token en una URL, en el
+almacenamiento ni en un registro.
 
 Antes de que el panel pueda iniciar la sesión de alguien, actívalo en AptiveAI
 Agents y agrega a tu servidor un endpoint de tokens: las dos secciones
@@ -203,9 +290,11 @@ sesión de nadie y dice que el asistente está desactivado.
 ### Quién puede usar el panel
 
 Cada persona que usa el panel necesita una **cuenta de AptiveAI en tu
-empresa**, creada por invitación — consulta [Usuarios y
-roles](/es/administration/users). El token responde por una persona que ya
-existe; nunca la crea. Quien no tiene cuenta ve *El asistente aún no está
+empresa**. La crea un propietario por invitación — consulta [Usuarios y
+roles](/es/administration/users) — o tu servidor con la [API de
+Aprovisionamiento](/es/for-apps/account-api) (`PUT /members/{email}`), que no
+le envía ningún correo a la persona ni le pone contraseña. El token responde
+por una persona que ya existe; nunca la crea. Quien no tiene cuenta ve *El asistente aún no está
 configurado para usted. Pida a su administrador que lo invite.*
 
 En el panel una persona ve **los agentes que ya puede usar** en AptiveAI
@@ -214,6 +303,15 @@ siempre, salvo que tu página indique uno con `agentId` ([Qué agente
 responde](#qué-agente-responde)). Los agentes independientes no se ofrecen. Quien no tiene ningún agente
 que usar ve *Aún no tiene agentes con los que trabajar. Pida a su administrador
 que comparta uno con usted.*
+
+Una persona **sin puesto** cuenta como si no tuviera ningún agente que usar
+(`no_agents`), salvo en una **cuenta que paga solo con su billetera** — una
+donde nadie tiene puesto ([Una cuenta que paga solo con su
+billetera](/es/for-apps/agents-api#una-cuenta-que-paga-solo-con-su-billetera)).
+Ahí, las personas sin puesto usan el panel, y cada una de sus tareas se paga
+con la billetera a la misma tarifa que la API de Agentes. Una tarea se rechaza
+antes de empezar cuando la billetera tiene menos de $0.05, y el panel le dice
+a la persona que le pida a su administrador que agregue fondos.
 
 ## El inicio de sesión, paso a paso
 
@@ -734,6 +832,89 @@ Las acciones de pantalla son **de mejor esfuerzo**:
 | `parameters` | Un JSON schema de `type: "object"` con `properties` (y `required` opcional), como máximo 2 KB |
 | El mensaje con que responde una acción | Como máximo 300 caracteres; lo que sobra se corta |
 
+## Tu propio sistema, como cada persona
+
+Cuando el agente trabaja en el sistema de tu propia aplicación, dale un
+[conector](/es/concepts/connectors) a tu servidor MCP y configúralo como
+**Cada persona inicia sesión**: así cada persona inicia sesión en tu servidor
+como ella misma, y cada acción que el agente hace ahí lleva el token de esa
+persona, nunca el de un administrador.
+
+### Lo que tu servidor debe ofrecer
+
+Un servidor MCP por Streamable HTTP que inicie la sesión de las personas con
+OAuth, como describe la especificación de autorización de MCP:
+
+- Una llamada sin autenticar responde `401`, y tu servidor publica sus
+  metadatos de recurso protegido (RFC 9728) con el nombre de su servidor de
+  autorización.
+- El servidor de autorización publica sus metadatos (RFC 8414) y admite PKCE
+  con `S256`, el parámetro `resource` (RFC 8707), tokens de actualización y el
+  registro dinámico de clientes (RFC 7591). AptiveAI registra un cliente para
+  cada inicio de sesión, con la URI de redirección
+  `https://console.aptiveai.io/api/embed/connect/callback` (y
+  `https://console.aptiveai.io/api/connectors/oauth/callback` para un inicio de
+  sesión hecho dentro de AptiveAI Agents).
+- Emite un token para **la persona que inicia sesión**, y tu servidor MCP
+  actúa como esa persona con él. Un token que actúa como una cuenta de servicio
+  fija le quita todo el sentido.
+- Dice qué cuenta inició sesión, con un `email` de un endpoint de userinfo o
+  dentro de un access token JWT (con `email_verified: true` cuando tu servidor
+  lo ha verificado).
+
+<Aside type="caution" title="La regla del correo">
+  AptiveAI rechaza un inicio de sesión cuando **cualquier** correo que indique
+  tu servidor — verificado, sin verificar o sin indicación de verificación — no
+  es el de la persona del panel (sin distinguir mayúsculas ni espacios): no se
+  conecta nada, así que un enlace reenviado no puede conectar la cuenta de otra
+  persona. Si tu servidor no indica ningún correo, solo la página de
+  confirmación de abajo protege de eso.
+</Aside>
+
+### Lo que configura un administrador
+
+Un administrador conecta tu servidor una vez en AptiveAI Agents
+(**Conectores → Servidor MCP personalizado**, autenticación **El inicio de
+sesión del propio servidor**), le da la conexión al agente que monta tu panel y
+elige **Cada persona inicia sesión** en **Quién inicia sesión**. Esa primera
+conexión solo indica el servidor y las herramientas que el agente puede usar;
+sobre ella no se ejecuta el trabajo de nadie más.
+
+Para una persona solo se usa **su propia** conexión a esa dirección exacta —
+el inicio de sesión del panel siempre la hace a esa dirección, envíe lo que
+envíe el navegador —, y no ofrece ninguna herramienta que no ofrezca la del
+administrador. Si no la tiene, la herramienta no se ejecuta.
+
+### Lo que ve una persona la primera vez
+
+1. Cuando el agente necesita tu sistema por primera vez, el chat pregunta:
+   *host.example aún no está conectado para ti. Conéctalo para que pueda
+   continuar.* con **Iniciar sesión en host.example** y **Ahora no**.
+2. **Iniciar sesión en host.example** abre una pestaña nueva (el panel nunca
+   sale de tu página; permite la pestaña si el navegador lo pregunta). Primero
+   dice *Vas a conectar host.example para Pat Example (pat@example.test) en
+   Northwind Desk. Si no eres tú, cierra esta pestaña.* — con el nombre de para
+   quién es la conexión, y en qué cuenta — y un botón **Continuar**.
+3. **Continuar** lleva a la página de inicio de sesión de tu propio servidor.
+4. Después de iniciar sesión, la pestaña dice *Ya estás conectado. Cierra esta
+   pestaña y vuelve al chat.* y la tarea continúa sola. La próxima vez no se
+   pregunta nada.
+
+La pestaña funciona sin ninguna sesión de AptiveAI: lleva un **enlace de un
+solo uso, válido diez minutos**, que solo puede hacer la conexión de esa
+persona a tu servidor, para la tarea que la pidió. Si tarda más, o el inicio de
+sesión falla, el chat lo dice y la persona puede volver a elegir **Iniciar
+sesión**. **Ahora no** deja que el agente continúe sin tu sistema.
+
+### Comprobar que nadie actúa como otra persona
+
+Antes de abrir el panel a personas que no son administradoras, consulta
+[`GET /connectors`](/es/for-apps/account-api#get-connectors) con la API de
+Aprovisionamiento desde tu servidor: lista cada conexión a una dirección de
+servidor, de quién es y con quién está compartida, y cómo la usa cada agente.
+Para el agente que montas, su permiso en la dirección de tu servidor debe ser
+`per_person`, y ninguna conexión a esa dirección debe estar compartida.
+
 ## Tema
 
 Sin tema, el panel se ve como AptiveAI Agents. Para que combine con tu
@@ -765,11 +946,11 @@ La sesión del panel se guarda en una **cookie de terceros particionada**
 panel dentro de tu sitio, separada de cualquier otro sitio, y nunca se
 convierte en la sesión normal de la persona en AptiveAI Agents.
 
-<Aside type="caution" title="Firefox y Safari todavía no se han verificado">
-  El panel se ha verificado en **Chrome y Edge** (Chromium). **No se ha
-  verificado en Firefox ni en Safari** (en macOS o iOS). Si tu gente usa
-  alguno de los dos, prueba el panel ahí, en un dispositivo real, antes de
-  depender de él.
+<Aside type="caution" title="Safari todavía no se ha verificado">
+  El panel se ha verificado en **navegadores basados en Chromium** (como
+  Chrome y Edge) y en **Firefox**. **No se ha verificado en Safari** (en macOS
+  o iOS). Si tu gente usa Safari, prueba el panel ahí, en un dispositivo real,
+  antes de depender de él.
 </Aside>
 
 ## Solución de problemas
@@ -784,11 +965,11 @@ mensaje de tu página, recibe `{ type: 'error', code }`.
 | `unavailable`, motivo `disabled` | El chat integrado está desactivado para la empresa. El panel se carga igual y lo indica, y se rechaza cualquier token | Un propietario activa **Chat integrado activado**. No envíes más tokens hasta que tu página vuelva a cargarse |
 | `unavailable`, motivo `bad_token` | Se rechazó el token: secreto equivocado, `iss` o `aud` equivocados, vigencia de más de 60 segundos, vencido, reloj muy desfasado o un `jti` usado dos veces | Firma con el secreto actual y los claims de [El token](#el-token); firma un token nuevo en cada llamada a `getToken`; revisa el reloj de tu servidor |
 | `unavailable`, motivo `no_account` | Ninguna cuenta de tu empresa tiene el correo del token | Invita a la persona — consulta [Usuarios y roles](/es/administration/users) — o comprueba que tu servidor firma el correo que la persona tiene en AptiveAI |
-| `unavailable`, motivo `account_unavailable` | La empresa está pausada, cancelada o suspendida, o la cuenta de la persona está suspendida | La persona consulta a su administrador; un propietario revisa [Facturación y puestos](/es/administration/billing) |
-| `unavailable`, motivo `no_agents` | La persona no tiene ningún agente que pueda usar o, con `agentId`, no puede usar ese agente (no está compartido con ella, se eliminó o no es un agente normal) | Comparte el agente con la persona — consulta [Compartir](/es/concepts/sharing) — o revisa el `agentId` que pasas |
+| `unavailable`, motivo `account_unavailable` | La empresa está pausada, bloqueada o cancelada, o la cuenta de la persona está suspendida | La persona consulta a su administrador; un propietario revisa [Facturación y puestos](/es/administration/billing) |
+| `unavailable`, motivo `no_agents` | La persona no tiene ningún agente que pueda usar o, con `agentId`, no puede usar ese agente (no está compartido con ella, se eliminó o no es un agente normal). Una persona sin puesto cuenta como si no tuviera ninguno, salvo en una cuenta que paga solo con su billetera | Comparte el agente con la persona — consulta [Compartir](/es/concepts/sharing) —, revisa el `agentId` que pasas o dale un puesto a la persona |
 | `error`, código `network` | El panel no pudo comunicarse con AptiveAI Agents al iniciar la sesión | El script le pide por sí solo un token nuevo a `getToken`; si se repite, revisa la conexión de la persona |
 | `error`, código `token_failed` | `getToken` falló tres veces seguidas: lanzó un error, no devolvió un token o el panel no logró comunicarse con AptiveAI Agents | Revisa tu endpoint de tokens y la conexión de la persona; el script vuelve a intentarlo cuando el panel se recarga |
-| `error`, código `session_not_kept` | Tres inicios de sesión seguidos terminaron antes de 30 segundos: el navegador no conserva la sesión del panel, normalmente porque bloquea su cookie. Firefox y Safari no se han verificado | Prueba el panel en Chrome o Edge y revisa si el navegador bloquea las cookies de terceros. El script deja de pedir tokens hasta que el panel vuelva a cargarse |
+| `error`, código `session_not_kept` | Tres inicios de sesión seguidos terminaron antes de 30 segundos: el navegador no conserva la sesión del panel, normalmente porque bloquea su cookie. Safari no se ha verificado | Prueba el panel en un navegador basado en Chromium o en Firefox y revisa si el navegador bloquea las cookies de terceros. El script deja de pedir tokens hasta que el panel vuelva a cargarse |
 | `error`, código `context_too_large` | El contexto pasa de 4 KB | Envía menos: una etiqueta y un id bastan |
 | `error`, código `too_many_actions` | Más de 20 acciones | Declara menos |
 | `error`, código `invalid_action` | Una acción incumple una regla de arriba: su nombre, su descripción, su schema `parameters`, un tamaño, o dos con el mismo nombre | Corrige la acción; toda la lista se rechaza hasta que sea válida |
@@ -803,8 +984,9 @@ protocolo directamente.
 
 **El frame.** Créalo con el id de tu empresa. Agrega `&lang=es` o `&lang=en` a
 la dirección para elegir el idioma del panel, `&theme=light` o `&theme=dark`
-para que empiece en el modo de tu página, y `&agent=<agent id>` para indicar el
-agente con el que habla ([Qué agente responde](#qué-agente-responde)):
+para que empiece en el modo de tu página, `&agent=<agent id>` para indicar el
+único agente con el que habla, o `&default_agent=<agent id>` para indicar el
+agente en el que se abre ([Qué agente responde](#qué-agente-responde)):
 
 ```html
 <iframe
@@ -831,6 +1013,9 @@ le pide a tu servidor tokens que se van a rechazar.
   `https://console.aptiveai.io` **y** `event.source` sea el `contentWindow`
   del frame.
 - Ignora los mensajes cuyo `type` no empiece por `aptiveai:`.
+
+El frame acepta `aptiveai:context` y `aptiveai:actions` en cuanto ha enviado
+`aptiveai:ready`.
 
 Cada mensaje es un objeto con un `type` y `v: 1`. Un mensaje con otro `v` se
 rechaza con `aptiveai:error` `unsupported_version`.
@@ -876,7 +1061,8 @@ Un mensaje que pasa un límite se rechaza con `aptiveai:error` y no tiene efecto
 ## Siguiente
 
 <CardGrid>
-  <LinkCard title="AptiveAI for Apps" href="/es/for-apps/overview" description="Las dos partes, quién las configura y cómo se pagan." />
+  <LinkCard title="AptiveAI for Apps" href="/es/for-apps/overview" description="Cada parte, quién la configura y cómo se paga." />
   <LinkCard title="API de Agentes" href="/es/for-apps/agents-api" description="Llama a un agente desde tu servidor, sin panel." />
+  <LinkCard title="API de Aprovisionamiento" href="/es/for-apps/account-api" description="Agrega a las personas del panel, define sus puestos y revisa sus conexiones desde tu propia pantalla de administración." />
   <LinkCard title="Conectores" href="/es/concepts/connectors" description="Cómo el agente lee y escribe de verdad los datos de tu aplicación." />
 </CardGrid>
