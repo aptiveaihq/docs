@@ -1,6 +1,6 @@
 ---
 title: AptiveAI for Apps
-description: Make AptiveAI the AI of an application that has none — call your agents from its server over an OpenAI-compatible API, or show AptiveAI Agents in a chat panel beside its screens. Who sets it up, how it is paid for, and which one you need.
+description: Make AptiveAI the AI of an application that has none — call your agents from its server over an OpenAI-compatible API, show AptiveAI Agents in a chat panel beside its screens, transcribe live speech, and manage the account's people from your own admin screen. Who sets it up, how it is paid for, and which one you need.
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -13,7 +13,7 @@ its model, its [connectors](/concepts/connectors)) and let the application use
 it. Changing a prompt or a model is then a change in AptiveAI, not a release of
 your application.
 
-It comes in two parts, and you can use either or both:
+It comes in four parts, and you can use any of them:
 
 - **The [Agents API](/for-apps/agents-api)** — your application's server calls
   an agent the way it would call a model, through an OpenAI-compatible chat
@@ -23,6 +23,14 @@ It comes in two parts, and you can use either or both:
   Agents inside your application's own pages. Your application signs its
   people in, can tell the agent what the person has open, and can let the agent
   change what the person sees, such as opening a record.
+- **The [Speech API](/for-apps/speech-api)** — live speech-to-text over a
+  WebSocket, for dictation or a voice feature in your application. Your server
+  trades its key for a short-lived token; the browser streams the audio.
+- **The [Provisioning API](/for-apps/account-api)** — your own admin screen
+  manages the AptiveAI account behind your application: adds people (with no
+  password and no email from AptiveAI), sets or frees their seats, removes
+  them, switches services on or off, and checks who could act through each
+  connection to your systems.
 
 The examples on these pages use an invented host application, *Northwind
 Desk*, and an invented person, *Jane Sample*.
@@ -36,42 +44,50 @@ Desk*, and an invented person, *Jane Sample*.
 | An answer computed on your server, with no person present | **[Agents API](/for-apps/agents-api)** |
 | An agent that works on a [computer](/concepts/agents) with a browser, asks for approvals, or runs for minutes | **[Embedded chat](/for-apps/embedded-chat)** — a task started there is an ordinary task |
 | The agent to open a record or switch a view in your application while it answers | **[Embedded chat](/for-apps/embedded-chat)**, with screen actions |
+| Live dictation or another voice feature | **[Speech API](/for-apps/speech-api)** |
+| To add your people to AptiveAI, and set their seats, from your own admin screen | **[Provisioning API](/for-apps/account-api)** |
 
 The Agents API answers within one request: it has no computer, no approval
 cards and no stored transcript. The embedded chat is AptiveAI Agents itself,
 shown inside your application, so everything a task can do, a task started
 there can do.
 
-Streaming speech-to-text for your application is in preview and is not
-documented here yet.
-
 ## Who sets it up
 
-Both parts are set up by an **owner of your enterprise**, in **Settings** of
+Every part is set up by an **owner of your enterprise**, in **Settings** of
 AptiveAI Agents:
 
 | Section | What it is for |
 |---|---|
-| **Settings → API keys** | Keys your application's server uses to call the Agents API, each limited to the agents you choose |
+| **Settings → API keys** | Keys your application's server uses, each with the services it may use — **Agents API** (limited to the agents you choose), **Speech API**, **Provisioning API** — and the account's own switches for the Agents API and Speech |
 | **Settings → Embedded chat** | Turning the panel on, the origins allowed to show it, the signing secret your server signs people in with, and the panel's colours |
 
 Nobody else sees these sections. The people who use the embedded chat need an
 AptiveAI account in your enterprise, created by invitation — see
-[Users and roles](/administration/users).
+[Users and roles](/administration/users) — or by your server with the
+[Provisioning API](/for-apps/account-api).
 
 ## How it is paid for
 
-**The Agents API is paid from your enterprise wallet**, per use: each request
-is charged at its usage cost times your enterprise's rate, and **the response
-says what was charged**, in dollars. It never spends anyone's seat allowance or
-promotional credit, and a request is refused before it runs when the wallet is
-empty or almost empty. API calls appear on [Activity](/administration/activity) as the activity
-**API**.
+**The Agents API and the Speech API are paid from your enterprise wallet**,
+per use. Each Agents API request is charged at its usage cost times your
+enterprise's rate, and **the response says what was charged**, in dollars; a
+speech session is charged by the second, at the [prices per
+hour](/for-apps/speech-api#models-and-prices). Neither ever spends anyone's
+seat allowance or promotional credit, and either is refused before it runs
+when the wallet is empty or almost empty. API calls appear on
+[Activity](/administration/activity) as the activity **API**.
 
 **A task started in the embedded chat is an ordinary task of the person who
 started it**: it is paid for like any task of theirs — their allowance, then
 the wallet where the owner allows it — with the same limits and approvals. See
-[Usage and credit](/administration/usage).
+[Usage and credit](/administration/usage). On an [account that pays only from
+its wallet](/for-apps/agents-api#an-account-that-pays-only-from-its-wallet),
+where nobody holds a seat, the panel's tasks are paid from the wallet instead,
+at the Agents API's rate.
+
+**Calling the Provisioning API costs nothing**, but assigning a seat when none
+of that tier is free buys one on the account's card.
 
 To add funds to the wallet, see [Billing and seats](/administration/billing#the-wallet).
 
@@ -80,5 +96,7 @@ To add funds to the wallet, see [Billing and seats](/administration/billing#the-
 <CardGrid>
   <LinkCard title="Embedded chat" href="/for-apps/embedded-chat" description="Show AptiveAI Agents in a panel of your application, signed in by your server." />
   <LinkCard title="Agents API" href="/for-apps/agents-api" description="Call an agent like a model, from your application's server." />
+  <LinkCard title="Speech API" href="/for-apps/speech-api" description="Live speech-to-text over a WebSocket, priced per hour." />
+  <LinkCard title="Provisioning API" href="/for-apps/account-api" description="Add people, set their seats and switch services from your own admin screen." />
   <LinkCard title="Agents" href="/concepts/agents" description="Instructions, model and connectors: what you configure before an application uses an agent." />
 </CardGrid>
