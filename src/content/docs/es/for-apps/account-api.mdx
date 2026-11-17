@@ -1,0 +1,470 @@
+---
+title: API de Aprovisionamiento
+description: Administra la cuenta de AptiveAI de tu cliente desde tu propia pantalla de administración. Lee la cuenta y sus personas, agrega una persona con puesto y sin contraseña, cambia o libera un puesto, cómpralo de forma segura, quita a una persona, activa o desactiva servicios y comprueba quién podría actuar mediante cada conexión.
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+La **API de Aprovisionamiento** permite que tu propia pantalla de
+administración gestione la cuenta de AptiveAI que hay detrás de tu aplicación:
+leerla, agregar personas con un puesto, cambiar o liberar un puesto, quitar
+personas, activar y desactivar servicios, y comprobar quién podría actuar
+mediante cada conexión a tus sistemas. Llamarla no cuesta nada; asignar un
+puesto cuando no queda ninguno libre de ese nivel **compra uno con la tarjeta
+de la cuenta**.
+
+La sirve aptiveai.io, **no** AptiveAI Agents, así que su URL base es distinta
+de la de la [API de Agentes](/es/for-apps/agents-api):
+
+```http
+https://aptiveai.io/api/v1
+Authorization: Bearer aak_…
+Content-Type: application/json
+```
+
+| Método y ruta | Qué hace |
+|---|---|
+| [`GET /account`](#get-account) | La cuenta: su estado, cómo paga, sus interruptores de servicio, sus puestos por nivel, su billetera |
+| [`GET /members`](#get-members) | Sus personas y, después, sus invitaciones pendientes |
+| [`PUT /members/{email}`](#put-membersemail) | Agrega una persona, o define el puesto de una persona |
+| [`DELETE /members/{email}`](#delete-membersemail) | Quita a una persona en ese momento |
+| [`PATCH /account/services`](#patch-accountservices) | Activa o desactiva el chat integrado, la API de Agentes y Voz |
+| [`GET /connectors`](#get-connectors) | Quién podría actuar mediante cada conexión a una dirección de servidor, solo lectura |
+
+## La clave `admin`
+
+Todos los endpoints necesitan una clave con el servicio **API de
+Aprovisionamiento** (`admin`). La crea un **propietario de tu empresa** en
+AptiveAI Agents, en **Ajustes → Claves de API** — consulta [Claves de
+API](/es/for-apps/agents-api#claves-de-api) —, eligiendo solo **API de
+Aprovisionamiento** en **Servicios**. No necesita ningún agente.
+
+- **Ningún servicio implica otro.** Una clave con la API de Aprovisionamiento
+  no puede llamar a un agente ni abrir una sesión de voz salvo que también
+  tenga esos servicios, y una clave con solo la API de Agentes o la API de Voz
+  no puede aprovisionar.
+- **Dale una clave propia.** Puede agregar y quitar personas y comprar puestos
+  con la tarjeta de la cuenta. Guárdala en el back office que administra la
+  cuenta, no en el servidor que atiende el chat, para que una clave de chat
+  filtrada no pueda comprar puestos. Al guardar una clave con la API de
+  Aprovisionamiento se le pide al propietario que confirme: *Esta clave puede
+  comprar asientos con tu tarjeta*.
+- La cuenta de la clave es **la única cuenta que puede ver o cambiar**.
+- La API de Aprovisionamiento no tiene interruptor propio en la cuenta: para
+  detenerla, revoca la clave o quítale **API de Aprovisionamiento**.
+- **Límite**: 120 solicitudes por minuto por clave (`429 rate_limited` con
+  `Retry-After`). La API de Aprovisionamiento lleva su propia cuenta, aparte de
+  la de la API de Agentes.
+
+Los cuerpos son JSON. Las lecturas no escriben nada; cada escritura [queda
+registrada](#qué-se-registra) con la clave como autora.
+
+**`{email}` en la ruta.** Codifícalo con porcentajes una vez
+(`pat%40example.test`; una dirección que contiene `%` lo envía como `%25`). Se
+decodifica una vez, se recortan los espacios y se pasa a minúsculas, así que
+las direcciones no distinguen mayúsculas. Un valor que no es una dirección de
+correo da `400 invalid_request`.
+
+## `GET /account`
+
+```json
+{
+  "enterprise": { "id": "3f6c2a9e-…", "name": "Northwind Desk", "status": "active" },
+  "billing": "seats",
+  "services": {
+    "embedded_chat": { "enabled": true },
+    "agents_api": { "enabled": true },
+    "speech": { "enabled": false }
+  },
+  "seat_tiers": [
+    { "tier": "bronze", "price_usd_month": 35, "purchased": 4, "assigned": 3 },
+    { "tier": "silver", "price_usd_month": 70, "purchased": 2, "assigned": 2 },
+    { "tier": "gold", "price_usd_month": 100, "purchased": 0, "assigned": 0 },
+    { "tier": "platinum", "price_usd_month": 150, "purchased": 0, "assigned": 0 }
+  ],
+  "wallet": { "balance_usd": 42.5 }
+}
+```
+
+| Campo | Significado |
+|---|---|
+| `enterprise.status` | `trialing`: una prueba. `active`: una suscripción pagada al día, **o una cuenta que paga solo con su billetera** (sin suscripción de puestos, nadie con puesto, y una clave de API activa, el chat integrado o un agente independiente), sea cual sea su prueba o su plan. `past_due`: falló el pago de una renovación y la cuenta está dentro de sus 7 días de gracia. `paused`: sin suscripción ni prueba (donde termina una prueba vencida), o `past_due` pasada la gracia. Una cuenta bloqueada o cancelada nunca responde: sus claves reciben `403 account_unavailable` |
+| `billing` | Cómo paga la cuenta. `seats`: las personas tienen puestos en la suscripción con tarjeta de la cuenta (o en una prueba), y tu pantalla ofrece los niveles de `seat_tiers`. `wallet`: la cuenta [paga solo con su billetera](#una-cuenta-que-paga-solo-con-su-billetera); **no ofrezcas niveles** — activa a una persona con `PUT /members/{email}` y `"seat_tier": null`, y desactívala con `DELETE /members/{email}`. Lee este campo en lugar de deducirlo de que `purchased` sea 0 |
+| `services.*.enabled` | Los tres interruptores ([`PATCH /account/services`](#patch-accountservices)) |
+| `seat_tiers` | Siempre los cuatro niveles, en este orden: `bronze`, `silver`, `gold`, `platinum` |
+| `seat_tiers[].price_usd_month` | El precio mensual de un puesto del nivel para esta cuenta: su propio precio acordado si lo tiene; si no, el precio de lista. Un puesto que se compra ahora se cobra a ese precio |
+| `seat_tiers[].purchased` | Los puestos del nivel comprados en la suscripción con tarjeta de la cuenta. **0 en todos los niveles cuando la cuenta no tiene suscripción con tarjeta** (una prueba, una cuenta pausada que nunca se suscribió, una cuenta que paga solo con su billetera — que se lee `active` con todos los niveles en 0) |
+| `seat_tiers[].assigned` | Las personas del nivel más las invitaciones pendientes de ese nivel. `purchased − assigned` son los puestos libres que el siguiente `PUT` usa antes de comprar uno. En una cuenta sin suscripción con tarjeta, `assigned` puede superar a `purchased`, que ahí es 0 |
+| `wallet.balance_usd` | La billetera de la cuenta, que paga la API de Agentes y Voz; 0 cuando la cuenta no tiene |
+
+**Qué estados significan "puede usar los servicios".** Las personas de la
+cuenta que tienen puesto pueden usar AptiveAI Agents — en tu panel integrado y
+en aptiveai.io — mientras la cuenta está `trialing` (mientras dure el crédito
+de la prueba), `active` o `past_due`. En una cuenta que paga solo con su
+billetera, las personas sin puesto usan el panel integrado mientras la
+billetera tenga al menos $0.05. Mientras la cuenta está `paused` no pueden: el
+panel integrado responde `unavailable` con el motivo `account_unavailable`. Las
+claves de API siguen funcionando en los cuatro estados: la API de Agentes y Voz
+están limitadas por la billetera, y la API de Aprovisionamiento sigue
+respondiendo, para que tu pantalla de administración pueda seguir mostrando la
+cuenta.
+
+## `GET /members`
+
+```json
+{
+  "members": [
+    { "email": "ana@example.test", "name": "Ana Example", "role": "owner", "seat_tier": "silver", "status": "active" },
+    { "email": "pat@example.test", "name": "Pat Example", "role": "member", "seat_tier": null, "status": "active" },
+    { "email": "sam@example.test", "name": "Sam Example", "role": "member", "seat_tier": "bronze", "status": "leaving" },
+    { "email": "lee@example.test", "name": null, "role": "member", "seat_tier": "bronze", "status": "invited" }
+  ]
+}
+```
+
+La lista nunca se pagina. Primero van las personas, ordenadas por correo, y
+luego las invitaciones pendientes de la cuenta, ordenadas por correo. El
+personal de AptiveAI no aparece.
+
+| Campo | Significado |
+|---|---|
+| `email` | En minúsculas |
+| `name` | El nombre que la persona eligió para sí en aptiveai.io; si no, el nombre que se le dio (con `PUT` o al registrarse); `null` cuando no hay ninguno, y siempre `null` para una invitación |
+| `role` | `owner`, `admin` o `member`. La API de Aprovisionamiento nunca cambia un rol |
+| `seat_tier` | El nivel del puesto de la persona, o **`null` cuando no tiene puesto**. Una persona sin puesto puede iniciar sesión pero no puede usar un agente normal: el panel integrado responde `unavailable` con el motivo `no_agents` para ella — salvo en una cuenta que paga solo con su billetera |
+| `status` | `active`: una persona de la cuenta. `leaving`: una persona cuya salida programó el propietario en aptiveai.io; conserva el acceso hasta que se aplica. `invited`: una invitación enviada desde aptiveai.io que nadie ha aceptado todavía; no es una persona |
+
+Las personas `active` y `leaving` pueden usar los servicios. Una dirección
+`invited` todavía no es una persona, así que el panel integrado responde
+`no_account` para ella. Un `PUT` sobre una dirección invitada la convierte en
+persona; un `PUT` sobre una persona `leaving` cancela la salida programada,
+devuelve su puesto a la suscripción sin cargo y la vuelve `active`.
+
+## `PUT /members/{email}`
+
+"Que así sea": tras una llamada correcta, la dirección es una persona de la
+cuenta con el puesto que pediste. Repetir la llamada es seguro ([Comprar un
+puesto y reintentar de forma segura](#comprar-un-puesto-y-reintentar-de-forma-segura)).
+
+| Campo | Regla |
+|---|---|
+| `name` | Un string de 1 a 120 caracteres tras recortar los espacios. **Obligatorio cuando la dirección todavía no tiene cuenta de AptiveAI** (la llamada la crea); sin él, `400 invalid_request`. Opcional en los demás casos: si se omite, el nombre queda como está; si se envía, reemplaza el nombre de la persona. Un nombre que la persona eligió para sí en aptiveai.io sigue ganando en `member.name` |
+| `seat_tier` | Obligatorio: `"bronze"`, `"silver"`, `"gold"`, `"platinum"`, o `null` para ningún puesto |
+| `expected_price_usd_month` | Opcional, un número. Solo se compara cuando esta llamada **compraría** un puesto: si difiere del `price_usd_month` actual del nivel en más de medio centavo, no se compra nada y la respuesta es `409 price_changed`, con el precio actual en `error.price_usd_month`. Se ignora cuando la llamada no compra nada. Envía el precio que mostró tu pantalla, para que a nadie se le cobre un precio que no vio |
+| Cualquier otro | Se ignora |
+
+### Quién es la dirección
+
+| La dirección es… | Qué pasa |
+|---|---|
+| Desconocida para AptiveAI | Se crea una persona **sin contraseña**, y **no se envía ningún correo**. Se une a la cuenta como `member` ([Personas sin contraseña](#personas-sin-contraseña)) |
+| Una cuenta de AptiveAI que no pertenece a ninguna cuenta | Se une a la cuenta como `member`. Su contraseña y su historial no se tocan |
+| Una persona de esta cuenta | Su puesto se define como se explica abajo. Su rol no cambia |
+| Una invitación pendiente de esta cuenta | La invitación se revoca, y su puesto pasa a la persona, que se une como `member` |
+| Una persona de otra cuenta, o personal de AptiveAI | `409 member_of_another_enterprise`. No se escribe nada |
+| Alguien que no está en esta cuenta, con una invitación pendiente a otra cuenta | `409 member_of_another_enterprise`. No se escribe nada; la invitación de la otra cuenta conserva su puesto |
+
+### El puesto
+
+1. **El mismo puesto que ya tiene** (un reintento, o nada que cambiar): no pasa
+   nada; `purchased` es `null`.
+2. **`null`**: la persona deja de tener puesto. Su puesto **sigue comprado y
+   queda libre** para la siguiente persona. Un propietario de la cuenta debe
+   conservar un puesto: `409 owner_needs_seat`.
+3. **Un nivel, en una cuenta sin suscripción con tarjeta**: la persona queda en
+   el nivel y no se compra nada; `purchased` es `null`. Una excepción: una
+   cuenta que paga solo con su billetera se rechaza con `409 not_subscribed`,
+   porque asignarle un puesto a alguien ahí cambia cómo se factura. Su
+   propietario se suscribe primero en aptiveai.io.
+4. **Un nivel, en una cuenta suscrita, con un puesto libre de ese nivel**: la
+   persona lo ocupa en ese momento; `purchased` es `null`.
+5. **Un nivel, en una cuenta suscrita, sin ningún puesto libre de ese nivel**:
+   se **compra** un puesto y la persona lo ocupa; `purchased` es
+   `{ "tier", "quantity": 1, "price_usd_month" }`.
+
+Pasar a un nivel más barato es inmediato; el puesto más caro sigue comprado y
+libre.
+
+**Crédito de IA con un puesto.** Pasar a un nivel más caro suma la diferencia
+entre el crédito de IA de los dos niveles por los días que quedan del periodo
+de facturación, igual que cuando el propietario de la cuenta sube de nivel a
+alguien en aptiveai.io; bajar de nivel no quita crédito. Liberar un puesto y
+volver a ocuparlo con la misma persona, o bajar y volver a subir, dentro de un
+periodo no suma nada; volver en un nivel más caro suma esa diferencia una vez.
+Un puesto que ocupa alguien nuevo trae el crédito de IA de ese puesto por los
+días que quedan, salvo que **un puesto financia a una sola persona por periodo
+de facturación**: si el puesto lo liberó (`"seat_tier": null` o `DELETE`)
+alguien a quien ya había financiado en este periodo, la persona nueva recibe lo
+que esa persona no había gastado, y nada más; si esa persona pasó a un nivel
+más barato, conserva la parte de ese nivel de lo que le queda y la persona
+nueva recibe solo el resto. Una persona sin puesto no puede gastar el crédito
+de IA que le quedó de un puesto; vuelve a ser suyo si recupera un puesto antes
+de que pase a otra persona.
+
+La respuesta es la persona como la muestra ahora `GET /members`, y lo que
+compró esta llamada:
+
+```json
+{
+  "member": { "email": "pat@example.test", "name": "Pat Example", "role": "member", "seat_tier": "silver", "status": "active" },
+  "purchased": { "tier": "silver", "quantity": 1, "price_usd_month": 70 }
+}
+```
+
+## Comprar un puesto y reintentar de forma segura
+
+**Qué significa comprar.** Se agrega un puesto del nivel a la suscripción con
+tarjeta de la cuenta y se cobra a la tarjeta en ese momento, prorrateado por
+los días que quedan del periodo de facturación; después se factura cada
+periodo a `price_usd_month`, como cualquier otro puesto. Los propietarios de la
+cuenta reciben el correo habitual de "puestos agregados", así que un puesto
+comprado desde tu pantalla nunca sorprende a quien paga. Una tarjeta rechazada,
+o un banco que pide autenticar el pago (y no hay nadie para hacerlo), da
+`402 payment_failed` con la frase del proveedor de pagos en `message`; no se
+compra ni se cambia nada.
+
+**Un puesto liberado sigue comprado y facturado.** `"seat_tier": null` y
+`DELETE` liberan un puesto; no lo devuelven. Aparece en `GET /account` como
+`purchased` mayor que `assigned`, y el siguiente `PUT` de ese nivel lo usa en
+lugar de comprar otro. La API de Aprovisionamiento no puede devolver puestos.
+Solo el propietario de la cuenta puede, en la página de facturación de
+aptiveai.io: no se reembolsa nada, y la siguiente renovación factura menos
+puestos. Avísale a tu cliente cuando se acumulen puestos libres.
+
+**Reintentar.** Las escrituras de una cuenta se atienden de una en una, así que
+dos `PUT` no pueden ocupar el mismo último puesto libre. Un `PUT` nunca compra
+dos veces:
+
+- **Repetido después de que funcionó**, encuentra a la persona ya en el nivel y
+  no cambia nada.
+- **Repetido tras una respuesta que nunca recibiste** (un tiempo de espera
+  agotado, una conexión cortada, un 5xx), primero compara lo que tiene el
+  proveedor de pagos para el nivel con lo que tienen los registros de
+  AptiveAI. Si el primer intento se cobró, el reintento no se vuelve a cobrar:
+  asigna el puesto ya comprado. No hay límite de tiempo para esto.
+- **Repetido tras un `402 payment_failed`** (una vez que el propietario
+  arregló la tarjeta), es un intento de compra nuevo: un rechazo anterior
+  nunca se repite.
+
+Un reintento responde `"purchased": null` aunque el primer intento haya
+comprado el puesto, porque el reintento en sí no compró nada. Para saber con
+certeza si se compró un puesto, lee `seat_tiers[].purchased` del nivel en
+`GET /account` **antes** del primer intento, y compáralo después de la llamada
+que funcionó.
+
+Si otro cambio de facturación de la cuenta sigue en curso pasados 30 segundos,
+o en ese momento se está aplicando un cambio programado para esta persona, la
+respuesta es `503 billing_busy` con `Retry-After: 30`: vuelve a enviar la misma
+llamada.
+
+## `DELETE /members/{email}`
+
+```json
+{ "member": { "email": "pat@example.test", "removed": true } }
+```
+
+- **Una persona de la cuenta sale en ese momento**, en cualquier tipo de
+  cuenta. (En aptiveai.io, cuando un propietario quita a alguien de una cuenta
+  suscrita, la persona se queda hasta el final del periodo; esta llamada no
+  espera.) Un token nuevo del chat integrado para ella se responde
+  `no_account`.
+- **Todo lo que hizo se queda** en la cuenta: las tareas y sus
+  transcripciones, los agentes, las habilidades, los archivos. Sus
+  automatizaciones se **pausan**, no se eliminan.
+- **Sus conexiones privadas se desconectan**: cada conexión suya en la cuenta
+  que no está compartida con nadie ni prestada a ningún agente olvida su
+  inicio de sesión guardado y aparece desconectada (la conexión en sí se
+  queda). Una conexión suya que está compartida con la organización o con
+  personas concretas, o prestada mediante un agente, queda como estaba:
+  revisa [`GET /connectors`](#get-connectors) después de quitar a alguien que
+  conectó tus sistemas.
+- Su cuenta de AptiveAI en sí se mantiene, sin pertenecer a ninguna cuenta; un
+  `PUT` posterior la vuelve a traer.
+- **Su puesto sigue comprado y queda libre.**
+- No se puede quitar al último propietario de la cuenta: `409 last_owner`. Un
+  propietario cuya salida ya programó el propietario de la cuenta en
+  aptiveai.io no cuenta como un propietario que se queda.
+- Una dirección que es solo una **invitación pendiente** de la cuenta hace que
+  se revoque la invitación, y la respuesta es la misma.
+- Cualquier otro caso — ninguna persona ni invitación con esa dirección, una
+  persona de otra cuenta, personal de AptiveAI — da `404 member_not_found`.
+
+## `PATCH /account/services`
+
+Envía al menos uno de tres booleanos, y nada más: `embedded_chat`,
+`agents_api`, `speech`. Un campo desconocido, un valor que no es booleano o un
+cuerpo vacío da `400 invalid_request`. La respuesta es el objeto `services`
+como queda después de la escritura:
+
+```json
+{ "embedded_chat": { "enabled": true }, "agents_api": { "enabled": true }, "speech": { "enabled": false } }
+```
+
+Una llamada que no cambia nada no escribe nada, y responde el mismo objeto.
+
+| Interruptor | Desactivado significa |
+|---|---|
+| `embedded_chat` | Todas las sesiones del chat integrado de la cuenta terminan en ese momento. La siguiente solicitud del panel abierto se rechaza, y el panel responde `unavailable` con el motivo `disabled`; una llamada de cierre de sesión de tu servidor se responde `401 { "ok": false, "reason": "disabled" }` ([Chat integrado](/es/for-apps/embedded-chat#cerrar-la-sesión-de-una-persona)). **Activarlo** necesita al menos un origen permitido y un secreto de firma, que solo define el propietario, en AptiveAI Agents, en **Ajustes → Chat integrado**; hasta entonces la respuesta es `409 embed_not_configured` y no se escribe nada de la solicitud. La API nunca cambia los orígenes ni el secreto |
+| `agents_api` | Todas las llamadas a chat completions de la cuenta responden `403 service_not_enabled` (*This service is switched off for this account.*), sea cual sea la clave |
+| `speech` | La ruta del token de voz responde `403 service_not_enabled`; un socket abierto con un token obtenido antes se cierra con `4001`; una sesión en curso recibe `{"type":"Error","error_code":4401,"error":"key revoked"}` en su siguiente cargo (en unos 30 segundos) y se cierra con `4401` |
+
+El propietario ve y cambia los mismos interruptores de la API de Agentes y de
+Voz arriba de **Ajustes → Claves de API**, y el del chat integrado en
+**Ajustes → Chat integrado**; `GET /account` lee lo último que se haya
+definido, desde cualquiera de los dos lados.
+
+## `GET /connectors`
+
+Antes de abrir tu asistente a personas que no son administradoras, comprueba
+que ningún camino permita que una de ellas actúe en tu sistema como otra
+persona. Esta llamada de solo lectura responde, solo para la cuenta de la
+clave, cada conexión que llega directamente a una dirección de servidor (un
+servidor MCP personalizado, o el servidor MCP remoto de un proveedor), y cada
+permiso de un agente sobre una de ellas. No devuelve ningún secreto, ningún
+token ni ninguna lista de herramientas.
+
+```json
+{
+  "connections": [
+    { "address": "https://host.example/mcp", "name": "host.example · pat@example.test",
+      "owner": "pat@example.test", "shared_with_organization": false, "shared_with_people": 0 },
+    { "address": "https://host.example/mcp", "name": "Front desk admin",
+      "owner": "admin@example.test", "shared_with_organization": true, "shared_with_people": 0 }
+  ],
+  "agent_grants": [
+    { "agent_id": "…", "agent_name": "Front desk", "address": "https://host.example/mcp", "access": "per_person" }
+  ]
+}
+```
+
+| Campo | Significado |
+|---|---|
+| `connections[].address` | La dirección del servidor, normalizada: el esquema y el host en minúsculas, sin el puerto por defecto, sin barra final, con la consulta. Compárala con la dirección de tu propio servidor normalizada de la misma forma |
+| `connections[].owner` | El correo de la persona de quien es la conexión; `null` para una conexión de la organización |
+| `connections[].shared_with_organization` | `true` cuando **Todos** en al menos un espacio de trabajo pueden usarla |
+| `connections[].shared_with_people` | Con cuántas personas está compartida por nombre; cada una de ellas puede usarla |
+| `agent_grants[].access` | Quién inicia sesión cuando el agente usa esa conexión: `per_person` (cada persona inicia sesión en tu servidor como ella misma), `shared` (todos usan el inicio de sesión del dueño de la conexión), `unset` (todavía sin elegir: solo la reciben las personas que pueden usar la conexión en sí). Solo se listan los permisos activos de agentes que no están eliminados |
+
+**La regla que hay que aplicar.** Para el agente que montas en el panel
+(`agentId`), su permiso en la dirección de tu servidor es `per_person`; y en
+esa dirección ninguna conexión es `shared_with_organization`, ninguna tiene
+`shared_with_people` mayor que 0, y ningún otro agente que tu gente pueda usar
+tiene un permiso `shared`. Cuando se cumple todo eso, cada acción que un agente
+hace en tu sistema se hace con el token propio de la persona que tiene la
+sesión iniciada — consulta [Tu propio sistema, como cada
+persona](/es/for-apps/embedded-chat#tu-propio-sistema-como-cada-persona).
+Vuelve a llamarla después de que un administrador cambie conectores o agentes;
+nada te avisa de un cambio.
+
+## Personas sin contraseña
+
+Una persona creada con `PUT` no tiene contraseña y no recibió ningún correo.
+Inicia sesión mediante tu [chat integrado](/es/for-apps/embedded-chat): tu
+servidor firma un token con su correo, como para cualquiera. Para usar el panel
+también necesita al menos un agente normal que pueda usar; el acceso a los
+agentes se da en AptiveAI Agents, como para cualquier otra persona, y el panel
+responde `no_agents` hasta que tenga uno. Una persona creada con
+`"seat_tier": null` usa el panel solo en una cuenta que paga solo con su
+billetera, donde sus tareas se pagan con ella; en una cuenta donde alguien
+tiene puesto, el panel responde `no_agents` para ella.
+
+Si esa persona va a la página de inicio de sesión de aptiveai.io y escribe su
+dirección, la página dice que le envió por correo un enlace para elegir una
+contraseña, y lo envía (como máximo un correo por dirección por minuto).
+Después de elegir una contraseña, inicia sesión con ella y con un código que
+se envía a la dirección, y usa AptiveAI Agents como `member`. La página de
+inicio de sesión responde igual para cualquier cuenta sin contraseña; no
+revela nada de la cuenta más allá de lo que revela para cualquier dirección.
+
+## Una cuenta que paga solo con su billetera
+
+Una cuenta donde **nadie tiene puesto** y que usa una clave de API activa, el
+chat integrado o un agente independiente paga solo con su billetera:
+`GET /account` lee `"billing": "wallet"` y `"status": "active"`, con todos los
+niveles en 0. No ofrezcas niveles. Activa a una persona con
+`PUT /members/{email}` y `{ "name": …, "seat_tier": null }`, y desactívala con
+`DELETE`; un puesto se rechaza con `409 not_subscribed` hasta que el
+propietario se suscriba en aptiveai.io. Lo que paga la billetera está en la
+[API de Agentes](/es/for-apps/agents-api#una-cuenta-que-paga-solo-con-su-billetera).
+
+## Qué se registra
+
+Cada escritura deja filas en el registro de auditoría de la cuenta con la
+clave como autora, con el nombre `api_key:<nombre de la clave> (…<últimos cuatro
+caracteres>)` — nunca el secreto:
+
+| Llamada | Filas |
+|---|---|
+| Un `PUT` que cambió algo | `member.provisioned`: la dirección, si se creó la persona, y su puesto y su nombre antes y después |
+| Un `PUT` que compró un puesto | También `billing.seats_add` |
+| Un `PUT` que otorgó crédito de puesto | También `seat_credit.grant` |
+| `DELETE` | `member.remove` |
+| `PATCH /account/services` | `account.services_changed` (antes y después), y `embed.updated` cuando cambió el chat integrado |
+
+Un `PUT` que no cambió nada, y cualquier lectura, no dejan ninguna fila.
+
+## Errores
+
+Los errores tienen la forma de OpenAI, `{ "error": { "message", "type", "code" } }`,
+como en la [API de Agentes](/es/for-apps/agents-api#errores). `price_changed`
+también lleva `error.price_usd_month`:
+
+```json
+{ "error": { "message": "The price of a gold seat is now 100 USD a month.", "type": "invalid_request_error", "code": "price_changed", "price_usd_month": 100 } }
+```
+
+| HTTP | `code` | Cuándo |
+|---|---|---|
+| 400 | `invalid_request` | El cuerpo no es JSON; un campo está mal formado; la ruta no es una dirección de correo; un `PUT` crearía una persona y no tiene `name`; un `PATCH` envía un campo desconocido o ninguno de los tres |
+| 401 | `invalid_api_key` | La clave falta, no se reconoce o está revocada |
+| 402 | `payment_failed` | `PUT`: la tarjeta fue rechazada, o el banco pidió autenticación. No se compró ni se cambió nada |
+| 403 | `account_unavailable` | La cuenta está bloqueada o cancelada |
+| 403 | `service_not_enabled` | La clave no tiene la API de Aprovisionamiento |
+| 404 | `member_not_found` | `DELETE`: ninguna persona ni invitación pendiente de la cuenta tiene esta dirección |
+| 409 | `member_of_another_enterprise` | `PUT`: la dirección es de una persona de otra cuenta, del personal de AptiveAI, o tiene una invitación pendiente a otra cuenta |
+| 409 | `owner_needs_seat` | `PUT`: `"seat_tier": null` para un propietario de la cuenta |
+| 409 | `not_subscribed` | `PUT`: un puesto en una cuenta que paga solo con su billetera y no tiene suscripción de puestos |
+| 409 | `price_changed` | `PUT`: `expected_price_usd_month` difiere del precio del puesto que compraría |
+| 409 | `last_owner` | `DELETE`: el último propietario de la cuenta (los propietarios que ya están saliendo no cuentan) |
+| 409 | `embed_not_configured` | `PATCH`: `"embedded_chat": true` antes de que el propietario defina un origen permitido y un secreto de firma |
+| 429 | `rate_limited` | Más de 120 solicitudes por minuto con esta clave; consulta `Retry-After` |
+| 500 | `server_error` | Cualquier otra cosa |
+| 502 | `payment_provider_error` | El proveedor de pagos falló, o no pudo confirmar una compra. Vuelve a intentarlo más tarde |
+| 503 | `billing_busy` | Hay otro cambio de facturación en curso en la cuenta, se está aplicando un cambio programado para esta persona, o la facturación no está disponible. `Retry-After: 30` |
+
+## Ejemplos
+
+```bash
+BASE=https://aptiveai.io/api/v1
+AUTH="Authorization: Bearer $APTIVEAI_ADMIN_KEY"
+
+# The account, then its people
+curl "$BASE/account" -H "$AUTH"
+curl "$BASE/members" -H "$AUTH"
+
+# Add a person on a silver seat, refusing any price but the one shown
+curl -X PUT "$BASE/members/pat%40example.test" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{ "name": "Pat Example", "seat_tier": "silver", "expected_price_usd_month": 70 }'
+
+# Free their seat (the seat stays bought; they stay in the account)
+curl -X PUT "$BASE/members/pat%40example.test" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{ "seat_tier": null }'
+
+# Remove them
+curl -X DELETE "$BASE/members/pat%40example.test" -H "$AUTH"
+
+# Switch Speech off for the whole account
+curl -X PATCH "$BASE/account/services" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{ "speech": false }'
+
+# Whose connection to your server an agent could act with
+curl "$BASE/connectors" -H "$AUTH"
+```
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="AptiveAI for Apps" href="/es/for-apps/overview" description="Cada parte, quién la configura y cómo se paga." />
+  <LinkCard title="Chat integrado" href="/es/for-apps/embedded-chat" description="Inicia la sesión de las personas que agregas en un panel de tu aplicación." />
+  <LinkCard title="Facturación y puestos" href="/es/administration/billing" description="Niveles de puesto, la tarjeta, el monedero y las facturas, como los ve el propietario." />
+</CardGrid>

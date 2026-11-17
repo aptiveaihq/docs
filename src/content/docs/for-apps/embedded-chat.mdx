@@ -1,0 +1,1046 @@
+---
+title: Embedded chat
+description: Show AptiveAI Agents in a panel beside your application's own screens. Add one script, sign your people in from your server, tell the agent what is on screen, and let it open records for the person. Setup, sign-in, page context, screen actions, theming, browsers, troubleshooting and the message protocol.
+---
+
+import { Aside, Steps, CardGrid, LinkCard, Tabs, TabItem } from '@astrojs/starlight/components';
+
+The **embedded chat** puts AptiveAI Agents in a panel inside your
+application. The person picks one of their agents, starts a task, follows it,
+answers its questions and approves its steps, and finds their earlier tasks,
+grouped by agent — all without leaving your application. A task started in the
+panel is an ordinary task: it appears in AptiveAI Agents too, under the same
+person.
+
+Your application does three things:
+
+1. **Signs the person in.** Your server vouches for the person who is signed in
+   to your application with a short-lived signed token. The person never sees
+   an AptiveAI sign-in screen.
+2. **Tells the agent what is on screen** (optional) — the page, the record the
+   person has open — so "what am I looking at?" has an answer.
+3. **Offers screen actions** (optional) — such as opening a record — that the
+   agent may ask your page to perform while it answers.
+
+The panel is a page of AptiveAI Agents shown in an `<iframe>` on your page. It
+has no live view of the agent's computer: a step that needs one offers **Open
+in AptiveAI**, which opens the full product in a new tab.
+
+## Quick start
+
+Add AptiveAI's script to your page, and mount the panel in an element of
+yours:
+
+```html
+<div id="assistant" style="height: 100%"></div>
+
+<script src="https://console.aptiveai.io/embed/v1.js"></script>
+<script>
+  const panel = AptiveAI.mount('#assistant', {
+    enterpriseId: 'YOUR-ENTERPRISE-ID',
+    // Your own server signs a token for the person signed in to your application.
+    getToken: async () => {
+      const res = await fetch('/aptiveai/token', { method: 'POST', credentials: 'same-origin' });
+      if (!res.ok) throw new Error('Could not get an AptiveAI token');
+      return res.text();
+    },
+    context: {
+      page: { title: 'Customers', url: location.href },
+    },
+    actions: [
+      {
+        name: 'open_customer',
+        description: "Open a customer's record on the person's screen.",
+        parameters: {
+          type: 'object',
+          properties: { customerId: { type: 'string' } },
+          required: ['customerId'],
+        },
+        run: async ({ customerId }) => {
+          await router.navigate(`/customers/${encodeURIComponent(customerId)}`);
+          return 'Opened';
+        },
+      },
+    ],
+    onEvent: (event) => console.log('AptiveAI', event.type, event),
+  });
+</script>
+```
+
+`AptiveAI.mount(el, options)` creates the panel's frame inside `el` (an
+element, or a selector for one) and returns a handle. **Settings → Embedded
+chat** shows the script tag for your account, ready to copy.
+
+| Option | What it is |
+|---|---|
+| `enterpriseId` | Your enterprise's id, from **Settings → Embedded chat** |
+| `getToken` | A function that returns a token string, or a promise of one, from **your own server** ([Sign-in, step by step](#sign-in-step-by-step)). It is called when the panel is ready and again whenever the session expires |
+| `context` | Optional. What the person has open ([Page context](#page-context)) |
+| `actions` | Optional. Screen actions the agent may ask your page to perform: `{ name, description, label, parameters, run(args) }` each. `label` and `parameters` (a JSON schema) are optional; `run` returns a result or throws ([Screen actions](#screen-actions)) |
+| `onEvent` | Optional. Receives `{ type, … }` for `ready`, `signed-in`, `unavailable`, `session-expired`, `task` and `error` ([Troubleshooting](#troubleshooting)) |
+| `origin` | Optional. The address of AptiveAI Agents, such as `https://console.aptiveai.io`. By default it is read from the script's own address, so you only need it when you load the script some other way |
+| `locale` | Optional. `'en'` or `'es'`: opens the panel in English or Spanish, and it stays in that language as the person moves around it. Any other value makes `mount` throw. Without it, the panel uses the language last set inside it, else the browser's language, else English. It is read when the panel opens; to change it, `unmount()` and mount again |
+| `theme` | Optional. `'light'` or `'dark'`: your page's mode, so the panel matches it ([Theming](#theming)). Any other value makes `mount` throw. Without it, the panel follows the visitor's system setting |
+| `taskId` | Optional. A task's id (a UUID): the panel opens on that task instead of on a new one. Anything that is not a UUID makes `mount` throw. A task that does not exist, or is not the person's, shows as not available |
+| `agentId` | Optional. The one agent the panel talks to (its id, a UUID); the person has no choice — see [Which agent answers](#which-agent-answers). With `taskId` too, the task opens and this agent is the one **New task** starts with. Anything that is not a UUID makes `mount` throw |
+| `defaultAgentId` | Optional. The agent the panel opens on (its id, a UUID); the person can change it — see [Which agent answers](#which-agent-answers). Not together with `agentId`. Anything that is not a UUID makes `mount` throw |
+
+| Handle | What it does |
+|---|---|
+| `setContext(context)` | Replaces the page context — call it whenever the person opens another page or record |
+| `setActions(actions)` | Replaces the list of screen actions; an empty list withdraws them |
+| `setTheme(mode)` | Switches the panel to `'light'` or `'dark'` when your page switches, live, without reloading: an open task stays open. Any other value throws |
+| `unmount()` | Removes the panel |
+| `iframe` | The panel's `<iframe>` element, to size or style it |
+
+Events passed to `onEvent`:
+
+| `type` | Fields | Meaning |
+|---|---|---|
+| `ready` | — | The panel loaded and is asking for a token |
+| `signed-in` | — | The person is signed in |
+| `unavailable` | `reason` | The panel cannot sign the person in, and shows one sentence saying why ([Troubleshooting](#troubleshooting)). The script asks for no further token until the panel loads again |
+| `session-expired` | — | The panel's session ended; the script is already asking `getToken` for a new token — at once after a session that lasted, or after a growing pause (1 second, then 2) when one ended within 30 seconds of signing in |
+| `task` | `id`, `status` | A task started or was opened, or its status changed ([the statuses](#reopening-where-the-person-was)) |
+| `error` | `code` | A message was refused; or `token_failed`: `getToken` failed three times in a row; or `session_not_kept`: three sign-ins in a row ended within 30 seconds, so this browser is not keeping the panel's session. After either of the last two the script stops asking for tokens until the panel loads again ([Troubleshooting](#troubleshooting)) |
+
+`mount` throws an `Error` at once when the element is missing, `enterpriseId`
+is missing, `getToken` is not a function, `locale` is not `'en'` or `'es'`,
+`theme` is not `'light'` or `'dark'`, `taskId`, `agentId` or `defaultAgentId`
+is not a UUID, or `agentId` and `defaultAgentId` are both given; `mount` and
+`setActions` also throw for an action with a bad name, a repeated name, no
+description or no `run`. Size the element yourself: the panel fills
+it. A docked column about 400 pixels
+wide works well; the panel also works at phone width.
+
+### Which agent answers
+
+Without `agentId`, the panel works as AptiveAI Agents does: the person picks one
+of the agents they can use, or types with none. With `agentId`, the panel opens
+on that agent, **New task** inside the panel keeps it, and no agent list is
+offered, so a person never starts a task without it. If the person cannot use
+that agent — it is not shared with them, it was deleted, or it is not a regular
+agent — the panel says it is not available and your page hears `unavailable`
+with reason `no_agents`.
+
+With `defaultAgentId`, the panel opens on that agent but does not hold the
+person to it: the agent shows as a chip above the message box, its ✕ takes it
+off and shows the person's other agents, and **New task** opens on the default
+again. A default the person cannot use is ignored, and the panel shows their
+agents as it would without the option.
+
+| You pass | The panel opens on | The person can change agent |
+|---|---|---|
+| `agentId` | That agent | No |
+| `defaultAgentId` | That agent | Yes, among the agents shared with them |
+| Neither | The list of their agents | Yes |
+
+When your application has one assistant, pass its agent's id as `agentId`:
+everyone then talks to the same agent, and nobody has to choose. When it has a
+usual assistant and others for particular work, pass the usual one as
+`defaultAgentId`. To use another agent, `unmount()` and mount again with its
+id.
+
+### Reopening where the person was
+
+The panel tells you about each task with a `task` event, `{ type: 'task', id,
+status }`, when a task starts, when an existing task is opened, and whenever
+its status changes. Keep the last `id` — in your own session or storage, per
+person — and pass it as `taskId` on the next `mount`: the panel opens on that
+task rather than on a new one. The person can still start a new task from
+there.
+
+| `status` | Means |
+|---|---|
+| `running` | The agent is working |
+| `awaiting_input` | The agent is waiting on the person: a question or an approval |
+| `idle` | Open for another message |
+| `completed`, `partial`, `failed`, `skipped`, `expired`, `stopped` | The task ended |
+
+### Naming the global
+
+The script puts its API on `window.AptiveAI`. If your page already uses that
+name, or you prefer another one, set `data-global` on the script tag:
+
+```html
+<script src="https://console.aptiveai.io/embed/v1.js" data-global="NorthwindAssistant"></script>
+<script>
+  const panel = NorthwindAssistant.mount('#assistant', { /* the same options */ });
+</script>
+```
+
+The name must be a plain JavaScript identifier (letters, digits, `_` and `$`,
+not starting with a digit) that your page does not already use. If it is not,
+the script uses `window.AptiveAI` instead and the browser's console shows one
+warning saying why. The script never overwrites a global that is not its own:
+if `AptiveAI` is taken too, it installs nothing and logs one error naming the
+names it could not use. Loading the script twice keeps the first copy.
+
+## How your page and the panel talk
+
+The panel is an `<iframe>` served by AptiveAI on its own origin,
+`https://console.aptiveai.io`. In the browser your page and the panel are two
+different sites, so neither can reach into the other: they talk **only through
+`window.postMessage`**, in version 1 of a small protocol where every message is
+an object `{ type, v: 1, … }`. The script — `AptiveAI.mount` — speaks it for
+you; this section is what it does on your behalf. The whole protocol is under
+[Advanced: the message protocol](#advanced-the-message-protocol).
+
+### Who sends what, and when
+
+1. **Your page creates the frame** (the script does it in `mount`). AptiveAI
+   lets the browser show it only on your allowed origins.
+2. **The frame loads and posts `aptiveai:ready`.**
+3. **Your page asks YOUR server for a token** (`getToken`). Your server signs
+   one for the person signed in to your application, valid for at most 60
+   seconds and usable once.
+4. **Your page posts `aptiveai:session`** with that token to the frame.
+5. **AptiveAI verifies the token and opens a session** for that person, inside
+   the frame only.
+6. **The frame posts `aptiveai:signed-in`** — or `aptiveai:unavailable` with a
+   reason when it cannot sign the person in.
+7. **From then on**, your page sends `aptiveai:context`, `aptiveai:actions` and
+   `aptiveai:theme` whenever they change. The frame posts `aptiveai:task` as
+   tasks start and change, `aptiveai:action` when the agent asks for one of your
+   screen actions — which your page answers with `aptiveai:action-result`,
+   carrying the same `id` — `aptiveai:session-expired` when the session ends
+   (back to step 3), and `aptiveai:error` when it refuses one of your messages.
+
+| Your page → the panel | The panel → your page |
+|---|---|
+| `aptiveai:session` — a fresh token | `aptiveai:ready` — listening; send a token |
+| `aptiveai:context` — what the person has open | `aptiveai:signed-in` — the person is signed in |
+| `aptiveai:actions` — the screen actions you offer | `aptiveai:task` — a task started, opened or changed status |
+| `aptiveai:theme` — your page's light or dark mode | `aptiveai:action` — the agent asks for a screen action |
+| `aptiveai:action-result` — your answer to `aptiveai:action` | `aptiveai:session-expired` — send a new token |
+| | `aptiveai:unavailable` — cannot sign this person in, and why |
+| | `aptiveai:error` — one of your messages was refused |
+
+### What never crosses the boundary
+
+- **The signing secret stays on your server.** Only a signed token, good for
+  60 seconds and once, passes through your page.
+- **Your page cannot read the panel**: not the conversation, not the tasks,
+  not its session cookie. It hears only the messages in the table above.
+- **The panel cannot read your page**: not its DOM, its cookies or its
+  storage. The agent knows only what you send as context and what your screen
+  actions answer.
+
+### Origin checks, on both sides
+
+- The frame loads **only on your allowed origins** (**Settings → Embedded
+  chat**); the browser refuses to show it anywhere else.
+- The panel posts only to your page's origin and reads a message only when it
+  comes from the page that framed it, on one of your allowed origins.
+- Your page posts to the frame with its exact origin as the target — never `*`
+  — and accepts a message only when `event.origin` is the console's origin and
+  `event.source` is the frame's `contentWindow`.
+
+The script does all of this for you: it creates the frame, answers every
+`aptiveai:ready` and `aptiveai:session-expired` with a token from `getToken`,
+sends your context, actions and theme, runs your actions' `run`, and applies
+the origin checks. It never puts a token in a URL, in storage or in a log.
+
+Before the panel can sign anyone in, turn it on in AptiveAI Agents and add a
+token endpoint to your server — the next two sections.
+
+## Set it up in AptiveAI
+
+An **owner of your enterprise** sets up the embedded chat in AptiveAI Agents,
+under **Settings → Embedded chat**.
+
+<Steps>
+
+1. Under **Access**, list your application's origins in **Allowed origins**:
+   one per line, as `https://host` or `https://host:port`, with no path. At
+   most 10. Only pages on these origins can show the panel; the browser refuses
+   it anywhere else.
+
+2. Under **Signing secret**, press **Generate a secret**. The secret is shown
+   **once**: copy it into your server's configuration (a secret store or an
+   environment variable), never into your page. The **Enterprise id** is shown
+   beside it — your server signs with it as the issuer, and your page passes it
+   to `AptiveAI.mount`.
+
+3. Switch **Embedded chat on** and press **Save**. It cannot be switched on
+   without at least one origin and a secret.
+
+4. Optionally, set the panel's colours under **Theme** ([Theming](#theming)).
+
+</Steps>
+
+**Generate a new secret** replaces the secret at once: the old one stops
+working immediately, so update your server at the same time. Switching the
+embedded chat off ends every panel session: an open panel's next request is
+refused, the panel asks your page for a token, and that is answered
+`unavailable` with `disabled`. A panel opened while it is off still loads on
+your allowed origins, but signs nobody in and says the assistant is switched
+off.
+
+### Who can use the panel
+
+Every person who uses the panel needs an **AptiveAI account in your
+enterprise**. An owner creates it by invitation — see [Users and
+roles](/administration/users) — or your server creates it with the
+[Provisioning API](/for-apps/account-api) (`PUT /members/{email}`), which sends
+the person no email and sets no password. The token vouches for an existing
+person; it never creates one. Someone without an account sees *The assistant is not set up
+for you yet. Ask your administrator to invite you.*
+
+In the panel a person sees **the agents they may already use** in AptiveAI
+Agents, by the usual [sharing rules](/concepts/sharing), unless your page names
+one with `agentId` ([Which agent answers](#which-agent-answers)). Standalone
+agents are not offered. Someone with no agent to use sees *You have no agents to work with
+yet. Ask your administrator to share one with you.*
+
+A person with **no seat** counts as having no agent to use (`no_agents`),
+except on an **account that pays only from its wallet** — one where nobody
+holds a seat ([An account that pays only from its
+wallet](/for-apps/agents-api#an-account-that-pays-only-from-its-wallet)). There,
+people with no seat use the panel, and each of their tasks is paid from the
+wallet at the same rate as the Agents API. A task is refused before it starts
+when the wallet holds less than $0.05, and the panel tells the person to ask
+their administrator to add funds.
+
+## Sign-in, step by step
+
+<Steps>
+
+1. Your page mounts the panel. The panel's frame loads from AptiveAI Agents,
+   which lets it be shown only on your allowed origins.
+
+2. The panel says it is ready, and the script calls your `getToken`.
+
+3. `getToken` asks **your own server** for a token. Your server checks that the
+   person is signed in to your application, signs a token for that person's
+   email with the signing secret, and returns it.
+
+4. The script hands the token to the panel, which trades it with AptiveAI
+   Agents for a session of its own. If `getToken` throws, returns no token, or
+   the panel cannot reach AptiveAI Agents, the script tries again after a
+   moment; after three failures in a row it stops and `onEvent` receives
+   `{ type: 'error', code: 'token_failed' }`.
+
+5. The panel opens, signed in. When that session ends, the panel asks again and
+   the script calls `getToken` for a fresh token.
+
+</Steps>
+
+<Aside type="caution" title="The email comes from your session, never from the request">
+  Your token endpoint must take the person's email from **your application's
+  own signed-in session** — never from a query parameter, a request body or a
+  header the browser sends. An endpoint that signs whatever email it is given
+  lets anyone sign in to AptiveAI Agents as anyone in your enterprise.
+
+  The **signing secret never reaches the browser**: sign only on your server,
+  and never log a token.
+</Aside>
+
+### The token
+
+A JSON Web Token, signed with **HS256** using the signing secret as its key.
+The secret is used as plain text — its UTF-8 bytes — not decoded from base64.
+
+| Claim | Value |
+|---|---|
+| `iss` | Your enterprise id |
+| `aud` | `aptiveai-embed` |
+| `sub` | The person's email. It is matched, ignoring case, to an account in your enterprise |
+| `iat` | When it was signed, in seconds |
+| `exp` | When it expires: **at most 60 seconds** after `iat` |
+| `jti` | A unique id. A token is used **once**: the same `jti` is refused while the token is alive |
+
+Up to 30 seconds of difference between your server's clock and AptiveAI's is
+tolerated. A token is at most 4,096 characters. Sign a new token every time the
+panel asks; never cache one.
+
+### A token endpoint
+
+Each example below is a complete, minimal endpoint. It takes the email from
+your application's own signed-in session, refuses with `401` when there is
+none, and returns the token as plain text, which is what `getToken` in the
+[quick start](#quick-start) reads. Each one reads your enterprise id and the
+secret from the environment variables `APTIVEAI_ENTERPRISE_ID` and
+`APTIVEAI_EMBED_SECRET`.
+
+<Aside type="note" title="Use the secret exactly as Settings shows it">
+  The key is the secret's own text, as UTF-8 bytes. It looks like base64, but
+  **do not decode it**: a decoded secret signs tokens that are refused as
+  `bad_token`. The secret is 43 characters (344 bits), above the 256-bit
+  minimum that some libraries, such as Microsoft.IdentityModel, enforce for
+  HS256. If a library says the key is too short, check that the secret was not
+  decoded, trimmed or cut. No `typ` header is required; `typ: "JWT"` is
+  accepted.
+</Aside>
+
+<Tabs syncKey="lang">
+  <TabItem label="Node.js">
+
+```js
+// npm install express jose
+import express from 'express';
+import { SignJWT } from 'jose';
+import { randomUUID } from 'node:crypto';
+
+const ENTERPRISE_ID = process.env.APTIVEAI_ENTERPRISE_ID;
+// The secret's UTF-8 bytes are the key: do not base64-decode it.
+const SECRET = new TextEncoder().encode(process.env.APTIVEAI_EMBED_SECRET);
+
+export async function signEmbedToken(email, audience = 'aptiveai-embed') {
+  const now = Math.floor(Date.now() / 1000);
+  return new SignJWT({})
+    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+    .setIssuer(ENTERPRISE_ID)
+    .setAudience(audience)
+    .setSubject(email)
+    .setIssuedAt(now)
+    .setExpirationTime(now + 60)
+    .setJti(randomUUID())
+    .sign(SECRET);
+}
+
+const app = express();
+// app.use(yourSession); — Your application's own sign-in, which must set the signed-in person.
+
+app.post('/aptiveai/token', async (req, res) => {
+  // The person signed in to YOUR application — never an email from the request.
+  const email = req.user?.email;
+  if (!email) return res.sendStatus(401);
+  res.set('Cache-Control', 'no-store').type('text/plain').send(await signEmbedToken(email));
+});
+
+app.listen(3000);
+```
+
+  </TabItem>
+  <TabItem label="Python">
+
+```python
+# pip install fastapi uvicorn PyJWT
+import os
+import time
+import uuid
+
+import jwt  # PyJWT
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import PlainTextResponse
+
+ENTERPRISE_ID = os.environ["APTIVEAI_ENTERPRISE_ID"]
+# The secret's UTF-8 bytes are the key: do not base64-decode it.
+SECRET = os.environ["APTIVEAI_EMBED_SECRET"].encode("utf-8")
+
+
+def sign_embed_token(email: str, audience: str = "aptiveai-embed") -> str:
+    now = int(time.time())
+    claims = {
+        "iss": ENTERPRISE_ID,
+        "aud": audience,
+        "sub": email,
+        "iat": now,
+        "exp": now + 60,
+        "jti": str(uuid.uuid4()),
+    }
+    return jwt.encode(claims, SECRET, algorithm="HS256")
+
+
+app = FastAPI()
+
+
+def signed_in_email(request: Request) -> str:
+    # The person signed in to YOUR application — never an email from the request.
+    # Your application's own sign-in, which must set the signed-in person.
+    user = getattr(request.state, "user", None)
+    if user is None:
+        raise HTTPException(status_code=401)
+    return user.email
+
+
+@app.post("/aptiveai/token", response_class=PlainTextResponse)
+def aptiveai_token(email: str = Depends(signed_in_email)):
+    return PlainTextResponse(sign_embed_token(email), headers={"Cache-Control": "no-store"})
+```
+
+  </TabItem>
+  <TabItem label="Java">
+
+```java
+// Maven: com.auth0:java-jwt:4.4.0 (with Spring Boot's spring-boot-starter-web and spring-boot-starter-security)
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import java.security.Principal;
+import java.time.Instant;
+import java.util.UUID;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AptiveAiTokenController {
+  static final String ENTERPRISE_ID = System.getenv("APTIVEAI_ENTERPRISE_ID");
+  // The secret's UTF-8 bytes are the key: do not base64-decode it.
+  static final Algorithm HS256 = Algorithm.HMAC256(System.getenv("APTIVEAI_EMBED_SECRET"));
+
+  static String signEmbedToken(String email, String audience) {
+    Instant now = Instant.now();
+    return JWT.create()
+        .withIssuer(ENTERPRISE_ID)
+        .withAudience(audience)
+        .withSubject(email)
+        .withIssuedAt(now)
+        .withExpiresAt(now.plusSeconds(60))
+        .withJWTId(UUID.randomUUID().toString())
+        .sign(HS256);
+  }
+
+  @PostMapping(value = "/aptiveai/token", produces = MediaType.TEXT_PLAIN_VALUE)
+  public ResponseEntity<String> token(Principal principal) {
+    // The person signed in to YOUR application — never an email from the request.
+    if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    String email = principal.getName(); // If your principal's name is not the email, look the email up here.
+    return ResponseEntity.ok()
+        .cacheControl(CacheControl.noStore())
+        .body(signEmbedToken(email, "aptiveai-embed"));
+  }
+}
+```
+
+  </TabItem>
+  <TabItem label="C#">
+
+```csharp
+// dotnet add package System.IdentityModel.Tokens.Jwt
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
+var enterpriseId = Environment.GetEnvironmentVariable("APTIVEAI_ENTERPRISE_ID")!;
+// The secret's UTF-8 bytes are the key: do not base64-decode it.
+var signingKey = new SymmetricSecurityKey(
+    Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("APTIVEAI_EMBED_SECRET")!));
+
+string SignEmbedToken(string email, string audience = "aptiveai-embed")
+{
+    var now = DateTime.UtcNow;
+    var handler = new JwtSecurityTokenHandler();
+    var token = handler.CreateJwtSecurityToken(new SecurityTokenDescriptor
+    {
+        Issuer = enterpriseId,
+        Audience = audience,
+        Subject = new ClaimsIdentity(new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        }),
+        IssuedAt = now,
+        NotBefore = now,
+        Expires = now.AddSeconds(60),
+        SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
+    });
+    return handler.WriteToken(token);
+}
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAuthentication(/* Your application's own sign-in (cookie, OpenID Connect, …). */);
+builder.Services.AddAuthorization();
+var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapPost("/aptiveai/token", (ClaimsPrincipal user, HttpResponse response) =>
+{
+    // The person signed in to YOUR application — never an email from the request.
+    var email = user.FindFirstValue(ClaimTypes.Email);
+    if (email is null) return Results.Unauthorized();
+    response.Headers.CacheControl = "no-store";
+    return Results.Text(SignEmbedToken(email));
+});
+
+app.Run();
+```
+
+  </TabItem>
+</Tabs>
+
+Any other JWT library works too, in any language, as long as it produces the
+claims above with HS256.
+
+### The panel's session
+
+The token opens a session of **8 hours** that exists only inside your
+application's panel. It is not the person's ordinary AptiveAI Agents session:
+it does not sign them in at console.aptiveai.io, it reaches only the panel's
+own pages, and it cannot change a password, two-factor settings or other
+sessions. **Open in AptiveAI** opens the full product in a new tab, where the
+person signs in the usual way.
+
+## Ending a person's session
+
+When a person signs out of your application, or you deactivate them, end their
+panel session too — otherwise it lives on for the rest of its 8 hours. Your
+**server** calls:
+
+```http
+POST https://console.aptiveai.io/api/embed/session/revoke
+Content-Type: application/json
+
+{ "token": "<a revoke token>" }
+```
+
+This is a server-to-server call: no cookie, no browser. The revoke token is
+signed exactly like the [sign-in token](#the-token) — HS256 with the signing
+secret, `iss` your enterprise id, `sub` the person's email, at most 60 seconds
+of life, a `jti` used once — with one difference: **`aud` is
+`aptiveai-embed-revoke`**. The two are not interchangeable: a sign-in token is
+refused here, and a revoke token never signs anyone in.
+
+| Answer | Meaning |
+|---|---|
+| `200 { "ok": true, "ended": <n> }` | Every panel session of that person opened through your enterprise has ended; `n` is how many. It is `0` when there were none, and also when the email has no account with you, so the answer never says who has one. The person's own AptiveAI Agents sessions are not touched |
+| `401 { "ok": false, "reason": "bad_token" }` | The token did not verify: wrong secret or audience, expired, over 60 seconds, or used before |
+| `401 { "ok": false, "reason": "disabled" }` | The embedded chat is switched off for your enterprise, so every session has already ended |
+| `429` | More than 60 calls a minute from your server; wait for `Retry-After` seconds |
+
+Each example reuses the signing function of the
+[token endpoint](#a-token-endpoint), with the revoke audience, and reads the
+address of AptiveAI Agents from `APTIVEAI_CONSOLE_URL`, which defaults to
+`https://console.aptiveai.io`.
+
+<Tabs syncKey="lang">
+  <TabItem label="Node.js">
+
+```js
+// Uses signEmbedToken from the token endpoint above.
+const CONSOLE_URL = process.env.APTIVEAI_CONSOLE_URL ?? 'https://console.aptiveai.io';
+
+export async function endEmbedSessions(email) {
+  const token = await signEmbedToken(email, 'aptiveai-embed-revoke');
+  const res = await fetch(`${CONSOLE_URL}/api/embed/session/revoke`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
+  });
+  return res.json(); // { ok: true, ended } or { ok: false, reason }
+}
+```
+
+  </TabItem>
+  <TabItem label="Python">
+
+```python
+# Uses sign_embed_token from the token endpoint above.
+import json
+import urllib.request
+
+CONSOLE_URL = os.environ.get("APTIVEAI_CONSOLE_URL", "https://console.aptiveai.io")
+
+
+def end_embed_sessions(email: str) -> dict:
+    body = json.dumps({"token": sign_embed_token(email, "aptiveai-embed-revoke")}).encode("utf-8")
+    request = urllib.request.Request(
+        f"{CONSOLE_URL}/api/embed/session/revoke",
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    # A 401 or 429 raises urllib.error.HTTPError.
+    with urllib.request.urlopen(request) as response:
+        return json.load(response)
+```
+
+  </TabItem>
+  <TabItem label="Java">
+
+```java
+// Uses signEmbedToken from the token endpoint above.
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class AptiveAiSessions {
+  static final String CONSOLE_URL =
+      System.getenv().getOrDefault("APTIVEAI_CONSOLE_URL", "https://console.aptiveai.io");
+  // HTTP/1.1: some servers drop the HTTP/2 upgrade Java tries on plain http.
+  static final HttpClient HTTP =
+      HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
+
+  public static String endEmbedSessions(String email) throws Exception {
+    String token = AptiveAiTokenController.signEmbedToken(email, "aptiveai-embed-revoke");
+    HttpRequest request = HttpRequest.newBuilder(URI.create(CONSOLE_URL + "/api/embed/session/revoke"))
+        .header("Content-Type", "application/json")
+        .POST(HttpRequest.BodyPublishers.ofString("{\"token\":\"" + token + "\"}"))
+        .build();
+    return HTTP.send(request, HttpResponse.BodyHandlers.ofString()).body(); // { ok: true, ended } or { ok: false, reason }
+  }
+}
+```
+
+  </TabItem>
+  <TabItem label="C#">
+
+```csharp
+// Uses SignEmbedToken from the token endpoint above.
+using System.Net.Http.Json;
+
+var consoleUrl = Environment.GetEnvironmentVariable("APTIVEAI_CONSOLE_URL") ?? "https://console.aptiveai.io";
+var http = new HttpClient();
+
+async Task<string> EndEmbedSessions(string email)
+{
+    var token = SignEmbedToken(email, "aptiveai-embed-revoke");
+    var res = await http.PostAsJsonAsync($"{consoleUrl}/api/embed/session/revoke", new { token });
+    return await res.Content.ReadAsStringAsync(); // { ok: true, ended } or { ok: false, reason }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+Call it:
+
+- when the person signs out of your application;
+- when you deactivate or remove the person in your application.
+
+A panel that is still open when its session ends notices at its next request
+and asks your page for a new token through `getToken`. **After sign-out or
+deactivation your token endpoint must refuse that person**, so the panel stays
+signed out. On a shared computer, also take the panel off the page at sign-out
+(`unmount()`) and mount a new one for the next person, so nothing of the
+previous person's panel stays on screen.
+
+## Page context
+
+Context tells the agent what the person has open in your application, so a
+question like "what changed on this order?" needs no explanation. Pass it to
+`AptiveAI.mount` and update it with `setContext` whenever the person moves:
+
+```js
+panel.setContext({
+  page: { title: 'Order 1042', url: location.href },
+  record: { type: 'order', id: '1042', label: 'Order 1042 — Jane Sample' },
+  note: 'Delivery was rescheduled this morning.',
+});
+```
+
+| Field | What it is |
+|---|---|
+| `page` | `{ title, url }` — the page the person is on |
+| `record` | `{ type, id, label }` — the record they have open |
+| `note` | Any short text worth knowing |
+
+Every field is optional; `setContext({})` or `setContext(null)` clears it.
+
+- **The panel shows it.** A line above the message box shows the record's
+  label (or the page's title), and the person can remove it from their next
+  message. It travels with each message the person sends, and the message shows
+  it in the task's transcript.
+- **It is a hint, not an instruction.** The agent is told it comes from the
+  application the person has open, not from the person, and reads the real data
+  through its own [connectors](/concepts/connectors).
+- **Keep it small and free of secrets.** The whole context is at most 4 KB of
+  JSON; a larger one is refused, and the panel keeps the previous one.
+
+## Screen actions
+
+A screen action lets the agent change **what the person sees** in your
+application while it answers: open a record, switch a tab, go to a page. You
+declare them with `actions`; the agent sees each one as a tool it may call,
+described by your `description`.
+
+```js
+panel.setActions([
+  {
+    name: 'go_to',
+    description: 'Go to one of the main pages: "orders", "customers" or "schedule".',
+    parameters: {
+      type: 'object',
+      properties: { page: { type: 'string', enum: ['orders', 'customers', 'schedule'] } },
+      required: ['page'],
+    },
+    run: async ({ page }) => {
+      if (!['orders', 'customers', 'schedule'].includes(page)) throw new Error('Unknown page');
+      await router.navigate(`/${page}`);
+      return `Showing ${page}`;
+    },
+  },
+]);
+```
+
+<Aside type="caution" title="A screen action changes the screen, never data">
+  Screen actions run without an approval card, so they must only navigate or
+  show things. Real work — writing a record, sending something, changing a
+  status — goes through a [connector](/concepts/connectors) to your
+  application, where it is permissioned, approved and recorded. Treat the
+  arguments as untrusted input: validate them in `run`, and throw for anything
+  you do not recognise.
+</Aside>
+
+How a call goes:
+
+1. The agent calls one of your actions, and the task's transcript shows the
+   step.
+2. The script calls your `run(args)` with the arguments.
+3. What `run` returns — or resolves to — tells the agent the outcome, which
+   the transcript shows too:
+
+   | `run` | The agent is told |
+   |---|---|
+   | returns a string, or anything else | Done, with the string as a short message |
+   | returns `false` | Not done |
+   | returns `{ ok, message }` | Done or not, as `ok` says, with `message` |
+   | throws | Not done, with the first line of your error's message |
+
+   An action the agent names that you no longer offer is answered *Unknown
+   action.* The agent's request is answered once: `run` is never called twice
+   for it.
+
+Screen actions are **best effort**:
+
+- The agent waits **at most 10 seconds** for an answer, then carries on as if
+  the action was not done.
+- One stretch of the agent's work may call **at most 5** screen actions.
+- If the panel is closed, or the person has left the page, the action is not
+  done and the task carries on.
+- A task the person sends a message to from the full product, outside your
+  application, has no screen actions.
+
+| Limit | Value |
+|---|---|
+| Actions declared at once | 20 |
+| `name` | Lowercase letters, digits and `_`, starting with a letter, at most 40 characters, unique |
+| `description` | Required, at most 300 characters |
+| `parameters` | A JSON schema of `type: "object"` with `properties` (and optional `required`), at most 2 KB |
+| The message an action answers with | At most 300 characters; longer is cut |
+
+## Your own system, as each person
+
+When the agent works in your application's own system, give it a
+[connector](/concepts/connectors) to your MCP server and set it to **Each
+person signs in**: every person then signs in to your server as themselves,
+and every action the agent takes there carries that person's own token, never
+an administrator's.
+
+### What your server must provide
+
+An MCP server over Streamable HTTP that signs people in with OAuth, as the MCP
+authorization specification describes:
+
+- An unauthenticated call answers `401`, and your server publishes its
+  protected resource metadata (RFC 9728) naming its authorization server.
+- The authorization server publishes its metadata (RFC 8414) and supports PKCE
+  with `S256`, the `resource` parameter (RFC 8707), refresh tokens, and dynamic
+  client registration (RFC 7591). AptiveAI registers a client for each sign-in,
+  with the redirect URI `https://console.aptiveai.io/api/embed/connect/callback`
+  (and `https://console.aptiveai.io/api/connectors/oauth/callback` for a sign-in
+  made inside AptiveAI Agents).
+- It issues a token for **the person who signs in**, and your MCP server acts
+  as that person with it. A token that acts as a fixed service account defeats
+  the point.
+- It says whose account signed in, with an `email` from a userinfo endpoint or
+  in a JWT access token (with `email_verified: true` when your server has
+  verified it).
+
+<Aside type="caution" title="The email rule">
+  AptiveAI refuses a sign-in when **any** email your server states — verified,
+  unverified or with no verification flag — is not the panel person's (case and
+  spaces ignored): nothing is connected, so a forwarded link cannot connect
+  somebody else's account. If your server states no email at all, only the
+  confirmation page below guards that.
+</Aside>
+
+### What an administrator sets
+
+An administrator connects your server once in AptiveAI Agents
+(**Connectors → Custom MCP server**, authentication **The server's own
+sign-in**), gives the connection to the agent your panel mounts, and chooses
+**Each person signs in** under **Who signs in**. That first connection only
+names the server and the tools the agent may use; nobody else's work runs on
+it.
+
+Only a person's **own** connection to that exact address is ever used for
+them — the panel's sign-in always makes it to that address, whatever the
+browser sends — and it offers no tool the administrator's does not. With none,
+the tool does not run.
+
+### What a person sees the first time
+
+1. When the agent first needs your system, the chat asks: *host.example isn't
+   connected for you yet. Connect it so I can carry on.* with **Sign in with
+   host.example** and **Not now**.
+2. **Sign in with host.example** opens a new tab (the panel itself never leaves
+   your page; allow the tab if the browser asks). It first says *You are about
+   to connect host.example for Pat Example (pat@example.test) in Northwind Desk.
+   If that is not you, close this tab.* — naming who the connection is for, in
+   which account — with a **Continue** button.
+3. **Continue** goes to your server's own sign-in page.
+4. After they sign in, the tab says *You're connected. Close this tab and go
+   back to the chat.* and the task carries on by itself. Next time nothing is
+   asked.
+
+The tab works without any AptiveAI sign-in: it carries a **single-use link,
+valid for ten minutes**, that can make only that one person's connection to
+your server, for the task that asked. If they take longer, or the sign-in
+fails, the chat says so and they can choose **Sign in** again. **Not now**
+lets the agent carry on without your system.
+
+### Checking that nobody acts as anybody else
+
+Before you open the panel to people who are not administrators, read
+[`GET /connectors`](/for-apps/account-api#get-connectors) with the Provisioning
+API from your server: it lists every connection to a server address, who owns
+it and who it is shared with, and how each agent uses it. For the agent you
+mount, its grant at your server's address should be `per_person`, and no
+connection at that address should be shared.
+
+## Theming
+
+With no theme, the panel looks like AptiveAI Agents. To match your
+application, open **Settings → Embedded chat → Theme** and pick a **Base
+theme**, then the **Page**, **Sidebar and cards** and **Accent** colours for
+**Light** and **Dark**. **Light and dark** decides whether each person sees the
+colours they chose for themselves (**Follow each person**) or one look for
+everyone (**Always this look**). **From a screenshot** proposes colours from an
+image of your application. Colours that are hard to read are flagged before you
+can save.
+
+**Your page's mode picks which of the two colour sets the panel shows.** Pass
+`theme: 'light'` or `'dark'` to `mount`, and call `setTheme` when your page
+switches. An enterprise that chose **Always this look** keeps that one look,
+whatever your page passes. Without `theme`, the panel follows the visitor's
+system setting. To follow the device yourself:
+
+```js
+const dark = window.matchMedia('(prefers-color-scheme: dark)');
+const panel = AptiveAI.mount('#assistant', { /* … */ theme: dark.matches ? 'dark' : 'light' });
+dark.addEventListener('change', (e) => panel.setTheme(e.matches ? 'dark' : 'light'));
+```
+
+## Browser support and cookies
+
+The panel's session is kept in a **partitioned third-party cookie**
+(`SameSite=None; Secure; Partitioned`): the browser keeps it only for the panel
+inside your site, separate from any other site, and it never becomes the
+person's ordinary AptiveAI Agents session.
+
+<Aside type="caution" title="Safari has not been verified yet">
+  The panel has been verified in **Chromium-based browsers** (such as Chrome
+  and Edge) and **Firefox**. **It has not been verified in Safari** (on macOS
+  or iOS). If your people use Safari, test the panel there, on a real device,
+  before you rely on it.
+</Aside>
+
+## Troubleshooting
+
+When the panel cannot sign the person in, it shows one sentence to the person
+and your `onEvent` receives `{ type: 'unavailable', reason }`. When a message
+from your page is refused, it receives `{ type: 'error', code }`.
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| The panel area stays blank, and the browser's console reports a refusal to frame the page | Your page's origin is not in **Allowed origins**, no origin is listed, or the enterprise id is wrong | Add the exact origin (scheme, host and port) in **Settings → Embedded chat**, and check the id you pass |
+| `unavailable`, reason `disabled` | The embedded chat is switched off for the enterprise. The panel still loads and says so, and every token is refused | An owner switches **Embedded chat on**. Send no more tokens until your page loads again |
+| `unavailable`, reason `bad_token` | The token was refused: wrong secret, wrong `iss` or `aud`, lifetime over 60 seconds, expired, clock far off, or a `jti` used twice | Sign with the current secret and the claims in [The token](#the-token); sign a new token on every call to `getToken`; check your server's clock |
+| `unavailable`, reason `no_account` | No account in your enterprise has the token's email | Invite the person — see [Users and roles](/administration/users) — or check that your server signs the email they have in AptiveAI |
+| `unavailable`, reason `account_unavailable` | The enterprise is paused, banned or cancelled, or the person's account is suspended | The person asks their administrator; an owner checks [Billing and seats](/administration/billing) |
+| `unavailable`, reason `no_agents` | The person has no agent they may use, or, with `agentId`, cannot use that agent (not shared with them, deleted, or not a regular agent). A person with no seat counts as having none, except on an account that pays only from its wallet | Share the agent with the person — see [Sharing](/concepts/sharing) — check the `agentId` you pass, or give the person a seat |
+| `error`, code `network` | The panel could not reach AptiveAI Agents while signing in | The script asks `getToken` for a new token by itself; check the person's connection if it repeats |
+| `error`, code `token_failed` | `getToken` failed three times in a row — it threw, returned no token, or the panel could not reach AptiveAI Agents | Check your token endpoint and the person's connection; the script tries again when the panel reloads |
+| `error`, code `session_not_kept` | Three sign-ins in a row ended within 30 seconds: the browser is not keeping the panel's session, usually because it blocks the panel's cookie. Safari has not been verified | Try the panel in a Chromium-based browser or Firefox, and check the browser's settings for blocked third-party cookies. The script stops asking for tokens until the panel loads again |
+| `error`, code `context_too_large` | The context is over 4 KB | Send less — a label and an id are enough |
+| `error`, code `too_many_actions` | More than 20 actions | Declare fewer |
+| `error`, code `invalid_action` | An action breaks a rule above: its name, description, `parameters` schema, a size, or two with one name | Fix the action; the whole list is refused until it is valid |
+| `error`, code `invalid_message` | A message did not have the expected shape | Check what you pass to `setContext` and `setActions` |
+| The agent says the screen did not respond | `run` did not answer within 10 seconds, the panel was closed, or the person left the page | Make `run` answer quickly; it only needs to start the navigation |
+
+## Advanced: the message protocol
+
+The script is a thin layer over a small `postMessage` protocol between your
+page and the panel's frame. If you cannot use the script, you can speak the
+protocol yourself.
+
+**The frame.** Create it with your enterprise id. Add `&lang=es` or `&lang=en`
+to the address to choose the panel's language, `&theme=light` or `&theme=dark`
+to start it in your page's mode, `&agent=<agent id>` to name the one agent it
+talks to, or `&default_agent=<agent id>` to name the agent it opens on
+([Which agent answers](#which-agent-answers)):
+
+```html
+<iframe
+  src="https://console.aptiveai.io/embed?e=YOUR-ENTERPRISE-ID"
+  title="Assistant"
+  allow="clipboard-write"
+></iframe>
+```
+
+**Who may frame it.** Only your allowed origins. For an unknown enterprise, or
+one with no allowed origins, nobody may. An enterprise that switched the
+embedded chat off still lets its allowed origins frame the panel, so the panel
+can say it is off: the frame loads, posts `aptiveai:ready`, and answers your
+`aptiveai:session` with `aptiveai:unavailable` reason `disabled`. Stop sending
+tokens then, until your page loads again; sending one on every
+`aptiveai:ready` only asks your server for tokens that will be refused.
+
+**Safety rules for your page:**
+
+- Post to the frame with its exact origin, `https://console.aptiveai.io`, as
+  the target — never `*`.
+- Accept a message only when `event.origin` is `https://console.aptiveai.io`
+  **and** `event.source` is the frame's `contentWindow`.
+- Ignore messages whose `type` does not start with `aptiveai:`.
+
+The frame accepts `aptiveai:context` and `aptiveai:actions` as soon as it has
+posted `aptiveai:ready`.
+
+Every message is an object with a `type` and `v: 1`. A message with another
+`v` is refused with `aptiveai:error` `unsupported_version`.
+
+### Your page to the frame
+
+| `type` | Fields | Meaning |
+|---|---|---|
+| `aptiveai:session` | `token` | Sign the person in. Send it in answer to `aptiveai:ready` and to `aptiveai:session-expired`, with a new token each time |
+| `aptiveai:context` | optional `page: { title, url }`, `record: { type, id, label }`, `note` | What the person has open. Send it whenever it changes; with no fields it clears the context |
+| `aptiveai:actions` | `actions: [{ name, description, label?, parameters? }]` | The screen actions you offer. Sending it again replaces the list; an empty list withdraws them. `label` (at most 80 characters) is your own wording for the step in the transcript |
+| `aptiveai:action-result` | `id`, `ok`, optional `message` | Your answer to an `aptiveai:action`: `ok: true` when it was done, `ok: false` with a short message when it was not |
+| `aptiveai:theme` | `theme`: `light` or `dark` | Your page's mode. Send it after `aptiveai:ready` (again after every `aptiveai:ready`) and whenever your page switches |
+
+### The frame to your page
+
+| `type` | Fields | Meaning |
+|---|---|---|
+| `aptiveai:ready` | — | The frame is listening. Send `aptiveai:session` |
+| `aptiveai:signed-in` | — | The person is signed in. Send `aptiveai:context` and `aptiveai:actions` now |
+| `aptiveai:session-expired` | — | The panel's session ended. Send a new `aptiveai:session` |
+| `aptiveai:unavailable` | `reason` | The person cannot be signed in: `no_account`, `disabled`, `bad_token`, `account_unavailable` or `no_agents` ([Troubleshooting](#troubleshooting)). Send no more tokens until your page loads again |
+| `aptiveai:task` | `id`, `status` | A task started or was opened, or its status changed ([the statuses](#reopening-where-the-person-was)) |
+| `aptiveai:action` | `id`, `name`, `arguments` | The agent asks you to perform one of your actions. Answer with `aptiveai:action-result` and the same `id` |
+| `aptiveai:error` | `code` | A message of yours was refused (`unsupported_version`, `invalid_message`, `context_too_large`, `too_many_actions`, `invalid_action`), or `network`: the panel could not reach AptiveAI Agents while signing in — send a new token |
+
+### Limits
+
+A message over a limit is refused with `aptiveai:error` and has no effect.
+
+| Limit | Value |
+|---|---|
+| A whole `aptiveai:context` message | 4 KB of JSON |
+| Actions in one `aptiveai:actions` | 20 |
+| Action `name` | `^[a-z][a-z0-9_]{0,39}$`, unique in the list |
+| Action `description` | 1 to 300 characters |
+| Action `label` | 80 characters |
+| Action `parameters` | A JSON schema of `type: "object"` with `properties`, at most 2 KB of JSON |
+| `aptiveai:action-result` `message` | 300 characters (longer is cut) |
+| `aptiveai:action-result` `id` | 100 characters |
+| `aptiveai:session` `token` | 4,096 characters |
+
+## Next
+
+<CardGrid>
+  <LinkCard title="AptiveAI for Apps" href="/for-apps/overview" description="Every part, who sets it up, and how it is paid for." />
+  <LinkCard title="Agents API" href="/for-apps/agents-api" description="Call an agent from your server, without a panel." />
+  <LinkCard title="Provisioning API" href="/for-apps/account-api" description="Add the panel's people, set their seats and check their connections from your own admin screen." />
+  <LinkCard title="Connectors" href="/concepts/connectors" description="How the agent reads and writes your application's data for real." />
+</CardGrid>

@@ -1,0 +1,482 @@
+---
+title: API de Agentes
+description: Llama a un agente de AptiveAI desde el servidor de tu aplicación como llamarías a un modelo — un endpoint de chat completions compatible con OpenAI donde el modelo es el agente. Claves de API, la solicitud, imágenes, respuestas en JSON, streaming, tus herramientas y las del agente, cuánto se cobró cada llamada, una cuenta que paga solo con su billetera, errores y límites, con ejemplos de curl y del SDK de OpenAI.
+---
+
+import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+La **API de Agentes** permite que el servidor de tu aplicación llame a un
+[agente](/es/concepts/agents) de AptiveAI como llamaría a un modelo. Es
+**compatible con OpenAI**: cualquier cliente que hable el chat completions de
+OpenAI funciona, con dos cambios — la dirección de AptiveAI y una clave de
+AptiveAI —, y el `model` que envías es el **id del agente**.
+
+Lo que el agente aporta y un modelo solo no:
+
+- **Sus instrucciones y su modelo**, configurados en AptiveAI Agents. Cambia
+  cualquiera de los dos ahí y todas las llamadas usan el cambio; tu aplicación
+  no necesita una nueva versión.
+- **Sus herramientas de conectores**, que se ejecutan del lado de AptiveAI
+  dentro de tu solicitud: el agente puede consultar tus sistemas antes de
+  responder.
+- **Tus propias herramientas**, que envías con la solicitud como siempre.
+  AptiveAI nunca las ejecuta: cuando el agente llama a una, la llamada vuelve a
+  ti.
+
+Cada llamada se paga con la billetera de tu empresa, y la respuesta dice cuánto
+se cobró.
+
+## Claves de API
+
+Un **propietario de tu empresa** crea las claves en AptiveAI Agents, en
+**Ajustes → Claves de API**.
+
+<Steps>
+
+1. Pulsa **Nueva clave**.
+2. Ponle un **Nombre** que diga para qué sirve; solo tú lo ves.
+3. En **Servicios**, elige para qué se puede usar la clave, al menos uno:
+   **API de Agentes** (esta página), **API de Voz** ([API de
+   Voz](/es/for-apps/speech-api)) o **API de Aprovisionamiento** ([API de
+   Aprovisionamiento](/es/for-apps/account-api)).
+4. Con **API de Agentes**, elige en **Agentes** los agentes a los que esta
+   clave puede llamar: al menos uno. Los agentes privados y los independientes
+   no aparecen. Una clave sin la API de Agentes no lista ningún agente.
+5. Deja **Conservar conversaciones** desactivado salvo que necesites leer las
+   conversaciones después ([Qué se guarda](#qué-se-guarda)).
+6. Pulsa **Crear clave** y luego **Copiar clave**. La clave empieza por `aak_`
+   y **no se vuelve a mostrar**: guárdala en el almacén de secretos de tu
+   servidor.
+
+</Steps>
+
+Ningún servicio implica otro: una clave con la API de Aprovisionamiento no
+puede llamar a un agente salvo que también tenga la API de Agentes, y una clave
+con solo la API de Agentes no puede aprovisionar. **Dale a la API de
+Aprovisionamiento una clave propia**: puede comprar puestos con la tarjeta de
+la cuenta, así que mantenla fuera del servidor que atiende el chat.
+
+Una clave lleva toda la autoridad de los conectores de sus agentes, así que va
+solo en tu servidor: nunca en un navegador, una app móvil ni un repositorio.
+Edita una clave para cambiar su nombre, sus agentes, sus servicios o
+**Conservar conversaciones**; el secreto en sí nunca cambia. **Revocar** es
+inmediato y permanente: todo lo que llame con esa clave deja de funcionar al
+instante. Crea una clave nueva en lugar de intentar reactivar una.
+
+**Los interruptores de la propia cuenta.** Además de los servicios de cada
+clave, tu cuenta tiene un interruptor para la API de Agentes y otro para Voz,
+los dos activados salvo que alguien los desactive. Una llamada necesita el
+servicio en su clave **y** el interruptor de la cuenta. El propietario los
+cambia arriba de **Ajustes → Claves de API**, donde el servicio de una clave
+que está desactivado para la cuenta aparece tachado, *Desactivado para esta
+cuenta*; la [API de
+Aprovisionamiento](/es/for-apps/account-api#patch-accountservices) también
+puede cambiarlos.
+
+El diálogo de la clave también lista, en **Herramientas que la API no
+ofrece**, cada herramienta de conectores de sus agentes que una llamada no
+puede usar, y por qué:
+
+| Motivo | Qué significa |
+|---|---|
+| *Necesita una computadora, y una llamada de API no tiene.* | Las herramientas del navegador, los flujos de navegador y todo lo que necesita la computadora del agente |
+| *Su inicio de sesión no está compartido con el agente.* | Una llamada de API no tiene ninguna persona por quien iniciar sesión. Solo se ofrecen los conectores con **Usar mi conexión** en **Quién inicia sesión**, en el editor del agente — consulta [Agentes](/es/concepts/agents) |
+| *Los mensajes no se pueden enviar desde una llamada de API.* | [AptiveAI Messaging](/es/concepts/messaging) no está disponible por la API |
+
+## La solicitud
+
+```http
+POST https://console.aptiveai.io/api/v1/chat/completions
+Authorization: Bearer aak_…
+Content-Type: application/json
+```
+
+También se acepta la forma sin prefijo, `Authorization: aak_…`.
+
+El cuerpo es un cuerpo de chat completions de OpenAI. `model` es el **id del
+agente**: la última parte de la dirección del agente cuando lo abres en
+AptiveAI Agents (`https://console.aptiveai.io/agents/<id>`). Siempre se usa el
+modelo del propio agente; desde la solicitud no se puede elegir otro.
+
+| Campo | Qué pasa |
+|---|---|
+| `model` | El id del agente. Debe ser uno de los agentes de la clave, no eliminado y no privado; si no, `404 agent_not_found`, la misma respuesta tanto si el agente no existe como si no es tuyo |
+| `messages` | Roles `system`, `user`, `assistant` y `tool`; `developer` se trata como `system`. Un mensaje `user` también puede llevar **imágenes**, como partes `image_url` con una URL `data:` en base64 incluida en el mensaje ([Imágenes](#imágenes)). Cualquier otra parte (audio, archivos) da `400 unsupported_content`, y también una imagen en cualquier mensaje que no sea `user` |
+| `tools` | Tus herramientas, solo `type: "function"`, con nombres de letras, dígitos, `_` y `-`, de hasta 64 caracteres. Un nombre que también es una herramienta del agente da `400 tool_name_conflict` |
+| `max_tokens`, `max_completion_tokens` | Lo máximo que puede escribir cada turno del modelo, hasta 32.000 tokens (también es el valor por defecto) |
+| `stream` | Admitido — consulta [Streaming](#streaming) |
+| `response_format` | `{"type":"json_object"}` o `{"type":"json_schema","json_schema":{"name","strict","schema"}}` pide una respuesta en JSON en `choices[0].message.content` ([Una respuesta en JSON](#una-respuesta-en-json-response_format)). `{"type":"text"}` o sin el campo: una respuesta normal. Uno mal formado da `400 invalid_request`. Funciona con imágenes, con tus `tools` y con `stream` |
+| `temperature`, `stop` | Se validan (`temperature` de 0 a 2; `stop` hasta 4 strings) pero **no se aplican** |
+| `tool_choice`, `stream_options` y todo lo demás | Se aceptan y se ignoran, nunca dan error, para que un cliente estándar funcione |
+
+Lo que el modelo del agente ve como sus instrucciones: una nota fija y breve de
+que responde a una aplicación por la API, sin ninguna persona a quien preguntar
+y sin computadora; luego las instrucciones del propio agente; luego tus
+mensajes `system`, en orden.
+
+La API **no guarda estado**. Tu aplicación conserva la conversación y la envía
+completa cada vez.
+
+## Imágenes
+
+El `content` de un mensaje `user` puede ser un array de partes `text` y partes
+`image_url`, con la forma de OpenAI. La imagen va **dentro del mensaje**, como
+una URL `data:` en base64:
+
+```json
+{ "role": "user", "content": [
+  { "type": "text", "text": "What does this delivery note say?" },
+  { "type": "image_url", "image_url": { "url": "data:image/jpeg;base64,/9j/4AAQ…", "detail": "high" } }
+] }
+```
+
+| Regla | Valor |
+|---|---|
+| **Tipos** | `image/jpeg`, `image/png`, `image/webp`, `image/gif`. El tipo de la URL `data:` debe ser el de los bytes — AptiveAI lee la firma del archivo —; si no, `400 unsupported_content` |
+| **Solo dentro del mensaje** | Una imagen nunca se descarga: una URL `http` o `https` da `400 unsupported_content` |
+| **Tamaño** | Cada imagen, como máximo **5 MB** (5.242.880 bytes) ya decodificada |
+| **Cantidad** | Como máximo **8 imágenes** por solicitud, contadas en todos los mensajes que envías, historial incluido |
+| **Cuerpo** | La solicitud completa, como máximo **60.120.416 bytes** (unos 57 MiB: espacio para ocho imágenes en el límite más 4 MiB de texto) |
+| **`detail`** | `auto`, `low` o `high`: se le pasa al modelo cuando su proveedor lo admite; si no, se descarta |
+
+Pasarse de un tamaño, de la cantidad o del límite del cuerpo da
+`413 content_too_large`.
+
+- **El modelo del agente debe aceptar imágenes.** Si no las acepta, la
+  solicitud da `400 unsupported_content`, con un mensaje que lo dice. Todos los
+  rechazos de arriba ocurren antes de cualquier llamada al modelo: no se cobra
+  nada. Si en ese momento no se puede confirmar si el modelo acepta imágenes,
+  la respuesta es `502 provider_error`; vuelve a intentarlo.
+- **Costo.** Los tokens de una imagen forman parte del `usage` que informa el
+  modelo (`prompt_tokens`) y se cobran a la tarifa habitual.
+- **Privacidad.** Los bytes de una imagen solo existen en memoria mientras dura
+  la solicitud. Nunca se escriben en una base de datos, un archivo ni un
+  registro. Con **Conservar conversaciones** activado, la conversación guardada
+  registra cada imagen solo como
+  `{ "type": "image_omitted", "media_type": "image/jpeg", "size_bytes": 182311 }`.
+
+<Aside type="tip" title="Antes de enviar una foto del teléfono">
+  Convierte HEIC (el formato por defecto de un iPhone) a JPEG y redúcela a unos
+  1600 píxeles en el lado largo. Un modelo no ve más detalle que eso, una
+  imagen más pequeña cuesta menos tokens y llega antes, y una foto a tamaño
+  completo puede pasar de 5 MB.
+</Aside>
+
+## Una respuesta en JSON: `response_format`
+
+`response_format` pide que `choices[0].message.content` sea JSON. Interprétalo
+tú (`JSON.parse`); con `"stream": true`, interpreta los deltas unidos cuando
+termine el stream.
+
+| Envías | Lo que recibe el modelo del agente |
+|---|---|
+| `json_schema`, y el modelo admite salidas estructuradas | El esquema en sí, que el proveedor del modelo hace cumplir (para un modelo de Anthropic, solo un esquema `"strict": true`) |
+| `json_schema`, y el modelo solo tiene un modo JSON | El modo JSON, más una instrucción final con el esquema |
+| `json_object` | El modo JSON cuando el modelo lo tiene, siempre con una instrucción final de que la respuesta sea solo un objeto JSON |
+| Cualquiera de los dos, y el modelo no admite ninguno (o un modelo de Anthropic con un esquema que no es estricto) | Una instrucción final: la respuesta debe ser solo JSON que cumpla el esquema |
+
+Solo la primera fila es una garantía; las demás son instrucciones que un
+modelo sigue casi siempre. Para un esquema que el modelo haga cumplir, usa la
+forma estricta de OpenAI: `"strict": true`, todas las propiedades en
+`required` y `"additionalProperties": false` en cada objeto.
+
+El formato se aplica a cada turno del modelo de la solicitud, junto con las
+herramientas del agente y las tuyas: cuando el modelo llama a una de tus
+herramientas, recibes la llamada como siempre, y la respuesta en JSON llega en
+el turno que termina la solicitud.
+
+```bash
+# A 1×1 PNG, inline, with a JSON answer
+curl https://console.aptiveai.io/api/v1/chat/completions \
+  -H "Authorization: Bearer $APTIVEAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "<agent id>",
+    "messages": [{ "role": "user", "content": [
+      { "type": "text", "text": "What colour is this pixel?" },
+      { "type": "image_url", "image_url": { "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" } }
+    ] }],
+    "response_format": { "type": "json_schema", "json_schema": { "name": "pixel", "strict": true,
+      "schema": { "type": "object", "properties": { "colour": { "type": "string" } }, "required": ["colour"], "additionalProperties": false } } }
+  }'
+```
+
+## Dos tipos de herramientas
+
+| | Las herramientas del agente | Tus herramientas |
+|---|---|---|
+| Qué son | Las herramientas de conectores del agente que no necesitan computadora y cuyo inicio de sesión está compartido con el agente | Las `tools` de tu solicitud |
+| Quién las ejecuta | AptiveAI, de su lado, dentro de tu solicitud | Tú |
+| Aprobaciones | Ninguna: por la API toda llamada está aprobada | Las decides tú |
+| Qué recibes | Sus resultados, en `aptiveai.messages` | Las llamadas, en `choices[0].message.tool_calls` |
+
+Cuando el modelo llama a una herramienta del agente, AptiveAI la ejecuta y el
+modelo sigue. Cuando llama a una tuya, la solicitud termina y la llamada vuelve
+a ti con `finish_reason: "tool_calls"`; ejecútala y vuelve a llamar con su
+resultado como mensaje `tool`. Un turno que llama a ambas ejecuta primero las
+del agente y luego devuelve las tuyas. Una herramienta del agente que falla es
+un resultado que el modelo lee y con el que responde, nunca un error HTTP.
+
+### Conservar en la conversación los resultados de las herramientas del agente
+
+`choices[0].message` contiene solo **tus** llamadas a herramientas. Para que el
+modelo recuerde en la siguiente llamada lo que devolvieron las herramientas
+**del agente**, agrega `aptiveai.messages` — todos los mensajes que agregó esta
+solicitud, en orden, incluidas las llamadas a herramientas del agente y sus
+resultados — en lugar de `choices[0].message`, y luego los resultados de tus
+herramientas:
+
+```js
+history.push(...answer.aptiveai.messages);
+for (const call of answer.choices[0].message.tool_calls ?? []) {
+  history.push({ role: 'tool', tool_call_id: call.id, content: await runMyTool(call) });
+}
+```
+
+Un cliente que agrega solo `choices[0].message` sigue funcionando; simplemente
+el modelo no ve en la siguiente llamada los resultados anteriores de las
+herramientas del agente.
+
+### Límites de una solicitud
+
+Una solicitud hace **como máximo 12 turnos del modelo y dura 120 segundos**.
+Pasado cualquiera de los dos, la respuesta obtenida hasta ese momento vuelve
+con `finish_reason: "length"` y `aptiveai.stopped` en `"turn_limit"` o
+`"time_limit"`. Cuando la billetera no puede cubrir un turno, la solicitud
+termina después de ese turno con `aptiveai.stopped: "insufficient_funds"`.
+`finish_reason` es aquello con lo que terminó el último turno: `length` solo
+aparece cuando se rechazó un turno más, después de herramientas del agente.
+
+## La respuesta
+
+El chat completion estándar, con `model` igual al id del agente, y un objeto
+propio de AptiveAI, `aptiveai`:
+
+```json
+{
+  "id": "chatcmpl-…",
+  "object": "chat.completion",
+  "created": 1793300000,
+  "model": "<agent id>",
+  "choices": [
+    {
+      "index": 0,
+      "message": { "role": "assistant", "content": "Order 1042 was rescheduled to Friday.", "refusal": null },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1200,
+    "completion_tokens": 80,
+    "total_tokens": 1280,
+    "prompt_tokens_details": { "cached_tokens": 200 }
+  },
+  "aptiveai": {
+    "cost_usd": 0.0123,
+    "messages": [{ "role": "assistant", "content": "Order 1042 was rescheduled to Friday." }],
+    "tools_run": [],
+    "stopped": null
+  }
+}
+```
+
+| Campo | Qué es |
+|---|---|
+| `choices[0].message` | El último mensaje del asistente, con solo tus herramientas en `tool_calls` |
+| `finish_reason` | `stop` para una respuesta completa, `tool_calls` cuando se devuelven tus herramientas, `length` cuando la terminó un límite o `max_tokens`, `content_filter` cuando el modelo se negó |
+| `usage` | Los tokens sumados de todos los turnos del modelo de la solicitud |
+| `aptiveai.cost_usd` | Lo que se **cobró** por esta solicitud, en dólares |
+| `aptiveai.unpaid_usd` | Aparece solo cuando la billetera no pudo cubrir todo el cobro: el faltante, registrado como adeudado |
+| `aptiveai.messages` | Todos los mensajes que agregó la solicitud, en orden |
+| `aptiveai.tools_run` | Los nombres de las herramientas del agente que se ejecutaron |
+| `aptiveai.stopped` | `null`, o por qué la solicitud terminó antes: `turn_limit`, `time_limit` o `insufficient_funds` |
+
+## Streaming
+
+Con `"stream": true` la respuesta es un `text/event-stream` de objetos
+`chat.completion.chunk`:
+
+1. un primer chunk con `delta: { role: "assistant", content: "" }`;
+2. el texto a medida que el modelo lo escribe, en `delta.content`;
+3. tus llamadas a herramientas en la forma indexada de OpenAI, cada una
+   **completa en un solo chunk** cuando termina su turno del modelo, no
+   argumento por argumento;
+4. un chunk con `aptiveai: { "tool": "<name>" }` cada vez que empieza una
+   herramienta del agente, para que puedas mostrar el avance (el trabajo de la
+   herramienta en sí no se transmite);
+5. un chunk final con `finish_reason`, `usage` y el objeto `aptiveai`
+   completo;
+6. `data: [DONE]`.
+
+El uso siempre llega en el chunk final; no hace falta `stream_options`. Un error
+después de que empezó el stream llega como un chunk con un objeto `error` (la
+forma de [Errores](#errores)), y el stream termina sin `[DONE]`. Cerrar la
+conexión detiene la solicitud; lo que el modelo ya usó se cobra igual.
+
+## Cuánto cuesta
+
+Cada llamada se paga solo con la **billetera de tu empresa**, nunca con la
+asignación del puesto de una persona ni con crédito promocional. Cada turno del
+modelo se cobra a su costo de uso por la tarifa de tu empresa, y
+`aptiveai.cost_usd` dice cuánto se cobró por la solicitud completa. Un turno
+cortado antes de que el proveedor del modelo informara su uso — por el límite
+de tiempo, o porque tu cliente se desconectó — se cobra igual, con una
+estimación.
+
+- **Antes de ejecutarse**, una solicitud se rechaza con
+  `402 insufficient_funds` cuando la billetera tiene menos de $0.05. No se
+  ejecuta ni se cobra nada.
+- **Mientras se ejecuta**, el costo exacto no se conoce de antemano, así que una
+  solicitud puede dejar la billetera un poco por debajo de cero. Cuando la
+  billetera no puede cubrir un turno, no se ejecuta ningún turno más ni se
+  llama a ninguna herramienta del agente: `aptiveai.stopped` es
+  `insufficient_funds`, y `aptiveai.unpaid_usd` es lo que no se cubrió.
+
+Las llamadas a la API aparecen en [Actividad](/es/administration/activity) como
+la actividad **API**. Para agregar fondos o configurar recargas automáticas,
+consulta [Facturación y puestos](/es/administration/billing#el-monedero).
+
+### Una cuenta que paga solo con su billetera
+
+Una cuenta puede usar la API de Agentes, Voz y el chat integrado **sin ninguna
+suscripción de puestos**: nadie en ella tiene puesto, y usa al menos una de
+estas cosas: una clave de API activa, el chat integrado activado o un [agente
+independiente](/es/concepts/standalone-agents). Esa cuenta **se paga con la
+billetera**:
+
+- Su propietario puede guardar una tarjeta, agregar fondos a la billetera y
+  activar las recargas automáticas, sin suscripción.
+- La API de Agentes y Voz funcionan como en cualquier cuenta, limitadas por la
+  billetera.
+- `GET /account`, de la [API de Aprovisionamiento](/es/for-apps/account-api),
+  informa `"billing": "wallet"` y el estado de la cuenta como `active`. Tu
+  servidor activa a sus personas con `PUT /members/{email}` y
+  `"seat_tier": null`, las desactiva con `DELETE`, y no ofrece niveles de
+  puesto.
+- Sus personas, que no tienen puesto, pueden usar el [chat
+  integrado](/es/for-apps/embedded-chat): iniciar y continuar tareas con los
+  agentes normales que pueden usar, y tareas sin agente. El uso del modelo de
+  cada tarea se paga con la billetera a la misma tarifa que la API de Agentes,
+  nunca con crédito de puesto ni de prueba. Una tarea se rechaza antes de
+  empezar cuando la billetera tiene menos de $0.05, y el panel le dice a la
+  persona que se lo pida a su administrador; lo que el último turno de una
+  tarea no pudo cubrir queda registrado como adeudado. La
+  [Actividad](/es/administration/activity) del propietario muestra estas
+  tareas como tareas, por persona y agente (o "sin agente"), con lo que se
+  cobró.
+- No se puede asignar un puesto con la API de Aprovisionamiento
+  (`409 not_subscribed`): asignarle un puesto a alguien cambia cómo se factura
+  la cuenta, así que su propietario se suscribe primero en aptiveai.io.
+
+Una persona sin puesto en una cuenta donde alguien más tiene puesto no puede
+usar el chat integrado (`no_agents`), y nadie sin puesto puede usar AptiveAI
+Agents en aptiveai.io directamente.
+
+## Qué se guarda
+
+Con **Conservar conversaciones** desactivado — el valor por defecto —, lo que
+envía tu aplicación y lo que responde el agente se mantiene solo mientras dura
+la solicitud y no se escribe en ningún lado. Con la opción activada, los
+mensajes y la respuesta de cada solicitud se guardan y se eliminan a los 30
+días.
+
+## Errores
+
+Los errores tienen la forma de OpenAI, `{ "error": { "message", "type", "code" } }`,
+así que un cliente estándar los lanza como lanzaría los de OpenAI. Ningún
+mensaje de error cita lo que enviaste.
+
+| HTTP | `code` | Cuándo |
+|---|---|---|
+| 400 | `invalid_request` | El cuerpo no es JSON, falta un campo o está mal formado, o dos de tus herramientas tienen el mismo nombre |
+| 400 | `unsupported_content` | Una parte de un mensaje que no es texto ni imagen; una imagen fuera de un mensaje `user`; una URL de imagen remota (`http`/`https`); una URL `data:` mal formada; un tipo de imagen que no se acepta, o bytes que no son del tipo declarado (el mensaje indica los tipos aceptados); un agente cuyo modelo no acepta imágenes |
+| 400 | `tool_name_conflict` | Una de tus herramientas se llama como una del agente |
+| 401 | `invalid_api_key` | La clave falta, no se reconoce o está revocada |
+| 402 | `insufficient_funds` | La billetera tiene menos de $0.05; no se ejecutó nada |
+| 403 | `account_unavailable` | La empresa está bloqueada o cancelada |
+| 403 | `service_not_enabled` | La clave no tiene **API de Agentes** en **Servicios**, o la API de Agentes está desactivada para la cuenta |
+| 404 | `agent_not_found` | `model` no es un agente al que esta clave pueda llamar |
+| 413 | `content_too_large` | Una imagen de más de 5 MB (decodificada), más de 8 imágenes en la solicitud, o un cuerpo de más de 60.120.416 bytes |
+| 429 | `rate_limited` | Demasiadas solicitudes con esta clave; espera los segundos de `Retry-After` |
+| 502 | `provider_error` | El proveedor del modelo falló tras los reintentos; o, en una solicitud con imágenes, no se pudo confirmar en ese momento si el modelo del agente acepta imágenes. Vuelve a intentarlo en un momento |
+| 500 | `server_error` | Cualquier otra cosa |
+
+**Límite de frecuencia.** Cada clave puede hacer unas **120 solicitudes por
+minuto**. Por encima, la respuesta es `429 rate_limited` con un encabezado
+`Retry-After` en segundos. La cuenta se lleva por instancia de servidor.
+
+## Ejemplos
+
+### curl
+
+```bash
+curl https://console.aptiveai.io/api/v1/chat/completions \
+  -H "Authorization: Bearer $APTIVEAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "<agent id>",
+    "messages": [{ "role": "user", "content": "What changed on order 1042 today?" }]
+  }'
+```
+
+### El SDK de OpenAI
+
+Funciona cualquier cliente compatible con OpenAI; apunta su URL base a
+AptiveAI.
+
+```js
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: process.env.APTIVEAI_API_KEY,
+  baseURL: 'https://console.aptiveai.io/api/v1',
+});
+
+const answer = await client.chat.completions.create({
+  model: '<agent id>',
+  messages: [{ role: 'user', content: 'What changed on order 1042 today?' }],
+  tools: [
+    {
+      type: 'function',
+      function: {
+        name: 'open_order',
+        description: 'Open an order in Northwind Desk.',
+        parameters: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
+      },
+    },
+  ],
+});
+
+console.log(answer.choices[0].message);
+console.log('Charged:', answer.aptiveai?.cost_usd);
+```
+
+```python
+from openai import OpenAI
+import os
+
+client = OpenAI(
+    api_key=os.environ["APTIVEAI_API_KEY"],
+    base_url="https://console.aptiveai.io/api/v1",
+)
+
+stream = client.chat.completions.create(
+    model="<agent id>",
+    messages=[{"role": "user", "content": "Summarize Jane Sample's open orders."}],
+    stream=True,
+)
+for chunk in stream:
+    if chunk.choices and chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="")
+```
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="AptiveAI for Apps" href="/es/for-apps/overview" description="Cada parte, quién la configura y cómo se paga." />
+  <LinkCard title="Chat integrado" href="/es/for-apps/embedded-chat" description="Pon AptiveAI Agents en un panel de tu aplicación." />
+  <LinkCard title="API de Voz" href="/es/for-apps/speech-api" description="Voz a texto en vivo para tu aplicación, pagada con la misma billetera." />
+  <LinkCard title="API de Aprovisionamiento" href="/es/for-apps/account-api" description="Administra las personas, los puestos y los servicios de la cuenta desde tu propia pantalla de administración." />
+  <LinkCard title="Conectores" href="/es/concepts/connectors" description="Los sistemas a los que llegan las herramientas de un agente." />
+</CardGrid>
