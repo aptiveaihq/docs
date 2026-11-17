@@ -1,0 +1,173 @@
+---
+title: Speech API
+description: Live speech-to-text for your application over a WebSocket, paid from your enterprise wallet. Your server trades its API key for a short-lived token, the browser opens the socket with it. Parameters, models, prices per hour, metering, close codes and errors.
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+The **Speech API** turns live speech into text for your application, over a
+WebSocket. It speaks our speech vendor's streaming protocol **unchanged**, so a
+client written for the vendor changes two addresses and one key, and nothing
+else. Every session is paid from your enterprise wallet, by the second.
+
+| | Our speech vendor | AptiveAI |
+|---|---|---|
+| Token (your server) | `POST https://token.us.assemblyai.com/v1/token`, `Authorization: <vendor key>` | `POST https://console.aptiveai.io/api/v1/speech/token`, `Authorization: <aak_ key>` (bare or `Bearer`) |
+| Socket (the browser) | `wss://streaming.us.assemblyai.com/v3/ws?token=…&<params>` | `wss://console.aptiveai.io/ws/speech?token=…&<params>` |
+
+Your API key never reaches a browser: your server trades it for a short-lived
+token, and the browser opens the socket with that token.
+
+## Before you start
+
+An **owner of your enterprise** creates a key in AptiveAI Agents, under
+**Settings → API keys**, with **Speech API** under **Services** — see
+[API keys](/for-apps/agents-api#api-keys). The account's own **Speech**
+switch, at the top of the same page, must be on too; it is on unless someone
+switched it off. The wallet must hold at least $0.05.
+
+## 1. The token
+
+Your **server** calls the token route with the key:
+
+```http
+POST https://console.aptiveai.io/api/v1/speech/token
+Authorization: Bearer aak_…
+Content-Type: application/json
+
+{ "expires_in_seconds": 60 }
+```
+
+```json
+{ "token": "…", "expires_in_seconds": 60 }
+```
+
+- `expires_in_seconds` is the token's life: **1 to 600 seconds**, 60 when you
+  send none. Other fields in the body, such as `product`, are ignored.
+- The key may be sent as `Authorization: Bearer aak_…` or bare,
+  `Authorization: aak_…` (the vendor's style), so a client that sends its key
+  bare works unchanged.
+- The token is AptiveAI's, not the vendor's. It gates **opening the socket**
+  only, and it may be used more than once within its life.
+
+| HTTP | `code` | When |
+|---|---|---|
+| 400 | `invalid_request` | The body is not a JSON object, or `expires_in_seconds` is not a number of seconds |
+| 401 | `invalid_api_key` | The key is missing, unknown or revoked |
+| 402 | `insufficient_funds` | The wallet holds less than $0.05 |
+| 403 | `account_unavailable` | The enterprise is banned or cancelled |
+| 403 | `service_not_enabled` | The key does not have **Speech API**, or Speech is switched off for the account |
+| 429 | `rate_limited` | Over 120 requests a minute for this key; see `Retry-After` |
+| 503 | `speech_unavailable` | The service is not available |
+
+Errors have the shape `{ "error": { "message", "type", "code" } }`, as in the
+[Agents API](/for-apps/agents-api#errors).
+
+## 2. The socket
+
+The **browser** opens the socket with the token and the vendor's query
+parameters:
+
+```js
+const params = new URLSearchParams({
+  token, // from your server
+  speech_model: 'universal-3-6-pro',
+  // …and any other parameter of the vendor's, such as sample_rate or encoding
+});
+const socket = new WebSocket(`wss://console.aptiveai.io/ws/speech?${params}`);
+
+socket.onmessage = (event) => {
+  const message = JSON.parse(event.data); // the vendor's frames, unchanged
+  console.log(message.type); // Begin, SpeechStarted, Turn, Termination or Error
+};
+
+// Send audio as binary frames: socket.send(pcmChunk)
+// To end: socket.send(JSON.stringify({ type: 'Terminate' }))
+```
+
+- **Parameters.** The vendor's query parameters — `speech_model`,
+  `sample_rate`, `encoding`, key terms and the rest — are passed through
+  unchanged.
+- **Audio** goes up as binary frames.
+- **What comes down** is the vendor's own text frames, unchanged: `Begin`,
+  `SpeechStarted`, `Turn`, `Termination`, `Error`.
+- **To end**, send `{"type":"Terminate"}`. The answer is `Termination`, then a
+  normal close.
+
+## Models and prices
+
+`speech_model` must be one AptiveAI has a rate for; any other is closed with
+`4400`. The rates are **per hour of session time** — the time the socket is
+open. What the wallet is charged is the vendor's rate (its public streaming
+pricing, read 2026-11-17) times 1.3, AptiveAI's standard fee:
+
+| `speech_model` | Vendor rate per hour | What you pay per hour (× 1.3) |
+|---|---|---|
+| `assemblyai-stt-3-7-realtime` | $0.30 | $0.39 |
+| `assemblyai-stt-3-7-realtime-agent` | $0.45 | $0.585 |
+| `universal-3-6-pro` (the default) | $0.45 | $0.585 |
+| `universal-streaming-english` | $0.15 | $0.195 |
+| `universal-streaming-multilingual` | $0.15 | $0.195 |
+| Medical Mode add-on (`domain`) | + $0.15 | + $0.195 |
+
+- **These are streaming rates.** The vendor's lower figures (for example
+  $0.21 per hour) are for pre-recorded audio, which the Speech API does not
+  offer.
+- **The default model is sent explicitly.** A session that names no model
+  runs on `universal-3-6-pro`: AptiveAI sends it to the vendor by name, so the
+  model that runs is the model that is priced. The bare `universal-streaming`
+  is not a model the vendor accepts, and is closed with `4400`.
+- **Add-ons.** A session that sets `domain` (Medical Mode,
+  `domain=medical-v1`) costs $0.15 an hour more at the vendor's rate, for the
+  whole session, and the fee applies to it like the model's rate.
+- An enterprise with its own agreed fee pays the vendor's rate times that fee
+  instead.
+
+## Metering
+
+- A session is metered **by the second**, from the vendor's `Begin` to the
+  close of either side, at the model's rate (plus any add-on's) plus AptiveAI's
+  fee.
+- It is paid from the **wallet only** — never a person's seat allowance or
+  promotional credit — debited every 30 seconds and at the close.
+- When a debit cannot be covered, the socket receives
+  `{"type":"Error","error_code":4402,"error":"insufficient funds"}` and is
+  closed; the seconds already used are recorded as owed.
+- **No audio and no transcript is stored or logged.**
+
+To add funds or set up automatic top-ups, see
+[Billing and seats](/administration/billing#the-wallet).
+
+## Limits
+
+| Limit | Value |
+|---|---|
+| One session | 1 hour (then closed with `4408`) |
+| Sessions at once | 20 per key, per AptiveAI server instance (then `4429`) |
+| Token requests | 120 a minute per key |
+
+A deploy of AptiveAI closes live sessions with a normal close code: reconnect
+with a new token.
+
+## Close codes
+
+AptiveAI's own close codes are below; the vendor's own pass through unchanged.
+
+| Code | Meaning |
+|---|---|
+| `4001` | Not authorized: a missing, invalid or expired token, a revoked key, or Speech switched off for the account |
+| `4401` | During a session: the key was revoked or lost **Speech API**, the account became unavailable, or Speech was switched off for the account. Sent at the next debit (within about 30 seconds), as an `Error` frame and then the close |
+| `4400` | Bad request: an unknown `speech_model`, or too much audio before `Begin` |
+| `4402` | Insufficient funds, when opening or mid-session |
+| `4408` | The one-hour session limit |
+| `4429` | Too many sessions at once for this key |
+| `4503` | The service is not available |
+| `1011` | The transcription vendor could not be reached |
+
+## Next
+
+<CardGrid>
+  <LinkCard title="AptiveAI for Apps" href="/for-apps/overview" description="Every part, who sets it up, and how it is paid for." />
+  <LinkCard title="Agents API" href="/for-apps/agents-api" description="API keys, the account's switches, and calling an agent like a model." />
+  <LinkCard title="Provisioning API" href="/for-apps/account-api" description="Switch Speech on or off for the account from your own admin screen." />
+</CardGrid>

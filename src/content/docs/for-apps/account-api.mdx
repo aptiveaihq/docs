@@ -1,0 +1,449 @@
+---
+title: Provisioning API
+description: Manage your customer's AptiveAI account from your own admin screen. Read the account and its people, add a person with a seat and no password, change or free a seat, buy one safely, remove a person, switch services on or off, and check who could act through each connection.
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+The **Provisioning API** lets your own admin screen manage the AptiveAI account
+behind your application: read it, add people with a seat, change or free a
+seat, remove people, switch services on and off, and check who could act
+through each connection to your systems. Calling it costs nothing; assigning a
+seat when none of that tier is free **buys one on the account's card**.
+
+It is served by aptiveai.io, **not** by AptiveAI Agents, so its base URL is
+different from the [Agents API](/for-apps/agents-api)'s:
+
+```http
+https://aptiveai.io/api/v1
+Authorization: Bearer aak_…
+Content-Type: application/json
+```
+
+| Method and path | What it does |
+|---|---|
+| [`GET /account`](#get-account) | The account: its status, how it pays, its service switches, its seats per tier, its wallet |
+| [`GET /members`](#get-members) | Its people, then its pending invitations |
+| [`PUT /members/{email}`](#put-membersemail) | Adds a person, or sets a person's seat |
+| [`DELETE /members/{email}`](#delete-membersemail) | Removes a person now |
+| [`PATCH /account/services`](#patch-accountservices) | Switches embedded chat, the Agents API and Speech on or off |
+| [`GET /connectors`](#get-connectors) | Who could act through each connection to a server address, read-only |
+
+## The `admin` key
+
+Every endpoint needs a key with the **Provisioning API** service (`admin`). An
+**owner of your enterprise** creates it in AptiveAI Agents, under **Settings →
+API keys** — see [API keys](/for-apps/agents-api#api-keys) — choosing only
+**Provisioning API** under **Services**. It needs no agent.
+
+- **Nothing implies anything.** A key with the Provisioning API cannot call an
+  agent or open a speech session unless it also has those services, and a key
+  with only the Agents API or the Speech API cannot provision.
+- **Give it a key of its own.** It can add and remove people and buy seats on
+  the account's card. Keep it in the back office that manages the account, not
+  on the server path that serves chat, so a leaked chat key cannot buy seats.
+  Saving a key with the Provisioning API asks the owner to confirm: *This key
+  can buy seats on your card*.
+- The key's account is **the only account it can see or change**.
+- The Provisioning API has no account switch of its own: to stop it, revoke
+  the key or take **Provisioning API** off it.
+- **Limit**: 120 requests a minute per key (`429 rate_limited` with
+  `Retry-After`). The Provisioning API keeps its own count, apart from the
+  Agents API's.
+
+Bodies are JSON. Reads write nothing; every write is
+[recorded](#what-is-recorded) with the key as the actor.
+
+**`{email}` in the path.** Percent-encode it once (`pat%40example.test`; an
+address that itself contains `%` sends it as `%25`). It is decoded once,
+trimmed and lower-cased, so addresses are not case-sensitive. A value that is
+not an email address is `400 invalid_request`.
+
+## `GET /account`
+
+```json
+{
+  "enterprise": { "id": "3f6c2a9e-…", "name": "Northwind Desk", "status": "active" },
+  "billing": "seats",
+  "services": {
+    "embedded_chat": { "enabled": true },
+    "agents_api": { "enabled": true },
+    "speech": { "enabled": false }
+  },
+  "seat_tiers": [
+    { "tier": "bronze", "price_usd_month": 35, "purchased": 4, "assigned": 3 },
+    { "tier": "silver", "price_usd_month": 70, "purchased": 2, "assigned": 2 },
+    { "tier": "gold", "price_usd_month": 100, "purchased": 0, "assigned": 0 },
+    { "tier": "platinum", "price_usd_month": 150, "purchased": 0, "assigned": 0 }
+  ],
+  "wallet": { "balance_usd": 42.5 }
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `enterprise.status` | `trialing`: a trial. `active`: a paid subscription in good standing, **or an account that pays only from its wallet** (no seat subscription, nobody in a seat, and a live API key, the embedded chat or a standalone agent), whatever its trial or plan. `past_due`: a renewal payment failed, and the account is inside its 7-day grace. `paused`: no subscription and no trial (where an ended trial lands), or `past_due` past the grace. A banned or cancelled account never answers: its keys get `403 account_unavailable` |
+| `billing` | How the account pays. `seats`: people hold seats on the account's card subscription (or on a trial), and your screen offers the tiers of `seat_tiers`. `wallet`: the account [pays only from its wallet](#an-account-that-pays-only-from-its-wallet); offer **no tiers** — switch a person on with `PUT /members/{email}` and `"seat_tier": null`, and off with `DELETE /members/{email}`. Read this field rather than inferring it from `purchased` being 0 |
+| `services.*.enabled` | The three switches ([`PATCH /account/services`](#patch-accountservices)) |
+| `seat_tiers` | Always the four tiers, in this order: `bronze`, `silver`, `gold`, `platinum` |
+| `seat_tiers[].price_usd_month` | This account's monthly price for one seat of the tier: its own agreed price where one is set, else the list price. A seat bought now is charged at it |
+| `seat_tiers[].purchased` | Seats of the tier bought on the account's card subscription. **0 for every tier when the account has no card subscription** (a trial, a paused account that never subscribed, an account that pays only from its wallet — which reads `active` with every tier at 0) |
+| `seat_tiers[].assigned` | People on the tier plus pending invitations of it. `purchased − assigned` is the free seats the next `PUT` uses before it buys one. On an account with no card subscription, `assigned` can exceed `purchased`, which is 0 there |
+| `wallet.balance_usd` | The account wallet that pays the Agents API and Speech; 0 when the account has none |
+
+**Which statuses mean "may use the services".** The people of the account who
+hold a seat can use AptiveAI Agents — in your embedded panel and on aptiveai.io
+— while the account is `trialing` (as long as the trial's credit lasts),
+`active` or `past_due`. On an account that pays only from its wallet, people
+with no seat use the embedded panel while the wallet holds at least $0.05.
+While the account is `paused` they cannot: the embedded panel answers
+`unavailable` with reason `account_unavailable`. API keys keep working in all
+four statuses: the Agents API and Speech are gated by the wallet, and the
+Provisioning API still answers, so your admin screen can still show the
+account.
+
+## `GET /members`
+
+```json
+{
+  "members": [
+    { "email": "ana@example.test", "name": "Ana Example", "role": "owner", "seat_tier": "silver", "status": "active" },
+    { "email": "pat@example.test", "name": "Pat Example", "role": "member", "seat_tier": null, "status": "active" },
+    { "email": "sam@example.test", "name": "Sam Example", "role": "member", "seat_tier": "bronze", "status": "leaving" },
+    { "email": "lee@example.test", "name": null, "role": "member", "seat_tier": "bronze", "status": "invited" }
+  ]
+}
+```
+
+The list is never paged. People come first, sorted by email, then the
+account's pending invitations, sorted by email. AptiveAI staff are left out.
+
+| Field | Meaning |
+|---|---|
+| `email` | Lower-cased |
+| `name` | The name the person chose for themselves on aptiveai.io, else the name they were given (by `PUT` or at sign-up); `null` when there is neither, and always `null` for an invitation |
+| `role` | `owner`, `admin` or `member`. The Provisioning API never changes a role |
+| `seat_tier` | The person's seat tier, or **`null` when they hold no seat**. A person with no seat can sign in but cannot use a regular agent: the embedded panel answers `unavailable` with reason `no_agents` for them — except on an account that pays only from its wallet |
+| `status` | `active`: a person of the account. `leaving`: a person whose removal the owner scheduled on aptiveai.io; they keep access until it applies. `invited`: an invitation sent from aptiveai.io that nobody has accepted yet; not a person |
+
+`active` and `leaving` people may use the services. An `invited` address is not
+a person yet, so the embedded panel answers `no_account` for it. A `PUT` on an
+invited address turns it into a person; a `PUT` on a `leaving` person cancels
+the scheduled removal, puts their seat back on the subscription at no charge,
+and makes them `active` again.
+
+## `PUT /members/{email}`
+
+"Make it so": after a successful call, the address is a person of the account
+on the seat you asked for. Repeating the call is safe ([Buying a seat, and
+retrying safely](#buying-a-seat-and-retrying-safely)).
+
+| Field | Rule |
+|---|---|
+| `name` | A string, 1 to 120 characters after trimming. **Required when the address has no AptiveAI account yet** (the call creates one); without it, `400 invalid_request`. Optional otherwise: left out, the name stays as it is; sent, it replaces the person's name. A name the person chose for themselves on aptiveai.io still wins in `member.name` |
+| `seat_tier` | Required: `"bronze"`, `"silver"`, `"gold"`, `"platinum"`, or `null` for no seat |
+| `expected_price_usd_month` | Optional, a number. Compared only when this call would **buy** a seat: if it differs from the tier's current `price_usd_month` by more than half a cent, nothing is bought and the answer is `409 price_changed`, with the current price in `error.price_usd_month`. Ignored when the call buys nothing. Send the price your screen showed, so nobody is charged a price they did not see |
+| Anything else | Ignored |
+
+### Who the address is
+
+| The address is… | What happens |
+|---|---|
+| Unknown to AptiveAI | A person is created with **no password**, and **no email is sent**. They join the account as a `member` ([People with no password](#people-with-no-password)) |
+| An AptiveAI account that belongs to no account | They join the account as a `member`. Their password and history are untouched |
+| A person of this account | Their seat is set as below. Their role does not change |
+| A pending invitation of this account | The invitation is revoked, and its seat goes to the person, who joins as a `member` |
+| A person of another account, or AptiveAI staff | `409 member_of_another_enterprise`. Nothing is written |
+| Not in this account, with a pending invitation into another account | `409 member_of_another_enterprise`. Nothing is written; the other account's invitation keeps its seat |
+
+### The seat
+
+1. **The same seat they hold** (a retry, or nothing to change): nothing
+   happens; `purchased` is `null`.
+2. **`null`**: the person holds no seat from now on. Their seat **stays bought
+   and is free** for the next person. An account owner must keep a seat:
+   `409 owner_needs_seat`.
+3. **A tier, on an account with no card subscription**: the person is put on
+   the tier and nothing is bought; `purchased` is `null`. One exception: an
+   account that pays only from its wallet is refused with
+   `409 not_subscribed`, because seating anyone there changes how it is
+   billed. Its owner subscribes on aptiveai.io first.
+4. **A tier, on a subscribed account, with a free seat of that tier**: the
+   person takes it now; `purchased` is `null`.
+5. **A tier, on a subscribed account, with no free seat of that tier**: one
+   seat is **bought**, and the person takes it; `purchased` is
+   `{ "tier", "quantity": 1, "price_usd_month" }`.
+
+A move to a cheaper tier is immediate; the dearer seat stays bought and free.
+
+**AI credit with a seat.** A move to a dearer tier adds the difference between
+the two tiers' AI credit for the days left in the billing period, as it does
+when the account's owner upgrades someone on aptiveai.io; a move down takes no
+credit back. Freeing a seat and filling it again with the same person, or
+moving down and back up, within one period adds nothing; coming back on a
+dearer tier adds that difference once. A seat filled by someone new brings
+that seat's AI credit for the days left, except that **a seat funds one person
+per billing period**: if the seat was freed (`"seat_tier": null` or `DELETE`)
+by someone it had already funded this period, the new person gets what that
+person had not spent, and nothing more; if that person moved to a cheaper tier
+instead, they keep that tier's share of what they have left and the new person
+gets only the rest. A person with no seat cannot spend AI credit left from a
+seat; it is theirs again if they get a seat back before it is passed on.
+
+The answer is the person as `GET /members` now shows them, and what this call
+bought:
+
+```json
+{
+  "member": { "email": "pat@example.test", "name": "Pat Example", "role": "member", "seat_tier": "silver", "status": "active" },
+  "purchased": { "tier": "silver", "quantity": 1, "price_usd_month": 70 }
+}
+```
+
+## Buying a seat, and retrying safely
+
+**What buying means.** One seat of the tier is added to the account's card
+subscription and charged to the card at once, prorated for the days left in
+the billing period; after that it is billed every period at `price_usd_month`
+like every other seat. The account's owners get the usual "seats added" email,
+so a seat bought from your screen never surprises the person who pays. A
+declined card, or a bank that asks for the payment to be authenticated (nobody
+is there to do it), is `402 payment_failed` with the payment provider's
+sentence in `message`; nothing is bought and nothing is changed.
+
+**A freed seat stays bought and billed.** `"seat_tier": null` and `DELETE`
+free a seat; they do not give it back. It shows in `GET /account` as
+`purchased` greater than `assigned`, and the next `PUT` for that tier uses it
+instead of buying another. The Provisioning API cannot give seats back. Only
+the account's owner can, on the billing page of aptiveai.io: nothing is
+refunded, and the next renewal bills fewer seats. Tell your customer when free
+seats pile up.
+
+**Retrying.** Writes for one account are handled one at a time, so two `PUT`s
+cannot take the same last free seat. A `PUT` never buys twice:
+
+- **Repeated after it succeeded**, it finds the person already on the tier and
+  changes nothing.
+- **Repeated after an answer you never received** (a timeout, a dropped
+  connection, a 5xx), it first compares what the payment provider holds for
+  the tier with what AptiveAI's records hold. If the first attempt was charged,
+  the retry is not charged again: it assigns the seat already bought. There is
+  no time limit on this.
+- **Repeated after a `402 payment_failed`** (once the owner has fixed the
+  card), it is a new purchase attempt: an earlier decline is never replayed.
+
+A retry answers `"purchased": null` even when the first attempt bought the
+seat, because the retry itself bought nothing. To know for certain whether a
+seat was bought, read `seat_tiers[].purchased` for the tier from
+`GET /account` **before** the first attempt, and compare it after the call that
+succeeded.
+
+If another billing change on the account is still in progress after 30
+seconds, or a change scheduled for this person is taking effect at that
+moment, the answer is `503 billing_busy` with `Retry-After: 30`: send the same
+call again.
+
+## `DELETE /members/{email}`
+
+```json
+{ "member": { "email": "pat@example.test", "removed": true } }
+```
+
+- **A person of the account leaves now**, on every kind of account. (On
+  aptiveai.io, an owner's removal on a subscribed account keeps the person
+  until the end of the period; this one does not wait.) A new embedded chat
+  token for them is answered `no_account`.
+- **Everything they made stays** for the account: tasks and their transcripts,
+  agents, skills, files. Their automations are **paused**, not deleted.
+- **Their private connections are disconnected**: every connection they own in
+  the account that is shared with nobody and lent to no agent forgets its
+  stored sign-in and reads disconnected (the connection itself stays). A
+  connection of theirs that is shared with the organization or with named
+  people, or lent through an agent, is left as it was: check
+  [`GET /connectors`](#get-connectors) after removing someone who connected
+  your systems.
+- Their AptiveAI account itself remains, belonging to no account; a later
+  `PUT` brings them back.
+- **Their seat stays bought and is free.**
+- The account's last owner cannot be removed: `409 last_owner`. An owner whose
+  removal the account's owner has already scheduled on aptiveai.io does not
+  count as an owner who stays.
+- An address that is only a **pending invitation** of the account has the
+  invitation revoked, and the answer is the same.
+- Anything else — no such person or invitation, a person of another account,
+  AptiveAI staff — is `404 member_not_found`.
+
+## `PATCH /account/services`
+
+Send at least one of three booleans, and nothing else: `embedded_chat`,
+`agents_api`, `speech`. An unknown field, a value that is not a boolean, or an
+empty body is `400 invalid_request`. The answer is the `services` object as it
+is after the write:
+
+```json
+{ "embedded_chat": { "enabled": true }, "agents_api": { "enabled": true }, "speech": { "enabled": false } }
+```
+
+A call that changes nothing writes nothing, and answers the same object.
+
+| Switch | Off means |
+|---|---|
+| `embedded_chat` | Every embedded chat session of the account ends at once. The open panel's next request is refused, and the panel answers `unavailable` with reason `disabled`; a revoke call from your server is answered `401 { "ok": false, "reason": "disabled" }` ([Embedded chat](/for-apps/embedded-chat#ending-a-persons-session)). **Switching it on** needs at least one allowed origin and a signing secret, which only the owner sets, in AptiveAI Agents under **Settings → Embedded chat**; until then the answer is `409 embed_not_configured` and nothing in the request is written. The API never changes the origins or the secret |
+| `agents_api` | Every chat completions call of the account answers `403 service_not_enabled` (*This service is switched off for this account.*), whatever the key |
+| `speech` | The speech token route answers `403 service_not_enabled`; a socket opened with a token minted earlier is closed with `4001`; a session in progress receives `{"type":"Error","error_code":4401,"error":"key revoked"}` at its next debit (within about 30 seconds) and closes with `4401` |
+
+The owner sees and flips the same Agents API and Speech switches at the top of
+**Settings → API keys**, and embedded chat in **Settings → Embedded chat**;
+`GET /account` reads whatever was set last, by either side.
+
+## `GET /connectors`
+
+Before you open your assistant to people who are not administrators, check
+that no route lets one of them act in your system as somebody else. This
+read-only call answers, for the key's account only, every connection reached
+directly at a server address (a Custom MCP server, or a vendor's remote MCP
+server), and every agent grant of one. It returns no secret, no token and no
+tool list.
+
+```json
+{
+  "connections": [
+    { "address": "https://host.example/mcp", "name": "host.example · pat@example.test",
+      "owner": "pat@example.test", "shared_with_organization": false, "shared_with_people": 0 },
+    { "address": "https://host.example/mcp", "name": "Front desk admin",
+      "owner": "admin@example.test", "shared_with_organization": true, "shared_with_people": 0 }
+  ],
+  "agent_grants": [
+    { "agent_id": "…", "agent_name": "Front desk", "address": "https://host.example/mcp", "access": "per_person" }
+  ]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `connections[].address` | The server's address, normalized: scheme and host lower-cased, the default port dropped, no trailing slash, the query kept. Compare it with your own server's address normalized the same way |
+| `connections[].owner` | The email of the person whose own connection it is; `null` for a connection the organization owns |
+| `connections[].shared_with_organization` | `true` when **Everyone** in at least one workspace may use it |
+| `connections[].shared_with_people` | How many people it is shared with by name; each of them may use it |
+| `agent_grants[].access` | Who signs in when the agent uses that connection: `per_person` (each person signs in to your server as themselves), `shared` (everyone uses the connection owner's sign-in), `unset` (not chosen yet: only people who may use the connection itself get it). Only enabled grants of agents that are not deleted are listed |
+
+**The rule to apply.** For the agent you mount in the panel (`agentId`), its
+grant at your server's address is `per_person`; and at that address no
+connection is `shared_with_organization`, none has `shared_with_people` above
+0, and no other agent your people can use has a `shared` grant. When all of
+that holds, every action an agent takes in your system is taken with the
+signed-in person's own token — see [Your own system, as each
+person](/for-apps/embedded-chat#your-own-system-as-each-person). Call it again
+after an administrator changes connectors or agents; nothing pushes a change
+to you.
+
+## People with no password
+
+A person created by `PUT` has no password and was sent no email. They sign in
+through your [embedded chat](/for-apps/embedded-chat): your server signs a
+token with their email, as for anyone. To use the panel they also need at
+least one regular agent they can use; access to agents is given in AptiveAI
+Agents, as for anyone else, and the panel answers `no_agents` until they have
+one. A person created with `"seat_tier": null` uses the panel only on an
+account that pays only from its wallet, where their tasks are paid from it; on
+an account where anyone holds a seat, the panel answers `no_agents` for them.
+
+If such a person goes to the sign-in page of aptiveai.io and types their
+address, the page says it has emailed them a link to choose a password, and
+sends it (at most one email per address per minute). After choosing a password
+they sign in with it and with a code emailed to the address, and use AptiveAI
+Agents as a `member`. The sign-in page answers the same way for every account
+without a password; nothing about the account is revealed beyond what the page
+reveals for any address.
+
+## An account that pays only from its wallet
+
+An account where **nobody holds a seat** and that uses a live API key, the
+embedded chat or a standalone agent pays only from its wallet:
+`GET /account` reads `"billing": "wallet"` and `"status": "active"`, with
+every tier at 0. Offer no tiers. Switch a person on with
+`PUT /members/{email}` and `{ "name": …, "seat_tier": null }`, and off with
+`DELETE`; a seat is refused with `409 not_subscribed` until the owner
+subscribes on aptiveai.io. What the wallet pays for is in the [Agents
+API](/for-apps/agents-api#an-account-that-pays-only-from-its-wallet).
+
+## What is recorded
+
+Every write leaves rows in the account's audit log with the key as the actor,
+named `api_key:<key name> (…<last four characters>)` — never the secret:
+
+| Call | Rows |
+|---|---|
+| A `PUT` that changed something | `member.provisioned`: the address, whether the person was created, and their seat and name before and after |
+| A `PUT` that bought a seat | Also `billing.seats_add` |
+| A `PUT` that granted seat credit | Also `seat_credit.grant` |
+| `DELETE` | `member.remove` |
+| `PATCH /account/services` | `account.services_changed` (before and after), and `embed.updated` when embedded chat changed |
+
+A `PUT` that changed nothing, and every read, leave no row.
+
+## Errors
+
+Errors have OpenAI's shape, `{ "error": { "message", "type", "code" } }`, as
+in the [Agents API](/for-apps/agents-api#errors). `price_changed` also carries
+`error.price_usd_month`:
+
+```json
+{ "error": { "message": "The price of a gold seat is now 100 USD a month.", "type": "invalid_request_error", "code": "price_changed", "price_usd_month": 100 } }
+```
+
+| HTTP | `code` | When |
+|---|---|---|
+| 400 | `invalid_request` | The body is not JSON; a field is malformed; the path is not an email address; a `PUT` would create a person and has no `name`; a `PATCH` sends an unknown field or none of the three |
+| 401 | `invalid_api_key` | The key is missing, unknown or revoked |
+| 402 | `payment_failed` | `PUT`: the card was declined, or the bank asked for authentication. Nothing was bought or changed |
+| 403 | `account_unavailable` | The account is banned or cancelled |
+| 403 | `service_not_enabled` | The key does not have the Provisioning API |
+| 404 | `member_not_found` | `DELETE`: no person or pending invitation of the account has this address |
+| 409 | `member_of_another_enterprise` | `PUT`: the address is a person of another account, AptiveAI staff, or has a pending invitation into another account |
+| 409 | `owner_needs_seat` | `PUT`: `"seat_tier": null` for an account owner |
+| 409 | `not_subscribed` | `PUT`: a seat on an account that pays only from its wallet and has no seat subscription |
+| 409 | `price_changed` | `PUT`: `expected_price_usd_month` differs from the price of the seat it would buy |
+| 409 | `last_owner` | `DELETE`: the account's last owner (owners already leaving are not counted) |
+| 409 | `embed_not_configured` | `PATCH`: `"embedded_chat": true` before the owner set an allowed origin and a signing secret |
+| 429 | `rate_limited` | Over 120 requests a minute for this key; see `Retry-After` |
+| 500 | `server_error` | Anything else |
+| 502 | `payment_provider_error` | The payment provider failed, or could not confirm a purchase. Try again later |
+| 503 | `billing_busy` | Another billing change on the account is in progress, a change scheduled for this person is taking effect, or billing is not available. `Retry-After: 30` |
+
+## Examples
+
+```bash
+BASE=https://aptiveai.io/api/v1
+AUTH="Authorization: Bearer $APTIVEAI_ADMIN_KEY"
+
+# The account, then its people
+curl "$BASE/account" -H "$AUTH"
+curl "$BASE/members" -H "$AUTH"
+
+# Add a person on a silver seat, refusing any price but the one shown
+curl -X PUT "$BASE/members/pat%40example.test" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{ "name": "Pat Example", "seat_tier": "silver", "expected_price_usd_month": 70 }'
+
+# Free their seat (the seat stays bought; they stay in the account)
+curl -X PUT "$BASE/members/pat%40example.test" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{ "seat_tier": null }'
+
+# Remove them
+curl -X DELETE "$BASE/members/pat%40example.test" -H "$AUTH"
+
+# Switch Speech off for the whole account
+curl -X PATCH "$BASE/account/services" -H "$AUTH" -H "Content-Type: application/json" \
+  -d '{ "speech": false }'
+
+# Whose connection to your server an agent could act with
+curl "$BASE/connectors" -H "$AUTH"
+```
+
+## Next
+
+<CardGrid>
+  <LinkCard title="AptiveAI for Apps" href="/for-apps/overview" description="Every part, who sets it up, and how it is paid for." />
+  <LinkCard title="Embedded chat" href="/for-apps/embedded-chat" description="Sign the people you add into a panel of your application." />
+  <LinkCard title="Billing and seats" href="/administration/billing" description="Seat tiers, the card, the wallet and invoices, as the owner sees them." />
+</CardGrid>

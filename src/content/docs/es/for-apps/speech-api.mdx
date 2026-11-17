@@ -1,0 +1,180 @@
+---
+title: API de Voz
+description: Voz a texto en vivo para tu aplicación por un WebSocket, pagada con la billetera de tu empresa. Tu servidor cambia su clave de API por un token de corta duración y el navegador abre el socket con él. Parámetros, modelos, precios por hora, medición, códigos de cierre y errores.
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+La **API de Voz** convierte en texto la voz en vivo para tu aplicación, por un
+WebSocket. Habla el protocolo de streaming de nuestro proveedor de voz **sin
+cambios**, así que un cliente escrito para el proveedor cambia dos direcciones
+y una clave, y nada más. Cada sesión se paga con la billetera de tu empresa,
+por segundo.
+
+| | Nuestro proveedor de voz | AptiveAI |
+|---|---|---|
+| Token (tu servidor) | `POST https://token.us.assemblyai.com/v1/token`, `Authorization: <clave del proveedor>` | `POST https://console.aptiveai.io/api/v1/speech/token`, `Authorization: <clave aak_>` (sin prefijo o con `Bearer`) |
+| Socket (el navegador) | `wss://streaming.us.assemblyai.com/v3/ws?token=…&<params>` | `wss://console.aptiveai.io/ws/speech?token=…&<params>` |
+
+Tu clave de API nunca llega a un navegador: tu servidor la cambia por un token
+de corta duración, y el navegador abre el socket con ese token.
+
+## Antes de empezar
+
+Un **propietario de tu empresa** crea una clave en AptiveAI Agents, en
+**Ajustes → Claves de API**, con **API de Voz** en **Servicios** — consulta
+[Claves de API](/es/for-apps/agents-api#claves-de-api). El interruptor **Voz**
+de la propia cuenta, arriba en la misma página, también debe estar activado;
+lo está salvo que alguien lo haya desactivado. La billetera debe tener al
+menos $0.05.
+
+## 1. El token
+
+Tu **servidor** llama a la ruta del token con la clave:
+
+```http
+POST https://console.aptiveai.io/api/v1/speech/token
+Authorization: Bearer aak_…
+Content-Type: application/json
+
+{ "expires_in_seconds": 60 }
+```
+
+```json
+{ "token": "…", "expires_in_seconds": 60 }
+```
+
+- `expires_in_seconds` es la vida del token: **de 1 a 600 segundos**, 60 si no
+  envías ninguno. Los demás campos del cuerpo, como `product`, se ignoran.
+- La clave se puede enviar como `Authorization: Bearer aak_…` o sin prefijo,
+  `Authorization: aak_…` (el estilo del proveedor), así que un cliente que
+  envía su clave sin prefijo funciona sin cambios.
+- El token es de AptiveAI, no del proveedor. Solo controla **la apertura del
+  socket**, y se puede usar más de una vez mientras está vigente.
+
+| HTTP | `code` | Cuándo |
+|---|---|---|
+| 400 | `invalid_request` | El cuerpo no es un objeto JSON, o `expires_in_seconds` no es un número de segundos |
+| 401 | `invalid_api_key` | La clave falta, no se reconoce o está revocada |
+| 402 | `insufficient_funds` | La billetera tiene menos de $0.05 |
+| 403 | `account_unavailable` | La empresa está bloqueada o cancelada |
+| 403 | `service_not_enabled` | La clave no tiene **API de Voz**, o Voz está desactivada para la cuenta |
+| 429 | `rate_limited` | Más de 120 solicitudes por minuto con esta clave; consulta `Retry-After` |
+| 503 | `speech_unavailable` | El servicio no está disponible |
+
+Los errores tienen la forma `{ "error": { "message", "type", "code" } }`, como
+en la [API de Agentes](/es/for-apps/agents-api#errores).
+
+## 2. El socket
+
+El **navegador** abre el socket con el token y los parámetros de consulta del
+proveedor:
+
+```js
+const params = new URLSearchParams({
+  token, // from your server
+  speech_model: 'universal-3-6-pro',
+  // …and any other parameter of the vendor's, such as sample_rate or encoding
+});
+const socket = new WebSocket(`wss://console.aptiveai.io/ws/speech?${params}`);
+
+socket.onmessage = (event) => {
+  const message = JSON.parse(event.data); // the vendor's frames, unchanged
+  console.log(message.type); // Begin, SpeechStarted, Turn, Termination or Error
+};
+
+// Send audio as binary frames: socket.send(pcmChunk)
+// To end: socket.send(JSON.stringify({ type: 'Terminate' }))
+```
+
+- **Parámetros.** Los parámetros de consulta del proveedor — `speech_model`,
+  `sample_rate`, `encoding`, las palabras clave y el resto — se pasan sin
+  cambios.
+- **El audio** sube como frames binarios.
+- **Lo que baja** son los propios frames de texto del proveedor, sin cambios:
+  `Begin`, `SpeechStarted`, `Turn`, `Termination`, `Error`.
+- **Para terminar**, envía `{"type":"Terminate"}`. La respuesta es
+  `Termination` y luego un cierre normal.
+
+## Modelos y precios
+
+`speech_model` debe ser uno para el que AptiveAI tenga tarifa; cualquier otro
+se cierra con `4400`. Las tarifas son **por hora de sesión** — el tiempo que el
+socket está abierto. Lo que se cobra a la billetera es la tarifa del proveedor
+(su precio público de streaming, consultado el 2026-11-17) por 1.3, la tarifa
+estándar de AptiveAI:
+
+| `speech_model` | Tarifa del proveedor por hora | Lo que pagas por hora (× 1.3) |
+|---|---|---|
+| `assemblyai-stt-3-7-realtime` | $0.30 | $0.39 |
+| `assemblyai-stt-3-7-realtime-agent` | $0.45 | $0.585 |
+| `universal-3-6-pro` (el predeterminado) | $0.45 | $0.585 |
+| `universal-streaming-english` | $0.15 | $0.195 |
+| `universal-streaming-multilingual` | $0.15 | $0.195 |
+| Complemento Medical Mode (`domain`) | + $0.15 | + $0.195 |
+
+- **Son tarifas de streaming.** Las cifras más bajas del proveedor (por
+  ejemplo, $0.21 por hora) son para audio pregrabado, que la API de Voz no
+  ofrece.
+- **El modelo predeterminado se envía explícitamente.** Una sesión que no
+  indica ningún modelo usa `universal-3-6-pro`: AptiveAI se lo envía al
+  proveedor por su nombre, así que el modelo que se ejecuta es el modelo que
+  se cobra. El `universal-streaming` a secas no es un modelo que el proveedor
+  acepte, y se cierra con `4400`.
+- **Complementos.** Una sesión que define `domain` (Medical Mode,
+  `domain=medical-v1`) cuesta $0.15 más por hora a la tarifa del proveedor,
+  durante toda la sesión, y la tarifa de AptiveAI se le aplica igual que a la
+  del modelo.
+- Una empresa con una tarifa propia acordada paga la tarifa del proveedor por
+  esa tarifa.
+
+## Medición
+
+- Una sesión se mide **por segundo**, desde el `Begin` del proveedor hasta el
+  cierre de cualquiera de los dos lados, a la tarifa del modelo (más la de
+  cualquier complemento) más la tarifa de AptiveAI.
+- Se paga **solo con la billetera** — nunca con la asignación del puesto de una
+  persona ni con crédito promocional —, con un cargo cada 30 segundos y al
+  cerrar.
+- Cuando un cargo no se puede cubrir, el socket recibe
+  `{"type":"Error","error_code":4402,"error":"insufficient funds"}` y se
+  cierra; los segundos ya usados quedan registrados como adeudados.
+- **No se guarda ni se registra ningún audio ni ninguna transcripción.**
+
+Para agregar fondos o configurar recargas automáticas, consulta
+[Facturación y puestos](/es/administration/billing#el-monedero).
+
+## Límites
+
+| Límite | Valor |
+|---|---|
+| Una sesión | 1 hora (luego se cierra con `4408`) |
+| Sesiones a la vez | 20 por clave, por instancia de servidor de AptiveAI (luego `4429`) |
+| Solicitudes de token | 120 por minuto por clave |
+
+Un despliegue de AptiveAI cierra las sesiones en curso con un código de cierre
+normal: vuelve a conectarte con un token nuevo.
+
+## Códigos de cierre
+
+Abajo están los códigos de cierre propios de AptiveAI; los del proveedor pasan
+sin cambios.
+
+| Código | Significado |
+|---|---|
+| `4001` | No autorizado: un token que falta, no es válido o venció, una clave revocada, o Voz desactivada para la cuenta |
+| `4401` | Durante una sesión: la clave se revocó o perdió **API de Voz**, la cuenta dejó de estar disponible, o Voz se desactivó para la cuenta. Se envía en el siguiente cargo (en unos 30 segundos), como un frame `Error` y luego el cierre |
+| `4400` | Solicitud incorrecta: un `speech_model` desconocido, o demasiado audio antes de `Begin` |
+| `4402` | Fondos insuficientes, al abrir o a mitad de la sesión |
+| `4408` | El límite de una hora por sesión |
+| `4429` | Demasiadas sesiones a la vez con esta clave |
+| `4503` | El servicio no está disponible |
+| `1011` | No se pudo comunicar con el proveedor de transcripción |
+
+## Siguiente
+
+<CardGrid>
+  <LinkCard title="AptiveAI for Apps" href="/es/for-apps/overview" description="Cada parte, quién la configura y cómo se paga." />
+  <LinkCard title="API de Agentes" href="/es/for-apps/agents-api" description="Las claves de API, los interruptores de la cuenta y cómo llamar a un agente como a un modelo." />
+  <LinkCard title="API de Aprovisionamiento" href="/es/for-apps/account-api" description="Activa o desactiva Voz para la cuenta desde tu propia pantalla de administración." />
+</CardGrid>

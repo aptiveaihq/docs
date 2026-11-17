@@ -77,9 +77,10 @@ export const nav = [
   },
   {
     // AptiveAI as the AI of another application: the Agents API, called from
-    // the application's server, and the embedded chat, a panel of AptiveAI
-    // Agents inside its pages. For the developers of that application and the
-    // enterprise owner who sets it up.
+    // the application's server; the embedded chat, a panel of AptiveAI Agents
+    // inside its pages; the Speech API; and the Provisioning API its admin
+    // screen manages the account with. For the developers of that application
+    // and the enterprise owner who sets it up.
     label: 'AptiveAI for Apps',
     es: { label: 'AptiveAI for Apps', short: 'Apps' },
     short: 'Apps',
@@ -90,6 +91,8 @@ export const nav = [
       { label: 'Overview', slug: 'for-apps/overview', desc: 'AptiveAI as the AI of your application: which part you need, who sets it up, how it is paid', es: { label: 'Resumen', desc: 'AptiveAI como la IA de tu aplicación: qué parte necesitas, quién la configura, cómo se paga' } },
       { label: 'Embedded chat', slug: 'for-apps/embedded-chat', desc: 'A panel of AptiveAI Agents in your application, signed in by your server', es: { label: 'Chat integrado', desc: 'Un panel de AptiveAI Agents en tu aplicación, con la sesión iniciada por tu servidor' } },
       { label: 'Agents API', slug: 'for-apps/agents-api', desc: 'Call an agent like a model, through an OpenAI-compatible endpoint', es: { label: 'API de Agentes', desc: 'Llama a un agente como a un modelo, con un endpoint compatible con OpenAI' } },
+      { label: 'Speech API', slug: 'for-apps/speech-api', desc: 'Live speech-to-text over a WebSocket, paid from the wallet', es: { label: 'API de Voz', desc: 'Voz a texto en vivo por un WebSocket, pagada con la billetera' } },
+      { label: 'Provisioning API', slug: 'for-apps/account-api', desc: "Manage the account's people, seats and services from your own admin screen", es: { label: 'API de Aprovisionamiento', desc: 'Administra las personas, los puestos y los servicios de la cuenta desde tu propia pantalla de administración' } },
     ],
   },
   {
