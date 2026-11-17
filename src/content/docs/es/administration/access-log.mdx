@@ -1,0 +1,79 @@
+---
+title: El registro de accesos
+description: La página, dentro de la aplicación de un agente independiente, que lista quién abrió qué registro, archivo de un registro o tarea, y cuándo, incluido el personal de AptiveAI. Qué registra y qué no, que se guarda para siempre y quién puede leerla.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+El **Registro de accesos** responde una pregunta sobre un [agente
+independiente](/es/concepts/standalone-agents): *¿quién abrió qué y cuándo?* Cada
+vez que alguien abre un registro, un archivo de un registro o una tarea del
+agente, aparece aquí. Sirve para comprobar que tus datos solo los ven quienes
+deben verlos.
+
+## Quién puede leerlo
+
+Solo el **propietario de la empresa del agente**, y AptiveAI. Nadie más de tu
+empresa ve la página ni su mosaico, ni siquiera un administrador.
+
+## Dónde está
+
+Dentro de la aplicación del agente, abre **Configurar y ayuda** y luego el
+mosaico **Registro de accesos**: *Mira quién abrió registros, archivos y
+tareas*. La página está en `console.aptiveai.io/a/‹dirección del agente›/access-log`.
+Cada agente independiente tiene su propio registro.
+
+## Qué muestra cada fila
+
+| Columna | Qué muestra |
+|---|---|
+| **Cuándo** | La fecha y la hora |
+| **Quién** | La persona. El personal de AptiveAI lleva la insignia **AptiveAI**. Alguien que ya no está aparece como *Una persona que ya no está* |
+| **Qué** | El acto, de la lista siguiente |
+| **Elemento** | El registro, archivo o tarea, con el nombre que tiene al abrir la página. Un elemento que se eliminó después aparece como *Un elemento eliminado* |
+
+| Qué | Cuándo se anota |
+|---|---|
+| **Abrió un registro** | Alguien abrió la página de un registro |
+| **Listó registros** | Alguien abrió la lista de registros |
+| **Buscó registros** | Alguien buscó en los registros, indicado como *con una búsqueda* |
+| **Abrió un archivo de un registro** / **Descargó un archivo de un registro** | Alguien vio o descargó un archivo de un registro |
+| **Abrió una tarea** | Alguien abrió una tarea de este agente |
+| **Abrió la aplicación** | El personal de AptiveAI abrió la aplicación |
+
+La misma persona que lee lo mismo otra vez en diez minutos es una sola fila, no
+muchas, porque una página se actualiza sola mientras está abierta.
+
+Usa **Cuándo** (*Últimas 24 horas*, *Últimos 7 días*, *Últimos 30 días*,
+*Todo*), **Qué** (*Registros*, *Archivos*, *Tareas*, *Aplicación*) y **Quién**
+(*Todos*, *Personal de AptiveAI*) para acotarlo. El cuadro de búsqueda encuentra
+una persona o un elemento en la página.
+
+## Qué no registra
+
+El registro guarda quién, qué y cuándo. **No** guarda lo que había en un
+registro: ni valores de campos, ni títulos de registros, ni nombres de archivos,
+ni el texto de una búsqueda. De una búsqueda solo dice que se hizo. Los nombres
+de la columna **Elemento** se buscan al abrir la página, así que un registro
+que cambió de nombre muestra el nombre nuevo.
+
+No lista la actualización automática del tablero, que muestra títulos y estados
+de tareas, ni las lecturas que el propio agente hace mientras trabaja: lo que el
+agente leyó está en la transcripción de la tarea.
+
+## Se guarda para siempre
+
+Nada borra ni edita una fila: ni una persona, ni un vencimiento, ni quitar a una
+persona de tu empresa. La página lo dice: *Se guarda para siempre.*
+
+<Aside type="note" title="El personal de AptiveAI también aparece">
+  Cuando el personal de AptiveAI abre la aplicación, los registros o las tareas
+  de tu agente, por ejemplo para darte soporte, las filas están en el registro
+  con la insignia **AptiveAI**. Filtra **Quién** por **Personal de AptiveAI**
+  para ver solo esas.
+</Aside>
+
+<CardGrid>
+  <LinkCard title="Agentes independientes" href="/es/concepts/standalone-agents" description="La aplicación en la que trabaja tu personal." />
+  <LinkCard title="Acceso y uso compartido" href="/es/administration/access" description="Quién ve cada agente, tarea y automatización." />
+</CardGrid>

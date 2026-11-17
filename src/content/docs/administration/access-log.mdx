@@ -1,0 +1,76 @@
+---
+title: The access log
+description: The page inside a standalone agent's app that lists who opened which record, record file or task, and when, including AptiveAI staff. What it records and does not record, that it is kept for good, and who can read it.
+---
+
+import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+The **Access log** answers one question about a [standalone
+agent](/concepts/standalone-agents): *who opened what, and when?* Each time
+someone opens a record, a record's file or a task of the agent, it is listed
+here. It is there for you to check that your data is seen only by the people
+who should see it.
+
+## Who can read it
+
+Only the **owner of the agent's enterprise**, and AptiveAI. Nobody else in your
+enterprise sees the page or its tile, not even an admin.
+
+## Where it is
+
+Inside the agent's app, open **Configure & help**, then the **Access log**
+tile: *See who opened records, files and tasks*. The page is at
+`console.aptiveai.io/a/‹agent address›/access-log`. Each standalone agent has
+its own log.
+
+## What each row shows
+
+| Column | What it shows |
+|---|---|
+| **When** | The date and time |
+| **Who** | The person. AptiveAI staff carry an **AptiveAI** badge. Someone who has since left shows as *A former member* |
+| **What** | The act, from the list below |
+| **Item** | The record, file or task, by its name as it is when you open the page. An item that has since been deleted shows as *A deleted item* |
+
+| What | When it is written |
+|---|---|
+| **Opened a record** | Someone opened a record's page |
+| **Listed records** | Someone opened the records list |
+| **Searched records** | Someone searched the records, shown as *with a search* |
+| **Opened a record file** / **Downloaded a record file** | Someone viewed or downloaded a file on a record |
+| **Opened a task** | Someone opened a task of this agent |
+| **Opened the app** | AptiveAI staff opened the app |
+
+The same person reading the same thing again within ten minutes is one row,
+not many, because a page refreshes by itself while it is open.
+
+Use **When** (*Last 24 hours*, *Last 7 days*, *Last 30 days*, *All time*),
+**What** (*Records*, *Files*, *Tasks*, *App*) and **Who** (*Everyone*, *AptiveAI
+staff*) to narrow it. The search box finds a person or an item on the page.
+
+## What it does not record
+
+The log holds who, what and when. It does **not** hold what was in a record:
+no field values, no record titles, no file names and no search text. A search
+says only that one was made. The names in the **Item** column are looked up
+when you open the page, so a record renamed since shows its new name.
+
+It does not list the board's automatic refresh, which shows task titles and
+states, or the reads the agent itself makes while it works: what the agent read
+is in the task's own transcript.
+
+## It is kept for good
+
+Nothing deletes or edits a row, not a person, not an expiry and not removing a
+person from your enterprise. The page says so: *Kept for good.*
+
+<Aside type="note" title="AptiveAI staff appear in it too">
+  When AptiveAI staff open your agent's app, records or tasks, for example to
+  support you, the rows are in the log with the **AptiveAI** badge. Filter
+  **Who** by **AptiveAI staff** to see only those.
+</Aside>
+
+<CardGrid>
+  <LinkCard title="Standalone agents" href="/concepts/standalone-agents" description="The app your staff work in." />
+  <LinkCard title="Access and sharing" href="/administration/access" description="Who sees which agent, task and automation." />
+</CardGrid>
