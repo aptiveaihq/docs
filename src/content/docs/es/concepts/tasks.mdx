@@ -5,6 +5,7 @@ description: Una tarea es un trabajo concreto, desde el mensaje que lo inicia ha
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import ThemedImage from '../../../../components/ThemedImage.astro';
+import YouTube from '../../../../components/YouTube.astro';
 import taskMenuDark from '../../../../assets/screenshots/task-menu-dark-20261013.png';
 import taskMenuLight from '../../../../assets/screenshots/task-menu-light-20261013.png';
 import taskBesideDark from '../../../../assets/screenshots/task-beside-page-dark-20261014.png';
@@ -330,10 +331,11 @@ de la tarea.
 | **Compartir…** | Abre el cuadro para compartir — consulta [Compartir](#compartir-una-tarea-y-quién-la-ve) | Siempre |
 | **Detener** | Interrumpe la tarea donde está, como el botón de detener del cuadro de mensajes; envíale un mensaje para continuar | La tarea está en ejecución y puedes detenerla |
 | **Entrenar agente** | Le pide al agente de la tarea que ofrezca una [sesión de entrenamiento](/es/concepts/training#empezar-una-sesión) que empiece con lo que pasó en esta tarea | Solo en el encabezado de la página de la tarea, cuando puedes editar su agente; no en una tarea de una automatización |
+| **Archivar** / **Desarchivar** | Quita una tarea terminada de tus listas y lo conserva todo — consulta [Archivar una tarea](#archivar-una-tarea) | La tarea terminó y puedes eliminarla |
 | **Eliminar** | Te pide confirmar y luego elimina la tarea | Tú iniciaste la tarea |
 
 Si eliminas la tarea que tienes abierta, pasas a la lista de Tareas. Un cambio
-hecho desde el menú — cambiar el nombre, fijar, compartir, detener o eliminar —
+hecho desde el menú — cambiar el nombre, fijar, compartir, detener, archivar o eliminar —
 se ve en todas las listas a la vez, sin recargar.
 
 <ThemedImage
@@ -420,7 +422,7 @@ consulta [Compartir](/es/concepts/sharing).
 
 **Tareas** (en **Trabajo**) muestra todas las tareas que puedes ver: el nombre en
 **Tarea**, con su resumen o la pregunta que espera respuesta, el **Agente**, el
-**Estado**, el **Inicio** y la **Duración**. Las tareas que te esperan se reúnen
+**Estado**, el **Inicio** y la **Duración**. Las tareas [archivadas](#archivar-una-tarea) no aparecen. Las tareas que te esperan se reúnen
 en una franja **Te necesitan** arriba, arriba. Las tareas
 iniciadas por la misma automatización se agrupan en una fila que puedes abrir.
 
@@ -438,7 +440,8 @@ lista filtrada nunca se confunde con la completa:
 
 La franja **Te necesitan** sigue los mismos filtros, así que un filtro que deja
 fuera las tareas que te esperan también la vacía. Escribe en el cuadro de
-búsqueda para buscar en nombres, resúmenes, instrucciones y más. La lista se
+búsqueda para buscar en nombres, resúmenes, instrucciones y más; mientras buscas,
+también aparecen las tareas archivadas, marcadas **Archivada**. La lista se
 actualiza sola.
 
 ### Estados
@@ -463,6 +466,44 @@ corto, con el mismo menú **…** en cada fila y el mismo filtro. Úsala para sa
 entre tareas; usa la lista de Tareas cuando quieras buscar o mirar más atrás.
 Consulta [Tareas recientes](/es/getting-started/finding-your-way#tareas-recientes).
 
+## Archivar una tarea
+
+<YouTube id="5RXr92nffDs" title="How to archive finished tasks in AptiveAI Agents" />
+
+*El video está en inglés.*
+
+Archiva una tarea terminada para quitarla de tus listas sin perder nada. Una
+tarea archivada conserva su transcripción, sus documentos y sus enlaces; su
+página, `/tasks/<id>`, se sigue abriendo, con una etiqueta **Archivada** y un
+botón **Desarchivar** en el encabezado.
+
+- **Una tarea.** Elige **Archivar** en el menú **…** de la tarea. No hay nada
+  que confirmar: la tarea sale de tus listas al instante, y **Deshacer** en el
+  aviso la devuelve. Una tarea que todavía está trabajando no se puede archivar
+  aún: archívala cuando termine.
+- **Muchas tareas.** En el encabezado de la lista de Tareas, abre **…** y elige
+  **Archivar tareas terminadas…**. Elige **Última actividad el día o antes**
+  (hoy, de forma predeterminada); el cuadro cuenta las tareas terminadas que se
+  archivarán antes de que confirmes, y **Deshacer** en el aviso las devuelve
+  todas. Si filtraste la lista por agente o por espacio de trabajo, solo se
+  archivan las tareas de ese agente o espacio de trabajo. Cuando hay más de las
+  que cabe en una pasada, el aviso lo dice: vuelve a hacerlo para archivar el
+  resto.
+- **Verlas.** Pon **Mostrar** en **Archivadas** en el filtro de la lista de
+  Tareas (el filtro de Recientes tiene la misma opción). Las tareas se
+  desarchivan una a una, desde su menú **…** o su página.
+
+Archivar vale para todo el espacio de trabajo: una tarea archivada sale de
+Recientes, de la lista de Tareas, de las tareas de un agente y del panel
+integrado para todos. Sigue en el historial de su automatización, marcada
+**Archivada**. Al archivar una tarea se quita su fijación, y no vuelve al
+desarchivarla.
+
+Una tarea que vuelve a estar activa — le envías un mensaje, o se reanuda — sale
+del archivo sola. Archivar no es actividad: no cambia cuánto tiempo se conserva
+una tarea. Quien puede eliminar una tarea puede archivarla: la persona que la
+inició, o un propietario o administrador de su espacio de trabajo.
+
 ## Cuánto tiempo se conserva una tarea
 
 Todas las tareas siguen el mismo reloj, contado desde su última actividad o,
@@ -479,6 +520,8 @@ cambio a un agente, a sus habilidades, conocimientos o entrenamiento, o a una
 automatización, lo que propuso. El detalle de cualquier otra acción aprobada — una escritura en otra
 aplicación o un secreto que escribe el agente — es una llamada a herramientas y
 se conserva 30 días.
+
+Archivar una tarea no cambia estos plazos.
 
 Cumplido el año, la tarea se elimina junto con su conversación. Una tarea que
 todavía está trabajando o esperando a alguien nunca se elimina. Los archivos
