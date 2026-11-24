@@ -5,6 +5,7 @@ description: A task is one piece of work, from the message that starts it to the
 
 import { Aside, Steps, CardGrid, LinkCard } from '@astrojs/starlight/components';
 import ThemedImage from '../../../components/ThemedImage.astro';
+import YouTube from '../../../components/YouTube.astro';
 import taskMenuDark from '../../../assets/screenshots/task-menu-dark-20261013.png';
 import taskMenuLight from '../../../assets/screenshots/task-menu-light-20261013.png';
 import taskBesideDark from '../../../assets/screenshots/task-beside-page-dark-20261014.png';
@@ -306,10 +307,11 @@ Only **Train agent** is offered on the task page alone.
 | **Share…** | Opens the share box — see [Sharing](#sharing-and-who-sees-a-task) | Always |
 | **Stop** | Interrupts the task where it is, as the stop button in the composer does; send it a message to carry on | The task is running and you may stop it |
 | **Train agent** | Asks the task's agent to offer a [training session](/concepts/training#starting-a-session) started with what happened in this task | In the task page's header only, when you may edit the task's agent; not on an automation's task |
+| **Archive** / **Unarchive** | Takes a finished task out of your lists and keeps everything — see [Archiving a task](#archiving-a-task) | The task has finished, and you may delete it |
 | **Delete** | Asks you to confirm, then deletes the task | You started the task |
 
 Deleting the task you have open takes you to the Tasks list. A change made from
-the menu — a rename, a pin, a share, a stop or a delete — shows in every list at
+the menu — a rename, a pin, a share, a stop, an archive or a delete — shows in every list at
 once, with no refresh.
 
 <ThemedImage
@@ -391,7 +393,7 @@ The rules are the same for tasks, automations, agents and skills — see
 
 **Tasks** (under **Work**) lists every task you can see: its **Task** name with
 its summary or the question it is waiting on, the **Agent**, **Status**,
-**Started** and **Duration**. Tasks waiting on you are gathered in a
+**Started** and **Duration**. [Archived](#archiving-a-task) tasks are left out. Tasks waiting on you are gathered in a
 **Needs you** band at the top. Tasks started by the same
 automation fold into one row you can open.
 
@@ -409,7 +411,8 @@ never passes for the whole one:
 
 The **Needs you** band follows the same filters, so a filter that leaves out
 tasks waiting on you also empties it. Type in the search box to match names,
-summaries, instructions and more. The list refreshes by itself.
+summaries, instructions and more; while you search, archived tasks are found
+too, marked **Archived**. The list refreshes by itself.
 
 ### Statuses
 
@@ -432,6 +435,40 @@ The sidebar's **RECENT** list shows the same tasks in a short form, with the sam
 the Tasks list when you want to search or look further back. See
 [Recent tasks](/getting-started/finding-your-way#recent-tasks).
 
+## Archiving a task
+
+<YouTube id="5RXr92nffDs" title="How to archive finished tasks in AptiveAI Agents" />
+
+Archive a finished task to take it out of your lists without losing anything.
+An archived task keeps its transcript, its documents and its links; its page,
+`/tasks/<id>`, still opens, with an **Archived** chip and an **Unarchive**
+button in the header.
+
+- **One task.** Choose **Archive** in the task's **…** menu. There is nothing
+  to confirm: the task leaves your lists at once, and the toast's **Undo** puts
+  it back. A task that is still working cannot be archived yet — archive it
+  once it finishes.
+- **Many tasks.** In the Tasks list's header, open **…** and choose
+  **Archive finished tasks…**. Pick **Last active on or before** (today by
+  default); the dialog counts the finished tasks that will be archived before
+  you confirm, and the toast's **Undo** brings them all back. If you have
+  filtered the list by agent or workspace, only that agent's or workspace's
+  tasks are archived. When there are more than one pass can take, the toast
+  says so: run it again to archive the rest.
+- **Seeing them.** Set **Show** to **Archived** in the Tasks list's filter
+  (Recent's filter has the same choice). Unarchive tasks one at a time, from
+  their **…** menu or their page.
+
+Archiving is for the whole workspace: an archived task leaves Recent, the
+Tasks list, an agent's tasks and the embedded panel for everyone. It stays in
+its automation's history, marked **Archived**. A pin is removed when a task is
+archived, and is not put back when it is unarchived.
+
+A task that becomes active again — you send it a message, or it resumes —
+leaves the archive by itself. Archiving is not activity: it does not change how
+long a task is kept. Whoever may delete a task may archive it: the person who
+started it, or an owner or admin of its workspace.
+
 ## How long a task is kept
 
 Every task is kept on the same clock, counted from its last activity — or, once
@@ -447,6 +484,8 @@ the record that you approved it, and, for a new agent or a change to an agent,
 its skills, knowledge or training, or to an automation, what it proposed. The detail of any
 other approved action — a write to another application, or a secret the agent
 types — is a tool call, kept 30 days.
+
+Archiving a task does not change these clocks.
 
 When the year is up, the task itself is removed with its conversation. A task
 that is still working or waiting on someone is never removed. Files have their
